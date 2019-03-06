@@ -84,7 +84,7 @@ mobs:register_mob("petz:"..pet_name, {
     view_range = 4,
     fear_height = 3,
 	do_custom = function(self, dtime)
-		if math.random(1, 100000) == 1 then
+		if math.random(1, 120000) == 1 then
 			minetest.add_item(self.object:get_pos(), "petz:duck_egg") --duck egg!
 		end
 	end,
