@@ -113,8 +113,6 @@ mobs:register_mob("petz:"..pet_name, {
 			self.fed= false
 			self.brushed = false
 		end
-		if petz.settings.tamagochi_mode == true and self.init_timer == true then
-        	petz.timer(self, pet_name)        
-    	end
+		petz.init_timer(self, pet_name)
 	end,
 })

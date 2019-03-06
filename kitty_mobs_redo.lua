@@ -78,9 +78,9 @@ mobs:register_mob("petz:"..pet_name, {
     animation = {
     	speed_normal = 15, walk_start = 1, walk_end = 12,
     	speed_run = 25, run_start = 13, run_end = 25,
-    	stand_start = 26, stand_end = 45,		
-    	stand2_start = 46, stand2_end = 58,	
-    	stand3_start = 59, stand3_end = 80,	
+    	stand_start = 26, stand_end = 46,		
+    	stand2_start = 47, stand2_end = 59,	
+    	stand3_start = 60, stand3_end = 81,	
 		},
     view_range = 4,
     fear_height = 3,
@@ -107,9 +107,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.fed= false
 			self.brushed = false
 		end
-		if petz.settings.tamagochi_mode == true and self.init_timer == true and self.tamed == false then
-        	petz.timer(self, pet_name)        
-    	end
+		petz.init_timer(self, pet_name)
 	end,
 })
 

@@ -33,26 +33,6 @@ if petz.settings.kitty_spawn then
     })
 end
 
---Pet Hairbrush
-if petz.settings.tamagochi_mode then
-
-    minetest.register_craftitem("petz:hairbrush", {
-        description = S("Hairbrush"),
-        inventory_image = "petz_hairbrush.png",
-        wield_image = "petz_hairbrush.png"
-    })
-
-    minetest.register_craft({
-        type = "shaped",
-        output = "petz:hairbrush",
-        recipe = {
-            {"", "", ""},
-            {"", "default:stick", "farming:string"},
-            {"default:stick", "", ""},
-        }
-    })
-end
-
 if petz.settings.puppy_spawn then
 
     assert(loadfile(modpath .. "/puppy_"..petz.settings.type_api..".lua"))(S) 
@@ -63,6 +43,26 @@ if petz.settings.puppy_spawn then
         name = "petz:puppy",
         nodes = {"default:dirt_with_grass"},
         neighbors = {"group:leaves"},
+        min_light = 3,
+        max_light = 5,
+        interval = 90,
+        chance = 900, 
+        min_height = 1,
+        max_height = 300,
+        day_toggle = false,
+    })
+end
+
+if petz.settings.ducky_spawn then
+
+    assert(loadfile(modpath .. "/ducky_"..petz.settings.type_api..".lua"))(S) 
+
+    mobs:register_egg("petz:ducky", S("Ducky"), "petz_spawnegg_ducky.png", 0)
+
+    mobs:spawn({
+        name = "petz:ducky",
+        nodes = {"default:dirt_with_grass"},
+        neighbors = {"group:water"},
         min_light = 3,
         max_light = 5,
         interval = 90,

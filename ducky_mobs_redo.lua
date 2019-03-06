@@ -1,8 +1,6 @@
 --
 --DUCKY
 --
-local S = ...
-
 local pet_name = "ducky"
 local mesh = nil
 local textures = {}
@@ -35,21 +33,20 @@ if petz.settings.type_model == "cubic" then
 	textures= {"petz:ducky_block"}
 	collisionbox = {-0.35, -0.75, -0.28, 0.35, -0.125, 0.28}
 else
-	mesh = 'petz_kitty.b3d'	
+	mesh = 'petz_ducky.b3d'	
 	textures= {{"petz_ducky.png"}, {"petz_ducky2.png"}, {"petz_ducky3.png"}}
 	collisionbox = {-0.35, -0.75, -0.28, 0.35, -0.3125, 0.28}
 end
 
 mobs:register_mob("petz:ducky", {
 	type = "animal",
-	rotate = petz.settings.rotate,
+	rotate = 180,
 	damage = 8,
     hp_min = 4,
     hp_max = 8,
     armor = 200,
 	visual = petz.settings.visual,
 	visual_size = petz.settings.visual_size,
-	mesh = mesh,
 	textures = textures,
 	collisionbox = collisionbox,
 	makes_footstep_sound = false,
@@ -59,7 +56,6 @@ mobs:register_mob("petz:ducky", {
     pushable = true,
     floats = true,
 	jump = true,
-	follow = petz.settings.ducky_follow,
 	drops = {
 		{name = "mobs:meat_raw",
 		chance = 1,
@@ -70,7 +66,7 @@ mobs:register_mob("petz:ducky", {
 	lava_damage = 6,
 	light_damage = 0,
     sounds = {
-		random = "petz_ducky_kwak",
+		random = "petz_ducky",
 	},
     animation = {
     	speed_normal = 15, walk_start = 1, walk_end = 12,
@@ -78,8 +74,8 @@ mobs:register_mob("petz:ducky", {
     	stand_start = 26, stand_end = 46,		
     	stand2_start = 47, stand2_end = 59,	
     	stand3_start = 60, stand3_end = 70,	
-    	stand4_start = 71, stand4_end = 91,	
+    	stand4_start = 71, stand3_end = 91,	
 		},
     view_range = 4,
     fear_height = 3,
-})
+    })

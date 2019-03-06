@@ -94,7 +94,7 @@ petz.set_affinity = function(self, increase, amount)
     if increase == true then
         new_affinitty = self.affinity +  amount
     else
-        new_affinitty = self.affinity -  amount
+        new_affinitty = self.affinity - amount
     end
     if new_affinitty > 100 then
         new_affinitty = 100
@@ -106,6 +106,15 @@ end
 
 --
 --The Timer for the Tamagochi Mode
+
+petz.init_timer = function(self, pet_name)
+    if (petz.settings.tamagochi_mode == true) and (self.tamed == true) and (self.init_timer == true) then
+        petz.timer(self, pet_name)
+        return true
+    else
+        return false
+    end
+end
 
 petz.timer = function(self, pet_name)
     minetest.after(petz.settings.tamagochi_check_time, function(self, pet_name)         

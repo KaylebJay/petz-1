@@ -10,12 +10,10 @@ petz.settings.tamagochi_safe_node = settings:get("tamagochi_safe_node", "")
 petz.settings.type_api = settings:get("type_api", "mobs_redo")
 petz.settings.kitty_spawn = settings:get_bool("kitty_spawn", true)
 petz.settings.kitty_follow = settings:get("kitty_follow", "")
-petz.settings.kitty_food = settings:get("kitty_food", "")
-petz.settings.kitty_favorite_food = settings:get("kitty_favorite_food", "")
 petz.settings.puppy_spawn = settings:get_bool("puppy_spawn", true)
 petz.settings.puppy_follow = settings:get("puppy_follow", "")
-petz.settings.puppy_food = settings:get("puppy_food", "")
-petz.settings.puppy_favorite_food = settings:get("puppy_favorite_food", "")
+petz.settings.ducky_spawn = settings:get_bool("ducky_spawn", true)
+petz.settings.ducky_follow = settings:get("ducky_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"
