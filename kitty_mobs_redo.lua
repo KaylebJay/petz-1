@@ -58,6 +58,7 @@ mobs:register_mob("petz:"..pet_name, {
     runaway = true,
     pushable = true,
 	jump = true,
+	floats = 1,
 	follow = petz.settings.kitty_follow,	
 	drops = {
 		{name = "mobs:meat_raw",
@@ -69,7 +70,7 @@ mobs:register_mob("petz:"..pet_name, {
     	nodes = "petz:pet_bowl",
     	chance = 1,
     },
-	water_damage = 2,
+	water_damage = 0,
 	lava_damage = 6,
 	light_damage = 0,
     sounds = {

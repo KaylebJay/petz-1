@@ -1,8 +1,11 @@
 --
 --DUCKY
 --
+local S = ...
+
 local pet_name = "ducky"
 local mesh = nil
+local scale_ducky = 1.3
 local textures = {}
 local collisionbox = {}
 
@@ -31,22 +34,23 @@ if petz.settings.type_model == "cubic" then
 	}
 	petz.register_cubic(node_name, fixed, tiles)		
 	textures= {"petz:ducky_block"}
-	collisionbox = {-0.35, -0.75, -0.28, 0.35, -0.125, 0.28}
+	collisionbox = {-0.35, -0.75*scale_ducky, -0.28, 0.35, -0.125, 0.28}
 else
 	mesh = 'petz_ducky.b3d'	
 	textures= {{"petz_ducky.png"}, {"petz_ducky2.png"}, {"petz_ducky3.png"}}
-	collisionbox = {-0.35, -0.75, -0.28, 0.35, -0.3125, 0.28}
+	collisionbox = {-0.35, -0.75*scale_ducky, -0.28, 0.35, -0.3125, 0.28}
 end
 
-mobs:register_mob("petz:ducky", {
+mobs:register_mob("petz:"..pet_name, {
 	type = "animal",
-	rotate = 180,
+	rotate = petz.settings.rotate,
 	damage = 8,
     hp_min = 4,
     hp_max = 8,
     armor = 200,
 	visual = petz.settings.visual,
-	visual_size = petz.settings.visual_size,
+	visual_size = {x=petz.settings.visual_size.x*scale_ducky, y=petz.settings.visual_size.y*scale_ducky},
+	mesh = mesh,
 	textures = textures,
 	collisionbox = collisionbox,
 	makes_footstep_sound = false,
@@ -54,8 +58,9 @@ mobs:register_mob("petz:ducky", {
     run_velocity = 1,    
     runaway = true,
     pushable = true,
-    floats = true,
+    floats = 1,
 	jump = true,
+	follow = petz.settings.ducky_follow,
 	drops = {
 		{name = "mobs:meat_raw",
 		chance = 1,
@@ -66,7 +71,7 @@ mobs:register_mob("petz:ducky", {
 	lava_damage = 6,
 	light_damage = 0,
     sounds = {
-		random = "petz_ducky",
+		random = "petz_ducky_quack",
 	},
     animation = {
     	speed_normal = 15, walk_start = 1, walk_end = 12,
@@ -74,8 +79,13 @@ mobs:register_mob("petz:ducky", {
     	stand_start = 26, stand_end = 46,		
     	stand2_start = 47, stand2_end = 59,	
     	stand3_start = 60, stand3_end = 70,	
-    	stand4_start = 71, stand3_end = 91,	
+    	stand4_start = 71, stand4_end = 91,	
 		},
     view_range = 4,
     fear_height = 3,
-    })
+	do_custom = function(self, dtime)
+		if math.random(1, 100000) == 1 then
+			minetest.add_item(self.object:get_pos(), "petz:duck_egg") --duck egg!
+		end
+	end,
+})

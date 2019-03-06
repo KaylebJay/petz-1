@@ -23,3 +23,9 @@ file name: petz_puppy_moaning.ogg
 Author: Zapsplat
 https://www.zapsplat.com/music/dog-barking-springer-spaniel-2/
 License: https://www.zapsplat.com/license-type/standard-license/
+--------------------------------------------
+filename: petz_ducky_quack.ogg
+Author: Alexander
+http://www.orangefreesounds.com/duck-quack-sound/
+License: The sound effect is permitted for commercial use
+under license Creative Commons Attribution 4.0 International License

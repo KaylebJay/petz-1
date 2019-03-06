@@ -60,9 +60,7 @@ mobs:register_mob("petz:"..pet_name, {
     runaway = true,
     pushable = true,
 	jump = true,
-	floats = true,
-	--fly = true,
-	--fly_in = "default:water_source",
+	floats = 1,
 	follow = petz.settings.puppy_follow,	
 	drops = {
 		{name = "mobs:meat_raw",

@@ -35,12 +35,12 @@ if petz.settings.type_model == "cubic" then
 	textures= {"petz:ducky_block"}
 	collisionbox = {-0.35, -0.75, -0.28, 0.35, -0.125, 0.28}
 else
-	mesh = 'petz_kitty.b3d'	
+	mesh = 'petz_ducky.b3d'	
 	textures= {{"petz_ducky.png"}, {"petz_ducky2.png"}, {"petz_ducky3.png"}}
 	collisionbox = {-0.35, -0.75, -0.28, 0.35, -0.3125, 0.28}
 end
 
-mobs:register_mob("petz:ducky", {
+mobs:register_mob("petz:"..pet_name, {
 	type = "animal",
 	rotate = petz.settings.rotate,
 	damage = 8,

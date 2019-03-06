@@ -115,3 +115,13 @@ minetest.register_craftitem("petz:kennel", {
         minetest.place_schematic(pt_above, modpath..'/schematics/kennel.mts', 0, nil, true)        
     end,
 })
+
+--Duck Egg
+
+minetest.register_craftitem("petz:duck_egg", {
+    description = S("Duck Egg"),
+    inventory_image = "petz_duck_egg.png",
+    wield_image = "petz_duck_egg.png",
+    on_use = minetest.item_eat(2),
+    groups = {flammable = 2, food = 2},
+})
