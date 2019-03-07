@@ -88,7 +88,7 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker, pet_name, give_orders)
 	end,
 	do_custom = function(self, dtime)
-		if math.random(1, 120000) == 1 then
+		if math.random(1, 150000) == 1 then
 			minetest.add_item(self.object:get_pos(), "petz:duck_egg") --duck egg!
 		end
 	end,
