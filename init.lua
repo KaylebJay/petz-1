@@ -62,7 +62,7 @@ if petz.settings.ducky_spawn then
     mobs:spawn({
         name = "petz:ducky",
         nodes = {"default:dirt_with_grass"},
-        neighbors = {"group:water"},
+        neighbors = {"default:river_water_source"},
         min_light = 3,
         max_light = 5,
         interval = 90,
