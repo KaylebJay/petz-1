@@ -90,6 +90,16 @@ mobs:register_mob("petz:"..pet_name, {
 	do_custom = function(self, dtime)
 		if math.random(1, 150000) == 1 then
 			minetest.add_item(self.object:get_pos(), "petz:duck_egg") --duck egg!
-		end
+		end		
+		local pos = self.object:get_pos()
+		local lay_range = 1
+		local nearby_nodes = minetest.find_nodes_in_area(
+			{x = pos.x - lay_range, y = pos.y - 1, z = pos.z - lay_range},
+			{x = pos.x + lay_range, y = pos.y + 1, z = pos.z + lay_range},
+			"petz:duck_nest")
+		if #nearby_nodes > 1 then
+			local nest_to_lay = nearby_nodes[math.random(1, #nearby_nodes)]
+			minetest.set_node(nest_to_lay, {name= "petz:duck_nest_egg"})
+		end		
 	end,
 })
