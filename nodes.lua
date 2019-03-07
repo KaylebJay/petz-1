@@ -125,3 +125,98 @@ minetest.register_craftitem("petz:duck_egg", {
     on_use = minetest.item_eat(2),
     groups = {flammable = 2, food = 2},
 })
+
+--Duck Nest
+
+minetest.register_node("petz:duck_nest", {
+    description = S("Duck Nest"),
+    inventory_image = "petz_duck_nest_inv.png",
+    wield_image = "petz_duck_nest_inv.png",
+    tiles = {"petz_duck_nest.png"},
+    groups = {snappy=1, bendy=2, cracky=1},
+    sounds = default_stone_sounds,
+    paramtype = "light",
+    drawtype = "mesh",
+    mesh = 'petz_duck_nest.b3d',
+    visual_size = {x = 1.3, y = 1.3},
+    tiles = {"petz_duck_nest_egg.png"},
+    collision_box = {
+        type = "fixed",
+        fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
+    },
+    selection_box = {
+        type = "fixed",
+        fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
+    },
+    on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+        if not(player == nil) then
+            local wielded_item_name= player:get_wielded_item():get_name()
+            if wielded_item_name == "petz:duck_egg" then
+                minetest.set_node(pos, {name= "petz:duck_nest_egg"})
+            end
+        end
+    end,
+})
+ 
+minetest.register_craft({
+    type = "shaped",
+    output = 'petz:duck_nest',
+    recipe = {        
+        {'', '', ''},
+        {'group:leaves', '', 'group:leaves'},
+        {'default:papyrus', 'default:papyrus', 'default:papyrus'},
+    }
+})
+
+
+minetest.register_node("petz:duck_nest_egg", {
+    description = S("Duck Nest with Egg"),
+    inventory_image = "petz_duck_nest_egg_inv.png",
+    wield_image = "petz_duck_nest_egg_inv.png",
+    tiles = {"petz_duck_nest_egg.png"},
+    groups = {snappy=1, bendy=2, cracky=1},
+    sounds = default_stone_sounds,
+    paramtype = "light",
+    drawtype = "mesh",
+    mesh = 'petz_duck_nest_egg.b3d',
+    visual_size = {x = 1.3, y = 1.3},
+    tiles = {"petz_duck_nest_egg.png"},
+    collision_box = {
+        type = "fixed",
+        fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
+    },
+    selection_box = {
+        type = "fixed",
+        fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
+    },
+})
+ 
+minetest.register_craft({
+    type = "shaped",
+    output = 'petz:duck_nest_egg',
+    recipe = {        
+        {'', '', ''},
+        {'group:leaves', 'petz:duck_egg', 'group:leaves'},
+        {'default:papyrus', 'default:papyrus', 'default:papyrus'},
+    }
+})
+
+-- Chance to hatch an egg into a duck
+minetest.register_abm({
+    nodenames = {"petz:duck_nest_egg"},
+    neighbors = {},
+    interval = 600.0, -- Run every 10 minuts
+    chance = 5, -- Select every 1 in 3 nodes
+    action = function(pos, node, active_object_count, active_object_count_wider)
+        local pos_above = {x = pos.x, y = pos.y +1, z= pos.z}
+        if pos_above then
+            if not minetest.registered_entities["petz:ducky"] then
+                return
+            end
+            --pos.y = pos.y + 1
+            local mob = minetest.add_entity(pos_above, "petz:ducky")
+            local ent = mob:get_luaentity()
+            minetest.set_node(pos, {name= "petz:duck_nest"})
+        end
+    end
+})
