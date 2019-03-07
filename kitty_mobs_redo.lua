@@ -4,6 +4,7 @@
 local S = ...
 
 local pet_name = "kitty"
+local give_orders = true
 local mesh = nil
 local textures = {}
 local collisionbox = {}
@@ -92,7 +93,7 @@ mobs:register_mob("petz:"..pet_name, {
     	petz.on_die(self, pos)
     end,
 	on_rightclick = function(self, clicker)
-		petz.on_rightclick(self, clicker, pet_name)
+		petz.on_rightclick(self, clicker, pet_name, give_orders)
 	end,
 	on_step = function(self, dtime)
 		petz.on_step(self, dtime)

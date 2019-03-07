@@ -178,7 +178,7 @@ end
 --Mobs Redo Events
 --
 
-petz.on_rightclick = function(self, clicker, pet_name)
+petz.on_rightclick = function(self, clicker, pet_name, give_orders)
         if not(clicker:is_player()) then
             return false
         end
@@ -211,7 +211,7 @@ petz.on_rightclick = function(self, clicker, pet_name)
                 minetest.chat_send_player(self.owner, S("Your").." "..pet_name.." "..S("has been captured."))
             end                
         --Else open the Form
-        else            
+        elseif give_orders == true then
             petz.pet[player_name]= self
             minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name, pet_name))
         end

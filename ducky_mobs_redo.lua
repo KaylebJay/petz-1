@@ -4,6 +4,7 @@
 local S = ...
 
 local pet_name = "ducky"
+local give_orders = false
 local mesh = nil
 local scale_ducky = 1.3
 local textures = {}
@@ -83,6 +84,9 @@ mobs:register_mob("petz:"..pet_name, {
 		},
     view_range = 4,
     fear_height = 3,
+    on_rightclick = function(self, clicker)
+		petz.on_rightclick(self, clicker, pet_name, give_orders)
+	end,
 	do_custom = function(self, dtime)
 		if math.random(1, 120000) == 1 then
 			minetest.add_item(self.object:get_pos(), "petz:duck_egg") --duck egg!
