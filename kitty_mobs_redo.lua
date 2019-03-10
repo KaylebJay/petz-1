@@ -4,7 +4,6 @@
 local S = ...
 
 local pet_name = "kitty"
-local give_orders = true
 local mesh = nil
 local textures = {}
 local collisionbox = {}
@@ -93,7 +92,7 @@ mobs:register_mob("petz:"..pet_name, {
     	petz.on_die(self, pos)
     end,
 	on_rightclick = function(self, clicker)
-		petz.on_rightclick(self, clicker, pet_name, give_orders)
+		petz.on_rightclick(self, clicker)
 	end,
 	on_step = function(self, dtime)
 		petz.on_step(self, dtime)
@@ -102,14 +101,32 @@ mobs:register_mob("petz:"..pet_name, {
 		self.init_timer = true
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set then
-			self.custom_vars_set = 0
+		if not self.custom_vars_set02 then
+			self.custom_vars_set02 = 0
+			self.petz_type = "kitty"
+			self.is_pet = true
+			self.give_orders = true
 			self.affinity = 100
 			self.init_timer = true
 			self.fed= false
 			self.brushed = false
+			self.beaver_oil_applied = false
 		end
-		petz.init_timer(self, pet_name)
+		petz.init_timer(self)
 	end,
 })
 
+mobs:register_egg("petz:kitty", S("Kitty"), "petz_spawnegg_kitty.png", 0)
+
+mobs:spawn({
+    name = "petz:kitty",
+    nodes = {"default:dirt_with_grass"},
+    neighbors = {"group:leaves"},
+    min_light = 3,
+    max_light = 5,
+    interval = 90,
+    chance = 900, 
+    min_height = 1,
+    max_height = 300,
+    day_toggle = false,
+ })

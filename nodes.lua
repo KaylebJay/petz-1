@@ -220,3 +220,36 @@ minetest.register_abm({
         end
     end
 })
+
+--Beaver 
+
+minetest.register_craftitem("petz:beaver_fur", {
+    description = S("Beaver Fur"),
+    inventory_image = "petz_beaver_fur.png",
+    wield_image = "petz_beaver_fur.png"
+})
+
+minetest.register_craftitem("petz:duck", {
+    description = S("Duck Feather"),
+    inventory_image = "petz_duck_feather.png",
+    wield_image = "petz_duck_feather.png"
+})
+
+--Beaver Oil
+
+minetest.register_craftitem("petz:beaver_oil", {
+    description = S("Beaver Oil"),
+    inventory_image = "petz_beaver_oil.png",
+    wield_image = "petz_beaver_oil.png"
+})
+
+
+minetest.register_craft({
+    type = "shaped",
+    output = "petz:beaver_oil",
+    recipe = {
+        {"", "", ""},
+        {"", "petz:beaver_fur", ""},
+        {"", "vessels:glass_bottle", ""},
+    }
+})

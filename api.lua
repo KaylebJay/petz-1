@@ -28,7 +28,7 @@ petz.settings.rotate = 0
 --Context
 petz.pet = {} -- A table of pet["owner_name"]="owner_name"
 
-petz.create_form = function(player_name, pet_name)
+petz.create_form = function(player_name, pet_type)
     local pet = petz.pet[player_name]
     if pet.affinity == nil then
        pet.affinity = 0
@@ -37,7 +37,7 @@ petz.create_form = function(player_name, pet_name)
     if petz.settings.tamagochi_mode == true then        
 		form_pet_orders = 
             "size[5,5;]"..
-            "image[0,0;1,1;petz_spawnegg_"..pet_name..".png]"..
+            "image[0,0;1,1;petz_spawnegg_"..pet_type..".png]"..
             "label[1,0;".. S("Orders").."]"..
             "image[3,1;1,1;petz_affinity_heart.png]"..
             "label[4,1;".. tostring(pet.affinity).."%]"..
@@ -52,7 +52,7 @@ petz.create_form = function(player_name, pet_name)
     else
         form_pet_orders =
             "size[3,5;]"..
-            "image[1,0;1,1;petz_spawnegg_"..pet_name..".png]"
+            "image[1,0;1,1;petz_spawnegg_"..pet_type..".png]"
     end
     form_pet_orders = form_pet_orders..
 		"button_exit[0,1;3,1;btn_followme;"..S("Follow me").."]"..
@@ -107,17 +107,17 @@ end
 --
 --The Timer for the Tamagochi Mode
 
-petz.init_timer = function(self, pet_name)
+petz.init_timer = function(self)
     if (petz.settings.tamagochi_mode == true) and (self.tamed == true) and (self.init_timer == true) then
-        petz.timer(self, pet_name)
+        petz.timer(self)
         return true
     else
         return false
     end
 end
 
-petz.timer = function(self, pet_name)
-    minetest.after(petz.settings.tamagochi_check_time, function(self, pet_name)         
+petz.timer = function(self)
+    minetest.after(petz.settings.tamagochi_check_time, function(self)         
         if not(self.object== nil) then
             local pos = self.object:get_pos()
             if not(pos == nil) then --important for if the pet dies
@@ -158,11 +158,11 @@ petz.timer = function(self, pet_name)
             self.brushed = false
             --If the pet starves to death
             if self.health == 0 then
-                minetest.chat_send_player(self.owner, S("Your").. " "..pet_name.." "..S("has starved to death!!!"))
+                minetest.chat_send_player(self.owner, S("Your").. " "..self.pet_type.." "..S("has starved to death!!!"))
                 self.init_timer  = false -- no more timing
             --I the pet get bored of you
             elseif self.affinity == 0 then
-                minetest.chat_send_player(self.owner, S("Your").." "..pet_name.." "..S("has abandoned you!!!"))
+                minetest.chat_send_player(self.owner, S("Your").." "..self.pet_type.." "..S("has abandoned you!!!"))
                 self.owner = "" --the pet abandon you
                 self.init_timer  = false -- no more timing
             --Else reinit the timer, to check again in the future
@@ -170,7 +170,7 @@ petz.timer = function(self, pet_name)
                 self.init_timer  = true
             end
         end
-    end, self, pet_name)
+    end, self)
     self.init_timer = false --the timer is reinited in the minetest.after function
 end
 
@@ -178,42 +178,52 @@ end
 --Mobs Redo Events
 --
 
-petz.on_rightclick = function(self, clicker, pet_name, give_orders)
+petz.on_rightclick = function(self, clicker)
         if not(clicker:is_player()) then
             return false
         end
         local player_name = clicker:get_player_name()
         local wielded_item = clicker:get_wielded_item()
         local wielded_item_name= wielded_item:get_name()
-        --If brushing
-        if wielded_item_name == "petz:hairbrush" then
-            if (self.owner ~= player_name) then
-                return
-            end           
-            if petz.settings.tamagochi_mode == true and self.brushed == false then                
-                petz.set_affinity(self, true, 5)                
-                self.brushed = true               
-            elseif petz.settings.tamagochi_mode == true and self.brushed == true then  
-                minetest.chat_send_player(self.owner, S("Your").." "..pet_name.." "..S("had already been brushed."))
-            end
-            petz.do_sound_effect("object", self.object, "petz_brushing")
-            petz.do_particles_effect(self.object, self.object:get_pos(), "star")            
+        if (self.is_pet) and (self.owner == player_name) then            
+            -- If brushing or spread beaver oil
+            if (wielded_item_name == "petz:hairbrush") or (wielded_item_name == "petz:beaver_oil") then
+                if petz.settings.tamagochi_mode == true then
+                    if wielded_item_name == "petz:hairbrush" then
+                        if self.brushed == false then
+                            petz.set_affinity(self, true, 5)
+                            self.brushed = true
+                        else
+                            minetest.chat_send_player(self.owner, S("Your").." "..self.pet_type.." "..S("had already been brushed."))
+                        end                
+                    else --it's beaver_oil
+                        if self.beaver_oil_applied == false then
+                            petz.set_affinity(self, true, 20)
+                            self.beaver_oil_applied = true
+                        else 
+                            minetest.chat_send_player(self.owner, S("Your").." "..self.pet_type.." "..S("had already been spreaded with beaver oil."))
+                        end     
+                    end
+                end
+                petz.do_sound_effect("object", self.object, "petz_brushing")
+                petz.do_particles_effect(self.object, self.object:get_pos(), "star")            
+            end        
         --If feeded
         elseif mobs:feed_tame(self, clicker, 5, false, true) then
             if petz.settings.tamagochi_mode == true and self.fed == false then
                 petz.set_affinity(self, true, 5)                
                 self.fed = true             
             end
-            petz.do_sound_effect("object", self.object, "petz_"..pet_name.."_moaning")
+            petz.do_sound_effect("object", self.object, "petz_"..self.pet_type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
         elseif (wielded_item_name == "mobs:lasso") or (wielded_item_name == "mobs:net") then        
             if mobs:capture_mob(self, clicker, 0, 100, 100, true, nil) then
-                minetest.chat_send_player(self.owner, S("Your").." "..pet_name.." "..S("has been captured."))
-            end                
+                minetest.chat_send_player(self.owner, S("Your").." "..self.pet_type.." "..S("has been captured."))
+            end         
         --Else open the Form
-        elseif give_orders == true then
+        elseif self.give_orders == true then
             petz.pet[player_name]= self
-            minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name, pet_name))
+            minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name, self.pet_type))
         end
 end
 

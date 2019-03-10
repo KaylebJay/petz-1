@@ -1,13 +1,19 @@
 --
---DUCKY
+--BEAVER
 --
-local S = ...
+local S, mg_name = ...
 
-local pet_name = "ducky"
+local pet_name = "beaver"
 local mesh = nil
-local scale_ducky = 1.3
+local scale_beaver = 1.3
 local textures = {}
 local collisionbox = {}
+local spawn_nodes = {}
+if mg_name == "valleys" then
+   spawn_nodes = {"default:river_water_source"}
+else
+   spawn_nodes = {"default:water_source"}
+end
 
 if petz.settings.type_model == "cubic" then
 	local node_name = "petz:"..pet_name.."_block"
@@ -25,20 +31,20 @@ if petz.settings.type_model == "cubic" then
 		{-0.0625, -0.375, 0.0625, -3.35276e-08, -0.3125, 0.125}, -- tail_bottom
 	}
 	tiles = {
-		"petz_ducky_top.png",
-		"petz_ducky_bottom.png",
-		"petz_ducky_right.png",
-		"petz_ducky_left.png",
-		"petz_ducky_back.png",
-		"petz_ducky_front.png"
+		"petz_beaver_top.png",
+		"petz_beaver_bottom.png",
+		"petz_beaver_right.png",
+		"petz_beaver_left.png",
+		"petz_beaver_back.png",
+		"petz_beaver_front.png"
 	}
 	petz.register_cubic(node_name, fixed, tiles)		
-	textures= {"petz:ducky_block"}
-	collisionbox = {-0.35, -0.75*scale_ducky, -0.28, 0.35, -0.125, 0.28}
+	textures= {"petz:beaver_block"}
+	collisionbox = {-0.35, -0.75*scale_beaver, -0.28, 0.35, -0.125, 0.28}
 else
-	mesh = 'petz_ducky.b3d'	
-	textures= {{"petz_ducky.png"}, {"petz_ducky2.png"}, {"petz_ducky3.png"}}
-	collisionbox = {-0.35, -0.75*scale_ducky, -0.28, 0.35, -0.3125, 0.28}
+	mesh = 'petz_beaver.b3d'	
+	textures= {{"petz_beaver.png"}}
+	collisionbox = {-0.35, -0.75*scale_beaver, -0.28, 0.35, -0.3125, 0.28}
 end
 
 mobs:register_mob("petz:"..pet_name, {
@@ -49,7 +55,7 @@ mobs:register_mob("petz:"..pet_name, {
     hp_max = 8,
     armor = 200,
 	visual = petz.settings.visual,
-	visual_size = {x=petz.settings.visual_size.x*scale_ducky, y=petz.settings.visual_size.y*scale_ducky},
+	visual_size = {x=petz.settings.visual_size.x*scale_beaver, y=petz.settings.visual_size.y*scale_beaver},
 	mesh = mesh,
 	textures = textures,
 	collisionbox = collisionbox,
@@ -58,18 +64,20 @@ mobs:register_mob("petz:"..pet_name, {
     run_velocity = 1,    
     runaway = true,
     pushable = true,
+    fly = true,
+    fly_in = "default:water_source",
     floats = 1,
 	jump = true,
-	follow = petz.settings.ducky_follow,
+	follow = petz.settings.beaver_follow,
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1,},
-		{name = "petz:duck_feather", chance = 3, min = 1, max = 1,},
+		{name = "petz:beaver_fur", chance = 1, min = 1, max = 1,},
 	},
 	water_damage = 0,
 	lava_damage = 6,
 	light_damage = 0,
     sounds = {
-		random = "petz_ducky_quack",
+		random = "petz_beaver_quack",
 	},
     animation = {
     	speed_normal = 15, walk_start = 1, walk_end = 12,
@@ -81,13 +89,17 @@ mobs:register_mob("petz:"..pet_name, {
 		},
     view_range = 4,
     fear_height = 3,
+    stay_near= {
+    	nodes = spawn_nodes,
+    	chance = 3,
+    },
     on_rightclick = function(self, clicker)
 		petz.on_rightclick(self, clicker)
 	end,
 	do_custom = function(self, dtime)
 		if not self.custom_vars_set02 then
 			self.custom_vars_set02 = 0
-			self.petz_type = "ducky"
+			self.petz_type = "beaver"
 			self.is_pet = false
 			self.give_orders = false
 			self.affinity = 100
@@ -96,33 +108,47 @@ mobs:register_mob("petz:"..pet_name, {
 			self.brushed = false
 			self.beaver_oil_applied = false
 		end
-		if math.random(1, 150000) == 1 then
-			minetest.add_item(self.object:get_pos(), "petz:duck_egg") --duck egg!
+		if not self.custom_vars_set then
+			self.custom_vars_set = 0
+			self.dam_created = false
 		end		
-		local pos = self.object:get_pos()
-		local lay_range = 1
-		local nearby_nodes = minetest.find_nodes_in_area(
-			{x = pos.x - lay_range, y = pos.y - 1, z = pos.z - lay_range},
-			{x = pos.x + lay_range, y = pos.y + 1, z = pos.z + lay_range},
-			"petz:duck_nest")
-		if #nearby_nodes > 1 then
-			local nest_to_lay = nearby_nodes[math.random(1, #nearby_nodes)]
-			minetest.set_node(nest_to_lay, {name= "petz:duck_nest_egg"})
-		end		
+		local pos = self.object:get_pos() -- check the beaver pos to togle between aquatic-terrestrial
+		local node = minetest.get_node_or_nil(pos)
+		if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water then
+    		self.fly = true --it is on water
+		else
+			local pos_underwater = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
+            	x = pos.x,
+            	y = pos.y - 3.5,
+            	z = pos.z,
+        	}
+        	node = minetest.get_node_or_nil(pos_underwater)
+        	if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water then
+        		local pos_below = {
+            		x = pos.x,
+            		y = pos.y - 2.0,
+            		z = pos.z,
+	        	}
+        		self.object:move_to(pos_below, true) -- move the beaver underwater
+        		self.fly = true
+        	else
+        		self.fly = false -- make terrestrial
+        	end
+		end 
 	end,
 })
 
-mobs:register_egg("petz:ducky", S("Ducky"), "petz_spawnegg_ducky.png", 0)
+mobs:register_egg("petz:beaver", S("Beaver"), "petz_spawnegg_beaver.png", 0)
 
 mobs:spawn({
-    name = "petz:ducky",
-    nodes = {"default:dirt_with_grass"},
+	name = "petz:beaver",
+    nodes = spawn_nodes,
     neighbors = {"group:water"},
     min_light = 3,
     max_light = 5,
     interval = 90,
     chance = 900, 
-    min_height = 1,
-    max_height = 300,
+    min_height = -5,
+    max_height = 0,
     day_toggle = false,
-})
+ })
