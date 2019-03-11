@@ -27,5 +27,5 @@ if petz.settings.ducky_spawn then
 end
 
 if petz.settings.beaver_spawn then
-    assert(loadfile(modpath .. "/beaver_"..petz.settings.type_api..".lua"))(S, mg_name)    
+    assert(loadfile(modpath .. "/beaver_"..petz.settings.type_api..".lua"))(S, modpath, mg_name)    
 end

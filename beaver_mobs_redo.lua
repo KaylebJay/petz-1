@@ -1,11 +1,11 @@
 --
 --BEAVER
 --
-local S, mg_name = ...
+local S, modpath, mg_name = ...
 
 local pet_name = "beaver"
 local mesh = nil
-local scale_beaver = 1.3
+local scale_beaver = 1.2
 local textures = {}
 local collisionbox = {}
 local spawn_nodes = {}
@@ -14,21 +14,35 @@ if mg_name == "valleys" then
 else
    spawn_nodes = {"default:water_source"}
 end
+local animation_terrestrial = {
+    speed_normal = 15, walk_start = 1, walk_end = 12,
+    speed_run = 25, run_start = 13, run_end = 25,
+    stand_start = 26, stand_end = 46,		
+    stand2_start = 47, stand2_end = 59,	 --sit   
+    stand3_start = 71, stand4_end = 91,	
+    stand4_start = 82, stand4_end = 95,	
+}
+local animation_aquatic = {
+    speed_normal = 15, walk_start = 96, walk_end = 121, --swin
+    speed_run = 25, run_start = 96, run_end = 121,
+    stand_start = 26, stand_end = 46,		
+    stand2_start = 82, stand4_end = 95,	
+}
 
 if petz.settings.type_model == "cubic" then
 	local node_name = "petz:"..pet_name.."_block"
 	fixed = {
-		{-0.125, -0.5, -0.0625, -0.0625, -0.4375, 0.0}, -- right_leg
-		{0, -0.5, -0.0625, 0.0625, -0.4375, 0.0}, -- left_leg
-		{-0.125, -0.4375, -0.125, 0.0625, -0.25, 0.0625}, -- body
-		{-0.125, -0.3125, 0.0625, 0.0625, -0.25, 0.125}, -- tail_top
-		{-0.125, -0.25, -0.1875, 0.0625, -0.1875, -0.125}, -- beak
-		{-0.125, -0.25, -0.125, 0.0625, -0.0625, 9.68575e-08}, -- head
-		{0.0625, -0.3125, -0.0625, 0.125, -0.25, 0.0625}, -- left_wing_top
-		{0.0625, -0.375, -0.0625, 0.125, -0.3125, 0}, -- left_wing_bottom
-		{-0.1875, -0.3125, -0.0625, -0.125, -0.25, 0.0625}, -- right_wing_top
-		{-0.1875, -0.375, -0.0625, -0.125, -0.3125, 0}, -- right_wing_bottom
-		{-0.0625, -0.375, 0.0625, -3.35276e-08, -0.3125, 0.125}, -- tail_bottom
+		{-0.1875, -0.375, -0.25, 0.125, -0.0625002, 0.1875}, -- body
+		{-0.1875, -0.375, -0.375, 0.125, -0.125, -0.25}, -- head
+		{-0.125, -0.375, -0.4375, 0.0625, -0.25, -0.375}, -- snout
+		{-0.125, -0.25, 0.1875, 0.0625, -0.1875, 0.5}, -- tail
+		{-0.0625, -0.4375, -0.4375, -5.58794e-09, -0.375, -0.375}, -- teeth
+		{0, -0.5, -0.25, 0.125, -0.375, -0.125}, -- front_left_leg
+		{-0.1875, -0.5, -0.25, -0.0625, -0.375, -0.125}, -- front_right_leg
+		{0, -0.5, 0.0625, 0.125, -0.375, 0.1875}, -- back_left_leg
+		{-0.1875, -0.5, 0.0625, -0.0625, -0.375, 0.1875}, -- back_right_leg
+		{-0.25, -0.25, -0.3125, -0.1875, -0.1875, -0.25}, -- left_ear
+		{0.125, -0.25, -0.3125, 0.1875, -0.1875, -0.25}, -- right_ear
 	}
 	tiles = {
 		"petz_beaver_top.png",
@@ -45,6 +59,42 @@ else
 	mesh = 'petz_beaver.b3d'	
 	textures= {{"petz_beaver.png"}}
 	collisionbox = {-0.35, -0.75*scale_beaver, -0.28, 0.35, -0.3125, 0.28}
+end
+
+local create_dam = function(self, mod_path, pos)		
+	if petz.settings.beaver_create_dam == true and self.dam_created == false then --a beaver can create only one dam
+		if math.random(1, 60000) > 1 then --chance of the dam to be created
+			return false
+		end		
+		local pos_underwater = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
+        	x = pos.x,
+        	y = pos.y - 4.5,
+    		z = pos.z,
+    	}
+    	if minetest.get_node(pos_underwater).name == "default:sand" then
+    		local pos_dam = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
+        		x = pos.x,
+        		y = pos.y - 2.0,
+    			z = pos.z,
+    		}
+    		minetest.place_schematic(pos_dam, modpath..'/schematics/beaver_dam.mts', 0, nil, true)    	
+    		self.dam_created = true
+    		return true
+    	end
+    end
+    return false
+end
+
+local set_behaviour= function(self, behaviour)	
+	if behaviour == "aquatic" then
+        self.fly = true
+        self.floats = 0
+        self.animation = animation_aquatic
+	elseif behaviour == "terrestrial" then
+        self.fly = false -- make terrestrial
+        self.floats = 1
+        self.animation = animation_terrestrial
+	end
 end
 
 mobs:register_mob("petz:"..pet_name, {
@@ -65,7 +115,7 @@ mobs:register_mob("petz:"..pet_name, {
     runaway = true,
     pushable = true,
     fly = true,
-    fly_in = "default:water_source",
+    fly_in = spawn_nodes,
     floats = 1,
 	jump = true,
 	follow = petz.settings.beaver_follow,
@@ -77,16 +127,9 @@ mobs:register_mob("petz:"..pet_name, {
 	lava_damage = 6,
 	light_damage = 0,
     sounds = {
-		random = "petz_beaver_quack",
+		random = "petz_beaver_sound",
 	},
-    animation = {
-    	speed_normal = 15, walk_start = 1, walk_end = 12,
-    	speed_run = 25, run_start = 13, run_end = 25,
-    	stand_start = 26, stand_end = 46,		
-    	stand2_start = 47, stand2_end = 59,	
-    	stand3_start = 60, stand3_end = 70,	
-    	stand4_start = 71, stand4_end = 91,	
-		},
+    animation = animation_aquatic,
     view_range = 4,
     fear_height = 3,
     stay_near= {
@@ -107,32 +150,37 @@ mobs:register_mob("petz:"..pet_name, {
 			self.fed= false
 			self.brushed = false
 			self.beaver_oil_applied = false
+			self.dam_created = false
 		end
 		if not self.custom_vars_set then
 			self.custom_vars_set = 0
 			self.dam_created = false
 		end		
+		local beaver_behaviour --terrestrial, floating or aquatic
 		local pos = self.object:get_pos() -- check the beaver pos to togle between aquatic-terrestrial
 		local node = minetest.get_node_or_nil(pos)
 		if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water then
-    		self.fly = true --it is on water
+			set_behaviour(self, "aquatic")	
+    		create_dam(self, modpath, pos)
 		else
 			local pos_underwater = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
             	x = pos.x,
             	y = pos.y - 3.5,
             	z = pos.z,
-        	}
+        	}        	        	
         	node = minetest.get_node_or_nil(pos_underwater)
-        	if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water then
-        		local pos_below = {
-            		x = pos.x,
-            		y = pos.y - 2.0,
-            		z = pos.z,
-	        	}
-        		self.object:move_to(pos_below, true) -- move the beaver underwater
-        		self.fly = true
+        	if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water
+        		and self.floats == false then
+        			local pos_below = {
+	            		x = pos.x,
+    	        		y = pos.y - 2.0,
+        	    		z = pos.z,
+	        		}
+        			self.object:move_to(pos_below, true) -- move the beaver underwater        
+        			set_behaviour(self, "aquatic")		
+        			create_dam(self, modpath, pos)
         	else
-        		self.fly = false -- make terrestrial
+        		set_behaviour(self, "terrestrial")	
         	end
 		end 
 	end,
@@ -148,7 +196,7 @@ mobs:spawn({
     max_light = 5,
     interval = 90,
     chance = 900, 
-    min_height = -5,
+    min_height = -8,
     max_height = 0,
     day_toggle = false,
  })

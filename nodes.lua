@@ -134,7 +134,7 @@ minetest.register_node("petz:duck_nest", {
     wield_image = "petz_duck_nest_inv.png",
     tiles = {"petz_duck_nest.png"},
     groups = {snappy=1, bendy=2, cracky=1},
-    sounds = default_stone_sounds,
+    sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
     drawtype = "mesh",
     mesh = 'petz_duck_nest.b3d',
@@ -175,7 +175,7 @@ minetest.register_node("petz:duck_nest_egg", {
     wield_image = "petz_duck_nest_egg_inv.png",
     tiles = {"petz_duck_nest_egg.png"},
     groups = {snappy=1, bendy=2, cracky=1},
-    sounds = default_stone_sounds,
+    sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
     drawtype = "mesh",
     mesh = 'petz_duck_nest_egg.b3d',
@@ -243,7 +243,6 @@ minetest.register_craftitem("petz:beaver_oil", {
     wield_image = "petz_beaver_oil.png"
 })
 
-
 minetest.register_craft({
     type = "shaped",
     output = "petz:beaver_oil",
@@ -252,4 +251,15 @@ minetest.register_craft({
         {"", "petz:beaver_fur", ""},
         {"", "vessels:glass_bottle", ""},
     }
+})
+
+minetest.register_node("petz:beaver_dam_branches", {
+    description = S("Beaver Dam Branches"),
+    drawtype = "allfaces_optional",
+    paramtype = "light",
+    walkable = true,
+    tiles = {"petz_beaver_dam_branches.png"},
+    is_ground_content = false,
+    groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
+    sounds = default.node_sound_wood_defaults(),
 })

@@ -16,6 +16,7 @@ petz.settings.ducky_spawn = settings:get_bool("ducky_spawn", true)
 petz.settings.ducky_follow = settings:get("ducky_follow", "")
 petz.settings.beaver_spawn = settings:get_bool("beaver_spawn", true)
 petz.settings.beaver_follow = settings:get("beaver_follow", "")
+petz.settings.beaver_create_dam = settings:get_bool("beaver_create_dam", true)
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"
