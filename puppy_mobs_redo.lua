@@ -122,14 +122,14 @@ mobs:register_mob("petz:"..pet_name, {
 mobs:register_egg("petz:puppy", S("Puppy"), "petz_spawnegg_puppy.png", 0)
 
 mobs:spawn({
-    name = "petz:puppy",
-    nodes = {"default:dirt_with_grass"},
-    neighbors = {"group:leaves"},
-    min_light = 3,
-    max_light = 5,
-    interval = 90,
-    chance = 900, 
-    min_height = 1,
-    max_height = 300,
-    day_toggle = false,
+	name = "petz:puppy",
+	nodes = {"default:dirt_with_grass"},
+	neighbors = {"group:grass"},
+	min_light = 14,
+	interval = 90,
+	chance = 8000,
+	min_height = 5,
+	max_height = 200,
+	day_toggle = true,
 })
+

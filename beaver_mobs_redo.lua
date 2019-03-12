@@ -190,13 +190,12 @@ mobs:register_egg("petz:beaver", S("Beaver"), "petz_spawnegg_beaver.png", 0)
 
 mobs:spawn({
 	name = "petz:beaver",
-    nodes = spawn_nodes,
-    neighbors = {"group:water"},
-    min_light = 3,
-    max_light = 5,
-    interval = 90,
-    chance = 900, 
-    min_height = -8,
-    max_height = 0,
-    day_toggle = false,
- })
+	nodes = spawn_nodes,
+	neighbors = {"default:sand", "default:dirt", "group:seaplants"},
+	min_light = 14,
+	interval = 90,
+	chance = 8000,
+	min_height = 1,
+	max_height = -8,
+	day_toggle = true,
+})
