@@ -1,4 +1,8 @@
 ----
+v0.4.2
+----
+-Fix: Mobs do not spawn.
+----
 v0.4
 ----
 -New Petz: Beaver. It is a semi-aquatic rodent.
