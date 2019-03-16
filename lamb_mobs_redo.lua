@@ -7,6 +7,7 @@ local pet_name = "lamb"
 
 local mesh = nil
 local fixed = {}
+local textures
 local scale_lamb = 1.7
 petz.lamb = {}
 local collisionbox = {}
@@ -37,8 +38,8 @@ if petz.settings.type_model == "cubic" then
 	collisionbox = {-0.35, -0.75*scale_lamb, -0.28, 0.35, -0.125, 0.28}
 else
 	mesh = 'petz_lamb.b3d'	
-	petz.lamb.textures = {"petz_lamb_white.png"}
-	petz.lamb.textures_shaved = {"petz_lamb_shaved_white.png"}
+	textures = {"petz_lamb_white.png"}
+	--petz.lamb.textures_shaved = {"petz_lamb_shaved_white.png"}
 	collisionbox = {-0.35, -0.75*scale_lamb, -0.28, 0.35, -0.3125, 0.28}
 end
 
@@ -53,7 +54,7 @@ mobs:register_mob("petz:"..pet_name, {
 	visual = petz.settings.visual,
 	visual_size = {x=petz.settings.visual_size.x*scale_lamb, y=petz.settings.visual_size.y*scale_lamb},
 	mesh = mesh,
-	textures = petz.lamb.textures,
+	textures = textures,
 	collisionbox = collisionbox,
 	makes_footstep_sound = false,
 	walk_velocity = 0.75,
@@ -91,9 +92,9 @@ mobs:register_mob("petz:"..pet_name, {
 	end,
  	on_replace = function(self, pos, oldnode, newnode)
 		petz.lamb_wool_regrow(self)
-    end,	
+    end,
     after_activate = function(self, staticdata, def, dtime)
-    	if not self.custom_vars_set02 then
+    	if not self.custom_vars_set02 then --but do not set here! instead wait for the do-custom function to do it.
     		local color
     		if petz.settings.type_model == "mesh" then --set a random color    			
     			local random_number = math.random(1, 10)
@@ -109,6 +110,8 @@ mobs:register_mob("petz:"..pet_name, {
 				self.textures_color = {"petz_lamb_"..color..".png"}
 				self.textures_shaved = {"petz_lamb_shaved_"..color..".png"}
 			else
+				self.tiles_color = petz.lamb.tiles
+				self.tiles_shaved = petz.lamb.tiles_shaved
 				color = "white" --cubic lamb color is always white
 			end
 			self.wool_color = color				    			    	
