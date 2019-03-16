@@ -132,7 +132,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.init_timer = false
 			self.fed= false
 			self.brushed = false
-			self.lamb_oil_applied = false			
+			self.beaver_oil_applied = false			
 			self.shaved = false
 			self.food_count = 0	
 		end	
