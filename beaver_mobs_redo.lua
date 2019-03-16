@@ -8,6 +8,8 @@ local mesh = nil
 local scale_beaver = 1.2
 local textures = {}
 local collisionbox = {}
+local fixed = {}
+local tiles = {}
 local spawn_nodes = {}
 if mg_name == "valleys" then
    spawn_nodes = {"default:river_water_source"}
@@ -152,10 +154,6 @@ mobs:register_mob("petz:"..pet_name, {
 			self.beaver_oil_applied = false
 			self.dam_created = false
 		end
-		if not self.custom_vars_set then
-			self.custom_vars_set = 0
-			self.dam_created = false
-		end		
 		local beaver_behaviour --terrestrial, floating or aquatic
 		local pos = self.object:get_pos() -- check the beaver pos to togle between aquatic-terrestrial
 		local node = minetest.get_node_or_nil(pos)
@@ -194,7 +192,7 @@ mobs:spawn({
 	neighbors = {"default:sand", "default:dirt", "group:seaplants"},
 	min_light = 14,
 	interval = 90,
-	chance = 8000,
+	chance = petz.settings.beaver_spawn_chance,
 	min_height = 1,
 	max_height = -8,
 	day_toggle = true,

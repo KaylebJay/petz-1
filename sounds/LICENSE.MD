@@ -29,3 +29,15 @@ Author: Alexander
 http://www.orangefreesounds.com/duck-quack-sound/
 License: The sound effect is permitted for commercial use
 under license Creative Commons Attribution 4.0 International License
+--------------------------------------------
+filename: petz_lamb_bleat.ogg
+Author: Alexander
+http://www.orangefreesounds.com/sheep-sound-baa/
+License: The sound effect is permitted for commercial use
+under license Creative Commons Attribution 4.0 International License
+--------------------------------------------
+filename: petz_lamb_moaning.ogg
+Author: Alexander
+http://www.orangefreesounds.com/bleating-sheep/
+License: The sound effect is permitted for commercial use
+under license Creative Commons Attribution 4.0 International License

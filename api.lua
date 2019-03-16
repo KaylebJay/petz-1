@@ -212,12 +212,17 @@ petz.on_rightclick = function(self, clicker)
                 petz.set_affinity(self, true, 5)                
                 self.fed = true             
             end
+            if self.petz_type == "lamb" then     
+                petz.lamb_wool_regrow(self)
+            end            
             petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
         elseif (wielded_item_name == "mobs:lasso") or (wielded_item_name == "mobs:net") then        
             if mobs:capture_mob(self, clicker, 0, 100, 100, true, nil) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has been captured."))
             end         
+        elseif self.petz_type == "lamb" and wielded_item_name == "mobs:shears" and clicker:get_inventory() and not self.shaved then
+            petz.lamb_wool_shave(self, clicker)     
         --Else open the Form
         elseif self.give_orders == true then
             petz.pet[player_name]= self

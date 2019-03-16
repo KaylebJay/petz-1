@@ -7,6 +7,8 @@ local pet_name= "puppy"
 local scale_puppy = 1.5
 local mesh = nil
 local textures = {}
+local fixed = {}
+local tiles = {}
 local collisionbox = {}
 
 if petz.settings.type_model == "cubic" then
@@ -127,7 +129,7 @@ mobs:spawn({
 	neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
-	chance = 8000,
+	chance = petz.settings.puppy_spawn_chance,
 	min_height = 5,
 	max_height = 200,
 	day_toggle = true,
