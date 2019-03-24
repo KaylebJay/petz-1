@@ -84,6 +84,7 @@ mobs:register_mob("petz:"..pet_name, {
     	stand_start = 26, stand_end = 46,		
     	stand2_start = 47, stand2_end = 59,	
     	stand4_start = 82, stand4_end = 94,	
+    	punch_start = 83, stand4_end = 95,	
 	},
     view_range = 8,
     fear_height = 3,
@@ -136,7 +137,7 @@ mobs:register_egg("petz:lion", S("Lion"), "petz_spawnegg_lion.png", 0)
 
 mobs:spawn({
 	name = "petz:lion",
-	nodes = {"default:dirt_with_grass"},
+	nodes = {"default:dirt_with_dry_grass"},
 	neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
