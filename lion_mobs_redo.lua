@@ -48,7 +48,6 @@ else
 	collisionbox = {-0.35, -0.75*scale_lion, -0.28, 0.35, -0.3125, 0.28}
 end
 
-
 mobs:register_mob("petz:"..pet_name, {
 	type = "monster",
 	rotate = petz.settings.rotate,
@@ -95,22 +94,24 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker)
 	end,
 	do_punch = function (self, hitter, time_from_last_punch, tool_capabilities, direction)
-    	if self.tamed == false then
-    		--The lion can be tamed lashed with a whip    	        
-        	local wielded_item_name= hitter:get_wielded_item():get_name()
-    		if (wielded_item_name == "petz:whip") then
+		local wielded_item_name= hitter:get_wielded_item():get_name()
+		if (wielded_item_name == "petz:whip") then
+    		if self.tamed == false then
+    		--The lion can be tamed lashed with a whip    	                	    	
     			self.lashing_count = (self.lashing_count or 0) + 1        
-				if self.lashing_count >= 3 then -- tame lion
+				if self.lashing_count >= petz.settings.lion_count_lashing_tame then -- tame lion
 					self.lashing_count = 0
 					self.type = "animal"
 					self.tamed = true			
 					self.owner = hitter:get_player_name()
-				end
-			end
-		else
-			if (petz.settings.tamagochi_mode == true) and (self.owner == hitter:get_player_name()) then
-        		petz.do_lashing(self)
-        	end
+					minetest.chat_send_player(self.owner, S("A").." "..self.petz_type.." "..S("has been tamed."))					
+				end			
+			else
+				if (petz.settings.tamagochi_mode == true) and (self.owner == hitter:get_player_name()) then
+	        		petz.do_lashing(self)
+    	    	end
+    	    end
+    	    petz.do_sound_effect("object", user, "petz_whip")
 		end
 	end,
 	do_custom = function(self, dtime)

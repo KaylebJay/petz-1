@@ -268,7 +268,10 @@ minetest.register_node("petz:beaver_dam_branches", {
 minetest.register_craftitem("petz:whip", {
     description = S("Whip"),
     inventory_image = "petz_whip.png",
-    wield_image = "petz_whip.png"
+    wield_image = "petz_whip.png",
+    after_use = function(itemstack, user, node, digparams)
+        petz.do_sound_effect("object", user, "petz_whip")
+    end,
 })
 
 minetest.register_craft({

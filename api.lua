@@ -109,9 +109,10 @@ end
 --
 
 petz.do_lashing = function(self)
-    if self.lashed == false then
+    if self.lashed == false then        
         self.lashed = true
     end
+    petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
 end
 
 --
@@ -246,7 +247,7 @@ petz.on_rightclick = function(self, clicker)
         elseif self.petz_type == "lamb" and wielded_item_name == "mobs:shears" and clicker:get_inventory() and not self.shaved then
             petz.lamb_wool_shave(self, clicker)
         --Else open the Form
-        elseif self.give_orders == true then
+        elseif (self.tamed == true) and (self.give_orders == true) then
             petz.pet[player_name]= self
             minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name))
         end

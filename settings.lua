@@ -27,6 +27,7 @@ petz.settings.lamb_follow = settings:get("lamb_follow", "")
 petz.settings.lion_spawn = settings:get_bool("lion_spawn", true)
 petz.settings.lion_spawn_chance = tonumber(settings:get("lion_spawn_chance"))
 petz.settings.lion_follow = settings:get("lion_follow", "")
+petz.settings.lion_count_lashing_tame = tonumber(settings:get("lion_count_lashing_tame", "3"))
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"
