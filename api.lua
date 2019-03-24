@@ -105,6 +105,16 @@ petz.set_affinity = function(self, increase, amount)
 end
 
 --
+-- Whip/lashing behaviour
+--
+
+petz.do_lashing = function(self)
+    if self.lashed == false then
+        self.lashed = true
+    end
+end
+
+--
 --The Timer for the Tamagochi Mode
 
 petz.init_timer = function(self)
@@ -148,14 +158,23 @@ petz.timer = function(self)
                 else
                     self.health = 0
                 end
+            else
+                self.fed = false --Reset the variable
             end
             --If the pet has not brushed
             if self.brushed == false then
                 petz.set_affinity(self, false, 20)
+            else
+                self.brushed = false --Reset the variable
             end
-            --Reset the variables
-            self.fed = false
-            self.brushed = false
+            --If the petz is a lion had to been lashed
+            if self.petz_type== "lion" then
+                if self.lashed == false then
+                    petz.set_affinity(self, false, 25)                
+                else
+                    self.lashed = false
+                end
+            end            
             --If the pet starves to death
             if self.health == 0 then
                 minetest.chat_send_player(self.owner, S("Your").. " "..self.petz_type.." "..S("has starved to death!!!"))
@@ -164,6 +183,9 @@ petz.timer = function(self)
             elseif self.affinity == 0 then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has abandoned you!!!"))
                 self.owner = "" --the pet abandon you
+                if self.is_wild == true then
+                    self.type = "monster" -- if the animal was wild (ie a lion) can attack you!
+                end
                 self.init_timer  = false -- no more timing
             --Else reinit the timer, to check again in the future
             else
@@ -222,7 +244,7 @@ petz.on_rightclick = function(self, clicker)
                 minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has been captured."))
             end         
         elseif self.petz_type == "lamb" and wielded_item_name == "mobs:shears" and clicker:get_inventory() and not self.shaved then
-            petz.lamb_wool_shave(self, clicker)     
+            petz.lamb_wool_shave(self, clicker)
         --Else open the Form
         elseif self.give_orders == true then
             petz.pet[player_name]= self

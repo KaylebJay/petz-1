@@ -24,6 +24,9 @@ petz.settings.beaver_create_dam = settings:get_bool("beaver_create_dam", true)
 petz.settings.lamb_spawn = settings:get_bool("lamb_spawn", true)
 petz.settings.lamb_spawn_chance = tonumber(settings:get("lamb_spawn_chance"))
 petz.settings.lamb_follow = settings:get("lamb_follow", "")
+petz.settings.lion_spawn = settings:get_bool("lion_spawn", true)
+petz.settings.lion_spawn_chance = tonumber(settings:get("lion_spawn_chance"))
+petz.settings.lion_follow = settings:get("lion_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

@@ -94,10 +94,10 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.lamb_wool_regrow(self)
     end,
     after_activate = function(self, staticdata, def, dtime)
-    	if not self.custom_vars_set02 then --but do not set here! instead wait for the do-custom function to do it.
+    	if not self.custom_vars_set03 then --but do not set here! instead wait for the do-custom function to do it.
     		local color
     		if petz.settings.type_model == "mesh" then --set a random color    			
-    			local random_number = math.random(1, 10)
+    			local random_number = math.random(1, 15)
     			if random_number == 1 then
 					color = "brown"
 				elseif random_number >= 2 and random_number <= 4 then
@@ -109,7 +109,7 @@ mobs:register_mob("petz:"..pet_name, {
 				end		
 				self.textures_color = {"petz_lamb_"..color..".png"}
 				self.textures_shaved = {"petz_lamb_shaved_"..color..".png"}
-			else
+			else --if 'cubic'
 				self.tiles_color = petz.lamb.tiles
 				self.tiles_shaved = petz.lamb.tiles_shaved
 				color = "white" --cubic lamb color is always white
@@ -123,10 +123,11 @@ mobs:register_mob("petz:"..pet_name, {
     	end
     end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set02 then
-			self.custom_vars_set02 = 0
+		if not self.custom_vars_set03 then
+			self.custom_vars_set03 = 0
 			self.petz_type = "lamb"
 			self.is_pet = false
+			self.is_wild = false
 			self.give_orders = false
 			self.affinity = 100
 			self.init_timer = false

@@ -17,19 +17,18 @@ assert(loadfile(modpath .. "/nodes.lua"))(modpath, S) --Load the nodes
 if petz.settings.kitty_spawn then
     assert(loadfile(modpath .. "/kitty_"..petz.settings.type_api..".lua"))(S) 
 end
-
 if petz.settings.puppy_spawn then
     assert(loadfile(modpath .. "/puppy_"..petz.settings.type_api..".lua"))(S) 
 end
-
 if petz.settings.ducky_spawn then
     assert(loadfile(modpath .. "/ducky_"..petz.settings.type_api..".lua"))(S) 
 end
-
 if petz.settings.beaver_spawn then
     assert(loadfile(modpath .. "/beaver_"..petz.settings.type_api..".lua"))(S, modpath, mg_name)    
 end
-
-if petz.settings.beaver_spawn then
+if petz.settings.lamb_spawn then
     assert(loadfile(modpath .. "/lamb_"..petz.settings.type_api..".lua"))(S)    
+end
+if petz.settings.lion_spawn then
+    assert(loadfile(modpath .. "/lion_"..petz.settings.type_api..".lua"))(S)    
 end

@@ -142,10 +142,11 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker)
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set02 then
-			self.custom_vars_set02 = 0
+		if not self.custom_vars_set03 then
+			self.custom_vars_set03 = 0
 			self.petz_type = "beaver"
 			self.is_pet = false
+			self.is_wild = false
 			self.give_orders = false
 			self.affinity = 100
 			self.init_timer = false

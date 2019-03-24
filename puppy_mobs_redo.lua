@@ -106,10 +106,11 @@ mobs:register_mob("petz:"..pet_name, {
 		self.init_timer = true
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set02 then
-			self.custom_vars_set02 = 0
+		if not self.custom_vars_set03 then
+			self.custom_vars_set03 = 0
 			self.petz_type = "puppy"
 			self.is_pet = true
+			self.is_wild = false
 			self.give_orders = true
 			self.affinity = 100
 			self.init_timer = true
@@ -134,4 +135,3 @@ mobs:spawn({
 	max_height = 200,
 	day_toggle = true,
 })
-

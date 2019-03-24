@@ -168,7 +168,6 @@ minetest.register_craft({
     }
 })
 
-
 minetest.register_node("petz:duck_nest_egg", {
     description = S("Duck Nest with Egg"),
     inventory_image = "petz_duck_nest_egg_inv.png",
@@ -262,4 +261,22 @@ minetest.register_node("petz:beaver_dam_branches", {
     is_ground_content = false,
     groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
     sounds = default.node_sound_wood_defaults(),
+})
+
+--Whip
+
+minetest.register_craftitem("petz:whip", {
+    description = S("Whip"),
+    inventory_image = "petz_whip.png",
+    wield_image = "petz_whip.png"
+})
+
+minetest.register_craft({
+    type = "shaped",
+    output = "petz:whip",
+    recipe = {
+        {'', '', 'farming:string'},
+        {'', 'farming:string', 'dye:brown'},
+        {'default:stick', '', ''},
+    }
 })
