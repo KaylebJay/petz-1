@@ -41,3 +41,15 @@ Author: Alexander
 http://www.orangefreesounds.com/bleating-sheep/
 License: The sound effect is permitted for commercial use
 under license Creative Commons Attribution 4.0 International License
+--------------------------------------------
+filename: petz_lion_roar.ogg
+Author: Alexander
+http://www.orangefreesounds.com/lion-roaring-sound/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+--------------------------------------------
+filename: petz_lion_moaning.ogg
+Author: Alexander
+http://www.orangefreesounds.com/roar-sound-effect/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
