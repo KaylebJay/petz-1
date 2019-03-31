@@ -124,7 +124,7 @@ mobs:register_egg("petz:kitty", S("Kitty"), "petz_spawnegg_kitty.png", 0)
 mobs:spawn({
 	name = "petz:kitty",
 	nodes = {"default:dirt_with_grass"},
-	neighbors = {"group:grass"},
+	--neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
 	chance = petz.settings.kitty_spawn_chance,

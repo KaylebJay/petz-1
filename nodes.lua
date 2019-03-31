@@ -283,3 +283,21 @@ minetest.register_craft({
         {'default:stick', '', ''},
     }
 })
+
+--Material for Lion's Cage
+
+minetest.register_node("petz:gray_paving_stone", {
+    description = S("Gray Paving Stone"),
+    tiles = {"petz_gray_paving_stone.png"},
+    is_ground_content = false,
+    groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
+    sounds = default.node_sound_wood_defaults(),
+})
+
+--Bucket Milk
+minetest.register_craftitem("petz:bucket_milk", {
+    description = S("Milk Bucket"),
+    wield_image = {"petz_bucket_milk.png"},
+    inventory_image = "petz_bucket_milk.png",
+    groups = {milk_bucket = 1},
+})

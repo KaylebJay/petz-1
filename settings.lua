@@ -6,7 +6,23 @@ petz.settings.type_model = settings:get("type_model", "mesh")
 petz.settings.tamagochi_mode = settings:get_bool("tamagochi_mode", true)
 petz.settings.tamagochi_check_time = tonumber(settings:get("tamagochi_check_time"))
 petz.settings.tamagochi_hunger_damage = tonumber(settings:get("tamagochi_hunger_damage"))
-petz.settings.tamagochi_safe_node = settings:get("tamagochi_safe_node", "")
+--Create a table with safe nodes
+function string:split(inSplitPattern, outResults)
+  if not outResults then
+    outResults = { }
+  end
+  local theStart = 1
+  local theSplitStart, theSplitEnd = string.find(self, inSplitPattern, theStart)
+  while theSplitStart do
+    table.insert(outResults, string.sub(self, theStart, theSplitStart-1))
+    theStart = theSplitEnd + 1
+    theSplitStart, theSplitEnd = string.find(self, inSplitPattern, theStart)
+  end
+  table.insert(outResults, string.sub(self, theStart))
+  return outResults
+end
+local tamagochi_safe_nodes = settings:get("tamagochi_safe_nodes", "")
+petz.settings.tamagochi_safe_nodes = tamagochi_safe_nodes:split(", ")
 petz.settings.type_api = settings:get("type_api", "mobs_redo")
 petz.settings.kitty_spawn = settings:get_bool("kitty_spawn", true)
 petz.settings.kitty_spawn_chance = tonumber(settings:get("kitty_spawn_chance"))
@@ -28,6 +44,9 @@ petz.settings.lion_spawn = settings:get_bool("lion_spawn", true)
 petz.settings.lion_spawn_chance = tonumber(settings:get("lion_spawn_chance"))
 petz.settings.lion_follow = settings:get("lion_follow", "")
 petz.settings.lion_count_lashing_tame = tonumber(settings:get("lion_count_lashing_tame", "3"))
+petz.settings.calf_spawn = settings:get_bool("calf_spawn", true)
+petz.settings.calf_spawn_chance = tonumber(settings:get("calf_spawn_chance"))
+petz.settings.calf_follow = settings:get("calf_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

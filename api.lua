@@ -20,6 +20,7 @@ petz.settings = {}
 petz.settings.mesh = nil
 petz.settings.visual_size = {}
 petz.settings.rotate = 0
+petz.settings.tamagochi_safe_nodes = {} --Table with safe nodes for tamagochi mode
 
 --
 --Form Dialog
@@ -139,10 +140,12 @@ petz.timer = function(self)
                 }
                 local node = minetest.get_node_or_nil(pos_below)
                 --minetest.chat_send_player(self.owner, petz.settings.tamagochi_safe_node)
-                if node and (node.name == petz.settings.tamagochi_safe_node) then
-                    self.init_timer = true    
-                    return
-                end
+                for i = 1, #petz.settings.tamagochi_safe_nodes do --loop  thru all safe nodes
+                    if node and (node.name == petz.settings.tamagochi_safe_nodes[i]) then
+                        self.init_timer = true    
+                        return
+                    end    
+                end                
             else  --if the pos is nil, it means that the pet died before 'minetest.after_effect'
                 self.init_timer = false --so no more timer
                 return
@@ -236,8 +239,10 @@ petz.on_rightclick = function(self, clicker)
                 self.fed = true             
             end
             if self.petz_type == "lamb" then     
-                petz.lamb_wool_regrow(self)
-            end            
+                petz.lamb_wool_regrow(self)                       
+            elseif self.petz_type == "calf" then     
+                petz.calf_milk_refill(self)
+            end     
             petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
         elseif (wielded_item_name == "mobs:lasso") or (wielded_item_name == "mobs:net") then        
@@ -246,6 +251,12 @@ petz.on_rightclick = function(self, clicker)
             end         
         elseif self.petz_type == "lamb" and wielded_item_name == "mobs:shears" and clicker:get_inventory() and not self.shaved then
             petz.lamb_wool_shave(self, clicker)
+        elseif self.petz_type == "calf" and wielded_item_name == "bucket:bucket_empty" and clicker:get_inventory() then
+			if not(self.milked) then
+				petz.calf_milk_milk(self, clicker)
+			else
+				minetest.chat_send_player(clicker:get_player_name(), S("This calf has already been milked."))
+			end
         --Else open the Form
         elseif (self.tamed == true) and (self.give_orders == true) then
             petz.pet[player_name]= self

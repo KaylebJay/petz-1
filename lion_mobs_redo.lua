@@ -41,11 +41,11 @@ if petz.settings.type_model == "cubic" then
 	}
 	petz.register_cubic(node_name, fixed, petz.lion.tiles)		
 	textures= {"petz:lion_block"}
-	collisionbox = {-0.35, -0.75*scale_lion, -0.28, 0.35, -0.125, 0.28}
+	collisionbox = {-0.5, -0.75*scale_lion, -0.5, 0.375, -0.375, 0.375}
 else
 	mesh = 'petz_lion.b3d'	
 	textures = {"petz_lion.png"}	
-	collisionbox = {-0.35, -0.75*scale_lion, -0.28, 0.35, -0.3125, 0.28}
+	collisionbox = {-0.5, -0.75*scale_lion, -0.5, 0.375, -0.375, 0.375}
 end
 
 mobs:register_mob("petz:"..pet_name, {
@@ -138,7 +138,7 @@ mobs:register_egg("petz:lion", S("Lion"), "petz_spawnegg_lion.png", 0)
 mobs:spawn({
 	name = "petz:lion",
 	nodes = {"default:dirt_with_dry_grass"},
-	neighbors = {"group:grass"},
+	--neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
 	chance = petz.settings.lion_spawn_chance,

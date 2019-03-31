@@ -77,7 +77,7 @@ mobs:register_mob("petz:"..pet_name, {
 	water_damage = 0,
 	lava_damage = 6,
 	light_damage = 0,
-    sounds = {
+	sounds = {
 		random = "petz_puppy_bark",
 	},
     animation = {
@@ -127,7 +127,7 @@ mobs:register_egg("petz:puppy", S("Puppy"), "petz_spawnegg_puppy.png", 0)
 mobs:spawn({
 	name = "petz:puppy",
 	nodes = {"default:dirt_with_grass"},
-	neighbors = {"group:grass"},
+	--neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
 	chance = petz.settings.puppy_spawn_chance,

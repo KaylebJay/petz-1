@@ -118,10 +118,10 @@ mobs:register_egg("petz:ducky", S("Ducky"), "petz_spawnegg_ducky.png", 0)
 mobs:spawn({
 	name = "petz:ducky",
 	nodes = {"default:dirt_with_grass"},
-	neighbors = {"group:grass"},
+	--neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
-	chance = 8000,
+	chance = petz.settings.ducky_spawn_chance,
 	min_height = 5,
 	max_height = 200,
 	day_toggle = true,

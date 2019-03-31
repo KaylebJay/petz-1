@@ -190,7 +190,7 @@ mobs:register_egg("petz:beaver", S("Beaver"), "petz_spawnegg_beaver.png", 0)
 mobs:spawn({
 	name = "petz:beaver",
 	nodes = spawn_nodes,
-	neighbors = {"default:sand", "default:dirt", "group:seaplants"},
+	--neighbors = {"default:sand", "default:dirt", "group:seaplants"},
 	min_light = 14,
 	interval = 90,
 	chance = petz.settings.beaver_spawn_chance,
