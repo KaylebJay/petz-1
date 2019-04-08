@@ -1,8 +1,6 @@
 local modpath, S = ...
 
 --Pet Hairbrush
-if petz.settings.tamagochi_mode then
-
     minetest.register_craftitem("petz:hairbrush", {
         description = S("Hairbrush"),
         inventory_image = "petz_hairbrush.png",
@@ -18,7 +16,6 @@ if petz.settings.tamagochi_mode then
             {"default:stick", "", ""},
         }
     })
-end
 
 --Pet Bowl
 minetest.register_node("petz:pet_bowl", {

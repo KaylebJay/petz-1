@@ -7,7 +7,7 @@ petz.settings.tamagochi_mode = settings:get_bool("tamagochi_mode", true)
 petz.settings.tamagochi_check_time = tonumber(settings:get("tamagochi_check_time"))
 petz.settings.tamagochi_hunger_damage = tonumber(settings:get("tamagochi_hunger_damage"))
 --Create a table with safe nodes
-function string:split(inSplitPattern, outResults)
+function petz:split(inSplitPattern, outResults)
   if not outResults then
     outResults = { }
   end
