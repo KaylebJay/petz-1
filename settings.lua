@@ -47,6 +47,9 @@ petz.settings.lion_count_lashing_tame = tonumber(settings:get("lion_count_lashin
 petz.settings.calf_spawn = settings:get_bool("calf_spawn", true)
 petz.settings.calf_spawn_chance = tonumber(settings:get("calf_spawn_chance"))
 petz.settings.calf_follow = settings:get("calf_follow", "")
+petz.settings.panda_spawn = settings:get_bool("panda_spawn", true)
+petz.settings.panda_spawn_chance = tonumber(settings:get("panda_spawn_chance"))
+petz.settings.panda_follow = settings:get("panda_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

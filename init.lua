@@ -35,3 +35,6 @@ end
 if petz.settings.calf_spawn then
     assert(loadfile(modpath .. "/calf_"..petz.settings.type_api..".lua"))(S)
 end
+if petz.settings.panda_spawn then
+    assert(loadfile(modpath .. "/panda_"..petz.settings.type_api..".lua"))(S)
+end
