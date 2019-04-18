@@ -134,7 +134,7 @@ mobs:spawn({
 	min_light = 14,
 	interval = 90,
 	chance = petz.settings.beaver_spawn_chance,
-	min_height = 1,
-	max_height = -8,
+	min_height = -8,
+	max_height = 200,
 	day_toggle = true,
 })
