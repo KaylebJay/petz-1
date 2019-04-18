@@ -10,7 +10,7 @@ local mg_name = minetest.get_mapgen_setting("mg_name")
 -- internationalization boilerplate
 local S = minetest.get_translator(minetest.get_current_modname())
 
-assert(loadfile(modpath .. "/api.lua"))(S)
+assert(loadfile(modpath .. "/api.lua"))(modpath, S)
 assert(loadfile(modpath .. "/settings.lua"))(modpath, S) --Load the settings
 assert(loadfile(modpath .. "/nodes.lua"))(modpath, S) --Load the nodes
 
@@ -37,4 +37,7 @@ if petz.settings.calf_spawn then
 end
 if petz.settings.panda_spawn then
     assert(loadfile(modpath .. "/panda_"..petz.settings.type_api..".lua"))(S)
+end
+if petz.settings.frog_spawn then
+    assert(loadfile(modpath .. "/frog_"..petz.settings.type_api..".lua"))(S, modpath, mg_name)
 end

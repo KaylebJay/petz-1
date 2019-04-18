@@ -1,4 +1,4 @@
-local S = ...
+local modpath, S = ...
 
 petz = {}
 
@@ -328,4 +328,87 @@ end
 
 petz.do_sound_effect = function(dest, dest_name, soundfile)
     minetest.sound_play(soundfile, {dest = dest_name, gain = 0.4})
+end
+
+--
+--Semiaquatic beahaviour
+--for beaver and frog
+--
+
+petz.set_behaviour= function(self, behaviour, water_type)	
+	if behaviour == "aquatic" then
+		self.behaviour = "aquatic"
+        self.fly = true     
+        self.fly_in = water_type
+        self.floats = 0
+        self.animation = self.animation_aquatic
+	elseif behaviour == "terrestrial" then
+		self.behaviour = "terrestrial"
+        self.fly = false -- make terrestrial
+        self.floats = 1
+        self.animation = self.animation_terrestrial        
+	end
+end
+
+petz.semiaquatic_behaviour = function(self)
+		local pos = self.object:get_pos() -- check the beaver pos to togle between aquatic-terrestrial
+		local node = minetest.get_node_or_nil(pos)
+		if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water then			
+			if not(self.behaviour == "aquatic") then 
+				petz.set_behaviour(self, "aquatic", node.name)		
+			end
+    		if self.petz_type == "beaver" then --beaver's dam
+				petz.create_dam(self, pos)
+			end
+		else
+			local pos_underwater = { --check if water below (when the mob is still terrestrial but float in the surface of the water)
+            	x = pos.x,
+            	y = pos.y - 3.5,
+            	z = pos.z,
+        	}        	        	
+        	node = minetest.get_node_or_nil(pos_underwater)        	
+        	if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water
+        		and self.floats == false then
+        			local pos_below = {
+	            		x = pos.x,
+    	        		y = pos.y - 2.0,
+        	    		z = pos.z,
+	        		}
+        			self.object:move_to(pos_below, true) -- move the mob underwater        
+					if not(self.behaviour == "aquatic") then 
+						petz.set_behaviour(self, "aquatic", node.name)
+					end	
+					if self.petz_type == "beaver" then --beaver's dam
+						petz.create_dam(self, pos)
+					end
+        	else
+        	if not(self.behaviour == "terrestrial") then 
+				petz.set_behaviour(self, "terrestrial", nil)
+			end        		
+        	end
+		end 
+end
+
+petz.create_dam = function(self, pos)		
+	if petz.settings.beaver_create_dam == true and self.dam_created == false then --a beaver can create only one dam
+		if math.random(1, 60000) > 1 then --chance of the dam to be created
+			return false
+		end		
+		local pos_underwater = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
+        	x = pos.x,
+        	y = pos.y - 4.5,
+    		z = pos.z,
+    	}
+    	if minetest.get_node(pos_underwater).name == "default:sand" then
+    		local pos_dam = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
+        		x = pos.x,
+        		y = pos.y - 2.0,
+    			z = pos.z,
+    		}
+    		minetest.place_schematic(pos_dam, modpath..'/schematics/beaver_dam.mts', 0, nil, true)    	
+    		self.dam_created = true
+    		return true
+    	end
+    end
+    return false
 end

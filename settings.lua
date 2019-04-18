@@ -50,6 +50,9 @@ petz.settings.calf_follow = settings:get("calf_follow", "")
 petz.settings.panda_spawn = settings:get_bool("panda_spawn", true)
 petz.settings.panda_spawn_chance = tonumber(settings:get("panda_spawn_chance"))
 petz.settings.panda_follow = settings:get("panda_follow", "")
+petz.settings.frog_spawn = settings:get_bool("frog_spawn", true)
+petz.settings.frog_spawn_chance = tonumber(settings:get("frog_spawn_chance"))
+petz.settings.frog_follow = settings:get("frog_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

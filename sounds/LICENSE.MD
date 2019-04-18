@@ -81,3 +81,9 @@ filename: petz_panda_moaning.ogg
 Author: San Diego Zoo
 https://animals.sandiegozoo.org/animals/giant-panda
 License: Unknown
+--------------------------------------------
+filename: petz_frog_croak.ogg
+Author: Alexander
+http://www.orangefreesounds.com/frog-sound/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
