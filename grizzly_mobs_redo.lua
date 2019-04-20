@@ -1,15 +1,15 @@
 --
---LION
+--GRIZZLY
 --
 local S = ...
 
-local pet_name = "lion"
+local pet_name = "grizzly"
 
 local mesh = nil
 local fixed = {}
 local textures
-local scale_lion = 2.3
-petz.lion = {}
+local scale_grizzly = 2.3
+petz.grizzly = {}
 local collisionbox = {}
 
 if petz.settings.type_model == "cubic" then
@@ -35,17 +35,17 @@ if petz.settings.type_model == "cubic" then
 		{-0.1875, -0.3125, -0.1875, -0.125, -0.25, -0.125}, -- mane_bottom_left
 		{0.0625, -0.3125, -0.1875, 0.125, -0.25, -0.125}, -- mane_bottom_right
 	}
-	petz.lion.tiles = {
-		"petz_lion_top.png", "petz_lion_bottom.png", "petz_lion_right.png",
-		"petz_lion_left.png", "petz_lion_back.png", "petz_lion_front.png"
+	petz.grizzly.tiles = {
+		"petz_grizzly_top.png", "petz_grizzly_bottom.png", "petz_grizzly_right.png",
+		"petz_grizzly_left.png", "petz_grizzly_back.png", "petz_grizzly_front.png"
 	}
-	petz.register_cubic(node_name, fixed, petz.lion.tiles)		
-	textures= {"petz:lion_block"}
-	collisionbox = {-0.5, -0.75*scale_lion, -0.5, 0.375, -0.375, 0.375}
+	petz.register_cubic(node_name, fixed, petz.grizzly.tiles)		
+	textures= {"petz:grizzly_block"}
+	collisionbox = {-0.5, -0.75*scale_grizzly, -0.5, 0.375, -0.375, 0.375}
 else
-	mesh = 'petz_lion.b3d'	
-	textures = {"petz_lion.png"}	
-	collisionbox = {-0.5, -0.75*scale_lion, -0.5, 0.375, -0.375, 0.375}
+	mesh = 'petz_grizzly.b3d'	
+	textures= {{"petz_grizzly.png"}, {"petz_grizzly2.png"}}
+	collisionbox = {-0.5, -0.75*scale_grizzly, -0.5, 0.375, -0.375, 0.375}
 end
 
 mobs:register_mob("petz:"..pet_name, {
@@ -54,10 +54,10 @@ mobs:register_mob("petz:"..pet_name, {
 	attack_type = 'dogfight',
 	damage = 8,
     hp_min = 20,
-    hp_max = 30,
+    hp_max = 25,
     armor = 400,
 	visual = petz.settings.visual,
-	visual_size = {x=petz.settings.visual_size.x*scale_lion, y=petz.settings.visual_size.y*scale_lion},
+	visual_size = {x=petz.settings.visual_size.x*scale_grizzly, y=petz.settings.visual_size.y*scale_grizzly},
 	mesh = mesh,
 	textures = textures,
 	collisionbox = collisionbox,
@@ -68,7 +68,7 @@ mobs:register_mob("petz:"..pet_name, {
     pushable = true,
     floats = 1,
 	jump = true,
-	follow = petz.settings.lion_follow,
+	follow = petz.settings.grizzly_follow,
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1,},		
 	},
@@ -76,7 +76,7 @@ mobs:register_mob("petz:"..pet_name, {
 	lava_damage = 6,
 	light_damage = 0,
     sounds = {
-		random = "petz_lion_roar",
+		random = "petz_grizzly_growl",
 	},
     animation = {
     	speed_normal = 15, walk_start = 1, walk_end = 12,
@@ -100,7 +100,7 @@ mobs:register_mob("petz:"..pet_name, {
 	do_custom = function(self, dtime)
 		if not self.custom_vars_set03 then
 			self.custom_vars_set03 = 0
-			self.petz_type = "lion"
+			self.petz_type = "grizzly"
 			self.is_pet = true
 			self.is_wild = true
 			self.give_orders = true
@@ -115,15 +115,15 @@ mobs:register_mob("petz:"..pet_name, {
 	end,
 })
 
-mobs:register_egg("petz:lion", S("Lion"), "petz_spawnegg_lion.png", 0)
+mobs:register_egg("petz:grizzly", S("Grizzly"), "petz_spawnegg_grizzly.png", 0)
 
 mobs:spawn({
-	name = "petz:lion",
-	nodes = {"default:dirt_with_dry_grass"},
+	name = "petz:grizzly",
+	nodes = {"default:dirt_with_coniferous_litter"},
 	--neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
-	chance = petz.settings.lion_spawn_chance,
+	chance = petz.settings.grizzly_spawn_chance,
 	min_height = 5,
 	max_height = 200,
 	day_toggle = true,

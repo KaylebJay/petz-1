@@ -13,6 +13,7 @@ local S = minetest.get_translator(minetest.get_current_modname())
 assert(loadfile(modpath .. "/api.lua"))(modpath, S)
 assert(loadfile(modpath .. "/settings.lua"))(modpath, S) --Load the settings
 assert(loadfile(modpath .. "/nodes.lua"))(modpath, S) --Load the nodes
+assert(loadfile(modpath .. "/food.lua"))(modpath, S) --Load the food items
 
 if petz.settings.kitty_spawn then
     assert(loadfile(modpath .. "/kitty_"..petz.settings.type_api..".lua"))(S) 
@@ -40,4 +41,7 @@ if petz.settings.panda_spawn then
 end
 if petz.settings.frog_spawn then
     assert(loadfile(modpath .. "/frog_"..petz.settings.type_api..".lua"))(S, modpath, mg_name)
+end
+if petz.settings.frog_spawn then
+    assert(loadfile(modpath .. "/grizzly_"..petz.settings.type_api..".lua"))(S, modpath, mg_name)
 end

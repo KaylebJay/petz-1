@@ -412,3 +412,25 @@ petz.create_dam = function(self, pos)
     end
     return false
 end
+
+petz.tame_whip= function(self, hitter)	
+		local wielded_item_name= hitter:get_wielded_item():get_name()
+		if (wielded_item_name == "petz:whip") then
+    		if self.tamed == false then
+    		--The grizzly can be tamed lashed with a whip    	                	    	
+    			self.lashing_count = (self.lashing_count or 0) + 1        
+				if self.lashing_count >= petz.settings.grizzly_count_lashing_tame then -- tame grizzly
+					self.lashing_count = 0
+					self.type = "animal"
+					self.tamed = true			
+					self.owner = hitter:get_player_name()
+					minetest.chat_send_player(self.owner, S("A").." "..self.petz_type.." "..S("has been tamed."))					
+				end			
+			else
+				if (petz.settings.tamagochi_mode == true) and (self.owner == hitter:get_player_name()) then
+	        		petz.do_lashing(self)
+    	    	end
+    	    end
+    	    petz.do_sound_effect("object", user, "petz_whip")
+		end
+end

@@ -53,6 +53,10 @@ petz.settings.panda_follow = settings:get("panda_follow", "")
 petz.settings.frog_spawn = settings:get_bool("frog_spawn", true)
 petz.settings.frog_spawn_chance = tonumber(settings:get("frog_spawn_chance"))
 petz.settings.frog_follow = settings:get("frog_follow", "")
+petz.settings.grizzly_spawn = settings:get_bool("grizzly_spawn", true)
+petz.settings.grizzly_spawn_chance = tonumber(settings:get("grizzly_spawn_chance"))
+petz.settings.grizzly_follow = settings:get("grizzly_follow", "")
+petz.settings.grizzly_count_lashing_tame = tonumber(settings:get("grizzly_count_lashing_tame", "3"))
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

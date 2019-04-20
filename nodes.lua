@@ -113,16 +113,6 @@ minetest.register_craftitem("petz:kennel", {
     end,
 })
 
---Duck Egg
-
-minetest.register_craftitem("petz:duck_egg", {
-    description = S("Duck Egg"),
-    inventory_image = "petz_duck_egg.png",
-    wield_image = "petz_duck_egg.png",
-    on_use = minetest.item_eat(2),
-    groups = {flammable = 2, food = 2},
-})
-
 --Duck Nest
 
 minetest.register_node("petz:duck_nest", {

@@ -87,3 +87,14 @@ Author: Alexander
 http://www.orangefreesounds.com/frog-sound/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+--------------------------------------------
+filename: petz_grizzly_growl.ogg
+Author: Alexander
+http://www.orangefreesounds.com/bear-sounds/
+Licence: The sound effect is permitted for non-commercial
+use under license “Personal Use Only”
+--------------------------------------------
+filename: petz_grizzly_moaning.ogg
+Author: Mike Koenig
+http://soundbible.com/1142-Bear.html
+Licence: Attribution 3.0
