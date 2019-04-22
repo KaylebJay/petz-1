@@ -98,3 +98,9 @@ filename: petz_grizzly_moaning.ogg
 Author: Mike Koenig
 http://soundbible.com/1142-Bear.html
 Licence: Attribution 3.0
+--------------------------------------------
+filename: petz_pony_neigh.ogg
+Author: Alexander
+http://www.orangefreesounds.com/horse-neighing/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
