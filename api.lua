@@ -58,7 +58,12 @@ petz.create_form = function(player_name)
         tamagochi_form_stuff =
             "image[1,0;1,1;petz_spawnegg_"..pet.petz_type..".png]"
     end
-    
+    if pet.petz_type == "parrot" then
+		form_size.y = form_size.y + 1
+		buttonexit_pos.y = buttonexit_pos.y + 1
+		more_form_orders = more_form_orders..
+		"button_exit[0,4;3,1;btn_alight;"..S("Alight").."]"	
+    end
     form_pet_orders =
 		"size["..form_size.x..","..form_size.y..";]"..
 		tamagochi_form_stuff..        
@@ -91,10 +96,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		pet.order = ""
 		pet.state = "walk"
 	elseif fields.btn_alight then
-		local dir = pet.object:get_look_dir()
-		local pitch = pet.object:get_look_vertical()
-		pet:set_pitch(pitch - 0.5 * math.pi)
-		pet:set_velocity(10)
+		pet.object:set_acceleration({
+			x = 0,
+			y = -1,
+			z = 0
+		})
+		pet:set_animation("stand")
 	end
 	return true
 end)
