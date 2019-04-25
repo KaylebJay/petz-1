@@ -48,7 +48,7 @@ if petz.settings.type_model == "cubic" then
 else
 	mesh = 'petz_parrot.b3d'	
 	textures= {{"petz_parrot.png"}, {"petz_parrot2.png"}, {"petz_parrot3.png"}}
-	collisionbox = {-0.35, -0.75*scale_parrot, -0.28, 0.35, -0.3125, 0.28}
+	collisionbox = {-0.35, -0.75*scale_parrot, -0.28, 0.35, 0.35, 0.28}
 end
 
 mobs:register_mob("petz:"..pet_name, {
@@ -97,12 +97,12 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker)
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set03 then
-			self.custom_vars_set03 = 0
+		if not self.custom_vars_set00 then
+			self.custom_vars_set00 = 0
 			self.petz_type = "parrot"
-			self.is_pet = false
+			self.is_pet = true
 			self.is_wild = false
-			self.give_orders = false
+			self.give_orders = true
 			self.affinity = 100
 			self.init_timer = false
 			self.fed= false
@@ -116,7 +116,7 @@ mobs:register_egg("petz:parrot", S("Parrot"), "petz_spawnegg_parrot.png", 0)
 
 mobs:spawn({
 	name = "petz:parrot",
-	nodes = {"default:dirt_with_grass"},
+	nodes = {"default:jungleleaves"},
 	--neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
