@@ -97,18 +97,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		pet.order = ""
 		pet.state = "walk"
 	elseif fields.btn_alight then
-		pet.object:set_acceleration({
-			x = 0,
-			y = -1,
-			z = 0
-		})
+		pet.object:set_acceleration({ x = 0, y = -1, z = 0 })
 		pet:set_animation("stand")
 	elseif fields.btn_fly then
-		pet.object:set_acceleration({
-			x = 0,
-			y = 0,
-			z = 0
-		})
+		pet.object:set_acceleration({ x = 0, y = 1, z = 0 })
+		pet:set_animation("fly")
+		minetest.after(2.5, function(pet) 
+			pet.object:set_acceleration({ x = 0, y = 0, z = 0 })    
+			pet.object:set_velocity({ x = 0, y = 0, z = 0 })    
+		end, pet)		
 	end
 	return true
 end)
