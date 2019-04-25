@@ -60,6 +60,9 @@ petz.settings.grizzly_count_lashing_tame = tonumber(settings:get("grizzly_count_
 petz.settings.pony_spawn = settings:get_bool("pony_spawn", true)
 petz.settings.pony_spawn_chance = tonumber(settings:get("pony_spawn_chance"))
 petz.settings.pony_follow = settings:get("pony_follow", "")
+petz.settings.parrot_spawn = settings:get_bool("parrot_spawn", true)
+petz.settings.parrot_spawn_chance = tonumber(settings:get("parrot_spawn_chance"))
+petz.settings.parrot_follow = settings:get("parrot_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

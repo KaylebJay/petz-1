@@ -104,3 +104,9 @@ Author: Alexander
 http://www.orangefreesounds.com/horse-neighing/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+--------------------------------------------
+filename: petz_pony_moaning.ogg
+Author: Alexander
+http://www.orangefreesounds.com/horse-neigh/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
