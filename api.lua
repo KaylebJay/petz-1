@@ -93,9 +93,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		pet.order = "stand"
 		pet:set_animation("stand")
 	elseif fields.btn_ownthing then
-        pet.type = "animal"
-		pet.order = ""
-		pet.state = "walk"
+		petz.ownthing(pet)
 	elseif fields.btn_alight then
 		pet.object:set_acceleration({ x = 0, y = -1, z = 0 })
 		pet:set_animation("stand")
@@ -105,13 +103,17 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		minetest.after(2.5, function(pet) 
 			pet.object:set_acceleration({ x = 0, y = 0, z = 0 })    
 			pet.object:set_velocity({ x = 0, y = 0, z = 0 })    
-			pet.type = "animal"
-			pet.order = ""
-			pet.state = "walk"
+			petz.ownthing(pet)
 		end, pet)		
 	end
 	return true
 end)
+
+petz.ownthing= function(pet)	
+    pet.type = "animal"
+	pet.order = ""
+	pet.state = "walk"	
+end
 
 --
 -- Increase/Descrease the pet affinity
