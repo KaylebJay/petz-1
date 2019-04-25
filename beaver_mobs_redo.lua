@@ -119,7 +119,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.beaver_oil_applied = false
 			self.dam_created = false	
 			self.animation_terrestrial = animation_terrestrial
-			self.animation_aquatic = animation_aquatic			
+			self.animation_aquatic = animation_aquatic	
 		end
 	petz.semiaquatic_behaviour(self)
 	end,

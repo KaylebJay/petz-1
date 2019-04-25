@@ -8,6 +8,19 @@ local mesh = nil
 local scale_parrot = 1.3
 local textures = {}
 local collisionbox = {}
+local animation_ground = {
+   	speed_normal = 15, walk_start = 1, walk_end = 12,
+   	speed_run = 25, run_start = 13, run_end = 25,
+   	stand_start = 26, stand_end = 46,		
+   	stand2_start = 47, stand2_end = 59,	
+   	stand3_start = 60, stand3_end = 70,	
+   	stand4_start = 71, stand4_end = 91,	  	
+}
+
+local animation_fly = {
+	stand_start = 92, stand_end = 98,	
+	speed_fly= 50, fly_start = 92, fly_end = 98,  	
+}
 
 if petz.settings.type_model == "cubic" then
 	local node_name = "petz:"..pet_name.."_block"
@@ -82,15 +95,7 @@ mobs:register_mob("petz:"..pet_name, {
     sounds = {
 		random = "petz_parrot_chirp",
 	},
-    animation = {
-    	speed_normal = 15, walk_start = 1, walk_end = 12,
-    	speed_run = 25, run_start = 13, run_end = 25,
-    	speed_fly= 50, fly_start = 92, fly_end = 98,
-    	stand_start = 26, stand_end = 46,		
-    	stand2_start = 47, stand2_end = 59,	
-    	stand3_start = 60, stand3_end = 70,	
-    	stand4_start = 71, stand4_end = 91,	    	
-		},
+    animation = animation_fly,
     view_range = 4,
     fear_height = 3,
     on_rightclick = function(self, clicker)
@@ -108,7 +113,11 @@ mobs:register_mob("petz:"..pet_name, {
 			self.fed= false
 			self.brushed = false
 			self.beaver_oil_applied = false
+			self.is_flying = true		
+			self.animation_ground = animation_ground
+			self.animation_fly = animation_fly
 		end
+		petz.fly_behaviour(self)
 	end,
 })
 

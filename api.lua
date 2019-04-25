@@ -434,3 +434,27 @@ petz.tame_whip= function(self, hitter)
     	    petz.do_sound_effect("object", user, "petz_whip")
 		end
 end
+
+--Fly Behaviour
+
+petz.fly_behaviour = function(self)		
+	local pos = self.object:get_pos() 
+	local pos_under= { 
+        	x = pos.x,
+        	y = pos.y - 1,
+    		z = pos.z,
+    	}
+    node = minetest.get_node_or_nil(pos_under) 
+    if node.name == "air" or minetest.registered_nodes[node.name].groups.water then
+		if self.is_flying == false then
+			self.is_flying = true
+			self.animation = self.animation_fly
+		end
+	else
+		if self.is_flying == true then
+			self.is_flying = false
+			self.animation = self.animation_ground
+		end
+    end
+    
+end
