@@ -31,13 +31,17 @@ petz.pet = {} -- A table of pet["owner_name"]="owner_name"
 
 petz.create_form = function(player_name)
     local pet = petz.pet[player_name]
+    local form_size = {x = 3, y = 5}
+    local buttonexit_pos = {x = 1, y = 4}
+    local tamagochi_form_stuff = ''
+    local more_form_orders = ''
     if pet.affinity == nil then
        pet.affinity = 0
     end
 	local form_pet_orders
-    if petz.settings.tamagochi_mode == true then        
-		form_pet_orders = 
-            "size[5,5;]"..
+    if petz.settings.tamagochi_mode == true then     
+		form_size.x= form_size.x + 2
+		tamagochi_form_stuff = 
             "image[0,0;1,1;petz_spawnegg_"..pet.petz_type..".png]"..
             "label[1,0;".. S("Orders").."]"..
             "image[3,1;1,1;petz_affinity_heart.png]"..
@@ -49,17 +53,20 @@ petz.create_form = function(player_name)
         else
             hungry_label = "Saciated"
         end
-        form_pet_orders = form_pet_orders .. "label[4,2;"..S(hungry_label).."]"
+        tamagochi_form_stuff =tamagochi_form_stuff .. "label[4,2;"..S(hungry_label).."]"
     else
-        form_pet_orders =
-            "size[3,5;]"..
+        tamagochi_form_stuff =
             "image[1,0;1,1;petz_spawnegg_"..pet.petz_type..".png]"
     end
-    form_pet_orders = form_pet_orders..
+    
+    form_pet_orders =
+		"size["..form_size.x..","..form_size.y..";]"..
+		tamagochi_form_stuff..        
 		"button_exit[0,1;3,1;btn_followme;"..S("Follow me").."]"..
 		"button_exit[0,2;3,1;btn_standhere;"..S("Stand here").."]"..
 		"button_exit[0,3;3,1;btn_ownthing;"..S("Do your own thing").."]"..	
-		"button_exit[1,4;1,1;btn_close;"..S("Close").."]"
+		more_form_orders..
+		"button_exit["..buttonexit_pos.x..","..buttonexit_pos.y..";1,1;btn_close;"..S("Close").."]"
 	return form_pet_orders
 end
 
@@ -78,10 +85,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	elseif fields.btn_standhere then
         pet.type = "animal"
 		pet.order = "stand"
+		pet:set_animation("stand")
 	elseif fields.btn_ownthing then
         pet.type = "animal"
 		pet.order = ""
 		pet.state = "walk"
+	elseif fields.btn_alight then
+		local dir = pet.object:get_look_dir()
+		local pitch = pet.object:get_look_vertical()
+		pet:set_pitch(pitch - 0.5 * math.pi)
+		pet:set_velocity(10)
 	end
 	return true
 end)
@@ -444,8 +457,8 @@ petz.fly_behaviour = function(self)
         	y = pos.y - 1,
     		z = pos.z,
     	}
-    node = minetest.get_node_or_nil(pos_under) 
-    if node.name == "air" or minetest.registered_nodes[node.name].groups.water then
+    local node_under = minetest.get_node_or_nil(pos_under) 
+    if node_under.name == "air" or minetest.registered_nodes[node_under.name].groups.water then
 		if self.is_flying == false then
 			self.is_flying = true
 			self.animation = self.animation_fly
