@@ -62,7 +62,8 @@ petz.create_form = function(player_name)
 		form_size.y = form_size.y + 1
 		buttonexit_pos.y = buttonexit_pos.y + 1
 		more_form_orders = more_form_orders..
-		"button_exit[0,4;3,1;btn_alight;"..S("Alight").."]"	
+		"button_exit[0,4;1,1;btn_alight;"..S("Alight").."]"	..
+		"button_exit[1,4;1,1;btn_fly;"..S("Fly").."]"	
     end
     form_pet_orders =
 		"size["..form_size.x..","..form_size.y..";]"..
@@ -102,6 +103,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			z = 0
 		})
 		pet:set_animation("stand")
+	elseif fields.btn_fly then
+		pet.object:set_acceleration({
+			x = 0,
+			y = 0,
+			z = 0
+		})
 	end
 	return true
 end)
