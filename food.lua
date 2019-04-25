@@ -30,3 +30,24 @@ minetest.register_craft({
 	recipe = "petz:frog_leg",
 	cooktime = 2,
 })
+
+--Parrot
+minetest.register_craftitem("petz:raw_parrot", {
+    description = S("Raw Parrot"),
+    inventory_image = "petz_raw_parrot.png",
+    wield_image = "petz_raw_parrot.png"
+})
+
+minetest.register_craftitem("petz:roasted_parrot", {
+	description = S("Roasted Parrot"),
+	inventory_image = "petz_roasted_parrot.png",	
+	on_use = minetest.item_eat(3),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:roasted_parrot",
+	recipe = "petz:raw_parrot",
+	cooktime = 2,
+})

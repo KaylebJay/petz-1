@@ -87,7 +87,7 @@ mobs:register_mob("petz:"..pet_name, {
 	jump = false,
 	follow = petz.settings.parrot_follow,
 	drops = {
-		{name = "mobs:meat_raw", chance = 5, min = 1, max = 1,},
+		{name = "petz:raw_parrot", chance = 3, min = 1, max = 1,},
 	},
 	water_damage = 0,
 	lava_damage = 6,
