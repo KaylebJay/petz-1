@@ -125,7 +125,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.is_wild = false
 			self.give_orders = true
 			self.affinity = 100
-			self.init_timer = false
+			self.init_timer = true
 			self.fed= false
 			self.brushed = false
 			self.beaver_oil_applied = false			
@@ -153,7 +153,8 @@ mobs:register_mob("petz:"..pet_name, {
 			mobs.detach(self.driver, {x = 1, y = 0, z = 1})
 		end
 	end,
-	after_activate = function(self, staticdata, def, dtime)
+	after_activate = function(self, staticdata, def, dtime)		
+		self.init_timer = true	
     	if not self.custom_vars_set00 then --but do not set here! instead wait for the do-custom function to do it.
     		local color
     		if petz.settings.type_model == "mesh" then --set a random color    			
