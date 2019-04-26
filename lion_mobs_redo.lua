@@ -105,13 +105,14 @@ mobs:register_mob("petz:"..pet_name, {
 			self.is_wild = true
 			self.give_orders = true
 			self.affinity = 100
-			self.init_timer = false
+			self.init_timer = true
 			self.fed= false
 			self.brushed = false
 			self.beaver_oil_applied = false
 			self.lashed = false
 			self.lashing_count = 0
-		end	
+		end
+		petz.init_timer(self)
 	end,
 })
 

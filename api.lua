@@ -160,6 +160,11 @@ end
 petz.timer = function(self)
     minetest.after(petz.settings.tamagochi_check_time, function(self)         
         if not(self.object== nil) then
+			if (not(minetest.is_singleplayer())) and (petz.settings.tamagochi_check_if_player_online == true) then
+				if minetest.player_exists(self.owner) == false then --if pet owner is not online
+					return
+				end
+			end       
             local pos = self.object:get_pos()
             if not(pos == nil) then --important for if the pet dies
                 local pos_below = {
@@ -467,13 +472,21 @@ end
 --Fly Behaviour
 
 petz.fly_behaviour = function(self)		
-	local pos = self.object:get_pos() 
+	local pos
+	if self == nil then
+		return
+	else
+		pos = self.object:get_pos()
+	end
 	local pos_under= { 
-        	x = pos.x,
-        	y = pos.y - 1,
-    		z = pos.z,
-    	}
+       	x = pos.x,
+       	y = pos.y - 1,
+   		z = pos.z,
+   	}
     local node_under = minetest.get_node_or_nil(pos_under) 
+ 	if node_under == nil then
+		return
+	end   
     if node_under.name == "air" or minetest.registered_nodes[node_under.name].groups.water then
 		if self.is_flying == false then
 			self.is_flying = true

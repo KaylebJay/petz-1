@@ -139,6 +139,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.driver_eye_offset = {x = 0, y = 0, z = 0}
 			self.driver_scale = {x = 1/self.visual_size.x, y = 1/self.visual_size.y}
 		end
+		petz.init_timer(self)
 		if self.driver then
 			mobs.drive(self, "walk", "stand", false, dtime) -- if driver present allow control of horse
 			return false -- skip rest of mob functions

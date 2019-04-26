@@ -101,6 +101,9 @@ mobs:register_mob("petz:"..pet_name, {
     on_rightclick = function(self, clicker)
 		petz.on_rightclick(self, clicker)
 	end,
+	after_activate = function(self, staticdata, def, dtime)
+		self.init_timer = true
+	end,
 	do_custom = function(self, dtime)
 		if not self.custom_vars_set00 then
 			self.custom_vars_set00 = 0
@@ -109,7 +112,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.is_wild = false
 			self.give_orders = true
 			self.affinity = 100
-			self.init_timer = false
+			self.init_timer = true
 			self.fed= false
 			self.brushed = false
 			self.beaver_oil_applied = false
@@ -117,6 +120,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.animation_ground = animation_ground
 			self.animation_fly = animation_fly
 		end
+		petz.init_timer(self)
 		petz.fly_behaviour(self)
 	end,
 })
