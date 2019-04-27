@@ -5,7 +5,7 @@ local S = ...
 
 local pet_name = "chicken"
 local mesh = nil
-local scale_chicken = 1.3
+local scale_chicken = 1.4
 local textures = {}
 local collisionbox = {}
 
