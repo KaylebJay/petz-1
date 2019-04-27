@@ -469,8 +469,9 @@ petz.tame_whip= function(self, hitter)
 		end
 end
 
+--
 --Fly Behaviour
-
+--
 petz.fly_behaviour = function(self)		
 	local pos
 	if self == nil then
@@ -498,5 +499,24 @@ petz.fly_behaviour = function(self)
 			self.animation = self.animation_ground
 		end
     end
-    
+end
+
+
+--
+--Lay Egg
+--
+petz.lay_egg = function(self)
+	local pos = self.object:get_pos()
+	if math.random(1, 150000) == 1 then
+		minetest.add_item(self.object:get_pos(), "petz:"..self.petz_type.."_egg") --chicken egg!
+	end			
+	local lay_range = 1
+	local nearby_nodes = minetest.find_nodes_in_area(
+		{x = pos.x - lay_range, y = pos.y - 1, z = pos.z - lay_range},
+		{x = pos.x + lay_range, y = pos.y + 1, z = pos.z + lay_range},
+		"petz:duck_nest")
+	if #nearby_nodes > 1 then
+		local nest_to_lay = nearby_nodes[math.random(1, #nearby_nodes)]
+		minetest.set_node(nest_to_lay, {name= "petz:"..self.petz_type.."_nest_egg"})
+	end		
 end

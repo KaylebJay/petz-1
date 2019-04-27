@@ -116,7 +116,7 @@ minetest.register_craftitem("petz:kennel", {
 --Duck Nest
 
 minetest.register_node("petz:duck_nest", {
-    description = S("Duck Nest"),
+    description = S("Nest"),
     inventory_image = "petz_duck_nest_inv.png",
     wield_image = "petz_duck_nest_inv.png",
     tiles = {"petz_duck_nest.png"},
@@ -176,6 +176,28 @@ minetest.register_node("petz:duck_nest_egg", {
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
     },
 })
+
+minetest.register_node("petz:chicken_nest_egg", {
+    description = S("Chicken Nest with Egg"),
+    inventory_image = "petz_chicken_nest_egg_inv.png",
+    wield_image = "petz_chicken_nest_egg_inv.png",
+    tiles = {"petz_chicken_nest_egg.png"},
+    groups = {snappy=1, bendy=2, cracky=1},
+    sounds = default.node_sound_wood_defaults(),
+    paramtype = "light",
+    drawtype = "mesh",
+    mesh = 'petz_duck_nest_egg.b3d',
+    visual_size = {x = 1.3, y = 1.3},
+    tiles = {"petz_chicken_nest_egg.png"},
+    collision_box = {
+        type = "fixed",
+        fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
+    },
+    selection_box = {
+        type = "fixed",
+        fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
+    },
+})
  
 minetest.register_craft({
     type = "shaped",
@@ -187,7 +209,7 @@ minetest.register_craft({
     }
 })
 
--- Chance to hatch an egg into a duck
+-- Chance to hatch an egg into a duck or chicken
 minetest.register_abm({
     nodenames = {"petz:duck_nest_egg"},
     neighbors = {},
@@ -201,6 +223,25 @@ minetest.register_abm({
             end
             --pos.y = pos.y + 1
             local mob = minetest.add_entity(pos_above, "petz:ducky")
+            local ent = mob:get_luaentity()
+            minetest.set_node(pos, {name= "petz:duck_nest"})
+        end
+    end
+})
+
+minetest.register_abm({
+    nodenames = {"petz:chicken_nest_egg"},
+    neighbors = {},
+    interval = 600.0, -- Run every 10 minuts
+    chance = 5, -- Select every 1 in 3 nodes
+    action = function(pos, node, active_object_count, active_object_count_wider)
+        local pos_above = {x = pos.x, y = pos.y +1, z= pos.z}
+        if pos_above then
+            if not minetest.registered_entities["petz:chicken"] then
+                return
+            end
+            --pos.y = pos.y + 1
+            local mob = minetest.add_entity(pos_above, "petz:chicken")
             local ent = mob:get_luaentity()
             minetest.set_node(pos, {name= "petz:duck_nest"})
         end
