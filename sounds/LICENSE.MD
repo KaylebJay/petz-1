@@ -122,3 +122,14 @@ Author: Alexander
 http://www.orangefreesounds.com/chickens-clucking/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+--------------------------------------------
+filename: petz_chimp_hoo.ogg
+Author: Alexander
+http://www.orangefreesounds.com/mp3-monkey/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+--------------------------------------------
+filename: petz_chimp_moaning.ogg
+Author: freesoundeffects
+https://www.freesoundeffects.com/free-sounds/monkey-10054/
+License: https://www.freesoundeffects.com/licence.php

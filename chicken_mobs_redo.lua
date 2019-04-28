@@ -34,7 +34,7 @@ if petz.settings.type_model == "cubic" then
 	}
 	petz.register_cubic(node_name, fixed, tiles)		
 	textures= {"petz:chicken_block"}
-	collisionbox = {-0.35, -0.75*scale_chicken, -0.28, 0.35, -0.125, 0.28}
+	collisionbox = {-0.35, -0.75*scale_chicken, -0.28, 0.35, -0.3125, 0.28}
 else
 	mesh = 'petz_chicken.b3d'	
 	textures= {{"petz_chicken.png"}, {"petz_chicken2.png"}, {"petz_chicken3.png"}}

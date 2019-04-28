@@ -67,6 +67,9 @@ petz.settings.parrot_follow = settings:get("parrot_follow", "")
 petz.settings.chicken_spawn = settings:get_bool("chicken_spawn", true)
 petz.settings.chicken_spawn_chance = tonumber(settings:get("chicken_spawn_chance"))
 petz.settings.chicken_follow = settings:get("chicken_follow", "")
+petz.settings.chimp_spawn = settings:get_bool("chimp_spawn", true)
+petz.settings.chimp_spawn_chance = tonumber(settings:get("chimp_spawn_chance"))
+petz.settings.chimp_follow = settings:get("chimp_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"
