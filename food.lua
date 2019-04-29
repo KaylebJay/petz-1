@@ -80,3 +80,24 @@ minetest.register_craft({
 	recipe = "petz:raw_chicken",
 	cooktime = 2,
 })
+
+--Piggy Porkchop
+minetest.register_craftitem("petz:raw_porkchop", {
+    description = S("Raw Porkchop"),
+    inventory_image = "petz_raw_porkchop.png",
+    wield_image = "petz_raw_porkchop.png"
+})
+
+minetest.register_craftitem("petz:roasted_porkchop", {
+	description = S("Roasted Porkchop"),
+	inventory_image = "petz_roasted_porkchop.png",	
+	on_use = minetest.item_eat(3),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:roasted_porkchop",
+	recipe = "petz:raw_porkchop",
+	cooktime = 3,
+})

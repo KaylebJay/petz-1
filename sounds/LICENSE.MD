@@ -133,3 +133,15 @@ filename: petz_chimp_moaning.ogg
 Author: freesoundeffects
 https://www.freesoundeffects.com/free-sounds/monkey-10054/
 License: https://www.freesoundeffects.com/licence.php
+--------------------------------------------
+filename: petz_piggy_squeal.ogg
+Author: Alexander
+http://www.orangefreesounds.com/pigs-noises/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+--------------------------------------------
+filename: petz_piggy_moaning.ogg
+Author: Alexander
+http://www.orangefreesounds.com/pig-noises/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
