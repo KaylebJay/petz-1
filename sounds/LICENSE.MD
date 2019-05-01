@@ -145,3 +145,15 @@ Author: Alexander
 http://www.orangefreesounds.com/pig-noises/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+--------------------------------------------
+filename: petz_pigeon_cooing.ogg
+Author: Alexander
+http://www.orangefreesounds.com/pigeon-cooing/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+--------------------------------------------
+filename: petz_pigeon_moaning.ogg
+Author: Alexander
+http://www.orangefreesounds.com/pigeon-coo-sounds/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)

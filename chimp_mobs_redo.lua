@@ -8,7 +8,7 @@ local mesh = nil
 local scale_chimp = 1.5
 local textures = {}
 local collisionbox = {}
-local animation_ground = {
+local animation_terrestrial = {
    	speed_normal = 15, walk_start = 0, walk_end = 12,
    	--speed_run = 25, run_start = 13, run_end = 25,
    	stand_start = 24, stand_end = 36,		
@@ -17,8 +17,12 @@ local animation_ground = {
    	stand4_start = 12, stand4_end = 24,
 }
 
-local animation_hang = {
-	speed_normal = 66, walk_start = 75,	
+local animation_hanging = {
+	speed_normal = 15, walk_start = 66, walk_end = 75,
+}
+
+local animation_arboreal = {
+	speed_normal = 15, walk_start = 78, walk_end = 90,
 }
 
 if petz.settings.type_model == "cubic" then
@@ -85,7 +89,7 @@ mobs:register_mob("petz:"..pet_name, {
     sounds = {
 		random = "petz_chimp_hoo",
 	},
-    animation = animation_ground,
+    animation = animation_terrestrial,
     view_range = 8,
     fear_height = 10,
     on_rightclick = function(self, clicker)
@@ -106,11 +110,14 @@ mobs:register_mob("petz:"..pet_name, {
 			self.fed= false
 			self.brushed = false
 			self.beaver_oil_applied = false
-			self.is_flying = true		
-			self.animation_ground = animation_ground
-			self.animation_hang = animation_hang
+			self.is_flying = true
+			self.behaviour = "terrestrial"
+			self.animation_terrestrial = animation_terrestrial
+			self.animation_hanging = animation_hanging
+			self.animation_arboreal = animation_arboreal
 		end
 		petz.init_timer(self)		
+		petz.arboreal_behaviour(self)		
 	end,
 })
 
