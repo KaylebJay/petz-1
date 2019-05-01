@@ -119,7 +119,7 @@ mobs:register_egg("petz:pigeon", S("Pigeon"), "petz_spawnegg_pigeon.png", 0)
 
 mobs:spawn({
 	name = "petz:pigeon",
-	nodes = {"default:jungleleaves"},
+	nodes = {"default:leaves"},
 	--neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
