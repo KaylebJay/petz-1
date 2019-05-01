@@ -50,7 +50,7 @@ if petz.settings.type_model == "cubic" then
 	collisionbox = {-0.35, -0.75*scale_pigeon, -0.28, 0.35, -0.125, 0.28}
 else
 	mesh = 'petz_pigeon.b3d'	
-	textures= {{"petz_pigeon.png"}}
+	textures= {{"petz_pigeon.png"}, {"petz_pigeon2.png"}, {"petz_pigeon3.png"}}
 	collisionbox = {-0.25, -0.75*scale_pigeon, -0.25, 0.25, -0.25, 0.25}
 end
 
@@ -100,7 +100,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.petz_type = "pigeon"
 			self.is_pet = false
 			self.is_wild = false
-			self.give_orders = true
+			self.give_orders = false
 			self.affinity = 100
 			self.init_timer = true
 			self.fed= false
