@@ -60,6 +60,6 @@ end
 if petz.settings.chimp_spawn then
     --assert(loadfile(modpath .. "/piggy_"..petz.settings.type_api..".lua"))(S)
 end
-if petz.settings.piggeon_spawn then
-    --assert(loadfile(modpath .. "/piggeon_"..petz.settings.type_api..".lua"))(S)
+if petz.settings.pigeon_spawn then
+    --assert(loadfile(modpath .. "/pigeon_"..petz.settings.type_api..".lua"))(S)
 end

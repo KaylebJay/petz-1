@@ -73,9 +73,9 @@ petz.settings.chimp_follow = settings:get("chimp_follow", "")
 petz.settings.piggy_spawn = settings:get_bool("piggy_spawn", true)
 petz.settings.piggy_spawn_chance = tonumber(settings:get("piggy_spawn_chance"))
 petz.settings.piggy_follow = settings:get("piggy_follow", "")
-petz.settings.piggeon_spawn = settings:get_bool("piggeon_spawn", true)
-petz.settings.piggeon_spawn_chance = tonumber(settings:get("piggeon_spawn_chance"))
-petz.settings.piggeon_follow = settings:get("piggeon_follow", "")
+petz.settings.pigeon_spawn = settings:get_bool("pigeon_spawn", true)
+petz.settings.pigeon_spawn_chance = tonumber(settings:get("pigeon_spawn_chance"))
+petz.settings.pigeon_follow = settings:get("pigeon_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"
