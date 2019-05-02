@@ -79,6 +79,7 @@ mobs:register_mob("petz:"..pet_name, {
     fly = false,    
     floats = 1,
 	jump = true,
+	jump_height = 8,
 	follow = petz.settings.chimp_follow,
 	drops = {
 		--{name = "petz:raw_chimp", chance = 3, min = 1, max = 1,},

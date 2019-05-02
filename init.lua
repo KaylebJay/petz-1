@@ -1,6 +1,6 @@
 --
 -- petz 
--- License:GPL3
+-- License:GPLv3
 --
 
 local modname = "petz"
@@ -55,11 +55,11 @@ if petz.settings.chicken_spawn then
     assert(loadfile(modpath .. "/chicken_"..petz.settings.type_api..".lua"))(S)
 end
 if petz.settings.chimp_spawn then
-    --assert(loadfile(modpath .. "/chimp_"..petz.settings.type_api..".lua"))(S)
+    assert(loadfile(modpath .. "/chimp_"..petz.settings.type_api..".lua"))(S)
 end
 if petz.settings.piggy_spawn then
-    --assert(loadfile(modpath .. "/piggy_"..petz.settings.type_api..".lua"))(S)
+    assert(loadfile(modpath .. "/piggy_"..petz.settings.type_api..".lua"))(S)
 end
 if petz.settings.pigeon_spawn then
-    --assert(loadfile(modpath .. "/pigeon_"..petz.settings.type_api..".lua"))(S)
+    assert(loadfile(modpath .. "/pigeon_"..petz.settings.type_api..".lua"))(S)
 end

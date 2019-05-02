@@ -559,24 +559,38 @@ petz.arboreal_behaviour = function(self, pos)
 		local node_front = minetest.get_node_or_nil(pos_front)
 		local pos_under = {x = pos.x, y = pos.y - 1.0, z = pos.z, }
 		local node_under = minetest.get_node_or_nil(pos_under)
-		local pos_top = {x = pos.x, y = pos.y + 1.0, z = pos.z,}
+		local pos_top = {x = pos.x, y = pos.y + 0.5, z = pos.z,}
 		local node_top = minetest.get_node_or_nil(pos_top)		
 		if node_front and minetest.registered_nodes[node_front.name]
+			and node_top and minetest.registered_nodes[node_top.name]
+			and node_top.name == "air"
 			and (minetest.registered_nodes[node_front.name].groups.wood
-				or minetest.registered_nodes[node_front.name].groups.leaves
-					or minetest.registered_nodes[node_front.name].groups.tree) then				
-						if not(self.behaviour == "arboreal") then 
-							petz.set_behaviour(self, "arboreal", "air")		
-						end
+			or minetest.registered_nodes[node_front.name].groups.leaves
+			or minetest.registered_nodes[node_front.name].groups.tree) then				
+				if not(self.behaviour == "arboreal") then 
+					petz.set_behaviour(self, "arboreal", "air")		
+				end
 		else
 			if self.behaviour == "arboreal" then
 				if node_front and minetest.registered_nodes[node_front.name] 
 					and (not(minetest.registered_nodes[node_front.name].groups.wood)
-						or not(minetest.registered_nodes[node_front.name].groups.tree)
-							or not(minetest.registered_nodes[node_front.name].groups.leaves)) then
-								self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
-								petz.set_behaviour(self, "terrestrial", nil)	
+					or not(minetest.registered_nodes[node_front.name].groups.tree)
+					or not(minetest.registered_nodes[node_front.name].groups.leaves))
+					then
+						self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
+						petz.set_behaviour(self, "terrestrial", nil)
+					
 				end
+			elseif node_top and minetest.registered_nodes[node_top.name]				
+				and not(node_top.name == "air") then
+					if (minetest.registered_nodes[node_top.name].groups.wood
+						or minetest.registered_nodes[node_top.name].groups.leaves
+						or minetest.registered_nodes[node_top.name].groups.tree) then	
+						petz.set_behaviour(self, "hanging", "air")	
+					else
+						self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
+						petz.set_behaviour(self, "terrestrial", nil)					
+					end		
 			end			
 		end
 end
