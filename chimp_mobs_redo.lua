@@ -17,10 +17,6 @@ local animation_terrestrial = {
    	stand4_start = 12, stand4_end = 24,
 }
 
-local animation_hanging = {
-	speed_normal = 15, walk_start = 66, walk_end = 75,
-}
-
 local animation_arboreal = {
 	speed_normal = 15, walk_start = 78, walk_end = 90,
 }
@@ -114,7 +110,6 @@ mobs:register_mob("petz:"..pet_name, {
 			self.is_flying = true
 			self.behaviour = "terrestrial"
 			self.animation_terrestrial = animation_terrestrial
-			self.animation_hanging = animation_hanging
 			self.animation_arboreal = animation_arboreal
 		end
 		petz.init_timer(self)		

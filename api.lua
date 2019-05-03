@@ -388,12 +388,6 @@ petz.set_behaviour= function(self, behaviour, fly_in)
         self.floats = 0
         self.animation = self.animation_arboreal
         self.object:set_acceleration({x = 0, y = 0.5, z = 0 })
-	elseif behaviour == "hanging" then
-		self.behaviour = "hanging"
-        self.fly = true     
-        self.fly_in = fly_in
-        self.floats = 0
-        self.animation = self.animation_hanging
 	end
 end
 
@@ -581,14 +575,8 @@ petz.arboreal_behaviour = function(self, pos)
 						petz.set_behaviour(self, "terrestrial", nil)					
 				elseif node_top and minetest.registered_nodes[node_top.name]				
 					and not(node_top.name == "air") then
-						if (minetest.registered_nodes[node_top.name].groups.wood
-							or minetest.registered_nodes[node_top.name].groups.leaves
-							or minetest.registered_nodes[node_top.name].groups.tree) then	
-							petz.set_behaviour(self, "hanging", "air")	
-						else
 							self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
-							petz.set_behaviour(self, "terrestrial", nil)					
-						end		
+							petz.set_behaviour(self, "terrestrial", nil)											
 				end
 			end			
 		end
