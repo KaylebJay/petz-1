@@ -85,7 +85,7 @@ mobs:register_mob("petz:"..pet_name, {
 	lava_damage = 6,
 	light_damage = 0,
     sounds = {
-		random = "petz_turtle_croak",
+		--random = "petz_turtle_croak",
 	},
     animation = animation_aquatic,
     view_range = 4,
@@ -98,8 +98,8 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker)
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set04 then
-			self.custom_vars_set04 = 0
+		if not self.custom_vars_set00 then
+			self.custom_vars_set00 = 0
 			self.petz_type = "turtle"
 			self.is_pet = false
 			self.is_wild = false
