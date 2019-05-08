@@ -329,3 +329,11 @@ minetest.register_craftitem("petz:bucket_milk", {
     inventory_image = "petz_bucket_milk.png",
     groups = {milk_bucket = 1},
 })
+
+--Turtle Shell
+minetest.register_craftitem("petz:turtle_shell", {
+    description = S("Turtle Shell"),
+    wield_image = {"petz_turtle_shell.png"},
+    inventory_image = "petz_turtle_shell.png",
+    groups = {},
+})
