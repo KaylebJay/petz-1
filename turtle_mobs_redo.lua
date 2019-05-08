@@ -53,7 +53,7 @@ if petz.settings.type_model == "cubic" then
 else
 	mesh = 'petz_turtle.b3d'	
 	textures= {{"petz_turtle.png"}, {"petz_turtle2.png"}, {"petz_turtle3.png"}}
-	collisionbox = {-0.35, -0.75*scale_turtle, -0.28, 0.35, -0.3125, 0.28}
+	collisionbox = {-0.35, -0.75*scale_turtle, -0.28, 0.35, -0.5, 0.28}
 end
 
 mobs:register_mob("petz:"..pet_name, {
