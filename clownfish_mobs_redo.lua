@@ -70,7 +70,7 @@ mobs:register_mob("petz:"..pet_name, {
 	jump = false,
 	follow = petz.settings.clownfish_follow,
 	drops = {
-		--{name = "petz:clownfish_shell", chance = 3, min = 1, max = 1,},
+		{name = "default:coral_orange", chance = 5, min = 1, max = 1,},
 	},
 	water_damage = 0,
 	lava_damage = 6,
