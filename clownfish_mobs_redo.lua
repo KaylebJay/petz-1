@@ -10,7 +10,7 @@ local textures = {}
 local collisionbox = {}
 local fixed = {}
 local tiles = {}
-local spawn_nodes = {"default:water_source"}
+local spawn_nodes = {"default:coral_orange"}
 local animation_aquatic = {
     speed_normal = 15, walk_start = 1, walk_end = 13, --swin
     speed_run = 25, run_start = 1, run_end = 13,
