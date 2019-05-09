@@ -65,7 +65,7 @@ mobs:register_mob("petz:"..pet_name, {
     runaway = true,
     pushable = true,
     fly = true,
-    fly_in = spawn_nodes,
+    fly_in = "default:water_source",
     floats = 1,
 	jump = false,
 	follow = petz.settings.clownfish_follow,
