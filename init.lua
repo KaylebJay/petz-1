@@ -64,5 +64,8 @@ if petz.settings.pigeon_spawn then
     assert(loadfile(modpath .. "/pigeon_"..petz.settings.type_api..".lua"))(S)
 end
 if petz.settings.turtle_spawn then
-    assert(loadfile(modpath .. "/turtle_"..petz.settings.type_api..".lua"))(S)
+    assert(loadfile(modpath .. "/turtle_"..petz.settings.type_api..".lua"))(S, modpath, mg_name)
+end
+if petz.settings.clownfish_spawn then
+    assert(loadfile(modpath .. "/clownfish_"..petz.settings.type_api..".lua"))(S)
 end
