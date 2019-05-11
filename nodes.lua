@@ -389,7 +389,7 @@ minetest.register_node("petz:fishtank", {
 		local has_fish = meta:get_string("has_fish")			
         if itemstack_name == "petz:clownfish" then	
 			if has_fish == "false" then
-				meta:set_string("has_fish", "true")
+				meta:set_string("has_fish", "true")				
 				minetest.add_entity({x=pos.x, y=pos.y, z=pos.z}, "petz:clownfish_entity_sprite")
 				itemstack:take_item()			
 				clicker:set_wielded_item(itemstack)
@@ -438,6 +438,10 @@ minetest.register_entity("petz:clownfish_entity_sprite", {
 	physical = false,	
 	textures = {"petz_clownfish_spritesheet.png"},
 	on_activate = function(self, staticdata)
+		local random_num = math.random(1)
+		if random_num == 1 then
+			self.textures[1] = self.textures[1] .. "^[transformFX"
+		end
 		self.object:set_sprite({x=0, y=0}, 16, 1.0, false)
 		local pos = self.object:getpos()
 		if minetest.get_node(pos).name ~= "petz:fishtank" then
