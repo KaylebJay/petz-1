@@ -357,7 +357,7 @@ local function remove_fish(pos)
 		return
 	end
 	for _, obj in pairs(objs) do
-		if obj and obj:get_luaentity() and obj:get_luaentity().name == "petz:clownfish_entity_sprite" then					
+		if obj and obj:get_luaentity() and obj:get_luaentity().groups.fishtank then					
 			obj:remove()
 			break			
 		end
