@@ -437,6 +437,7 @@ minetest.register_entity("petz:clownfish_entity_sprite", {
 	collisionbox = {0},
 	physical = false,	
 	textures = {"petz_clownfish_spritesheet.png"},
+	groups = {fishtank = 1},
 	on_activate = function(self, staticdata)
 		local random_num = math.random(1)
 		if random_num == 1 then
