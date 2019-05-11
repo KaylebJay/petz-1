@@ -88,7 +88,7 @@ mobs:register_mob("petz:"..pet_name, {
 		if not self.custom_vars_set01 then
 			self.custom_vars_set01 = 0
 			self.petz_type = "clownfish"
-			self.groups = {fishtank = 1}
+			self.groups = {fish= 1, fishtank = 1}
 			self.is_pet = false
 			self.is_wild = false
 			self.give_orders = false
