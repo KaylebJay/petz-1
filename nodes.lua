@@ -390,7 +390,7 @@ minetest.register_node("petz:fishtank", {
         if itemstack_name == "petz:clownfish" then	
 			if has_fish == "false" then
 				meta:set_string("has_fish", "true")
-				minetest.add_entity({x=pos.x, y=pos.y+0.25, z=pos.z}, "petz:clownfish_entity_sprite")
+				minetest.add_entity({x=pos.x, y=pos.y, z=pos.z}, "petz:clownfish_entity_sprite")
 				itemstack:take_item()			
 				clicker:set_wielded_item(itemstack)
 				return itemstack
@@ -431,11 +431,14 @@ minetest.register_craft({
 
 minetest.register_entity("petz:clownfish_entity_sprite", {
 	visual = "sprite",
+	spritediv = {x = 1, y = 16},
+	initial_sprite_basepos = {x = 0, y = 0},
 	visual_size = {x=0.8, y=0.8},
 	collisionbox = {0},
 	physical = false,	
-	textures = {"petz_clownfish_right.png"},
+	textures = {"petz_clownfish_spritesheet.png"},
 	on_activate = function(self, staticdata)
+		self.object:set_sprite({x=0, y=0}, 16, 1.0, false)
 		local pos = self.object:getpos()
 		if minetest.get_node(pos).name ~= "petz:fishtank" then
 			self.object:remove()
