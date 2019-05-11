@@ -137,9 +137,18 @@ minetest.register_node("petz:duck_nest", {
     },
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         if not(player == nil) then
-            local wielded_item_name= player:get_wielded_item():get_name()
-            if wielded_item_name == "petz:duck_egg" then
-                minetest.set_node(pos, {name= "petz:duck_nest_egg"})
+            local itemstack_name = itemstack:get_name()
+            if itemstack_name == "petz:duck_egg" or itemstack_name == "petz:chicken_egg" then
+				local egg_type = "" 
+				if itemstack_name == "petz:duck_egg" then
+					egg_type = "duck"
+				else
+					egg_type = "chicken"
+				end
+                itemstack:take_item()			
+				player:set_wielded_item(itemstack)
+				minetest.set_node(pos, {name= "petz:".. egg_type .."_nest_egg"})
+				return itemstack
             end
         end
     end,
@@ -336,4 +345,100 @@ minetest.register_craftitem("petz:turtle_shell", {
     wield_image = {"petz_turtle_shell.png"},
     inventory_image = "petz_turtle_shell.png",
     groups = {},
+})
+
+---
+---Fishtank
+---
+
+local function remove_fish(pos)
+	local objs = minetest.get_objects_inside_radius(pos, 0.5)
+	if not objs then
+		return
+	end
+	for _, obj in pairs(objs) do
+		if obj and obj:get_luaentity() and obj:get_luaentity().name == "petz:clownfish_entity_sprite" then					
+			obj:remove()
+			break			
+		end
+	end
+end
+
+minetest.register_node("petz:fishtank", {
+	description = S("Fish Tank"),
+	drawtype = "glasslike_framed",
+	tiles = {"petz_fishtank_top.png", "petz_fishtank_bottom.png"},
+	special_tiles = {"petz_fishtank_bottom.png"},
+	inventory_image = "petz_fishtank_inv.png",
+	walkable = false,
+	groups = {snappy = 2, attached_node = 1},
+	paramtype = "light",
+	paramtype2 = "glasslikeliquidlevel",
+	param2 = 50,
+	sunlight_propagates = true,
+	use_texture_alpha = true,
+	light_source = LIGHT_MAX - 1,
+	sounds = default.node_sound_glass_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = { -0.25, -0.5, -0.25, 0.25, 0.4, 0.25 },
+	},
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+        local itemstack_name= itemstack:get_name()
+        local meta = minetest.get_meta(pos)
+		local has_fish = meta:get_string("has_fish")			
+        if itemstack_name == "petz:clownfish" then	
+			if has_fish == "false" then
+				meta:set_string("has_fish", "true")
+				minetest.add_entity({x=pos.x, y=pos.y+0.25, z=pos.z}, "petz:clownfish_entity_sprite")
+				itemstack:take_item()			
+				clicker:set_wielded_item(itemstack)
+				return itemstack
+			end
+		elseif (itemstack_name == "fireflies:bug_net") and (has_fish == "true") then
+			local inv = clicker:get_inventory()
+			if inv:room_for_item("main", ItemStack("petz:clownfish")) then
+				inv:add_item("main", "petz:clownfish")
+				remove_fish(pos)
+				meta:set_string("has_fish", "false")
+			end
+		end
+    end,
+	after_place_node = function(pos, placer, itemstack)
+		minetest.set_node(pos, {name = "petz:fishtank", param2 = 1})
+		local meta = minetest.get_meta(pos)
+		meta:set_string("has_fish", "false")
+	end,
+	on_destruct = function(pos)
+		local meta = minetest.get_meta(pos)
+		local has_fish = meta:get_string("has_fish")
+		if has_fish == "true" then
+			remove_fish(pos)
+			minetest.add_entity(pos, "petz:clownfish")
+		end
+	end
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "petz:fishtank",
+	recipe = {
+		{"default:obsidian_glass", "default:obsidian_glass", "default:obsidian_glass"},
+		{"default:obsidian_glass", "default:water_source", "default:obsidian_glass"},
+		{"default:obsidian_glass", "default:obsidian_glass", "default:obsidian_glass"},
+	}
+})
+
+minetest.register_entity("petz:clownfish_entity_sprite", {
+	visual = "sprite",
+	visual_size = {x=0.8, y=0.8},
+	collisionbox = {0},
+	physical = false,	
+	textures = {"petz_clownfish_right.png"},
+	on_activate = function(self, staticdata)
+		local pos = self.object:getpos()
+		if minetest.get_node(pos).name ~= "petz:fishtank" then
+			self.object:remove()
+		end
+	end,
 })
