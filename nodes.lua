@@ -371,7 +371,7 @@ minetest.register_node("petz:fishtank", {
 	special_tiles = {"petz_fishtank_bottom.png"},
 	inventory_image = "petz_fishtank_inv.png",
 	walkable = false,
-	groups = {snappy = 2, attached_node = 1},
+	groups = {snappy = 2},
 	paramtype = "light",
 	paramtype2 = "glasslikeliquidlevel",
 	param2 = 50,
