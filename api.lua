@@ -31,49 +31,71 @@ petz.pet = {} -- A table of pet["owner_name"]="owner_name"
 
 petz.create_form = function(player_name)
     local pet = petz.pet[player_name]
-    local form_size = {x = 3, y = 5}
+    local form_size = {w = 3, h = 2}
+    local hungrystuff_pos = {x= 0, y = 0}
     local buttonexit_pos = {x = 1, y = 4}
+    local form_title = ""
     local tamagochi_form_stuff = ''
+    local affinity_stuff = ''
+    local form_orders = ''
     local more_form_orders = ''
+    local final_form = ''	
     if pet.affinity == nil then
        pet.affinity = 0
     end
-	local form_pet_orders
     if petz.settings.tamagochi_mode == true then     
-		form_size.x= form_size.x + 2
+    	form_size.w= form_size.w + 2
+		if pet.has_affinity == true then
+			form_title = S("Orders")
+			hungrystuff_pos = {x= 3, y = 1}
+			affinity_stuff =
+				"image[3,2;1,1;petz_affinity_heart.png]"..
+				"label[4,2;".. tostring(pet.affinity).."%]"
+		else
+			form_size.w= form_size.w - 1
+			form_size.h= form_size.h + 1
+			form_title = S("Status")
+			hungrystuff_pos = {x= 1, y = 1}
+		end
 		tamagochi_form_stuff = 
             "image[0,0;1,1;petz_spawnegg_"..pet.petz_type..".png]"..
-            "label[1,0;".. S("Orders").."]"..
-            "image[3,1;1,1;petz_affinity_heart.png]"..
-            "label[4,1;".. tostring(pet.affinity).."%]"..
-            "image[3,2;1,1;petz_pet_bowl_inv.png]"
+            "label[1,0;".. form_title .."]"..
+            "image[".. hungrystuff_pos.x ..",".. hungrystuff_pos.y ..";1,1;petz_pet_bowl_inv.png]"..
+            affinity_stuff            
         local hungry_label = ""
         if pet.fed == false then
             hungry_label = "Hungry"
         else
             hungry_label = "Saciated"
         end
-        tamagochi_form_stuff =tamagochi_form_stuff .. "label[4,2;"..S(hungry_label).."]"
+        tamagochi_form_stuff = tamagochi_form_stuff .. "label[".. hungrystuff_pos.x +1 ..",".. hungrystuff_pos.y ..";"..S(hungry_label).."]"
     else
         tamagochi_form_stuff =
             "image[1,0;1,1;petz_spawnegg_"..pet.petz_type..".png]"
     end
     if pet.petz_type == "parrot" then
-		form_size.y = form_size.y + 1
+		form_size.h = form_size.h + 1
 		buttonexit_pos.y = buttonexit_pos.y + 1
 		more_form_orders = more_form_orders..
 		"button_exit[0,4;1,1;btn_alight;"..S("Alight").."]"	..
 		"button_exit[1,4;1,1;btn_fly;"..S("Fly").."]"	
     end
-    form_pet_orders =
-		"size["..form_size.x..","..form_size.y..";]"..
+    if pet.give_orders == true then
+		form_size.h= form_size.h + 3
+		form_orders =
+			"button_exit[0,1;3,1;btn_followme;"..S("Follow me").."]"..
+			"button_exit[0,2;3,1;btn_standhere;"..S("Stand here").."]"..
+			"button_exit[0,3;3,1;btn_ownthing;"..S("Do your own thing").."]"..	
+			more_form_orders
+	else
+		buttonexit_pos.y = buttonexit_pos.y - 2
+    end
+    final_form =
+		"size["..form_size.w..","..form_size.h..";]"..
 		tamagochi_form_stuff..        
-		"button_exit[0,1;3,1;btn_followme;"..S("Follow me").."]"..
-		"button_exit[0,2;3,1;btn_standhere;"..S("Stand here").."]"..
-		"button_exit[0,3;3,1;btn_ownthing;"..S("Do your own thing").."]"..	
-		more_form_orders..
+		form_orders..
 		"button_exit["..buttonexit_pos.x..","..buttonexit_pos.y..";1,1;btn_close;"..S("Close").."]"
-	return form_pet_orders
+	return final_form
 end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
@@ -157,6 +179,21 @@ petz.init_timer = function(self)
     end
 end
 
+petz.set_health = function(self, amount)
+	local current_health = self.health
+    local new_health = current_health + amount
+    if new_health >= 0  then
+		if new_health >= self.hp_max then
+			self.health = self.hp_max
+		else
+			self.health = new_health               
+		end
+    else
+        self.health = 0
+    end
+    return self.health
+end
+
 petz.timer = function(self)
     minetest.after(petz.settings.tamagochi_check_time, function(self)         
         if not(self.object== nil) then
@@ -185,26 +222,29 @@ petz.timer = function(self)
                 return
             end
             --Decrease affinitty always a bit amount because the pet lost some affinitty
-            petz.set_affinity(self, false, 10)
+            if self.has_affinity == true then
+				petz.set_affinity(self, false, 10)
+			end
             --Decrease health if pet has not fed
             if self.fed == false then
-                local current_health = self.health
-                new_health = current_health - petz.settings.tamagochi_hunger_damage
-                if new_health>=0  then
-                    self.health = new_health
-                    petz.set_affinity(self, false, 33)
-                else
-                    self.health = 0
-                end
+				local damage_amount = - petz.settings.tamagochi_hunger_damage
+				local new_health = petz.set_health(self, damage_amount) 
+                if (new_health >= 0)  and (self.has_affinity == true) then
+					petz.set_affinity(self, false, 33)
+				end                
             else
                 self.fed = false --Reset the variable
             end
             --If the pet has not brushed
-            if self.brushed == false then
-                petz.set_affinity(self, false, 20)
-            else
-                self.brushed = false --Reset the variable
-            end
+            if self.can_be_brushed == true then
+				if self.brushed == false then
+					if self.has_affinity == true then
+						petz.set_affinity(self, false, 20)
+					end
+				else
+					self.brushed = false --Reset the variable
+				end
+			end
             --If the petz is a lion had to been lashed
             if self.petz_type== "lion" then
                 if self.lashed == false then
@@ -218,7 +258,7 @@ petz.timer = function(self)
                 minetest.chat_send_player(self.owner, S("Your").. " "..self.petz_type.." "..S("has starved to death!!!"))
                 self.init_timer  = false -- no more timing
             --I the pet get bored of you
-            elseif self.affinity == 0 then
+            elseif (self.has_affinity == true) and (self.affinity == 0) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has abandoned you!!!"))
                 self.owner = "" --the pet abandon you
                 if self.is_wild == true then
@@ -245,7 +285,7 @@ petz.on_rightclick = function(self, clicker)
         local player_name = clicker:get_player_name()
         local wielded_item = clicker:get_wielded_item()
         local wielded_item_name= wielded_item:get_name()
-        if ((self.is_pet == true) and (self.owner == player_name)) -- If brushing or spread beaver oil
+        if ((self.is_pet == true) and (self.owner == player_name) and (self.can_be_brushed == true))-- If brushing or spread beaver oil
             and ((wielded_item_name == "petz:hairbrush") or (wielded_item_name == "petz:beaver_oil")) then                       
                 if petz.settings.tamagochi_mode == true then
                     if wielded_item_name == "petz:hairbrush" then
@@ -292,7 +332,7 @@ petz.on_rightclick = function(self, clicker)
 				minetest.chat_send_player(clicker:get_player_name(), S("This calf has already been milked."))
 			end
         --Else open the Form
-        elseif (self.tamed == true) and (self.give_orders == true) then
+        elseif (self.tamed == true) and (self.is_pet == true) then
             petz.pet[player_name]= self
             minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name))
         end
@@ -544,7 +584,7 @@ petz.pos_front = function(self, pos)
 	return pos_front
 end
 
-petz.arboreal_behaviour = function(self, pos)
+petz.arboreal_behaviour = function(self)
 		local pos = self.object:get_pos() -- check the mob pos to togle between arboreal-terrestrial
 		---
 		---Change behaviour status
@@ -580,4 +620,21 @@ petz.arboreal_behaviour = function(self, pos)
 				end
 			end			
 		end
+end
+
+---
+---Aquatic Behaviour
+---
+petz.aquatic_behaviour = function(self)
+	if self.is_mammal == false then --if not mammal, air suffocation
+		local pos = self.object:get_pos() 
+		local pos_under = {x = pos.x, y = pos.y - 0.75, z = pos.z, }
+		--Check if the aquatic animal is on water
+		local node_under = minetest.get_node_or_nil(pos_under)
+		if node_under and minetest.registered_nodes[node_under.name] 
+			and (not(minetest.registered_nodes[node_under.name].groups.water)) then
+				local air_damage = - petz.settings.air_damage
+				petz.set_health(self, air_damage)
+		end	
+	end
 end

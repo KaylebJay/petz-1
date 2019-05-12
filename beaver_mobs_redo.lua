@@ -115,6 +115,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.affinity = 100
 			self.init_timer = false
 			self.fed= false
+			self.can_be_brushed = true
 			self.brushed = false
 			self.beaver_oil_applied = false
 			self.dam_created = false	

@@ -118,15 +118,17 @@ mobs:register_mob("petz:"..pet_name, {
 		end
 	end, 	
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set00 then
-			self.custom_vars_set00 = 0
+		if not self.custom_vars_set01 then
+			self.custom_vars_set01 = 0
 			self.petz_type = "pony"
 			self.is_pet = true
 			self.is_wild = false
 			self.give_orders = true
+			self.has_affinity = true
 			self.affinity = 100
 			self.init_timer = true
 			self.fed= false
+			self.can_be_brushed = true
 			self.brushed = false
 			self.beaver_oil_applied = false			
 			self.food_count = 0

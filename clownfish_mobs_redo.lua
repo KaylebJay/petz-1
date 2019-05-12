@@ -85,19 +85,23 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker)
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set01 then
-			self.custom_vars_set01 = 0
+		if not self.custom_vars_set02 then
+			self.custom_vars_set02 = 0
 			self.petz_type = "clownfish"
 			self.groups = {fish= 1, fishtank = 1}
-			self.is_pet = false
+			self.is_pet = true
 			self.is_wild = false
+			self.is_mammal = false
+			self.has_affinity = false
 			self.give_orders = false
 			self.affinity = 100
 			self.init_timer = false
 			self.fed= false
+			self.can_be_brushed = false
 			self.brushed = false			
 			self.animation = animation_aquatic
-		end	
+		end
+		petz.aquatic_behaviour(self)		
 	end,
 })
 

@@ -22,9 +22,14 @@ function petz:split(inSplitPattern, outResults)
   table.insert(outResults, string.sub(self, theStart))
   return outResults
 end
+--Safe Nodes
 local tamagochi_safe_nodes = settings:get("tamagochi_safe_nodes", "")
 petz.settings.tamagochi_safe_nodes = tamagochi_safe_nodes:split(", ")
+--Air Damage
+petz.settings.air_damage = tonumber(settings:get("air_damage"))
+--API Type
 petz.settings.type_api = settings:get("type_api", "mobs_redo")
+--Mobs Specific
 petz.settings.kitty_spawn = settings:get_bool("kitty_spawn", true)
 petz.settings.kitty_spawn_chance = tonumber(settings:get("kitty_spawn_chance"))
 petz.settings.kitty_follow = settings:get("kitty_follow", "")
