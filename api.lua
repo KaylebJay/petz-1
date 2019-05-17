@@ -91,10 +91,13 @@ petz.create_form = function(player_name)
 			"label[3,0;"..genre.."]"..
 			"image[3,3;1,1;petz_pony_velocity_icon.png]"..
 			"label[4,3;".. tostring(pet.max_speed_forward).."/"..tostring(pet.max_speed_reverse)..'/'..tostring(pet.accel).."]"
-		if pet.is_pregnant == true then
+		if pet.is_male == false and pet.is_pregnant == true then
 			more_form_orders = more_form_orders..
-			"image[3,4;1,1;petz_pony_pregnant_icon.png]"..
-			"label[4,4;"..S("Pregnant").."]"
+				"image[3,4;1,1;petz_pony_pregnant_icon.png]"..
+				"label[4,4;"..S("Pregnant").."]"
+		elseif pet.is_male == false and pet.pregnant_count <= 0 then
+			more_form_orders = more_form_orders..				
+				"label[3,4;"..S("Infertile").."]"
 		end
     end
     if pet.give_orders == true then
