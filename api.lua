@@ -438,7 +438,7 @@ petz.on_rightclick = function(self, clicker)
 			else
 				minetest.chat_send_player(clicker:get_player_name(), S("This calf has already been milked."))
 			end
-		elseif self.petz_type == "pony" and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm")then
+		elseif self.petz_type == "pony" and not(self.is_baby) and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm") then
 			petz.breed(self, clicker, wielded_item, wielded_item_name)	
         --Else open the Form
         elseif (self.tamed == true) and (self.is_pet == true) then
