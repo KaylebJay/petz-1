@@ -183,8 +183,8 @@ mobs:register_mob("petz:"..pet_name, {
     		if not(staticdata== "baby") then
 				--set a random velocity for walk and run
 				self.max_speed_forward= math.random(1, 3)				
-				self.max_speed_reverse= math.random(1, 2)	
-				self.accel= math.random(1, 2)	
+				self.max_speed_reverse= math.random(1, 3)	
+				self.accel= math.random(1, 3)	
 			end
     		local color
     		if petz.settings.type_model == "mesh" then --set a random color    			
