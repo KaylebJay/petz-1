@@ -395,7 +395,7 @@ minetest.register_node("petz:fishtank", {
 				clicker:set_wielded_item(itemstack)
 				return itemstack
 			end
-		elseif (itemstack_name == "fireflies:bug_net") and (has_fish == "true") then
+		elseif ((itemstack_name == "mobs:net") or (itemstack_name == "fireflies:bug_net")) and (has_fish == "true") then
 			local inv = clicker:get_inventory()
 			if inv:room_for_item("main", ItemStack("petz:clownfish")) then
 				inv:add_item("main", "petz:clownfish")

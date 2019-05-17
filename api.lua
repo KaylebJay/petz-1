@@ -284,7 +284,7 @@ end
 --
 --Mobs Redo Events
 --
-petz.check_capture_items = function(self, wielded_item_name, clicker)
+petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)
 	local capture_item_type
 	if wielded_item_name == "mobs:lasso" then
 		capture_item_type = "lasso"
@@ -294,13 +294,17 @@ petz.check_capture_items = function(self, wielded_item_name, clicker)
 		return false
 	end
 	if capture_item_type == self.capture_item then
-		--check for room in inventory
-		local inv = clicker:get_inventory()
-		if inv:room_for_item("main", ItemStack("air")) then
-			return true
+		if check_inv_room == true then
+			--check for room in inventory
+			local inv = clicker:get_inventory()
+			if inv:room_for_item("main", ItemStack("air")) then
+				return true
+			else
+				minetest.chat_send_player(clicker:get_player_name(), S("No room in your inventory to capture it."))
+				return false				
+			end
 		else
-			minetest.chat_send_player(clicker:get_player_name(), S("No room in your inventory to capture it."))
-			return false
+			return true
 		end
 	else
 		return false
@@ -348,7 +352,7 @@ petz.on_rightclick = function(self, clicker)
             end     
             petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
-        elseif petz.check_capture_items(self, wielded_item_name, clicker) == true then        
+        elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then        
             if mobs:capture_mob(self, clicker, 0, 100, 100, true, nil) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has been captured."))
             end         
