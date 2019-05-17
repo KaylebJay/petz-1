@@ -98,8 +98,8 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker)
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set00 then
-			self.custom_vars_set00 = 0
+		if not self.custom_vars_set01 then
+			self.custom_vars_set01 = 0
 			self.petz_type = "turtle"
 			self.is_pet = false
 			self.is_wild = false
@@ -109,7 +109,8 @@ mobs:register_mob("petz:"..pet_name, {
 			self.fed= false
 			self.brushed = false			
 			self.animation_terrestrial = animation_terrestrial
-			self.animation_aquatic = animation_aquatic			
+			self.animation_aquatic = animation_aquatic		
+			self.capture_item = "net"	
 		end
 	petz.semiaquatic_behaviour(self)
 	end,

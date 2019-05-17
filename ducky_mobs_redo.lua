@@ -85,8 +85,8 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker)
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set03 then
-			self.custom_vars_set03 = 0
+		if not self.custom_vars_set04 then
+			self.custom_vars_set04 = 0
 			self.petz_type = "ducky"
 			self.is_pet = false
 			self.is_wild = false
@@ -96,6 +96,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.fed= false
 			self.brushed = false
 			self.beaver_oil_applied = false
+			self.capture_item = "net"
 		end
 		petz.lay_egg(self)	
 	end,

@@ -106,8 +106,8 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker)
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set05 then
-			self.custom_vars_set05 = 0
+		if not self.custom_vars_set06 then
+			self.custom_vars_set06 = 0
 			self.petz_type = "beaver"
 			self.is_pet = false
 			self.is_wild = false
@@ -121,6 +121,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.dam_created = false	
 			self.animation_terrestrial = animation_terrestrial
 			self.animation_aquatic = animation_aquatic	
+			self.capture_item = "net"
 		end
 	petz.semiaquatic_behaviour(self)
 	end,

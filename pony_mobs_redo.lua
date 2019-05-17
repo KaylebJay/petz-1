@@ -118,8 +118,8 @@ mobs:register_mob("petz:"..pet_name, {
 		end
 	end, 	
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set01 then
-			self.custom_vars_set01 = 0
+		if not self.custom_vars_set02 then
+			self.custom_vars_set02 = 0
 			self.petz_type = "pony"
 			self.is_pet = true
 			self.is_wild = false
@@ -137,6 +137,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.max_speed_reverse = 2
 			self.accel = 6
 			self.terrain_type = 3
+			self.capture_item = "lasso"
 			self.driver_attach_at = {x = -0.0325, y = -0.125, z = -0.2}
 			self.driver_eye_offset = {x = 0, y = 0, z = 0}
 			self.driver_scale = {x = 1/self.visual_size.x, y = 1/self.visual_size.y}

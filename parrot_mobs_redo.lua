@@ -5,7 +5,7 @@ local S = ...
 
 local pet_name = "parrot"
 local mesh = nil
-local scale_parrot = 1.3
+local scale_parrot = 0.7
 local textures = {}
 local collisionbox = {}
 local animation_ground = {
@@ -104,9 +104,14 @@ mobs:register_mob("petz:"..pet_name, {
 	after_activate = function(self, staticdata, def, dtime)
 		self.init_timer = true
 	end,
+	on_die = function(self, pos)
+		if not(self.object:get_attach() == nil) then
+			self.object:set_detach()
+		end
+	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set01 then
-			self.custom_vars_set01 = 0
+		if not self.custom_vars_set02 then
+			self.custom_vars_set02 = 0
 			self.petz_type = "parrot"
 			self.is_pet = true
 			self.is_wild = false
@@ -121,6 +126,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.is_flying = true		
 			self.animation_ground = animation_ground
 			self.animation_fly = animation_fly
+			self.capture_item = "net"
 		end
 		petz.init_timer(self)
 		petz.fly_behaviour(self)

@@ -78,7 +78,8 @@ petz.create_form = function(player_name)
 		buttonexit_pos.y = buttonexit_pos.y + 1
 		more_form_orders = more_form_orders..
 		"button_exit[0,4;1,1;btn_alight;"..S("Alight").."]"	..
-		"button_exit[1,4;1,1;btn_fly;"..S("Fly").."]"	
+		"button_exit[1,4;1,1;btn_fly;"..S("Fly").."]"..
+		"button_exit[2,4;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"	
     end
     if pet.give_orders == true then
 		form_size.h= form_size.h + 3
@@ -126,7 +127,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			pet.object:set_acceleration({ x = 0, y = 0, z = 0 })    
 			pet.object:set_velocity({ x = 0, y = 0, z = 0 })    
 			petz.ownthing(pet)
-		end, pet)		
+			end, pet)	
+	elseif fields.btn_perch_shoulder then
+		pet.object:set_attach(player, "Arm_Left", {x=0.5,y=-6.25,z=0}, {x=0,y=0,z=180}) 
+		pet:set_animation("stand")
+		minetest.after(120.0, function(pet) 
+			pet.object:set_detach()
+			end, pet)	
 	end
 	return true
 end)
@@ -277,6 +284,21 @@ end
 --
 --Mobs Redo Events
 --
+petz.check_capture_items = function(self, wielded_item_name)
+	local capture_item_type
+	if wielded_item_name == "mobs:lasso" then
+		capture_item_type = "lasso"
+	elseif (wielded_item_name == "mobs:net") or (wielded_item_name == "fireflies:bug_net") then
+		capture_item_type = "net"
+	else
+		return false
+	end
+	if capture_item_type == self.capture_item then
+		return true
+	else
+		return false
+	end
+end
 
 petz.on_rightclick = function(self, clicker)
         if not(clicker:is_player()) then
@@ -319,7 +341,7 @@ petz.on_rightclick = function(self, clicker)
             end     
             petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
-        elseif (wielded_item_name == "mobs:lasso") or (wielded_item_name == "mobs:net") then        
+        elseif petz.check_capture_items(self, wielded_item_name) == true then        
             if mobs:capture_mob(self, clicker, 0, 100, 100, true, nil) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has been captured."))
             end         

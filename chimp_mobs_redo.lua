@@ -96,8 +96,8 @@ mobs:register_mob("petz:"..pet_name, {
 		self.init_timer = true
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set01 then
-			self.custom_vars_set01 = 0
+		if not self.custom_vars_set02 then
+			self.custom_vars_set02 = 0
 			self.petz_type = "chimp"
 			self.is_pet = true
 			self.is_wild = false
@@ -113,6 +113,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.behaviour = "terrestrial"
 			self.animation_terrestrial = animation_terrestrial
 			self.animation_arboreal = animation_arboreal
+			self.capture_item = "net"
 		end
 		petz.init_timer(self)		
 		petz.arboreal_behaviour(self)		

@@ -123,8 +123,8 @@ mobs:register_mob("petz:"..pet_name, {
     	end
     end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set03 then
-			self.custom_vars_set03 = 0
+		if not self.custom_vars_set04 then
+			self.custom_vars_set04 = 0
 			self.petz_type = "lamb"
 			self.is_pet = false
 			self.is_wild = false
@@ -135,7 +135,8 @@ mobs:register_mob("petz:"..pet_name, {
 			self.brushed = false
 			self.beaver_oil_applied = false			
 			self.shaved = false
-			self.food_count = 0	
+			self.food_count = 0
+			self.capture_item = "lasso"
 		end	
 	end,
 })

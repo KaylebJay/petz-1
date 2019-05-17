@@ -98,8 +98,8 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.tame_whip(self, hitter)
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set05 then
-			self.custom_vars_set05 = 0
+		if not self.custom_vars_set06 then
+			self.custom_vars_set06 = 0
 			self.petz_type = "lion"
 			self.is_pet = true
 			self.is_wild = true
@@ -113,6 +113,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.beaver_oil_applied = false
 			self.lashed = false
 			self.lashing_count = 0
+			self.capture_item = "lasso"
 		end
 		petz.init_timer(self)
 	end,

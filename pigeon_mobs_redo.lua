@@ -95,8 +95,8 @@ mobs:register_mob("petz:"..pet_name, {
 		self.init_timer = true
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set00 then
-			self.custom_vars_set00 = 0
+		if not self.custom_vars_set01 then
+			self.custom_vars_set01 = 0
 			self.petz_type = "pigeon"
 			self.is_pet = false
 			self.is_wild = false
@@ -109,6 +109,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.is_flying = true		
 			self.animation_ground = animation_ground
 			self.animation_fly = animation_fly
+			self.capture_item = "net"
 		end
 		petz.init_timer(self)
 		petz.fly_behaviour(self)
