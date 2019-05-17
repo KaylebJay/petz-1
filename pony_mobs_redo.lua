@@ -188,13 +188,15 @@ mobs:register_mob("petz:"..pet_name, {
 			end
     		local color
     		if petz.settings.type_model == "mesh" then --set a random color    			
-    			local random_number = math.random(1, 3)
+    			local random_number = math.random(1, 4)
     			if random_number == 1 then
 					color = "brown"
 				elseif random_number == 2 then
 					color = "white"				
-				else				
-					color = "yellow"
+				elseif random_number == 3 then
+					color = "yellow"				
+				else
+					color = "black"
 				end		
 				self.textures_color = {"petz_pony_"..color..".png"}
 				self.textures_saddle = {"petz_pony_"..color..".png" .. "^petz_pony_saddle.png"}
