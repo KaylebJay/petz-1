@@ -450,3 +450,27 @@ minetest.register_entity("petz:clownfish_entity_sprite", {
 		end
 	end,
 })
+
+--Metal Syringe
+
+minetest.register_craftitem("petz:glass_syringe", {
+    description = S("Glass Syringe"),
+    inventory_image = "petz_glass_syringe.png",
+    wield_image = "petz_glass_syringe.png"
+})
+
+minetest.register_craftitem("petz:glass_syringe_sperm", {
+    description = S("Glass Syringe with sperm"),
+    inventory_image = "petz_glass_syringe_sperm.png",
+    wield_image = "petz_glass_syringe_sperm.png"
+})
+
+minetest.register_craft({
+    type = "shaped",
+    output = "petz:glass_syringe",
+    recipe = {
+        {"", "", "vessels:glass_fragments"},
+        {"", "vessels:glass_fragments", ""},
+        {"default:steel_ingot", "", ""},
+    }
+})

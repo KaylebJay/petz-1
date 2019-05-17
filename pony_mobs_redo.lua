@@ -7,10 +7,13 @@ local pet_name = "pony"
 
 local mesh = nil
 local textures = {}
+local textures_baby = {}
 local fixed = {}
 local scale_pony = 2.2
+local scale_baby = 0.5
 petz.pony = {}
 local collisionbox = {}
+local collisionbox_baby = {}
 
 if petz.settings.type_model == "cubic" then
 	local node_name = "petz:"..pet_name.."_block"
@@ -43,6 +46,7 @@ if petz.settings.type_model == "cubic" then
 else
 	mesh = 'petz_pony.b3d'	
 	textures = {"petz_pony_white.png"}	
+	textures_baby = {"petz_pony_baby.png"}	
 	collisionbox = {-0.5, -0.75*scale_pony, -0.5, 0.375, -0.375, 0.375}
 end
 
@@ -61,7 +65,7 @@ mobs:register_mob("petz:"..pet_name, {
 	collisionbox = collisionbox,
 	makes_footstep_sound = false,
 	walk_velocity = 0.75,
-    run_velocity = 1,    
+    run_velocity = 1.0,    
     runaway = true,
     pushable = true,
     floats = 1,
@@ -97,7 +101,7 @@ mobs:register_mob("petz:"..pet_name, {
 					self.object:set_properties({tiles = petz.pony.tiles})
 				end 
 				self.saddle = false					
-			elseif not self.driver and not self.saddle and clicker:get_wielded_item():get_name() == "mobs:saddle" then -- Put on saddle if tamed
+			elseif not self.driver and not self.saddle and self.is_baby== false and clicker:get_wielded_item():get_name() == "mobs:saddle" then -- Put on saddle if tamed
 				local w = clicker:get_wielded_item() -- Put on saddle and take saddle from player's inventory
 				if petz.settings.type_model == "mesh" then
 					self.object:set_properties({textures = self.textures_saddle})
@@ -118,29 +122,39 @@ mobs:register_mob("petz:"..pet_name, {
 		end
 	end, 	
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set02 then
-			self.custom_vars_set02 = 0
+		if not self.custom_vars_set03 then --change in after_activate function below
+			self.custom_vars_set03 = 0
 			self.petz_type = "pony"
 			self.is_pet = true
 			self.is_wild = false
 			self.give_orders = true
+			self.scale_pony = scale_pony
+			self.scale_baby = scale_baby
 			self.has_affinity = true
 			self.affinity = 100
 			self.init_timer = true
-			self.fed= false
+			self.fed = false			
+			self.is_male = true
+			self.pregnant_count = 5
+			self.is_pregnant = false
 			self.can_be_brushed = true
 			self.brushed = false
 			self.beaver_oil_applied = false			
 			self.food_count = 0
 			self.saddle = false
-			self.max_speed_forward = 7
-			self.max_speed_reverse = 2
-			self.accel = 6
 			self.terrain_type = 3
 			self.capture_item = "lasso"
 			self.driver_attach_at = {x = -0.0325, y = -0.125, z = -0.2}
 			self.driver_eye_offset = {x = 0, y = 0, z = 0}
 			self.driver_scale = {x = 1/self.visual_size.x, y = 1/self.visual_size.y}
+			self.visual_size_baby = {x=petz.settings.visual_size.x*scale_pony*0.5, y=petz.settings.visual_size.y*scale_pony*0.5}
+			--set a random genre
+			random_number = math.random(1, 2)
+			if random_number == 1 then
+				self.is_male = true
+			else
+				self.is_male = false
+			end
 		end
 		petz.init_timer(self)
 		if self.driver then
@@ -157,8 +171,21 @@ mobs:register_mob("petz:"..pet_name, {
 		end
 	end,
 	after_activate = function(self, staticdata, def, dtime)		
-		self.init_timer = true	
-    	if not self.custom_vars_set00 then --but do not set here! instead wait for the do-custom function to do it.
+		if (staticdata== "baby") or (self.is_baby== true) then							
+			petz.init_growth(self)
+			self.object:set_properties({
+				visual_size = {x=petz.settings.visual_size.x*scale_pony*scale_baby, y=petz.settings.visual_size.y*scale_pony*scale_baby},
+				collisionbox = {-0.5*scale_baby, -0.75*scale_pony*scale_baby, -0.25, 0.375, -0.375, 0.375}
+			})		
+		end
+		self.init_timer = true
+    	if not self.custom_vars_set03 then --but do not set here! instead wait for the do-custom function to do it.  
+    		if not(staticdata== "baby") then
+				--set a random velocity for walk and run
+				self.max_speed_forward= math.random(1, 3)				
+				self.max_speed_reverse= math.random(1, 2)	
+				self.accel= math.random(1, 2)	
+			end
     		local color
     		if petz.settings.type_model == "mesh" then --set a random color    			
     			local random_number = math.random(1, 3)
@@ -176,12 +203,15 @@ mobs:register_mob("petz:"..pet_name, {
 				self.tiles_saddle = petz.pony.tiles_saddle
 				color = "brown" --cubic horse color is always brown
 			end
-			self.skin_color = color				    			    	
-		end 		
+			self.skin_color = color
+		end 				
     	if self.saddle then
     		self.object:set_properties({textures = self.textures_saddle})
     	else
     		self.object:set_properties({textures = self.textures_color})
+    	end
+    	if self.is_pregnant == true then
+			petz.init_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)
     	end
 	end,
 })

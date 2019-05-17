@@ -79,7 +79,23 @@ petz.create_form = function(player_name)
 		more_form_orders = more_form_orders..
 		"button_exit[0,4;1,1;btn_alight;"..S("Alight").."]"	..
 		"button_exit[1,4;1,1;btn_fly;"..S("Fly").."]"..
-		"button_exit[2,4;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"	
+		"button_exit[2,4;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"
+	elseif pet.petz_type == "pony" then
+		local genre = ''
+		if pet.is_male == true then
+			genre = "Male"
+		else
+			genre = "Female"
+		end		
+		more_form_orders = more_form_orders..
+			"label[3,0;"..genre.."]"..
+			"image[3,3;1,1;petz_pony_velocity_icon.png]"..
+			"label[4,3;".. tostring(pet.max_speed_forward).."/"..tostring(pet.max_speed_reverse)..'/'..tostring(pet.accel).."]"
+		if pet.is_pregnant == true then
+			more_form_orders = more_form_orders..
+			"image[3,4;1,1;petz_pony_pregnant_icon.png]"..
+			"label[4,4;"..S("Pregnant").."]"
+		end
     end
     if pet.give_orders == true then
 		form_size.h= form_size.h + 3
@@ -199,6 +215,61 @@ petz.set_health = function(self, amount)
         self.health = 0
     end
     return self.health
+end
+
+local function round(x, n)
+	return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
+end
+
+petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel)
+    minetest.after(petz.settings.pony_pregnancy_time, function(self, max_speed_forward, max_speed_reverse, accel)         
+        if not(self.object:get_pos() == nil) then
+			local pos = self.object:get_pos()		
+			self.is_pregnant = false
+			local baby = minetest.add_entity(pos, "petz:pony", "baby")	
+			local baby_entity = baby:get_luaentity()
+			baby_entity.is_baby = true
+			--Set the genetics accordingly the father and the mother
+			local random_number = math.random(-1, 1)
+			local new_max_speed_forward = round((max_speed_forward + self.max_speed_forward)/2, 0) + random_number
+			if new_max_speed_forward <= 0 then
+				new_max_speed_forward = 0
+			elseif new_max_speed_forward > 10 then
+				new_max_speed_forward = 10
+			end
+			local new_max_speed_reverse = round((max_speed_reverse  + self.max_speed_reverse)/2, 0) + random_number
+			if new_max_speed_reverse <= 0 then
+				new_max_speed_reverse = 0
+			elseif new_max_speed_reverse > 10 then
+				new_max_speed_reverse = 10
+			end
+			local new_accel  = round((accel + self.accel)/2, 0)	+ random_number
+			if new_accel <= 0 then
+				new_accel = 0
+			elseif new_accel > 10 then
+				new_accel = 10
+			end
+			baby_entity.max_speed_forward= new_max_speed_forward 
+			baby_entity.max_speed_reverse = new_max_speed_reverse
+			baby_entity.accel = new_accel 
+			if not(self.owner== nil) and not(self.owner== "") then					
+				baby_entity.owner = self.owner
+				baby_entity.tamed = true
+			end			
+		end
+    end, self, max_speed_forward, max_speed_reverse, accel)
+end
+
+petz.init_growth = function(self)
+    minetest.after(petz.settings.pony_growth_time, function(self)         
+        if not(self.object:get_pos() == nil) then
+			self.is_baby = false
+			self.object:set_properties({		
+				visual_size = {x=petz.settings.visual_size.x*self.scale_pony, y=petz.settings.visual_size.y*self.scale_pony},
+				collisionbox = {-0.5, -0.75*self.scale_pony, -0.5, 0.375, -0.375, 0.375}
+			})		
+		end
+    end, self, max_speed_forward, max_speed_reverse, accel)
 end
 
 petz.timer = function(self)
@@ -364,11 +435,36 @@ petz.on_rightclick = function(self, clicker)
 			else
 				minetest.chat_send_player(clicker:get_player_name(), S("This calf has already been milked."))
 			end
+		elseif self.petz_type == "pony" and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm")then
+			petz.breed(self, clicker, wielded_item, wielded_item_name)	
         --Else open the Form
         elseif (self.tamed == true) and (self.is_pet == true) then
             petz.pet[player_name]= self
             minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name))
         end
+end
+
+
+petz.breed = function(self, clicker, wielded_item, wielded_item_name)
+	if wielded_item_name == "petz:glass_syringe" and self.is_male== true then		
+		local new_wielded_item = ItemStack("petz:glass_syringe_sperm")
+		local meta = new_wielded_item:get_meta()
+		meta:set_int("max_speed_forward", self.max_speed_forward)
+		meta:set_int("max_speed_reverse", self.max_speed_reverse)
+		meta:set_int("accel", self.accel)
+		clicker:set_wielded_item(new_wielded_item)
+	elseif wielded_item_name == "petz:glass_syringe_sperm" and self.is_male== false then			 
+		if self.is_pregnant == false and self.pregnant_count > 0 then
+			self.is_pregnant = true
+			self.pregnant_count = self.pregnant_count - 1	
+			local meta = wielded_item:get_meta()
+			local max_speed_forward = meta:get_int("max_speed_forward")
+			local max_speed_reverse = meta:get_int("max_speed_reverse")
+			local accel = meta:get_int("accel")			
+			petz.init_pregnancy(self, max_speed_forward, max_speed_reverse, accel)
+		end
+		clicker:set_wielded_item("petz:glass_syringe")	
+	end
 end
 
 petz.on_die = function(self, pos)
