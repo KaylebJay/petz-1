@@ -464,8 +464,9 @@ petz.breed = function(self, clicker, wielded_item, wielded_item_name)
 			local meta = wielded_item:get_meta()
 			local max_speed_forward = meta:get_int("max_speed_forward")
 			local max_speed_reverse = meta:get_int("max_speed_reverse")
-			local accel = meta:get_int("accel")			
+			local accel = meta:get_int("accel")		
 			petz.init_pregnancy(self, max_speed_forward, max_speed_reverse, accel)
+			petz.do_particles_effect(self.object, self.object:get_pos(), "pregnant")
 		end
 		clicker:set_wielded_item("petz:glass_syringe")	
 	end
@@ -505,12 +506,23 @@ petz.do_particles_effect = function(obj, pos, particle_type)
     }    
     local texture_name
     local particles_amount
+    local min_size
+    local max_size
     if particle_type == "star" then
         texture_name = "petz_star_particle.png"
         particles_amount = 20
+		min_size = 1.0
+		max_size = 1.5
     elseif particle_type == "heart" then
         texture_name = "petz_affinity_heart.png"
         particles_amount = 10
+ 		min_size = 1.0
+		max_size = 1.5
+    elseif particle_type == "pregnant" then
+        texture_name = "petz_pony_pregnant_icon.png"
+        particles_amount = 10
+        min_size = 5.0
+		max_size = 6.0 
     end
     minetest.add_particlespawner({
         --attached = obj,
@@ -524,8 +536,8 @@ petz.do_particles_effect = function(obj, pos, particle_type)
         --maxacc = {x=1, y=0, z=1},
         minexptime = 1,
         maxexptime = 1,
-        minsize = 1.0,
-        maxsize = 1.5,
+        minsize = min_size,
+        maxsize =max_size,
         collisiondetection = false,
         vertical = false,
         texture = texture_name,        
