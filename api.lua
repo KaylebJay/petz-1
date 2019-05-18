@@ -267,7 +267,8 @@ petz.init_growth = function(self)
     minetest.after(petz.settings.pony_growth_time, function(self)         
         if not(self.object:get_pos() == nil) then
 			self.is_baby = false
-			self.object:set_properties({		
+			self.object:set_properties({
+				is_baby = false,
 				visual_size = {x=petz.settings.visual_size.x*self.scale_pony, y=petz.settings.visual_size.y*self.scale_pony},
 				collisionbox = {-0.5, -0.75*self.scale_pony, -0.5, 0.375, -0.375, 0.375}
 			})		
