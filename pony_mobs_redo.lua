@@ -101,7 +101,7 @@ mobs:register_mob("petz:"..pet_name, {
 					self.object:set_properties({tiles = petz.pony.tiles})
 				end 
 				self.saddle = false					
-			elseif not self.driver and not self.saddle and self.is_baby== false and clicker:get_wielded_item():get_name() == "mobs:saddle" then -- Put on saddle if tamed
+			elseif not self.driver and not self.saddle and not(self.is_baby) and clicker:get_wielded_item():get_name() == "mobs:saddle" then -- Put on saddle if tamed
 				local w = clicker:get_wielded_item() -- Put on saddle and take saddle from player's inventory
 				if petz.settings.type_model == "mesh" then
 					self.object:set_properties({textures = self.textures_saddle})
