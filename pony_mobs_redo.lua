@@ -188,13 +188,17 @@ mobs:register_mob("petz:"..pet_name, {
 			end
     		local color
     		if petz.settings.type_model == "mesh" then --set a random color    			
-    			local random_number = math.random(1, 4)
+    			local random_number = math.random(1, 6)
     			if random_number == 1 then
 					color = "brown"
 				elseif random_number == 2 then
 					color = "white"				
 				elseif random_number == 3 then
 					color = "yellow"				
+				elseif random_number == 4 then
+					color = "white_dotted"				
+				elseif random_number == 5 then
+					color = "gray_dotted"		
 				else
 					color = "black"
 				end		
