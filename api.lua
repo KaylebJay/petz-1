@@ -267,7 +267,9 @@ petz.init_growth = function(self)
     minetest.after(petz.settings.pony_growth_time, function(self)         
         if not(self.object:get_pos() == nil) then
 			self.is_baby = false
+			self.jump = false
 			self.object:set_properties({
+				jump = false,
 				is_baby = false,
 				visual_size = {x=petz.settings.visual_size.x*self.scale_pony, y=petz.settings.visual_size.y*self.scale_pony},
 				collisionbox = {-0.5, -0.75*self.scale_pony, -0.5, 0.375, -0.375, 0.375}
@@ -359,9 +361,34 @@ end
 --
 --Mobs Redo Events
 --
+
+petz.lamb_wool_regrow = function(self)
+	self.food_count = (self.food_count or 0) + 1        
+	if self.food_count >= 5 then -- if lamb replaces 5x grass then it regrows wool
+		self.food_count = 0
+		self.shaved = false
+		if petz.settings.type_model == "mesh" then
+			self.object:set_properties({textures = self.textures_color})
+		else
+			self.object:set_properties({tiles = petz.lamb.tiles})
+		end
+	end
+end
+
+petz.lamb_wool_shave = function(self, clicker)
+    clicker:get_inventory():add_item("main", "wool:"..self.wool_color)
+    petz.do_sound_effect("object", self.object, "petz_lamb_moaning")
+	if petz.settings.type_model == "mesh" then
+		self.object:set_properties({textures = self.textures_shaved})
+	else
+		self.object:set_properties({tiles = petz.lamb.tiles_shaved})
+	end 
+	self.shaved = true           
+end
+
 petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)
 	local capture_item_type
-	if wielded_item_name == "mobs:lasso" then
+	if wielded_item_name == "mobs:lasso" or wielded_item_name == "pet<:lasso"then
 		capture_item_type = "lasso"
 	elseif (wielded_item_name == "mobs:net") or (wielded_item_name == "fireflies:bug_net") then
 		capture_item_type = "net"

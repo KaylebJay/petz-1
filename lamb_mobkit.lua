@@ -44,57 +44,68 @@ else
 end
 
 
-mobs:register_mob("petz:"..pet_name, {
-	type = "animal",
+minetest.register_entity("petz:lamb",{
+	--Petz specifics
+	petz_type = "lamb",
+	is_pet = false,
+	is_wild = false,
+	give_orders = false,
+	affinity = 100,
+	init_timer = false,
+	fed= false,
+	brushed = false,
+	beaver_oil_applied = false,
+	shaved = false,
+	food_count = 0,
+	capture_item = "lasso",
+
 	rotate = petz.settings.rotate,
-	damage = 8,
-    hp_min = 4,
-    hp_max = 8,
-    armor = 200,
+
+	physical = true,
+	stepheight = 0.1,				--EVIL!
+	collide_with_objects = true,
+	collisionbox = collisionbox,
 	visual = petz.settings.visual,
-	visual_size = {x=petz.settings.visual_size.x*scale_lamb, y=petz.settings.visual_size.y*scale_lamb},
 	mesh = mesh,
 	textures = textures,
-	collisionbox = collisionbox,
-	makes_footstep_sound = false,
-	walk_velocity = 0.75,
-    run_velocity = 1,    
-    runaway = true,
-    pushable = true,
-    floats = 1,
-	jump = true,
-	follow = petz.settings.lamb_follow,
-	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1,},		
+	visual_size = {x=petz.settings.visual_size.x*scale_lamb, y=petz.settings.visual_size.y*scale_lamb},
+	static_save = true,
+	on_step = mobkit.stepfunc,	-- required
+	on_activate = mobkit.actfunc,		-- required
+	get_staticdata = mobkit.statfunc,
+	-- api props
+	springiness=0,
+	buoyancy = 0.9,
+	walk_speed = 5,
+	jump_height = 1.26,
+	view_range = 24,
+	lung_capacity = 10, -- seconds
+	max_hp = 8,
+	attack={range=0.5,damage_groups={fleshy=3}},
+	
+	animation = {
+		walk={range={x=1, y=12}, speed=25, loop=true},	
+		run={range={x=13, y=25}, speed=25, loop=true},	
 	},
-	water_damage = 0,
-	lava_damage = 6,
-	light_damage = 0,
-    sounds = {
-		random = "petz_lamb_bleat",
-	},
-    animation = {
-    	speed_normal = 15, walk_start = 1, walk_end = 12,
-    	speed_run = 25, run_start = 13, run_end = 25,
-    	stand_start = 26, stand_end = 46,		
-    	stand2_start = 47, stand2_end = 59,	
-    	stand4_start = 82, stand4_end = 94,	
-	},
-    view_range = 4,
-    fear_height = 3,
-    replace_rate = 10,
-    replace_what = {
-        {"group:grass", "air", -1},
-        {"default:dirt_with_grass", "default:dirt", -2}
-    },
-    on_rightclick = function(self, clicker)
+	
+	brainfunc = petz.herbivore_brain,
+	
+	on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
+		local hvel = vector.multiply(vector.normalize({x=dir.x,y=0,z=dir.z}),4)
+		self.object:set_velocity({x=hvel.x,y=2,z=hvel.z})		
+	end,
+	
+	on_rightclick = function(self, clicker)
 		petz.on_rightclick(self, clicker)
 	end,
+	
  	on_replace = function(self, pos, oldnode, newnode)
 		petz.lamb_wool_regrow(self)
     end,
+    
     after_activate = function(self, staticdata, def, dtime)
     	if not self.custom_vars_set03 then --but do not set here! instead wait for the do-custom function to do it.
+			self.custom_vars_set03 = 0
     		local color
     		if petz.settings.type_model == "mesh" then --set a random color    			
     			local random_number = math.random(1, 15)
@@ -114,7 +125,7 @@ mobs:register_mob("petz:"..pet_name, {
 				self.tiles_shaved = petz.lamb.tiles_shaved
 				color = "white" --cubic lamb color is always white
 			end
-			self.wool_color = color				    			    	
+			self.wool_color = color							    			    	
 		end 		
     	if self.shaved then
     		self.object:set_properties({textures = self.textures_shaved})
@@ -122,35 +133,4 @@ mobs:register_mob("petz:"..pet_name, {
     		self.object:set_properties({textures = self.textures_color})
     	end
     end,
-	do_custom = function(self, dtime)
-		if not self.custom_vars_set04 then
-			self.custom_vars_set04 = 0
-			self.petz_type = "lamb"
-			self.is_pet = false
-			self.is_wild = false
-			self.give_orders = false
-			self.affinity = 100
-			self.init_timer = false
-			self.fed= false
-			self.brushed = false
-			self.beaver_oil_applied = false			
-			self.shaved = false
-			self.food_count = 0
-			self.capture_item = "lasso"
-		end	
-	end,
-})
-
-mobs:register_egg("petz:lamb", S("Lamb"), "petz_spawnegg_lamb.png", 0)
-
-mobs:spawn({
-	name = "petz:lamb",
-	nodes = {"default:dirt_with_grass"},
-	--neighbors = {"group:grass"},
-	min_light = 14,
-	interval = 90,
-	chance = petz.settings.lamb_spawn_chance,
-	min_height = 5,
-	max_height = 200,
-	day_toggle = true,
 })
