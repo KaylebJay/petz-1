@@ -164,8 +164,10 @@ petz.ownthing= function(pet)
 end
 
 --
--- Increase/Descrease the pet affinity
+--The Tamagochi Mode
 --
+
+-- Increase/Descrease the pet affinity
 
 petz.set_affinity = function(self, increase, amount)
     local new_affinitty
@@ -182,19 +184,7 @@ petz.set_affinity = function(self, increase, amount)
     self.affinity = new_affinitty
 end
 
---
--- Whip/lashing behaviour
---
-
-petz.do_lashing = function(self)
-    if self.lashed == false then        
-        self.lashed = true
-    end
-    petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
-end
-
---
---The Timer for the Tamagochi Mode
+--The Tamagochi Timer
 
 petz.init_timer = function(self)
     if (petz.settings.tamagochi_mode == true) and (self.tamed == true) and (self.init_timer == true) then
@@ -224,59 +214,9 @@ local function round(x, n)
 	return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
 end
 
-petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel)
-    minetest.after(petz.settings.pony_pregnancy_time, function(self, max_speed_forward, max_speed_reverse, accel)         
-        if not(self.object:get_pos() == nil) then
-			local pos = self.object:get_pos()		
-			self.is_pregnant = false
-			local baby = minetest.add_entity(pos, "petz:pony", "baby")	
-			local baby_entity = baby:get_luaentity()
-			baby_entity.is_baby = true
-			--Set the genetics accordingly the father and the mother
-			local random_number = math.random(-1, 1)
-			local new_max_speed_forward = round((max_speed_forward + self.max_speed_forward)/2, 0) + random_number
-			if new_max_speed_forward <= 0 then
-				new_max_speed_forward = 0
-			elseif new_max_speed_forward > 10 then
-				new_max_speed_forward = 10
-			end
-			local new_max_speed_reverse = round((max_speed_reverse  + self.max_speed_reverse)/2, 0) + random_number
-			if new_max_speed_reverse <= 0 then
-				new_max_speed_reverse = 0
-			elseif new_max_speed_reverse > 10 then
-				new_max_speed_reverse = 10
-			end
-			local new_accel  = round((accel + self.accel)/2, 0)	+ random_number
-			if new_accel <= 0 then
-				new_accel = 0
-			elseif new_accel > 10 then
-				new_accel = 10
-			end
-			baby_entity.max_speed_forward= new_max_speed_forward 
-			baby_entity.max_speed_reverse = new_max_speed_reverse
-			baby_entity.accel = new_accel 
-			if not(self.owner== nil) and not(self.owner== "") then					
-				baby_entity.owner = self.owner
-				baby_entity.tamed = true
-			end			
-		end
-    end, self, max_speed_forward, max_speed_reverse, accel)
-end
-
-petz.init_growth = function(self)
-    minetest.after(petz.settings.pony_growth_time, function(self)         
-        if not(self.object:get_pos() == nil) then
-			self.is_baby = false
-			self.jump = false
-			self.object:set_properties({
-				jump = false,
-				is_baby = false,
-				visual_size = {x=petz.settings.visual_size.x*self.scale_pony, y=petz.settings.visual_size.y*self.scale_pony},
-				collisionbox = {-0.5, -0.75*self.scale_pony, -0.5, 0.375, -0.375, 0.375}
-			})		
-		end
-    end, self, max_speed_forward, max_speed_reverse, accel)
-end
+--
+--Tamagochi Mode Timer
+--
 
 petz.timer = function(self)
     minetest.after(petz.settings.tamagochi_check_time, function(self)         
@@ -359,7 +299,7 @@ petz.timer = function(self)
 end
 
 --
---Mobs Redo Events
+--Lamb Functions
 --
 
 petz.lamb_wool_regrow = function(self)
@@ -383,8 +323,14 @@ petz.lamb_wool_shave = function(self, clicker)
 	else
 		self.object:set_properties({tiles = petz.lamb.tiles_shaved})
 	end 
-	self.shaved = true           
+	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)
+	petz.afraid_behaviour(self, clicker)
+	self.shaved = true           	
 end
+
+--
+--Capture Mobs Mechanics
+--
 
 petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)
 	local capture_item_type
@@ -412,6 +358,10 @@ petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_
 		return false
 	end
 end
+
+--
+--on_rightclick event for all the Mobs
+--
 
 petz.on_rightclick = function(self, clicker)
         if not(clicker:is_player()) then
@@ -475,6 +425,9 @@ petz.on_rightclick = function(self, clicker)
         end
 end
 
+--
+--Breed Mechanics
+--
 
 petz.breed = function(self, clicker, wielded_item, wielded_item_name)
 	if wielded_item_name == "petz:glass_syringe" and self.is_male== true then		
@@ -499,9 +452,71 @@ petz.breed = function(self, clicker, wielded_item, wielded_item_name)
 	end
 end
 
+petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel)
+    minetest.after(petz.settings.pony_pregnancy_time, function(self, max_speed_forward, max_speed_reverse, accel)         
+        if not(self.object:get_pos() == nil) then
+			local pos = self.object:get_pos()		
+			self.is_pregnant = false
+			local baby = minetest.add_entity(pos, "petz:pony", "baby")	
+			local baby_entity = baby:get_luaentity()
+			baby_entity.is_baby = true
+			--Set the genetics accordingly the father and the mother
+			local random_number = math.random(-1, 1)
+			local new_max_speed_forward = round((max_speed_forward + self.max_speed_forward)/2, 0) + random_number
+			if new_max_speed_forward <= 0 then
+				new_max_speed_forward = 0
+			elseif new_max_speed_forward > 10 then
+				new_max_speed_forward = 10
+			end
+			local new_max_speed_reverse = round((max_speed_reverse  + self.max_speed_reverse)/2, 0) + random_number
+			if new_max_speed_reverse <= 0 then
+				new_max_speed_reverse = 0
+			elseif new_max_speed_reverse > 10 then
+				new_max_speed_reverse = 10
+			end
+			local new_accel  = round((accel + self.accel)/2, 0)	+ random_number
+			if new_accel <= 0 then
+				new_accel = 0
+			elseif new_accel > 10 then
+				new_accel = 10
+			end
+			baby_entity.max_speed_forward= new_max_speed_forward 
+			baby_entity.max_speed_reverse = new_max_speed_reverse
+			baby_entity.accel = new_accel 
+			if not(self.owner== nil) and not(self.owner== "") then					
+				baby_entity.owner = self.owner
+				baby_entity.tamed = true
+			end			
+		end
+    end, self, max_speed_forward, max_speed_reverse, accel)
+end
+
+petz.init_growth = function(self)
+    minetest.after(petz.settings.pony_growth_time, function(self)         
+        if not(self.object:get_pos() == nil) then
+			self.is_baby = false
+			self.jump = false
+			self.object:set_properties({
+				jump = false,
+				is_baby = false,
+				visual_size = {x=petz.settings.visual_size.x*self.scale_pony, y=petz.settings.visual_size.y*self.scale_pony},
+				collisionbox = {-0.5, -0.75*self.scale_pony, -0.5, 0.375, -0.375, 0.375}
+			})		
+		end
+    end, self, max_speed_forward, max_speed_reverse, accel)
+end
+
+--
+--ondie event for all the mobs
+--
+
 petz.on_die = function(self, pos)
     petz.pet[self.owner]= nil
 end
+
+--
+--do_punch event for all the mobs
+--
 
 petz.do_punch = function (self, hitter, time_from_last_punch, tool_capabilities, direction)
     if petz.settings.tamagochi_mode == true then         
@@ -515,7 +530,7 @@ petz.do_punch = function (self, hitter, time_from_last_punch, tool_capabilities,
 end
 
 --
---Effects
+--Particle Effects
 --
 
 petz.do_particles_effect = function(obj, pos, particle_type)
@@ -572,98 +587,32 @@ petz.do_particles_effect = function(obj, pos, particle_type)
     })
 end
 
+--
+--Sound System
+--
+
+-- play sound
+petz.mob_sound = function(self, sound, _gain, _max_hear_distance)
+	if sound then
+		minetest.sound_play(sound, {object = self.object, gain = _gain, max_hear_distance = _max_hear_distance})
+	end
+end
+
 petz.do_sound_effect = function(dest, dest_name, soundfile)
     minetest.sound_play(soundfile, {dest = dest_name, gain = 0.4})
 end
 
 --
---Semiaquatic beahaviour
---for beaver and frog
+--Tame with a whip mechanic
 --
 
-petz.set_behaviour= function(self, behaviour, fly_in)	
-	if behaviour == "aquatic" then
-		self.behaviour = "aquatic"
-        self.fly = true     
-        self.fly_in = fly_in
-        self.floats = 0
-        self.animation = self.animation_aquatic
-	elseif behaviour == "terrestrial" then
-		self.behaviour = "terrestrial"
-        self.fly = false -- make terrestrial
-        self.floats = 1
-        self.animation = self.animation_terrestrial  
-	elseif behaviour == "arboreal" then
-		self.behaviour = "arboreal"
-        self.fly = true     
-        self.fly_in = fly_in
-        self.floats = 0
-        self.animation = self.animation_arboreal
-        self.object:set_acceleration({x = 0, y = 0.5, z = 0 })
-	end
-end
+-- Whip/lashing behaviour
 
-petz.semiaquatic_behaviour = function(self)
-		local pos = self.object:get_pos() -- check the beaver pos to togle between aquatic-terrestrial
-		local node = minetest.get_node_or_nil(pos)
-		if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water then			
-			if not(self.behaviour == "aquatic") then 
-				petz.set_behaviour(self, "aquatic", node.name)		
-			end
-    		if self.petz_type == "beaver" then --beaver's dam
-				petz.create_dam(self, pos)
-			end
-		else
-			local pos_underwater = { --check if water below (when the mob is still terrestrial but float in the surface of the water)
-            	x = pos.x,
-            	y = pos.y - 3.5,
-            	z = pos.z,
-        	}        	        	
-        	node = minetest.get_node_or_nil(pos_underwater)        	
-        	if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water
-        		and self.floats == false then
-        			local pos_below = {
-	            		x = pos.x,
-    	        		y = pos.y - 2.0,
-        	    		z = pos.z,
-	        		}
-        			self.object:move_to(pos_below, true) -- move the mob underwater        
-					if not(self.behaviour == "aquatic") then 
-						petz.set_behaviour(self, "aquatic", node.name)
-					end	
-					if self.petz_type == "beaver" then --beaver's dam
-						petz.create_dam(self, pos)
-					end
-        	else
-        	if not(self.behaviour == "terrestrial") then 
-				petz.set_behaviour(self, "terrestrial", nil)
-			end        		
-        	end
-		end 
-end
-
-petz.create_dam = function(self, pos)		
-	if petz.settings.beaver_create_dam == true and self.dam_created == false then --a beaver can create only one dam
-		if math.random(1, 60000) > 1 then --chance of the dam to be created
-			return false
-		end		
-		local pos_underwater = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
-        	x = pos.x,
-        	y = pos.y - 4.5,
-    		z = pos.z,
-    	}
-    	if minetest.get_node(pos_underwater).name == "default:sand" then
-    		local pos_dam = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
-        		x = pos.x,
-        		y = pos.y - 2.0,
-    			z = pos.z,
-    		}
-    		minetest.place_schematic(pos_dam, modpath..'/schematics/beaver_dam.mts', 0, nil, true)    	
-    		self.dam_created = true
-    		return true
-    	end
+petz.do_lashing = function(self)
+    if self.lashed == false then        
+        self.lashed = true
     end
-    return false
+    petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
 end
 
 petz.tame_whip= function(self, hitter)	
@@ -689,41 +638,10 @@ petz.tame_whip= function(self, hitter)
 end
 
 --
---Fly Behaviour
+--Duck and Chicken mechanics
 --
-petz.fly_behaviour = function(self)		
-	local pos
-	if self == nil then
-		return
-	else
-		pos = self.object:get_pos()
-	end
-	local pos_under= { 
-       	x = pos.x,
-       	y = pos.y - 1,
-   		z = pos.z,
-   	}
-    local node_under = minetest.get_node_or_nil(pos_under) 
- 	if node_under == nil then
-		return
-	end   
-    if node_under.name == "air" or minetest.registered_nodes[node_under.name].groups.water then
-		if self.is_flying == false then
-			self.is_flying = true
-			self.animation = self.animation_fly
-		end
-	else
-		if self.is_flying == true then
-			self.is_flying = false
-			self.animation = self.animation_ground
-		end
-    end
-end
 
-
---
 --Lay Egg
---
 petz.lay_egg = function(self)
 	local pos = self.object:get_pos()
 	if math.random(1, 150000) == 1 then
@@ -740,73 +658,30 @@ petz.lay_egg = function(self)
 	end		
 end
 
----
----Arboreal Behaviour
----
+--
+--Create Dam Beaver Mechanic
+--
 
-petz.pos_front = function(self, pos)
-	local yaw = self.object:get_yaw()
-	local dir_x = -math.sin(yaw) * (self.collisionbox[4] + 0.5)
-	local dir_z = math.cos(yaw) * (self.collisionbox[4] + 0.5)	
-	local pos_front = {	-- what is in front of mob?
-		x = pos.x + dir_x,
-		y = pos.y - 0.75,
-		z = pos.z + dir_z
-	}
-	return pos_front
-end
-
-petz.arboreal_behaviour = function(self)
-		local pos = self.object:get_pos() -- check the mob pos to togle between arboreal-terrestrial
-		---
-		---Change behaviour status
-		---
-		local pos_front = petz.pos_front(self, pos)
-		local node_front = minetest.get_node_or_nil(pos_front)
-		local pos_under = {x = pos.x, y = pos.y - 1.0, z = pos.z, }
-		local node_under = minetest.get_node_or_nil(pos_under)
-		local pos_top = {x = pos.x, y = pos.y + 0.5, z = pos.z,}
-		local node_top = minetest.get_node_or_nil(pos_top)		
-		if node_front and minetest.registered_nodes[node_front.name]
-			and node_top and minetest.registered_nodes[node_top.name]
-			and node_top.name == "air"
-			and (minetest.registered_nodes[node_front.name].groups.wood
-			or minetest.registered_nodes[node_front.name].groups.leaves
-			or minetest.registered_nodes[node_front.name].groups.tree) then				
-				if not(self.behaviour == "arboreal") then 
-					petz.set_behaviour(self, "arboreal", "air")		
-				end
-		else
-			if self.behaviour == "arboreal" then
-				if node_front and minetest.registered_nodes[node_front.name] 
-					and (not(minetest.registered_nodes[node_front.name].groups.wood)
-					or not(minetest.registered_nodes[node_front.name].groups.tree)
-					or not(minetest.registered_nodes[node_front.name].groups.leaves))
-					then
-						self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
-						petz.set_behaviour(self, "terrestrial", nil)					
-				elseif node_top and minetest.registered_nodes[node_top.name]				
-					and not(node_top.name == "air") then
-							self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
-							petz.set_behaviour(self, "terrestrial", nil)											
-				end
-			end			
-		end
-end
-
----
----Aquatic Behaviour
----
-petz.aquatic_behaviour = function(self)
-	if self.is_mammal == false then --if not mammal, air suffocation
-		local pos = self.object:get_pos() 
-		local pos_under = {x = pos.x, y = pos.y - 0.75, z = pos.z, }
-		--Check if the aquatic animal is on water
-		local node_under = minetest.get_node_or_nil(pos_under)
-		if node_under and minetest.registered_nodes[node_under.name] 
-			and (not(minetest.registered_nodes[node_under.name].groups.water)) then
-				local air_damage = - petz.settings.air_damage
-				petz.set_health(self, air_damage)
-		end	
-	end
+petz.create_dam = function(self, pos)		
+	if petz.settings.beaver_create_dam == true and self.dam_created == false then --a beaver can create only one dam
+		if math.random(1, 60000) > 1 then --chance of the dam to be created
+			return false
+		end		
+		local pos_underwater = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
+        	x = pos.x,
+        	y = pos.y - 4.5,
+    		z = pos.z,
+    	}
+    	if minetest.get_node(pos_underwater).name == "default:sand" then
+    		local pos_dam = { --check if water below (when the beaver is still terrestrial but float in the surface of the water)
+        		x = pos.x,
+        		y = pos.y - 2.0,
+    			z = pos.z,
+    		}
+    		minetest.place_schematic(pos_dam, modpath..'/schematics/beaver_dam.mts', 0, nil, true)    	
+    		self.dam_created = true
+    		return true
+    	end
+    end
+    return false
 end

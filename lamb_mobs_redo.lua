@@ -58,7 +58,7 @@ mobs:register_mob("petz:"..pet_name, {
 	collisionbox = collisionbox,
 	makes_footstep_sound = false,
 	walk_velocity = 0.75,
-    run_velocity = 1,    
+    run_velocity = 1.5,    
     runaway = true,
     pushable = true,
     floats = 1,
@@ -94,7 +94,7 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.lamb_wool_regrow(self)
     end,
     after_activate = function(self, staticdata, def, dtime)
-    	if not self.custom_vars_set03 then --but do not set here! instead wait for the do-custom function to do it.
+    	if not self.custom_vars_set04 then --but do not set here! instead wait for the do-custom function to do it.
     		local color
     		if petz.settings.type_model == "mesh" then --set a random color    			
     			local random_number = math.random(1, 15)
@@ -123,7 +123,7 @@ mobs:register_mob("petz:"..pet_name, {
     	end
     end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set04 then
+		if not self.custom_vars_set04 then --change above in after activate
 			self.custom_vars_set04 = 0
 			self.petz_type = "lamb"
 			self.is_pet = false
