@@ -29,6 +29,8 @@ petz.settings.tamagochi_safe_nodes = tamagochi_safe_nodes:split(", ")
 petz.settings.air_damage = tonumber(settings:get("air_damage"))
 --API Type
 petz.settings.type_api = settings:get("type_api", "mobs_redo")
+--Capture Mobs
+petz.settings.rob_mobs = settings:get_bool("rob_mobs", false)
 --Mobs Specific
 petz.settings.kitty_spawn = settings:get_bool("kitty_spawn", true)
 petz.settings.kitty_spawn_chance = tonumber(settings:get("kitty_spawn_chance"))

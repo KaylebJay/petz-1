@@ -404,10 +404,18 @@ petz.on_rightclick = function(self, clicker)
             end     
             petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
-        elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then        
-            if mobs:capture_mob(self, clicker, 0, 100, 100, false, nil) then
-                minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has been captured."))
-            end         
+        elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then  
+			local player_name = clicker:get_player_name()
+			if (self.owner ~= player_name and petz.settings.rob_mobs == false) then
+				minetest.chat_send_player(self.owner, S("You are not the owner of the ").." "..self.petz_type..".")	
+				return
+			end
+			if self.owner== nil or self.owner== "" or (self.owner ~= player_name and petz.settings.rob_mobs == true) then
+				self.tamed = true
+				self.owner = player_name
+			end
+			mobs:capture_mob(self, clicker, 0, 100, 100, true, nil)
+			minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has been captured")..".")				            
         elseif self.petz_type == "lamb" and wielded_item_name == "mobs:shears" and clicker:get_inventory() and not self.shaved then
             petz.lamb_wool_shave(self, clicker)
         elseif self.petz_type == "calf" and wielded_item_name == "bucket:bucket_empty" and clicker:get_inventory() then
