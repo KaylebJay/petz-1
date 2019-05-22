@@ -434,18 +434,15 @@ petz.on_rightclick = function(self, clicker)
 end
 
 --
---Capture mechanics
+--Capture Mechanics
 --
 
 petz.capture = function(self, clicker)
-	-- add special mob egg with all mob information
-	local new_stack = ItemStack(self.name .. "_set")
+	local new_stack = ItemStack(self.name .. "_set") 	-- add special mob egg with all mob information
 	local tmp = {}
 	for _,stat in pairs(self) do
 		local t = type(stat)
-		if  t ~= "function"
-		and t ~= "nil"
-		and t ~= "userdata" then
+		if  t ~= "function" and t ~= "nil" and t ~= "userdata" then
 			tmp[_] = self[_]
 		end
 	end

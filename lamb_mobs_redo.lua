@@ -8,7 +8,7 @@ local pet_name = "lamb"
 local mesh = nil
 local fixed = {}
 local textures
-local scale_lamb = 1.7
+local scale_lamb = 1.8
 petz.lamb = {}
 local collisionbox = {}
 
