@@ -2,13 +2,16 @@
 -- a modder will want to refer to specific names according to games/mods they're using 
 -- in order for mobs not to spawn on treetops, certain biomes etc.
 
+local abr = minetest.get_mapgen_setting('active_block_range')
+local spawn_rate = 0.8	 
+
 local function spawnstep(dtime)
 
 	for _,plyr in ipairs(minetest.get_connected_players()) do
 		if math.random()<dtime*0.2 then	-- each player gets a spawn chance every 5s on average
 			local vel = plyr:get_player_velocity()
 			local spd = vector.length(vel)
-			local chance = wildlife.spawn_rate * 1/(spd*0.75+1)  -- chance is quadrupled for speed=4
+			local chance = spawn_rate * 1/(spd*0.75+1)  -- chance is quadrupled for speed=4
 
 			local yaw
 			if spd > 1 then

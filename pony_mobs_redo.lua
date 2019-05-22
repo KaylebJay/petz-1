@@ -122,7 +122,7 @@ mobs:register_mob("petz:"..pet_name, {
 		end
 	end, 	
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set03 then --change in after_activate function below
+		if not self.custom_vars_set03 then --change in after_activate function below too
 			self.custom_vars_set03 = 0
 			self.petz_type = "pony"
 			self.is_pet = true

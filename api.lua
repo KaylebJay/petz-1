@@ -405,7 +405,7 @@ petz.on_rightclick = function(self, clicker)
             petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
         elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then        
-            if mobs:capture_mob(self, clicker, 0, 100, 100, true, nil) then
+            if mobs:capture_mob(self, clicker, 0, 100, 100, false, nil) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has been captured."))
             end         
         elseif self.petz_type == "lamb" and wielded_item_name == "mobs:shears" and clicker:get_inventory() and not self.shaved then
