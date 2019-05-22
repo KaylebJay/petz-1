@@ -334,7 +334,7 @@ end
 
 petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)
 	local capture_item_type
-	if wielded_item_name == "mobs:lasso" or wielded_item_name == "pet<:lasso"then
+	if wielded_item_name == "mobs:lasso" or wielded_item_name == "petz:lasso" then
 		capture_item_type = "lasso"
 	elseif (wielded_item_name == "mobs:net") or (wielded_item_name == "fireflies:bug_net") then
 		capture_item_type = "net"
@@ -407,7 +407,7 @@ petz.on_rightclick = function(self, clicker)
         elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then  
 			local player_name = clicker:get_player_name()
 			if (self.owner ~= player_name and petz.settings.rob_mobs == false) then
-				minetest.chat_send_player(self.owner, S("You are not the owner of the ").." "..self.petz_type..".")	
+				minetest.chat_send_player(self.owner, S("You are not the owner of the").." "..self.petz_type..".")	
 				return
 			end
 			if self.owner== nil or self.owner== "" or (self.owner ~= player_name and petz.settings.rob_mobs == true) then
