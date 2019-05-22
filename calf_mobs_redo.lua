@@ -89,7 +89,7 @@ mobs:register_mob("petz:"..pet_name, {
 		if not self.custom_vars_set04 then
 			self.custom_vars_set04 = 0
 			self.petz_type = "calf"
-			self.is_pet = false
+			self.is_pet = true
 			self.is_wild = false
 			self.give_orders = false
 			self.affinity = 100
