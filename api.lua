@@ -414,7 +414,7 @@ petz.on_rightclick = function(self, clicker)
 				self.tamed = true
 				self.owner = player_name
 			end
-			mobs:capture_mob(self, clicker, 0, 100, 100, true, nil)
+			petz.capture(self, clicker)
 			minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has been captured")..".")				            
         elseif self.petz_type == "lamb" and wielded_item_name == "mobs:shears" and clicker:get_inventory() and not self.shaved then
             petz.lamb_wool_shave(self, clicker)
@@ -431,6 +431,34 @@ petz.on_rightclick = function(self, clicker)
             petz.pet[player_name]= self
             minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name))
         end
+end
+
+--
+--Capture mechanics
+--
+
+petz.capture = function(self, clicker)
+	-- add special mob egg with all mob information
+	local new_stack = ItemStack(self.name .. "_set")
+	local tmp = {}
+	for _,stat in pairs(self) do
+		local t = type(stat)
+		if  t ~= "function"
+		and t ~= "nil"
+		and t ~= "userdata" then
+			tmp[_] = self[_]
+		end
+	end
+	local data_str = minetest.serialize(tmp)
+	new_stack:set_metadata(data_str)
+	local inv = clicker:get_inventory()
+	if inv:room_for_item("main", new_stack) then
+		inv:add_item("main", new_stack)
+	else
+		minetest.add_item(clicker:get_pos(), new_stack)
+	end
+	self.object:remove()
+	self:mob_sound("default_place_node_hard")
 end
 
 --
