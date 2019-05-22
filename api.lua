@@ -406,7 +406,7 @@ petz.on_rightclick = function(self, clicker)
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
         elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then  
 			local player_name = clicker:get_player_name()
-			if (self.is_pet == true and self.owner ~= player_name and petz.settings.rob_mobs == false) then
+			if (self.is_pet == true and self.owner and self.owner ~= player_name and petz.settings.rob_mobs == false) then
 				minetest.chat_send_player(self.owner, S("You are not the owner of the").." "..self.petz_type..".")	
 				return
 			end
