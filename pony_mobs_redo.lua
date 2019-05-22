@@ -119,7 +119,9 @@ mobs:register_mob("petz:"..pet_name, {
 			else
 				petz.on_rightclick(self, clicker)
 			end			
-		end
+		else
+			petz.on_rightclick(self, clicker)
+		end		
 	end, 	
 	do_custom = function(self, dtime)
 		if not self.custom_vars_set03 then --change in after_activate function below too
