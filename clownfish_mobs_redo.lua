@@ -106,7 +106,7 @@ mobs:register_mob("petz:"..pet_name, {
 	end,
 })
 
-mobs:register_egg("petz:clownfish", S("Clownfish"), "petz_spawnegg_clownfish.png", 0)
+local fish_itemstack = mobs:register_egg("petz:clownfish", S("Clownfish"), "petz_spawnegg_clownfish.png", 0)
 
 mobs:spawn({
 	name = "petz:clownfish",

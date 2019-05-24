@@ -177,20 +177,23 @@ minetest.register_node("petz:fishtank", {
 	},
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
         local itemstack_name= itemstack:get_name()
+        local itemstack_group = minetest.get_item_group(itemstack_name, "spawn_egg")
         local meta = minetest.get_meta(pos)
 		local has_fish = meta:get_string("has_fish")			
-        if itemstack_name == "petz:clownfish" then	
+        if (itemstack_group >= 1) and (itemstack_name == "petz:clownfish" or itemstack_name == "petz:tropicalfish") then	
 			if has_fish == "false" then
 				meta:set_string("has_fish", "true")				
-				minetest.add_entity({x=pos.x, y=pos.y, z=pos.z}, "petz:clownfish_entity_sprite")
+				meta:set_string("fish_type", itemstack_name)	
+				minetest.add_entity({x=pos.x, y=pos.y, z=pos.z}, itemstack_name.."_entity_sprite")
 				itemstack:take_item()			
 				clicker:set_wielded_item(itemstack)
 				return itemstack
 			end
 		elseif ((itemstack_name == "mobs:net") or (itemstack_name == "fireflies:bug_net")) and (has_fish == "true") then
 			local inv = clicker:get_inventory()
-			if inv:room_for_item("main", ItemStack("petz:clownfish")) then
-				inv:add_item("main", "petz:clownfish")
+			local fish_type = meta:get_string("fish_type")
+			if fish_type and inv:room_for_item("main", ItemStack(fish_type)) then
+				inv:add_item("main", fish_type)
 				remove_fish(pos)
 				meta:set_string("has_fish", "false")
 			end
@@ -204,9 +207,10 @@ minetest.register_node("petz:fishtank", {
 	on_destruct = function(pos)
 		local meta = minetest.get_meta(pos)
 		local has_fish = meta:get_string("has_fish")
-		if has_fish == "true" then
+		local fish_type = meta:get_string("fish_type")	
+		if fish_type and has_fish == "true" then
 			remove_fish(pos)
-			minetest.add_entity(pos, "petz:clownfish")
+			minetest.add_entity(pos, fish_type)
 		end
 	end
 })
