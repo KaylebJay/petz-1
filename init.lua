@@ -75,3 +75,6 @@ end
 if petz.settings.clownfish_spawn then
     assert(loadfile(modpath .. "/clownfish_"..petz.settings.type_api..".lua"))(S)
 end
+if petz.settings.tropicalfish_spawn then
+    assert(loadfile(modpath .. "/tropicalfish_"..petz.settings.type_api..".lua"))(S)
+end

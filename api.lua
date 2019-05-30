@@ -439,15 +439,13 @@ end
 
 petz.capture = function(self, clicker)
 	local new_stack = ItemStack(self.name .. "_set") 	-- add special mob egg with all mob information
-	local tmp = {}
+	local meta = new_stack:get_meta()	
 	for _,stat in pairs(self) do
 		local t = type(stat)
 		if  t ~= "function" and t ~= "nil" and t ~= "userdata" then
-			tmp[_] = self[_]
+			meta:set_string(_, self[_])			
 		end
-	end
-	local data_str = minetest.serialize(tmp)
-	new_stack:set_metadata(data_str)
+	end	
 	local inv = clicker:get_inventory()
 	if inv:room_for_item("main", new_stack) then
 		inv:add_item("main", new_stack)

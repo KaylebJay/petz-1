@@ -1,16 +1,16 @@
 --
---CLOWNFISH
+--TROPICAL FISH
 --
 local S = ...
 
-local pet_name = "clownfish"
+local pet_name = "tropicalfish"
 local mesh = nil
-local scale_clownfish = 1.0
+local scale_tropicalfish = 1.0
 local textures = {}
 local collisionbox = {}
 local fixed = {}
 local tiles = {}
-local spawn_nodes = {"default:coral_orange"}
+local spawn_nodes = {"default:coral_brown"}
 local animation_aquatic = {
     speed_normal = 15, walk_start = 1, walk_end = 13, --swin
     speed_run = 25, run_start = 1, run_end = 13,
@@ -31,20 +31,20 @@ if petz.settings.type_model == "cubic" then
 		{0, -0.3125, -0.25, 0.0625, -0.25, 0}, -- dorsal_fin
 	}
 	tiles = {
-		"petz_clownfish_top.png",
-		"petz_clownfish_bottom.png",
-		"petz_clownfish_right.png",
-		"petz_clownfish_left.png",
-		"petz_clownfish_back.png",
-		"petz_clownfish_front.png"
+		"petz_tropicalfish_top.png",
+		"petz_tropicalfish_bottom.png",
+		"petz_tropicalfish_right.png",
+		"petz_tropicalfish_left.png",
+		"petz_tropicalfish_back.png",
+		"petz_tropicalfish_front.png"
 	}
 	petz.register_cubic(node_name, fixed, tiles)		
-	textures= {"petz:clownfish_block"}
-	collisionbox = {-0.35, -0.75*scale_clownfish, -0.28, 0.35, -0.125, 0.28}
+	textures= {"petz:tropicalfish_block"}
+	collisionbox = {-0.35, -0.75*scale_tropicalfish, -0.28, 0.35, -0.125, 0.28}
 else
-	mesh = 'petz_clownfish.b3d'	
-	textures= {{"petz_clownfish.png"}}
-	collisionbox = {-0.35, -0.75*scale_clownfish, -0.28, 0.35, -0.5, 0.28}
+	mesh = 'petz_tropicalfish.b3d'	
+	textures= {{"petz_tropicalfish.png"}, {"petz_tropicalfish2.png"}, {"petz_tropicalfish3.png"}}
+	collisionbox = {-0.35, -0.75*scale_tropicalfish, -0.28, 0.35, -0.5, 0.28}
 end
 
 mobs:register_mob("petz:"..pet_name, {
@@ -55,7 +55,7 @@ mobs:register_mob("petz:"..pet_name, {
     hp_max = 8,
     armor = 200,
 	visual = petz.settings.visual,
-	visual_size = {x=petz.settings.visual_size.x*scale_clownfish, y=petz.settings.visual_size.y*scale_clownfish},
+	visual_size = {x=petz.settings.visual_size.x*scale_tropicalfish, y=petz.settings.visual_size.y*scale_tropicalfish},
 	mesh = mesh,
 	textures = textures,
 	collisionbox = collisionbox,
@@ -68,15 +68,15 @@ mobs:register_mob("petz:"..pet_name, {
     fly_in = "default:water_source",
     floats = 1,
 	jump = false,
-	follow = petz.settings.clownfish_follow,
+	follow = petz.settings.tropicalfish_follow,
 	drops = {
-		{name = "default:coral_orange", chance = 5, min = 1, max = 1,},
+		{name = "default:coral_brown", chance = 5, min = 1, max = 1,},
 	},
 	water_damage = 0,
 	lava_damage = 6,
 	light_damage = 0,
     sounds = {
-		--random = "petz_clownfish_croak",
+		--random = "petz_tropicalfish_croak",
 	},
     animation = animation_aquatic,
     view_range = 4,
@@ -85,9 +85,9 @@ mobs:register_mob("petz:"..pet_name, {
 		petz.on_rightclick(self, clicker)
 	end,
 	do_custom = function(self, dtime)
-		if not self.custom_vars_set03 then
-			self.custom_vars_set03 = 0
-			self.petz_type = "clownfish"
+		if not self.custom_vars_set00 then
+			self.custom_vars_set00 = 0
+			self.petz_type = "tropicalfish"
 			self.groups = {fish= 1, fishtank = 1}
 			self.is_pet = true
 			self.is_wild = false
@@ -106,14 +106,14 @@ mobs:register_mob("petz:"..pet_name, {
 	end,
 })
 
-minetest.register_entity("petz:clownfish_entity_sprite", {
+minetest.register_entity("petz:tropicalfish_entity_sprite", {
 	visual = "sprite",
 	spritediv = {x = 1, y = 16},
 	initial_sprite_basepos = {x = 0, y = 0},
 	visual_size = {x=0.8, y=0.8},
 	collisionbox = {0},
 	physical = false,	
-	textures = {"petz_clownfish_spritesheet.png"},
+	textures = {"petz_tropicalfish_spritesheet.png"},
 	groups = {fishtank = 1},
 	on_activate = function(self, staticdata)
 		local pos = self.object:getpos()
@@ -123,15 +123,15 @@ minetest.register_entity("petz:clownfish_entity_sprite", {
 	end,
 })
 
-local fish_itemstack = mobs:register_egg("petz:clownfish", S("Clownfish"), "petz_spawnegg_clownfish.png", 0)
+local fish_itemstack = mobs:register_egg("petz:tropicalfish", S("Tropical Fish"), "petz_spawnegg_tropicalfish.png", 0)
 
 mobs:spawn({
-	name = "petz:clownfish",
+	name = "petz:tropicalfish",
 	nodes = spawn_nodes,
 	--neighbors = {"default:sand", "default:dirt", "group:seaplants"},
 	min_light = 14,
 	interval = 90,
-	chance = petz.settings.clownfish_spawn_chance,
+	chance = petz.settings.tropicalfish_spawn_chance,
 	min_height = -8,
 	max_height = 200,
 	day_toggle = true,

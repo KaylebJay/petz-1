@@ -175,16 +175,26 @@ minetest.register_node("petz:fishtank", {
 		type = "fixed",
 		fixed = { -0.25, -0.5, -0.25, 0.25, 0.4, 0.25 },
 	},
-	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-        local itemstack_name= itemstack:get_name()
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)		
+		local itemstack_meta = itemstack:get_meta()
+		local itemstack_name
+		itemstack_name= itemstack_meta:get_string("petz_type") --Captured mobs have a entity name ended in '_set', so cannot use itemstack:get_name()
+		if itemstack_name == "" then
+			itemstack_name = itemstack:get_name()
+		else
+			itemstack_name= "petz:"..itemstack_name
+		end
         local itemstack_group = minetest.get_item_group(itemstack_name, "spawn_egg")
+        --minetest.chat_send_player("singleplayer", itemstack_name)        
         local meta = minetest.get_meta(pos)
 		local has_fish = meta:get_string("has_fish")			
-        if (itemstack_group >= 1) and (itemstack_name == "petz:clownfish" or itemstack_name == "petz:tropicalfish") then	
+        if (itemstack_group >= 1) or (itemstack_name == "petz:clownfish" or itemstack_name == "petz:tropicalfish") then	
 			if has_fish == "false" then
 				meta:set_string("has_fish", "true")				
 				meta:set_string("fish_type", itemstack_name)	
-				minetest.add_entity({x=pos.x, y=pos.y, z=pos.z}, itemstack_name.."_entity_sprite")
+				local fish_entity = minetest.add_entity({x=pos.x, y=pos.y, z=pos.z}, itemstack_name.."_entity_sprite")
+				fish_entity:set_properties({textures=itemstack_meta:get_string("textures").."^[transformFX"}) 		
+				fish_entity:set_sprite({x=0, y=0}, 16, 1.0, false)		
 				itemstack:take_item()			
 				clicker:set_wielded_item(itemstack)
 				return itemstack
@@ -196,6 +206,7 @@ minetest.register_node("petz:fishtank", {
 				inv:add_item("main", fish_type)
 				remove_fish(pos)
 				meta:set_string("has_fish", "false")
+				meta:set_string("fish_texture", nil)
 			end
 		end
     end,
@@ -223,28 +234,6 @@ minetest.register_craft({
 		{"default:obsidian_glass", "default:water_source", "default:obsidian_glass"},
 		{"default:obsidian_glass", "default:obsidian_glass", "default:obsidian_glass"},
 	}
-})
-
-minetest.register_entity("petz:clownfish_entity_sprite", {
-	visual = "sprite",
-	spritediv = {x = 1, y = 16},
-	initial_sprite_basepos = {x = 0, y = 0},
-	visual_size = {x=0.8, y=0.8},
-	collisionbox = {0},
-	physical = false,	
-	textures = {"petz_clownfish_spritesheet.png"},
-	groups = {fishtank = 1},
-	on_activate = function(self, staticdata)
-		local random_num = math.random(1)
-		if random_num == 1 then
-			self.textures[1] = self.textures[1] .. "^[transformFX"
-		end
-		self.object:set_sprite({x=0, y=0}, 16, 1.0, false)
-		local pos = self.object:getpos()
-		if minetest.get_node(pos).name ~= "petz:fishtank" then
-			self.object:remove()
-		end
-	end,
 })
 
 --Metal Syringe

@@ -91,6 +91,9 @@ petz.settings.turtle_follow = settings:get("turtle_follow", "")
 petz.settings.clownfish_spawn = settings:get_bool("clownfish_spawn", true)
 petz.settings.clownfish_spawn_chance = tonumber(settings:get("clownfish_spawn_chance"))
 petz.settings.clownfish_follow = settings:get("clownfish_follow", "")
+petz.settings.tropicalfish_spawn = settings:get_bool("tropicalfish_spawn", true)
+petz.settings.tropicalfish_spawn_chance = tonumber(settings:get("tropicalfish_spawn_chance"))
+petz.settings.tropicalfish_follow = settings:get("tropicalfish_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"
