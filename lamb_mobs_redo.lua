@@ -106,7 +106,7 @@ mobs:register_mob("petz:"..pet_name, {
 					color = "grey"
 				else				
 					color = "white"
-				end		
+				end
 				self.textures_color = {"petz_lamb_"..color..".png"}
 				self.textures_shaved = {"petz_lamb_shaved_"..color..".png"}
 			else --if 'cubic'
@@ -137,6 +137,7 @@ mobs:register_mob("petz:"..pet_name, {
 			self.shaved = false
 			self.food_count = 0
 			self.capture_item = "lasso"
+			self.wool_color = "white"
 		end	
 	end,
 })

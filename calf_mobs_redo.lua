@@ -117,17 +117,3 @@ mobs:spawn({
 	max_height = 200,
 	day_toggle = true,
 })
-
-petz.calf_milk_refill = function(self)
-	self.food_count = (self.food_count or 0) + 1        
-	if self.food_count >= 5 then -- if calf replaces 5x grass then it refill milk
-		self.food_count = 0
-		self.milked= false
-	end
-end
-
-petz.calf_milk_milk = function(self, clicker)
-    clicker:set_wielded_item("petz:bucket_milk")
-    petz.do_sound_effect("object", self.object, "petz_calf_moaning")
-	self.milked = true           
-end

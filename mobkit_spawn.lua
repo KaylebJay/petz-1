@@ -65,5 +65,3 @@ end
 
 
 minetest.register_globalstep(spawnstep)
-
-

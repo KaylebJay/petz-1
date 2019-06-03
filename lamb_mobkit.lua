@@ -43,26 +43,24 @@ else
 	collisionbox = {-0.35, -0.75*scale_lamb, -0.28, 0.35, -0.3125, 0.28}
 end
 
-
 minetest.register_entity("petz:lamb",{
 	--Petz specifics
+	custom_vars_set00 = nil,	
+	init_timer = false,
 	petz_type = "lamb",
 	is_pet = false,
+	has_affinity = false,
 	is_wild = false,
 	give_orders = false,
-	affinity = 100,
-	init_timer = false,
-	fed= false,
-	brushed = false,
-	beaver_oil_applied = false,
-	shaved = false,
-	food_count = 0,
+	init_timer = false,	
+	can_be_brushed = true,
 	capture_item = "lasso",
+	follow = petz.settings.lamb_follow,
 
 	rotate = petz.settings.rotate,
 
 	physical = true,
-	stepheight = 0.1,				--EVIL!
+	stepheight = 0.1,	--EVIL!
 	collide_with_objects = true,
 	collisionbox = collisionbox,
 	visual = petz.settings.visual,
@@ -71,28 +69,33 @@ minetest.register_entity("petz:lamb",{
 	visual_size = {x=petz.settings.visual_size.x*scale_lamb, y=petz.settings.visual_size.y*scale_lamb},
 	static_save = true,
 	on_step = mobkit.stepfunc,	-- required
-	on_activate = mobkit.actfunc,		-- required
 	get_staticdata = mobkit.statfunc,
 	-- api props
-	springiness=0,
-	buoyancy = 0.9,
-	walk_speed = 5,
-	jump_height = 1.26,
-	view_range = 24,
+	springiness= 0,
+	buoyancy = 0.5, -- portion of hitbox submerged
+	walk_speed = 1,
+	jump_height = 2.0,
+	view_range = 10,
 	lung_capacity = 10, -- seconds
-	max_hp = 8,
-	attack={range=0.5,damage_groups={fleshy=3}},
+	max_hp = 114,
 	
+	attack={range=0.5, damage_groups={fleshy=3}},	
 	animation = {
-		walk={range={x=1, y=12}, speed=25, loop=true},	
-		run={range={x=13, y=25}, speed=25, loop=true},	
+		walk={range={x=1, y=12}, speed=20, loop=true},	
+		run={range={x=13, y=25}, speed=20, loop=true},	
+		stand={range={x=26, y=46}, speed=15, loop=true},	
+	},
+	sounds = {
+		misc = "petz_lamb_bleat",
+		moaning = "petz_lamb_moaning",
 	},
 	
 	brainfunc = petz.herbivore_brain,
 	
-	on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
-		local hvel = vector.multiply(vector.normalize({x=dir.x,y=0,z=dir.z}),4)
-		self.object:set_velocity({x=hvel.x,y=2,z=hvel.z})		
+	on_activate = petz.set_lamb, --on_activate, required
+	
+	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
+		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
 	end,
 	
 	on_rightclick = function(self, clicker)
@@ -103,34 +106,8 @@ minetest.register_entity("petz:lamb",{
 		petz.lamb_wool_regrow(self)
     end,
     
-    after_activate = function(self, staticdata, def, dtime)
-    	if not self.custom_vars_set03 then --but do not set here! instead wait for the do-custom function to do it.
-			self.custom_vars_set03 = 0
-    		local color
-    		if petz.settings.type_model == "mesh" then --set a random color    			
-    			local random_number = math.random(1, 15)
-    			if random_number == 1 then
-					color = "brown"
-				elseif random_number >= 2 and random_number <= 4 then
-					color = "dark_grey"
-				elseif random_number >= 5 and random_number <= 7 then				
-					color = "grey"
-				else				
-					color = "white"
-				end		
-				self.textures_color = {"petz_lamb_"..color..".png"}
-				self.textures_shaved = {"petz_lamb_shaved_"..color..".png"}
-			else --if 'cubic'
-				self.tiles_color = petz.lamb.tiles
-				self.tiles_shaved = petz.lamb.tiles_shaved
-				color = "white" --cubic lamb color is always white
-			end
-			self.wool_color = color							    			    	
-		end 		
-    	if self.shaved then
-    		self.object:set_properties({textures = self.textures_shaved})
-    	else
-    		self.object:set_properties({textures = self.textures_color})
-    	end
-    end,
 })
+
+petz:register_egg("petz:lamb", S("Lamb"), "petz_spawnegg_lamb.png", false)
+
+
