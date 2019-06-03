@@ -109,5 +109,3 @@ minetest.register_entity("petz:lamb",{
 })
 
 petz:register_egg("petz:lamb", S("Lamb"), "petz_spawnegg_lamb.png", false)
-
-

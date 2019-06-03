@@ -171,8 +171,7 @@ end
 
 -- Increase/Descrease the pet affinity
 
-petz.set_affinity = function(self, increase, amount)
-	self.affinity = mobkit.recall(self, "affinity") or 100
+petz.set_affinity = function(self, increase, amount)	
     local new_affinitty    
     if increase == true then
         new_affinitty = self.affinity +  amount
@@ -184,14 +183,13 @@ petz.set_affinity = function(self, increase, amount)
     elseif new_affinitty <0 then     
         new_affinitty = 0
     end
-    self.affinity = mobkit.remember(self, "affinity", new_affinitty)
+    self.affinity = new_affinitty
+    mobkit.remember(self, "affinity", self.affinity)
 end
 
 --The Tamagochi Timer
 
-petz.init_timer = function(self)
-	self.tamed = mobkit.recall(self, "tamed") or ""
-	self.init_timer = mobkit.recall(self, "init_timer") or false
+petz.init_timer = function(self)	
     if (petz.settings.tamagochi_mode == true) and (self.tamed == true) and (self.init_timer == true) then
         petz.timer(self)
         return true
@@ -228,7 +226,6 @@ petz.timer = function(self)
     minetest.after(petz.settings.tamagochi_check_time, function(self)         
         if not(self.object== nil) then
 			if (not(minetest.is_singleplayer())) and (petz.settings.tamagochi_check_if_player_online == true) then
-				self.owner = mobkit.recall(self, "owner")  
 				if minetest.player_exists(self.owner) == false then --if pet owner is not online
 					return
 				end
@@ -244,12 +241,14 @@ petz.timer = function(self)
                 --minetest.chat_send_player(self.owner, petz.settings.tamagochi_safe_node)
                 for i = 1, #petz.settings.tamagochi_safe_nodes do --loop  thru all safe nodes
                     if node and (node.name == petz.settings.tamagochi_safe_nodes[i]) then
-                        self.init_timer = mobkit.remember(self, "init_timer", true)    
+						self.init_timer = true
+						mobkit.remember(self, "init_timer", self.init_timer)    
                         return
                     end    
                 end                
             else  --if the pos is nil, it means that the pet died before 'minetest.after_effect'
-                self.init_timer = mobkit.remember(self, "init_timer", false)   --so no more timer
+                self.init_timer = false
+                mobkit.remember(self, "init_timer", self.init_timer)   --so no more timer
                 return
             end
             --Decrease affinitty always a bit amount because the pet lost some affinitty	
@@ -257,7 +256,6 @@ petz.timer = function(self)
 				petz.set_affinity(self, false, 10)
 			end
             --Decrease health if pet has not fed
-            self.fed = mobkit.recall(self, "fed") or false
             if self.fed == false then
 				local damage_amount = - petz.settings.tamagochi_hunger_damage
 				local new_health = petz.set_health(self, damage_amount) 
@@ -265,26 +263,27 @@ petz.timer = function(self)
 					petz.set_affinity(self, false, 33)
 				end                
             else
-                self.fed = mobkit.remember(self, "fed", false) --Reset the variable
+                self.fed = false
+                mobkit.remember(self, "fed", self.fed) --Reset the variable
             end
             --If the pet has not brushed            
-            if self.can_be_brushed == true then
-				self.brushed = mobkit.recall(self, "brushed") or false
+            if self.can_be_brushed == true then				
 				if self.brushed == false then
 					if self.has_affinity == true then
 						petz.set_affinity(self, false, 20)
 					end
 				else
-					self.brushed = mobkit.remember(self, "brushed", false) --Reset the variable
+					self.brushed = false
+					mobkit.remember(self, "brushed", self.brushed) --Reset the variable
 				end
 			end
             --If the petz is a lion had to been lashed
-            if self.petz_type== "lion" then
-				self.lashed = mobkit.recall(self, "lashed") or false
+            if self.petz_type== "lion" then				
                 if self.lashed == false then
                     petz.set_affinity(self, false, 25)                
                 else
-                    self.lashed = mobkit.remember(self, "lashed", false)
+                    self.lashed = false
+                    mobkit.remember(self, "lashed", self.lashed)
                 end
             end            
             --If the pet starves to death            
@@ -312,12 +311,14 @@ end
 --Lamb Functions
 --
 
-petz.lamb_wool_regrow = function(self)
-	self.food_count = mobkit.recall(self, "food_count") or 0
-	self.food_count = mobkit.remember(self, "food_count", self.food_count+1)
-	if self.food_count >= 5 then -- if lamb replaces 5x grass then it regrows wool
-		self.food_count = mobkit.remember(self, "food_count", 0)
-		self.shaved = mobkit.remember(self, "shaved", false)	
+petz.lamb_wool_regrow = function(self)	
+	self.food_count_wool = self.food_count_wool + 1
+	mobkit.remember(self, "food_count_wool", self.food_count_wool)
+	if self.food_count_wool >= 5 then -- if lamb replaces 5x grass then it regrows wool
+		self.food_count_wool = 0
+		mobkit.remember(self, "food_count_wool", self.food_count_wool)
+		self.shaved = false
+		mobkit.remember(self, "shaved", self.shaved)	
 		local lamb_texture = "petz_lamb_"..self.wool_color..".png"		
 		if petz.settings.type_model == "mesh" then
 			self.object:set_properties({textures = {lamb_texture}})
@@ -336,9 +337,10 @@ petz.lamb_wool_shave = function(self, clicker)
 	else
 		self.object:set_properties({tiles = petz.lamb.tiles_shaved})
 	end 
-	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)
+	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)	
+	self.shaved = true
+	mobkit.remember(self, "shaved", self.shaved)        	
 	petz.afraid_behaviour(self, clicker)
-	self.shaved = mobkit.remember(self, "shaved", true)        	
 end
 
 --
@@ -431,7 +433,7 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 		if creative_mode == false then -- if not in creative then take item
 			wielded_item:take_item()
 			clicker:set_wielded_item(wielded_item)
-		end	
+		end
 		local pet_hp = self.object:get_hp()			
 		pet_hp = pet_hp + 4 -- increase health
 		if pet_hp >= self.max_hp then
@@ -439,18 +441,19 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", self.petz_type, tostring(pet_hp)))							
 		end
 		self.object:set_hp(pet_hp)
-		-- Feed and Tame
-		local food_count = mobkit.recall(self, "food_count") or 0
-		mobkit.remember(self, "food_count", food_count+1)
-		if self.food_count >= feed_count then
-			self.food_count = mobkit.remember(self, "food_count", 0)   
+		-- Feed and Tame	
+		self.food_count = self.food_count + 1	
+		mobkit.remember(self, "food_count", self.food_count)
+		if self.food_count >= feed_count then			
+			self.food_count = 0
+			mobkit.remember(self, "food_count", 0)   
 			if tame then
-				self.tamed = mobkit.recall(self, "tamed") or false
 				if self.tamed == false then
-					self.tamed = mobkit.remember(self, "tamed", true)   
-					self.owner= mobkit.recall(self, "owner") or ""
-					if not self.owner or self.owner == "" then
-						self.owner = mobkit.remember("owner", clicker:get_player_name())
+					self.tamed = true
+					mobkit.remember(self, "tamed", true)   
+					if not(self.owner) or self.owner == "" then
+						self.owner = clicker:get_player_name()
+						mobkit.remember(self, "owner", self.owner)
 					end
 					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", self.petz_type))					
 				end
@@ -477,18 +480,18 @@ petz.on_rightclick = function(self, clicker)
             and ((wielded_item_name == "petz:hairbrush") or (wielded_item_name == "petz:beaver_oil")) then                       
                 if petz.settings.tamagochi_mode == true then
                     if wielded_item_name == "petz:hairbrush" then
-						self.brushed = mobkit.recall(self, "brushed") or false
                         if self.brushed == false then
                             petz.set_affinity(self, true, 5)
-                            self.brushed = mobkit.remember(self, "brushed", true) 
+                            self.brushed = true
+                            mobkit.remember(self, "brushed", self.brushed) 
                         else
                             minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("had already been brushed."))
                         end                
-                    else --it's beaver_oil
-						self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied") or false
+                    else --it's beaver_oil						
                         if self.beaver_oil_applied == false then
                             petz.set_affinity(self, true, 20)
-                            self.beaver_oil_applied = mobkit.remember(self, "beaver_oil_applied", true)
+                            self.beaver_oil_applied = true
+                            mobkit.remember(self, "beaver_oil_applied", self.beaver_oil_applied)
                         else 
                             minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("had already been spreaded with beaver oil."))
                         end     
@@ -498,10 +501,10 @@ petz.on_rightclick = function(self, clicker)
                 petz.do_particles_effect(self.object, self.object:get_pos(), "star")
         --If feeded
         elseif petz.feed_tame(self, clicker, wielded_item, wielded_item_name, 5, true) then
-			self.fed = mobkit.recall(self, "fed") or false
             if petz.settings.tamagochi_mode == true and self.fed == false then
                 petz.set_affinity(self, true, 5)                
-                self.fed = mobkit.remember(self, "fed", true)            
+                self.fed = true
+                mobkit.remember(self, "fed", self.fed)            
             end
             if self.petz_type == "lamb" then     
                 petz.lamb_wool_regrow(self)                       
@@ -512,28 +515,27 @@ petz.on_rightclick = function(self, clicker)
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
         elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then  
 			local player_name = clicker:get_player_name()
-			self.owner = mobkit.recall(self, "owner") or ""
 			if (self.is_pet == true and self.owner and self.owner ~= player_name and petz.settings.rob_mobs == false) then
 				minetest.chat_send_player(self.owner, S("You are not the owner of the").." "..self.petz_type..".")	
 				return
 			end
 			if self.owner== nil or self.owner== "" or (self.owner ~= player_name and petz.settings.rob_mobs == true) then				
-				self.tamed = mobkit.remember(self, "tamed", true)
-				self.owner = mobkit.remember(self, "owner", player_name) 
+				self.tamed = true
+				mobkit.remember(self, "tamed", self.tamed )
+				self.owner = player_name
+				mobkit.remember(self, "owner", self.owner) 
 			end
 			petz.capture(self, clicker)
-			minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has been captured")..".")				            
+			minetest.chat_send_player("singleplayer", S("Your").." "..self.petz_type.." "..S("has been captured")..".")				            
         elseif self.petz_type == "lamb" and (wielded_item_name == "mobs:shears" or wielded_item_name == "petz:shears") and clicker:get_inventory() and not self.shaved then
             petz.lamb_wool_shave(self, clicker)
         elseif self.petz_type == "calf" and wielded_item_name == "bucket:bucket_empty" and clicker:get_inventory() then
-			self.milked = mobkit.recall(self, "milked") or false
 			if not(self.milked) then
 				petz.calf_milk_milk(self, clicker)
 			else
 				minetest.chat_send_player(clicker:get_player_name(), S("This calf has already been milked."))
 			end
 		elseif self.petz_type == "pony" and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm") then
-			self.is_baby = mobkit.recall(self, "is_baby") or false
 			if not(self.is_baby) then
 				petz.breed(self, clicker, wielded_item, wielded_item_name)	
 			end
@@ -549,18 +551,21 @@ end
 ---
 
 petz.calf_milk_refill = function(self)
-	self.food_count = mobkit.recall(self, "food_count") or 0
-	self.food_count = mobkit.remember(self, "food_count", self.food_count+1)      
+	self.food_count = self.food_count + 1
+	mobkit.remember(self, "food_count", self.food_count)      
 	if self.food_count >= 5 then -- if calf replaces 5x grass then it refill milk
-		self.food_count = mobkit.remember(self, "food_count", 0) 
-		self.milked= mobkit.remember(self, "milked", false) 
+		self.food_count = 0
+		mobkit.remember(self, "food_count", self.food_count) 
+		self.milked = false
+		mobkit.remember(self, "milked", self.milked) 
 	end
 end
 
 petz.calf_milk_milk = function(self, clicker)
     clicker:set_wielded_item("petz:bucket_milk")
     petz.do_sound_effect("object", self.object, "petz_calf_moaning")
-	self.milked = mobkit.remember(self, "milked", true)          
+	self.milked = true
+	mobkit.remember(self, "milked", self.milked)          
 end
 
 --
@@ -582,7 +587,6 @@ petz.capture = function(self, clicker)
 	else
 		minetest.add_item(clicker:get_pos(), new_stack)
 	end
-	self:mob_sound("default_place_node_hard")
 	self.object:remove()
 end
 
@@ -591,7 +595,6 @@ end
 --
 
 petz.breed = function(self, clicker, wielded_item, wielded_item_name)
-	self.is_male = mobkit.recall(self, "is_male") or false
 	if wielded_item_name == "petz:glass_syringe" and self.is_male== true then		
 		local new_wielded_item = ItemStack("petz:glass_syringe_sperm")
 		local meta = new_wielded_item:get_meta()
@@ -599,12 +602,12 @@ petz.breed = function(self, clicker, wielded_item, wielded_item_name)
 		meta:set_int("max_speed_reverse", self.max_speed_reverse)
 		meta:set_int("accel", self.accel)
 		clicker:set_wielded_item(new_wielded_item)
-	elseif wielded_item_name == "petz:glass_syringe_sperm" and self.is_male== false then	
-		self.is_pregnant = mobkit.recall(self, "is_pregnant") or false		 
+	elseif wielded_item_name == "petz:glass_syringe_sperm" and self.is_male== false then	 
 		if self.is_pregnant == false and self.pregnant_count > 0 then
-			self.is_pregnant = mobkit.remember(self, "is_pregnant", true)
-			self.pregnant_count = mobkit.recall(self, "pregnant_count") or 0
-			self.pregnant_count = mobkit.recall(self, "pregnant_count", self.pregnant_count - 1)	
+			self.is_pregnant = true
+			mobkit.remember(self, "is_pregnant", self.is_pregnant)
+			self.pregnant_count = self.pregnant_count - 1
+			mobkit.remember(self, "pregnant_count", self.pregnant_count)	
 			local meta = wielded_item:get_meta()
 			local max_speed_forward = meta:get_int("max_speed_forward")
 			local max_speed_reverse = meta:get_int("max_speed_reverse")
@@ -620,10 +623,11 @@ petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel
     minetest.after(petz.settings.pony_pregnancy_time, function(self, max_speed_forward, max_speed_reverse, accel)         
         if not(self.object:get_pos() == nil) then
 			local pos = self.object:get_pos()		
-			self.is_pregnant = mobkit.remember(self, "is_pregnant", false)
+			self.is_pregnant = false
+			mobkit.remember(self, "is_pregnant", self.is_pregnant)
 			local baby = minetest.add_entity(pos, "petz:pony", "baby")	
 			local baby_entity = baby:get_luaentity()
-			baby_entity.is_baby = mobkit.remember(self, "is_baby", true)
+			baby_entity.is_baby = true
 			--Set the genetics accordingly the father and the mother
 			local random_number = math.random(-1, 1)
 			local new_max_speed_forward = round((max_speed_forward + self.max_speed_forward)/2, 0) + random_number
@@ -644,13 +648,12 @@ petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel
 			elseif new_accel > 10 then
 				new_accel = 10
 			end
-			baby_entity.max_speed_forward= mobkit.remember(self, "max_speed_forward", new_max_speed_forward) 
-			baby_entity.max_speed_reverse = mobkit.remember(self, "max_speed_reverse", new_max_speed_reverse) 
-			baby_entity.accel = mobkit.remember(self, "accel", new_accel)
-			self.owner = mobkit.recall(self, "owner") or ""
+			baby_entity.max_speed_forward = new_max_speed_forward 
+			baby_entity.max_speed_reverse = new_max_speed_reverse
+			baby_entity.accel = new_accel
 			if not(self.owner== nil) and not(self.owner== "") then					
-				baby_entity.owner = mobkit.remember(self, "owner", self.owner)
-				baby_entity.tamed = mobkit.remember(self, "tamed", true)
+				baby_entity.tamed = true
+				baby_entity.owner = self.owner				
 			end			
 		end
     end, self, max_speed_forward, max_speed_reverse, accel)
@@ -675,7 +678,6 @@ end
 --
 
 petz.on_die = function(self, pos)
-	self.owner = mobkit.recall(self, "owner") or ""
     petz.pet[self.owner]= nil
 end
 
@@ -880,8 +882,8 @@ function petz:register_egg(pet_name, desc, inv_img, no_creative)
 				local ent = mob:get_luaentity()
 				-- set owner if not a monster
 				if ent.is_wild == false then
-					ent.owner = mobkit.remember(ent, "owner", placer:get_player_name())
-					ent.tamed = mobkit.remember(ent, "tamed", true)						
+					ent.owner = placer:get_player_name()
+					ent.tamed = true
 				end
 				-- since mob is unique we remove egg once spawned
 				itemstack:take_item()
@@ -924,7 +926,7 @@ function petz.herbivore_brain(self)
 			local player = mobkit.get_nearby_player(self)
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()	
-				if mobkit.recall(self, "tamed") == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
+				if self.tamed == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
 					mobkit.hq_runfrom(self, 10, player)
 					return
 				end
@@ -963,11 +965,31 @@ function petz.herbivore_brain(self)
 	end
 end
 
+petz.load_vars = function(self)
+	self.wool_color = mobkit.recall(self, "wool_color") or "white"
+	self.tamed = mobkit.recall(self, "tamed") or false
+	self.owner = mobkit.recall(self, "owner") or ""	
+	self.affinity = mobkit.recall(self, "affinity") or 100	
+	self.fed = mobkit.recall(self, "fed") or false
+	self.brushed = mobkit.recall(self, "brushed") or false
+	self.lashed = mobkit.recall(self, "lashed") or false
+	self.food_count = mobkit.recall(self, "food_count") or 0
+	self.food_count_wool = mobkit.recall(self, "food_count_wool") or 0
+	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied") or false
+	self.milked = mobkit.recall(self, "milked") or false
+	self.is_baby = mobkit.recall(self, "is_baby") or false
+	self.is_male = mobkit.recall(self, "is_male") or false
+	self.is_pregnant = mobkit.recall(self, "is_pregnant") or false		
+	self.pregnant_count = mobkit.recall(self, "pregnant_count") or 0
+	self.shaved = mobkit.recall(self, "shaved") or false
+end
+
 function petz.set_lamb(self, staticdata, dtime_s)
-	if not self.memory then self.memory = {} end
-    self.tamed = mobkit.recall(self, "tamed") or false
-	local wool_color = mobkit.recall(self, "wool_color") or "white"
-	if not(wool_color) then
+	--if not self.memory then
+		--self.memory = {}
+	--end
+	mobkit.actfunc(self, staticdata, dtime_s)
+	if (mobkit.recall(self, "wool_color") == nil) then
 		if petz.settings.type_model == "mesh" then --set a random color    			
 			local random_number = math.random(1, 15)
 			if random_number == 1 then
@@ -979,28 +1001,33 @@ function petz.set_lamb(self, staticdata, dtime_s)
 			else				
 				wool_color = "white" --from 8 to 15
 			end		
-			mobkit.remember(self, "wool_color", wool_color)
 			self.wool_color = wool_color
+			mobkit.remember(self, "wool_color", self.wool_color)
+			--set some vars
+			self.tamed = false
+			mobkit.remember(self, "tamed", self.tamed)
+			self.owner = ""
+			mobkit.remember(self, "owner", self.owner)				
+			self.food_count = 0
+			mobkit.remember(self, "food_count", self.food_count)	
+			self.food_count_wool = 0
+			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
+			self.shaved = false
+			mobkit.remember(self, "shaved", self.shaved)	
 		else --if 'cubic'
 			self.tiles_color = petz.lamb.tiles
 			self.tiles_shaved = petz.lamb.tiles_shaved
-			mobkit.remember(self, "wool_color", "white") --cubic lamb color is always white				
+			mobkit.remember(self, "wool_color", "white") --cubic lamb color is always white						
 		end
-		mobkit.remember(self, "wool_color", wool_color)
 	else
-		--Load saved variables
-		self.wool_color = mobkit.recall(self, "wool_color") or "white"
-		self.tamed = mobkit.recall(self, "tamed") or false
-		self.owner = mobkit.recall(self, "owner") or ""		
+		--Load memory variables
+		petz.load_vars(self)
 	end 		
-	local shaved_string = ""	
-	self.shaved = mobkit.recall(self, "shaved") or false
+	local shaved_string = ""
     if self.shaved == true then
 		shaved_string = "_shaved"
     end
     local lamb_texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
-    --minetest.chat_send_player("singleplayer", lamb_texture)
     mobkit.remember(self, "textures", lamb_texture) 
     self.object:set_properties({textures = {lamb_texture}})   
-    mobkit.actfunc(self, staticdata, dtime_s)
 end
