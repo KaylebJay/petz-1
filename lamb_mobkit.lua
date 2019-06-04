@@ -56,6 +56,12 @@ minetest.register_entity("petz:lamb",{
 	can_be_brushed = true,
 	capture_item = "lasso",
 	follow = petz.settings.lamb_follow,
+	replace_rate = 10,
+	replace_offset = 0,
+    replace_what = {
+        {"group:grass", "air", -1},
+        {"default:dirt_with_grass", "default:dirt", -2}
+    },
 
 	rotate = petz.settings.rotate,
 

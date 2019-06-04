@@ -308,6 +308,40 @@ petz.timer = function(self)
 end
 
 --
+--Replace behaviour
+--
+
+petz.replace = function(self)
+	if not self.replace_rate or not self.replace_what or self.child == true or self.object:get_velocity().y ~= 0 or math.random(1, self.replace_rate) > 1 then
+		return
+	end
+	local pos = self.object:get_pos()
+	local what, with, y_offset
+	if type(self.replace_what[1]) == "table" then
+		local num = math.random(#self.replace_what)
+		what = self.replace_what[num][1] or ""
+		with = self.replace_what[num][2] or ""
+		y_offset = self.replace_what[num][3] or 0
+	else
+		what = self.replace_what
+		with = self.replace_with or ""
+		y_offset = self.replace_offset or 0
+	end
+	pos.y = pos.y + y_offset
+	if #minetest.find_nodes_in_area(pos, pos, what) > 0 then
+		local oldnode = {name = what}
+		local newnode = {name = with}
+		local on_replace_return
+		if self.on_replace then
+			on_replace_return = self:on_replace(pos, oldnode, newnode)
+		end
+		if on_replace_return ~= false then
+			minetest.set_node(pos, {name = with})
+		end
+	end
+end
+
+--
 --Lamb Functions
 --
 
@@ -347,6 +381,48 @@ end
 --Capture Mobs Mechanics
 --
 
+--
+-- Register Egg
+--
+
+function petz:register_egg(pet_name, desc, inv_img, no_creative)
+	local grp = {spawn_egg = 1}
+	minetest.register_craftitem(pet_name .. "_set", { -- register new spawn egg containing mob information
+		description = S("@1 (Tamed)", desc),
+		inventory_image = inv_img,
+		groups = {spawn_egg = 2},
+		stack_max = 1,
+		on_place = function(itemstack, placer, pointed_thing)
+			local pos = pointed_thing.above
+			-- am I clicking on something with existing on_rightclick function?
+			local under = minetest.get_node(pointed_thing.under)
+			local def = minetest.registered_nodes[under.name]
+			if def and def.on_rightclick then
+				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
+			end
+			if pos and not minetest.is_protected(pos, placer:get_player_name()) then
+				if not minetest.registered_entities[pet_name] then
+					return
+				end
+				pos.y = pos.y + 1
+				local meta = itemstack:get_meta()
+				local mob = minetest.add_entity(pos, pet_name, minetest.serialize(data))
+				local ent = mob:get_luaentity()
+				-- set owner if not a monster
+				if ent.is_wild == false then
+					ent.owner = placer:get_player_name()
+					mobkit.remember(ent, "owner", ent.owner)
+					ent.tamed = true
+					mobkit.remember(ent, "tamed", true)
+				end
+				-- since mob is unique we remove egg once spawned
+				itemstack:take_item()
+			end
+			return itemstack
+		end,
+	})
+end
+
 petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)
 	local capture_item_type
 	if wielded_item_name == "mobs:lasso" or wielded_item_name == "petz:lasso" then
@@ -373,6 +449,28 @@ petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_
 		return false
 	end
 end
+
+petz.capture = function(self, clicker)
+	local new_stack = ItemStack(self.name .. "_set") 	-- add special mob egg with all mob information
+	local stack_meta = new_stack:get_meta()	
+	--local sett ="---TABLE---: "
+	for key, value in pairs(self) do
+		local t = type(value)
+		if  t ~= "function" and t ~= "nil" and t ~= "userdata" then
+			stack_meta:set_string(key, self[key])	
+			--sett= sett .. ", ".. tostring(key).." : ".. tostring(self[key])
+			--minetest.chat_send_player("singleplayer", sett)				
+		end
+	end
+	local inv = clicker:get_inventory()	
+	if inv:room_for_item("main", new_stack) then
+		inv:add_item("main", new_stack)
+	else
+		minetest.add_item(clicker:get_pos(), new_stack)
+	end
+	self.object:remove()
+end
+
 
 --
 --on_punch event for all the Mobs
@@ -454,6 +552,7 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 					if not(self.owner) or self.owner == "" then
 						self.owner = clicker:get_player_name()
 						mobkit.remember(self, "owner", self.owner)
+						minetest.chat_send_player("singleplayer", "hola")
 					end
 					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", self.petz_type))					
 				end
@@ -569,28 +668,6 @@ petz.calf_milk_milk = function(self, clicker)
 end
 
 --
---Capture Mechanics
---
-
-petz.capture = function(self, clicker)
-	local new_stack = ItemStack(self.name .. "_set") 	-- add special mob egg with all mob information
-	local meta = new_stack:get_meta()	
-	for _,stat in pairs(self) do
-		local t = type(stat)
-		if  t ~= "function" and t ~= "nil" and t ~= "userdata" then
-			meta:set_string(_, self[_])			
-		end
-	end	
-	local inv = clicker:get_inventory()
-	if inv:room_for_item("main", new_stack) then
-		inv:add_item("main", new_stack)
-	else
-		minetest.add_item(clicker:get_pos(), new_stack)
-	end
-	self.object:remove()
-end
-
---
 --Breed Mechanics
 --
 
@@ -628,6 +705,7 @@ petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel
 			local baby = minetest.add_entity(pos, "petz:pony", "baby")	
 			local baby_entity = baby:get_luaentity()
 			baby_entity.is_baby = true
+			mobkit.remember(baby_entity, "is_baby", baby_entity.is_baby)
 			--Set the genetics accordingly the father and the mother
 			local random_number = math.random(-1, 1)
 			local new_max_speed_forward = round((max_speed_forward + self.max_speed_forward)/2, 0) + random_number
@@ -649,11 +727,16 @@ petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel
 				new_accel = 10
 			end
 			baby_entity.max_speed_forward = new_max_speed_forward 
+			mobkit.remember(baby_entity, "max_speed_forward", baby_entity.max_speed_forward)
 			baby_entity.max_speed_reverse = new_max_speed_reverse
+			mobkit.remember(baby_entity, "max_speed_reverse", baby_entity.max_speed_reverse)
 			baby_entity.accel = new_accel
+			mobkit.remember(baby_entity, "accel", baby_entity.accel)
 			if not(self.owner== nil) and not(self.owner== "") then					
 				baby_entity.tamed = true
-				baby_entity.owner = self.owner				
+				mobkit.remember(baby_entity, "tamed", baby_entity.tamed)
+				baby_entity.owner = self.owner
+				mobkit.remember(baby_entity, "owner", baby_entity.owner)
 			end			
 		end
     end, self, max_speed_forward, max_speed_reverse, accel)
@@ -663,6 +746,7 @@ petz.init_growth = function(self)
     minetest.after(petz.settings.pony_growth_time, function(self)         
         if not(self.object:get_pos() == nil) then
 			self.is_baby = false
+			mobkit.remember(self, "is_baby", self.is_baby)
 			self.object:set_properties({
 				jump = false,
 				is_baby = false,
@@ -692,6 +776,7 @@ petz.do_punch = function (self, hitter, time_from_last_punch, tool_capabilities,
                 self.affinity = 0       
             end
             self.affinity = self.affinity - 20
+            mobkit.remember(self, "affinity", self.affinity)
         end
     end
 end
@@ -854,46 +939,6 @@ petz.create_dam = function(self, pos)
 end
 
 --
--- Register Egg
---
-
-function petz:register_egg(pet_name, desc, inv_img, no_creative)
-	local grp = {spawn_egg = 1}
-	minetest.register_craftitem(pet_name .. "_set", { -- register new spawn egg containing mob information
-		description = S("@1 (Tamed)", desc),
-		inventory_image = inv_img,
-		groups = {spawn_egg = 2},
-		stack_max = 1,
-		on_place = function(itemstack, placer, pointed_thing)
-			local pos = pointed_thing.above
-			-- am I clicking on something with existing on_rightclick function?
-			local under = minetest.get_node(pointed_thing.under)
-			local def = minetest.registered_nodes[under.name]
-			if def and def.on_rightclick then
-				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
-			end
-			if pos and not minetest.is_protected(pos, placer:get_player_name()) then
-				if not minetest.registered_entities[pet_name] then
-					return
-				end
-				pos.y = pos.y + 1
-				local data = itemstack:get_metadata()
-				local mob = minetest.add_entity(pos, pet_name, data)
-				local ent = mob:get_luaentity()
-				-- set owner if not a monster
-				if ent.is_wild == false then
-					ent.owner = placer:get_player_name()
-					ent.tamed = true
-				end
-				-- since mob is unique we remove egg once spawned
-				itemstack:take_item()
-			end
-			return itemstack
-		end,
-	})
-end
-
---
 --Herbivore Behaviour
 --
 
@@ -958,6 +1003,10 @@ function petz.herbivore_brain(self)
 				mobkit.clear_queue_high(self)
 			end			
 		end
+		
+		if prty < 6 then			
+			petz.replace(self) --Replace nodes by others
+		end
 			
 		if mobkit.is_queue_empty_high(self) then
 			mobkit.hq_roam(self, 0)
@@ -982,15 +1031,14 @@ petz.load_vars = function(self)
 	self.is_pregnant = mobkit.recall(self, "is_pregnant") or false		
 	self.pregnant_count = mobkit.recall(self, "pregnant_count") or 0
 	self.shaved = mobkit.recall(self, "shaved") or false
+	self.child = mobkit.recall(self, "child") or false
 end
 
 function petz.set_lamb(self, staticdata, dtime_s)
-	--if not self.memory then
-		--self.memory = {}
-	--end
 	mobkit.actfunc(self, staticdata, dtime_s)
 	if (mobkit.recall(self, "wool_color") == nil) then
-		if petz.settings.type_model == "mesh" then --set a random color    			
+		if petz.settings.type_model == "mesh" then --set a random color 
+			local wool_color
 			local random_number = math.random(1, 15)
 			if random_number == 1 then
 				wool_color = "brown"
@@ -1013,7 +1061,8 @@ function petz.set_lamb(self, staticdata, dtime_s)
 			self.food_count_wool = 0
 			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
 			self.shaved = false
-			mobkit.remember(self, "shaved", self.shaved)	
+			mobkit.remember(self, "shaved", self.shaved)				
+			minetest.chat_send_player("singleplayer", "ana")	
 		else --if 'cubic'
 			self.tiles_color = petz.lamb.tiles
 			self.tiles_shaved = petz.lamb.tiles_shaved
@@ -1022,6 +1071,7 @@ function petz.set_lamb(self, staticdata, dtime_s)
 	else
 		--Load memory variables
 		petz.load_vars(self)
+		minetest.chat_send_player("singleplayer", "lucas")	
 	end 		
 	local shaved_string = ""
     if self.shaved == true then
@@ -1029,5 +1079,7 @@ function petz.set_lamb(self, staticdata, dtime_s)
     end
     local lamb_texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
     mobkit.remember(self, "textures", lamb_texture) 
-    self.object:set_properties({textures = {lamb_texture}})   
+	self.object:set_properties({textures = {lamb_texture}}) 		
+	minetest.chat_send_player("singleplayer", staticdata)	
+	minetest.chat_send_player("singleplayer", "pepe")	
 end
