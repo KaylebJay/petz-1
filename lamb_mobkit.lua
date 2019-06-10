@@ -44,27 +44,26 @@ else
 end
 
 minetest.register_entity("petz:lamb",{
-	--Petz specifics
-	custom_vars_set00 = nil,	
-	init_timer = false,
-	petz_type = "lamb",
+	--Petz specifics	
+	type = "lamb",	
+	init_timer = false,	
 	is_pet = false,
 	has_affinity = false,
 	is_wild = false,
 	give_orders = false,
-	init_timer = false,	
 	can_be_brushed = true,
 	capture_item = "lasso",
 	follow = petz.settings.lamb_follow,
+	drops = {
+		{name = "petz:mini_lamb_chop", chance = 1, min = 1, max = 1,},		
+	},
 	replace_rate = 10,
 	replace_offset = 0,
     replace_what = {
         {"group:grass", "air", -1},
         {"default:dirt_with_grass", "default:dirt", -2}
     },
-
 	rotate = petz.settings.rotate,
-
 	physical = true,
 	stepheight = 0.1,	--EVIL!
 	collide_with_objects = true,
@@ -98,10 +97,13 @@ minetest.register_entity("petz:lamb",{
 	
 	brainfunc = petz.herbivore_brain,
 	
-	on_activate = petz.set_lamb, --on_activate, required
+	on_activate = function(self, staticdata, dtime_s) --on_activate, required
+		mobkit.actfunc(self, staticdata, dtime_s)
+		petz.set_lamb(self, staticdata, dtime_s)
+	end,
 	
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
-		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
+		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)		
 	end,
 	
 	on_rightclick = function(self, clicker)

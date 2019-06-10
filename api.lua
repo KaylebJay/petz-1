@@ -60,7 +60,7 @@ petz.create_form = function(player_name)
 			hungrystuff_pos = {x= 1, y = 1}
 		end
 		tamagochi_form_stuff = 
-            "image[0,0;1,1;petz_spawnegg_"..pet.petz_type..".png]"..
+            "image[0,0;1,1;petz_spawnegg_"..pet.type..".png]"..
             "label[1,0;".. form_title .."]"..
             "image[".. hungrystuff_pos.x ..",".. hungrystuff_pos.y ..";1,1;petz_pet_bowl_inv.png]"..
             affinity_stuff            
@@ -73,16 +73,16 @@ petz.create_form = function(player_name)
         tamagochi_form_stuff = tamagochi_form_stuff .. "label[".. hungrystuff_pos.x +1 ..",".. hungrystuff_pos.y ..";"..S(hungry_label).."]"
     else
         tamagochi_form_stuff =
-            "image[1,0;1,1;petz_spawnegg_"..pet.petz_type..".png]"
+            "image[1,0;1,1;petz_spawnegg_"..pet.type..".png]"
     end
-    if pet.petz_type == "parrot" then
+    if pet.type == "parrot" then
 		form_size.h = form_size.h + 1
 		buttonexit_pos.y = buttonexit_pos.y + 1
 		more_form_orders = more_form_orders..
 		"button_exit[0,4;1,1;btn_alight;"..S("Alight").."]"	..
 		"button_exit[1,4;1,1;btn_fly;"..S("Fly").."]"..
 		"button_exit[2,4;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"
-	elseif pet.petz_type == "pony" then
+	elseif pet.type == "pony" then
 		local genre = ''
 		if pet.is_male == true then
 			genre = "Male"
@@ -278,7 +278,7 @@ petz.timer = function(self)
 				end
 			end
             --If the petz is a lion had to been lashed
-            if self.petz_type== "lion" then				
+            if self.type== "lion" then				
                 if self.lashed == false then
                     petz.set_affinity(self, false, 25)                
                 else
@@ -288,15 +288,15 @@ petz.timer = function(self)
             end            
             --If the pet starves to death            
             if self:get_hp() <= 100 then
-                minetest.chat_send_player(self.owner, S("Your").. " "..self.petz_type.." "..S("has starved to death!!!"))
+                minetest.chat_send_player(self.owner, S("Your").. " "..self.type.." "..S("has starved to death!!!"))
                 self.init_timer  = false -- no more timing
             --I the pet get bored of you
             elseif (self.has_affinity == true) and (self.affinity == 0) then
-                minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has abandoned you!!!"))
+                minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("has abandoned you!!!"))
                 self.owner = "" --the pet abandon you
-                if self.is_wild == true then
-                    self.type = "monster" -- if the animal was wild (ie a lion) can attack you!
-                end
+                --if self.is_wild == true then
+                    --self.type = "monster" -- if the animal was wild (ie a lion) can attack you!
+                --end
                 self.init_timer  = false -- no more timing
             --Else reinit the timer, to check again in the future
             else
@@ -308,7 +308,7 @@ petz.timer = function(self)
 end
 
 --
---Replace behaviour
+--Replace Engine
 --
 
 petz.replace = function(self)
@@ -339,6 +339,44 @@ petz.replace = function(self)
 			minetest.set_node(pos, {name = with})
 		end
 	end
+end
+
+--
+-- Drop Items Engine
+--
+
+petz.drop_items = function(self)
+		minetest.chat_send_player("singleplayer", "prueba")	
+	if not self.drops or #self.drops == 0 then 	-- check for nil or no drops
+		return
+	end	
+	if self.child then -- no drops for child mobs
+		return
+	end	
+	local death_by_player = self.was_killed_by_player or nil -- was mob killed by player?
+	local obj, item, num
+	local pos = self.object:get_pos()
+	for n = 1, #self.drops do
+		if math.random(1, self.drops[n].chance) == 1 then
+			num = math.random(self.drops[n].min or 0, self.drops[n].max or 1)
+			item = self.drops[n].name
+			if death_by_player then	-- only drop rare items (drops.min=0) if killed by player
+				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
+			elseif self.drops[n].min ~= 0 then
+				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
+			end
+			if obj and obj:get_luaentity() then
+				obj:set_velocity({
+					x = math.random(-10, 10) / 9,
+					y = 6,
+					z = math.random(-10, 10) / 9,
+				})
+			elseif obj then
+				obj:remove() -- item does not exist
+			end
+		end
+	end
+	self.drops = {}
 end
 
 --
@@ -405,8 +443,10 @@ function petz:register_egg(pet_name, desc, inv_img, no_creative)
 					return
 				end
 				pos.y = pos.y + 1
-				local meta = itemstack:get_meta()
-				local mob = minetest.add_entity(pos, pet_name, minetest.serialize(data))
+				local meta = itemstack:get_meta()				
+				local meta_table = meta:to_table()
+				local sdata = minetest.serialize(meta_table)
+				local mob = minetest.add_entity(pos, pet_name, sdata)
 				local ent = mob:get_luaentity()
 				-- set owner if not a monster
 				if ent.is_wild == false then
@@ -502,12 +542,13 @@ petz.on_punch = function(self, puncher, time_from_last_punch, tool_capabilities,
 			local petz_pos = self.object:get_pos()
 			if vector.distance(puncher_pos, petz_pos) <= 5 then	-- a way to decrease punch range without dependences
 				local petz_hp = self.object:get_hp()
-				minetest.chat_send_player("singleplayer", "hp : "..tostring(petz_hp))	
+				--minetest.chat_send_player("singleplayer", "hp : "..tostring(petz_hp))	
 				local weapon_damage = petz.calculate_damage(tool_capabilities)
-				minetest.chat_send_player("singleplayer", "damage : ".. weapon_damage)	
+				--minetest.chat_send_player("singleplayer", "damage : ".. weapon_damage)	
 				local new_hp = petz_hp - weapon_damage
-				minetest.chat_send_player("singleplayer", "NEW hp : "..tostring(new_hp))	
+				--minetest.chat_send_player("singleplayer", "NEW hp : "..tostring(new_hp))	
 				self.object:set_hp(new_hp)
+				self.was_killed_by_player = petz.was_killed_by_player(self, puncher)
 				mobkit.make_sound(self, 'misc')				
 				-- kickback:
 				local hvel = vector.multiply(vector.normalize({x=dir.x,y=0,z=dir.z}),4)
@@ -536,7 +577,7 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 		pet_hp = pet_hp + 4 -- increase health
 		if pet_hp >= self.max_hp then
 			pet_hp = self.max_hp
-			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", self.petz_type, tostring(pet_hp)))							
+			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", self.type, tostring(pet_hp)))							
 		end
 		self.object:set_hp(pet_hp)
 		-- Feed and Tame	
@@ -554,7 +595,7 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 						mobkit.remember(self, "owner", self.owner)
 						minetest.chat_send_player("singleplayer", "hola")
 					end
-					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", self.petz_type))					
+					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", self.type))					
 				end
 			end			
 		end
@@ -584,7 +625,7 @@ petz.on_rightclick = function(self, clicker)
                             self.brushed = true
                             mobkit.remember(self, "brushed", self.brushed) 
                         else
-                            minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("had already been brushed."))
+                            minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("had already been brushed."))
                         end                
                     else --it's beaver_oil						
                         if self.beaver_oil_applied == false then
@@ -592,7 +633,7 @@ petz.on_rightclick = function(self, clicker)
                             self.beaver_oil_applied = true
                             mobkit.remember(self, "beaver_oil_applied", self.beaver_oil_applied)
                         else 
-                            minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("had already been spreaded with beaver oil."))
+                            minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("had already been spreaded with beaver oil."))
                         end     
                     end
                 end
@@ -605,17 +646,17 @@ petz.on_rightclick = function(self, clicker)
                 self.fed = true
                 mobkit.remember(self, "fed", self.fed)            
             end
-            if self.petz_type == "lamb" then     
+            if self.type == "lamb" then     
                 petz.lamb_wool_regrow(self)                       
-            elseif self.petz_type == "calf" then     
+            elseif self.type == "calf" then     
                 petz.calf_milk_refill(self)
             end     
-            petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
+            petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
         elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then  
 			local player_name = clicker:get_player_name()
 			if (self.is_pet == true and self.owner and self.owner ~= player_name and petz.settings.rob_mobs == false) then
-				minetest.chat_send_player(self.owner, S("You are not the owner of the").." "..self.petz_type..".")	
+				minetest.chat_send_player(self.owner, S("You are not the owner of the").." "..self.type..".")	
 				return
 			end
 			if self.owner== nil or self.owner== "" or (self.owner ~= player_name and petz.settings.rob_mobs == true) then				
@@ -625,16 +666,16 @@ petz.on_rightclick = function(self, clicker)
 				mobkit.remember(self, "owner", self.owner) 
 			end
 			petz.capture(self, clicker)
-			minetest.chat_send_player("singleplayer", S("Your").." "..self.petz_type.." "..S("has been captured")..".")				            
-        elseif self.petz_type == "lamb" and (wielded_item_name == "mobs:shears" or wielded_item_name == "petz:shears") and clicker:get_inventory() and not self.shaved then
+			minetest.chat_send_player("singleplayer", S("Your").." "..self.type.." "..S("has been captured")..".")				            
+        elseif self.type == "lamb" and (wielded_item_name == "mobs:shears" or wielded_item_name == "petz:shears") and clicker:get_inventory() and not self.shaved then
             petz.lamb_wool_shave(self, clicker)
-        elseif self.petz_type == "calf" and wielded_item_name == "bucket:bucket_empty" and clicker:get_inventory() then
+        elseif self.type == "calf" and wielded_item_name == "bucket:bucket_empty" and clicker:get_inventory() then
 			if not(self.milked) then
 				petz.calf_milk_milk(self, clicker)
 			else
 				minetest.chat_send_player(clicker:get_player_name(), S("This calf has already been milked."))
 			end
-		elseif self.petz_type == "pony" and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm") then
+		elseif self.type == "pony" and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm") then
 			if not(self.is_baby) then
 				petz.breed(self, clicker, wielded_item, wielded_item_name)	
 			end
@@ -864,7 +905,7 @@ petz.do_lashing = function(self)
     if self.lashed == false then        
         self.lashed = true
     end
-    petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
+    petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
 end
 
 petz.tame_whip= function(self, hitter)	
@@ -875,10 +916,10 @@ petz.tame_whip= function(self, hitter)
     			self.lashing_count = (self.lashing_count or 0) + 1        
 				if self.lashing_count >= petz.settings.grizzly_count_lashing_tame then -- tame grizzly
 					self.lashing_count = 0
-					self.type = "animal"
+					--self.type = "animal"
 					self.tamed = true			
 					self.owner = hitter:get_player_name()
-					minetest.chat_send_player(self.owner, S("A").." "..self.petz_type.." "..S("has been tamed."))					
+					minetest.chat_send_player(self.owner, S("A").." "..self.type.." "..S("has been tamed."))					
 				end			
 			else
 				if (petz.settings.tamagochi_mode == true) and (self.owner == hitter:get_player_name()) then
@@ -897,7 +938,7 @@ end
 petz.lay_egg = function(self)
 	local pos = self.object:get_pos()
 	if math.random(1, 150000) == 1 then
-		minetest.add_item(self.object:get_pos(), "petz:"..self.petz_type.."_egg") --chicken egg!
+		minetest.add_item(self.object:get_pos(), "petz:"..self.type.."_egg") --chicken egg!
 	end			
 	local lay_range = 1
 	local nearby_nodes = minetest.find_nodes_in_area(
@@ -906,7 +947,7 @@ petz.lay_egg = function(self)
 		"petz:duck_nest")
 	if #nearby_nodes > 1 then
 		local nest_to_lay = nearby_nodes[math.random(1, #nearby_nodes)]
-		minetest.set_node(nest_to_lay, {name= "petz:"..self.petz_type.."_nest_egg"})
+		minetest.set_node(nest_to_lay, {name= "petz:"..self.type.."_nest_egg"})
 	end		
 end
 
@@ -938,20 +979,33 @@ petz.create_dam = function(self, pos)
     return false
 end
 
+petz.was_killed_by_player = function(self, puncher)	
+	if self.object:get_hp() <= 100 then
+		if puncher:is_player() then
+			return true
+		else
+			return false
+		end
+	else
+		return false
+	end
+end
 --
 --Herbivore Behaviour
 --
 
 function petz.herbivore_brain(self)
 
-	if self.object:get_hp() <= 0 then	
+	if self.object:get_hp() <= 100 then	
+		petz.drop_items(self)
 		mobkit.clear_queue_high(self)
 		mobkit.hq_die(self)
 		return
 	end
 	
-	if mobkit.timer(self,1) then 
+	if mobkit.timer(self, 1) then 
 		local prty = mobkit.get_queue_priority(self)		
+		
 		if prty < 20 and self.isinliquid then
 			mobkit.hq_liquid_recovery(self, 20)
 			return
@@ -1011,6 +1065,7 @@ function petz.herbivore_brain(self)
 		if mobkit.is_queue_empty_high(self) then
 			mobkit.hq_roam(self, 0)
 		end
+		
 	end
 end
 
@@ -1034,9 +1089,13 @@ petz.load_vars = function(self)
 	self.child = mobkit.recall(self, "child") or false
 end
 
-function petz.set_lamb(self, staticdata, dtime_s)
-	mobkit.actfunc(self, staticdata, dtime_s)
-	if (mobkit.recall(self, "wool_color") == nil) then
+function petz.set_lamb(self, staticdata, dtime_s)	
+	local static_data_table = minetest.deserialize(staticdata)	
+	local captured_mob = false
+	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["wool_color"] then 
+		captured_mob = true
+	end
+	if (mobkit.recall(self, "wool_color") == nil and captured_mob == false) then
 		if petz.settings.type_model == "mesh" then --set a random color 
 			local wool_color
 			local random_number = math.random(1, 15)
@@ -1061,17 +1120,18 @@ function petz.set_lamb(self, staticdata, dtime_s)
 			self.food_count_wool = 0
 			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
 			self.shaved = false
-			mobkit.remember(self, "shaved", self.shaved)				
-			minetest.chat_send_player("singleplayer", "ana")	
-		else --if 'cubic'
-			self.tiles_color = petz.lamb.tiles
-			self.tiles_shaved = petz.lamb.tiles_shaved
-			mobkit.remember(self, "wool_color", "white") --cubic lamb color is always white						
+			mobkit.remember(self, "shaved", self.shaved)							
+			self.was_killed_by_player = false
+			mobkit.remember(self, "was_killed_by_player", self.was_killed_by_player)	
 		end
-	else
+	elseif captured_mob == false then
 		--Load memory variables
 		petz.load_vars(self)
-		minetest.chat_send_player("singleplayer", "lucas")	
+		--minetest.chat_send_player("singleplayer", "lucas")	
+	else
+		wool_color = static_data_table["fields"]["wool_color"] 
+		self.wool_color = wool_color
+		--minetest.chat_send_player("singleplayer", static_data_table["fields"]["wool_color"])
 	end 		
 	local shaved_string = ""
     if self.shaved == true then
@@ -1079,7 +1139,8 @@ function petz.set_lamb(self, staticdata, dtime_s)
     end
     local lamb_texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
     mobkit.remember(self, "textures", lamb_texture) 
+    local hp = self.object:get_hp()
 	self.object:set_properties({textures = {lamb_texture}}) 		
-	minetest.chat_send_player("singleplayer", staticdata)	
-	minetest.chat_send_player("singleplayer", "pepe")	
+	self.object:set_hp(hp)
+	--minetest.chat_send_player("singleplayer", staticdata)
 end
