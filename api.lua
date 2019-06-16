@@ -324,6 +324,7 @@ petz.lamb_wool_shave = function(self, clicker)
 	else
 		minetest.add_item(self.object:get_pos(), new_stack)
 	end
+	self.object:set_properties({textures = self.textures_shaved})
 	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)
 	petz.afraid_behaviour(self, clicker)
 	self.shaved = true           	
