@@ -124,7 +124,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
     local pet = petz.pet[player:get_player_name()] 
 	--brewing.magic_sound("to_player", player, "brewing_select")
-	if pet then
+	if pet and pet.object then
 		if fields.btn_followme then
 			pet.type = "npc"
 			pet.order = "follow"
