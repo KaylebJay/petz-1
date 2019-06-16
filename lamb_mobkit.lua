@@ -43,7 +43,7 @@ else
 	collisionbox = {-0.35, -0.75*scale_lamb, -0.28, 0.35, -0.3125, 0.28}
 end
 
-minetest.register_entity("petz:lamb",{
+minetest.register_entity("petz:lamb",{          
 	--Petz specifics	
 	type = "lamb",	
 	init_timer = false,	
@@ -78,7 +78,7 @@ minetest.register_entity("petz:lamb",{
 	-- api props
 	springiness= 0,
 	buoyancy = 0.5, -- portion of hitbox submerged
-	walk_speed = 1,
+	max_speed = 1,
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
@@ -88,7 +88,11 @@ minetest.register_entity("petz:lamb",{
 	animation = {
 		walk={range={x=1, y=12}, speed=20, loop=true},	
 		run={range={x=13, y=25}, speed=20, loop=true},	
-		stand={range={x=26, y=46}, speed=15, loop=true},	
+		stand={
+			{range={x=26, y=46}, speed=5, loop=true},
+			{range={x=47, y=59}, speed=5, loop=true},
+			{range={x=82, y=94}, speed=5, loop=true},		
+		},	
 	},
 	sounds = {
 		misc = "petz_lamb_bleat",
@@ -102,8 +106,8 @@ minetest.register_entity("petz:lamb",{
 		petz.set_lamb(self, staticdata, dtime_s)
 	end,
 	
-	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
-		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)		
+	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		
+		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
 	end,
 	
 	on_rightclick = function(self, clicker)

@@ -346,7 +346,7 @@ end
 --
 
 petz.drop_items = function(self)
-		minetest.chat_send_player("singleplayer", "prueba")	
+	--minetest.chat_send_player("singleplayer", "prueba")	
 	if not self.drops or #self.drops == 0 then 	-- check for nil or no drops
 		return
 	end	
@@ -393,26 +393,32 @@ petz.lamb_wool_regrow = function(self)
 		mobkit.remember(self, "shaved", self.shaved)	
 		local lamb_texture = "petz_lamb_"..self.wool_color..".png"		
 		if petz.settings.type_model == "mesh" then
-			self.object:set_properties({textures = {lamb_texture}})
+			petz.set_properties(self, {textures = {lamb_texture}})
 		else
-			self.object:set_properties({tiles = petz.lamb.tiles})
+			petz.set_properties(self, {tiles = petz.lamb.tiles})			
 		end
 	end
 end
 
 petz.lamb_wool_shave = function(self, clicker)
-    clicker:get_inventory():add_item("main", "wool:"..self.wool_color)
+	local inv = clicker:get_inventory()	
+	local new_stack = "wool:"..self.wool_color
+	if inv:room_for_item("main", new_stack) then
+		inv:add_item("main", new_stack)
+	else
+		minetest.add_item(self.object:get_pos(), new_stack)
+	end
     petz.do_sound_effect("object", self.object, "petz_lamb_moaning")
     local lamb_texture = "petz_lamb_shaved_"..self.wool_color..".png"
 	if petz.settings.type_model == "mesh" then
-		self.object:set_properties({textures = {lamb_texture}})
+		petz.set_properties(self, {textures = {lamb_texture}})		
 	else
-		self.object:set_properties({tiles = petz.lamb.tiles_shaved})
+		petz.set_properties(self, {tiles = petz.lamb.tiles_shaved})		
 	end 
 	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)	
 	self.shaved = true
 	mobkit.remember(self, "shaved", self.shaved)        	
-	petz.afraid_behaviour(self, clicker)
+	petz.afraid(self, clicker:get_pos())
 end
 
 --
@@ -517,12 +523,27 @@ end
 --
 petz.calculate_damage = function(tool_capabilities)
 	local damage_points
-	if tool_capabilities.damage_groups["fleshy"] ~= nil or tool_capabilities.damage_groups["fleshy"] ~= "" then
+	if tool_capabilities.damage_groups["fleshy"] ~= nil or tool_capabilities.damage_groups["fleshy"] ~= "" then		
 		damage_points = tool_capabilities.damage_groups["fleshy"] or 0
+		--minetest.chat_send_player("singleplayer", "hp : "..tostring(damage_points))	
 	else
 		damage_points = 0
 	end
 	return damage_points
+end
+
+petz.do_punch = function(self, puncher, tool_capabilities)
+	local puncher_pos = puncher:get_pos()
+	local petz_pos = self.object:get_pos()
+	if vector.distance(puncher_pos, petz_pos) <= 5 then	-- a way to decrease punch range without dependences
+		local petz_hp = self.object:get_hp()
+		--minetest.chat_send_player("singleplayer", "OLD hp : "..tostring(petz_hp))	
+		local weapon_damage = petz.calculate_damage(tool_capabilities)
+		--minetest.chat_send_player("singleplayer", "damage points: ".. weapon_damage)	
+		local new_hp = petz_hp - weapon_damage
+		--minetest.chat_send_player("singleplayer", "NEW hp : "..tostring(new_hp))	
+		self.object:set_hp(new_hp)
+	end
 end
 
 petz.is_alive = function(thing) -- thing can be luaentity or objectref.
@@ -535,30 +556,41 @@ petz.is_alive = function(thing) -- thing can be luaentity or objectref.
 	return thing:get_hp() > 0	
 end
 
-petz.on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
+petz.kick_back= function(self, dir) 
+	local hvel = vector.multiply(vector.normalize({x=dir.x,y=0,z=dir.z}),4)
+	self.object:set_velocity({x=hvel.x,y=2,z=hvel.z})
+end
+
+petz.lookat=function(self, pos2)
+	local pos1=self.object:get_pos()
+	local vec = {x=pos1.x-pos2.x, y=pos1.y-pos2.y, z=pos1.z-pos2.z}
+	local yaw = math.atan(vec.z/vec.x)-math.pi/2
+	if pos1.x >= pos2.x then
+		yaw = yaw+math.pi
+	end
+   self.object:set_yaw(yaw+math.pi)
+end
+
+petz.afraid= function(self, pos) 
+	petz.lookat(self, pos)
+	local x = self.object:get_velocity().x
+	local z = self.object:get_velocity().z	
+	local hvel = vector.multiply(vector.normalize({x= x, y= 0 ,z= z}), 4)
+	mobkit.clear_queue_high(self)
+	self.object:set_velocity({x= hvel.x, y= 0, z= hvel.z})
+end
+
+function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
 	if petz.is_alive(self) then
 		if type(puncher) == 'userdata' and puncher:is_player() then		
-			local puncher_pos = puncher:get_pos()
-			local petz_pos = self.object:get_pos()
-			if vector.distance(puncher_pos, petz_pos) <= 5 then	-- a way to decrease punch range without dependences
-				local petz_hp = self.object:get_hp()
-				--minetest.chat_send_player("singleplayer", "hp : "..tostring(petz_hp))	
-				local weapon_damage = petz.calculate_damage(tool_capabilities)
-				--minetest.chat_send_player("singleplayer", "damage : ".. weapon_damage)	
-				local new_hp = petz_hp - weapon_damage
-				--minetest.chat_send_player("singleplayer", "NEW hp : "..tostring(new_hp))	
-				self.object:set_hp(new_hp)
-				self.was_killed_by_player = petz.was_killed_by_player(self, puncher)
-				mobkit.make_sound(self, 'misc')				
-				-- kickback:
-				local hvel = vector.multiply(vector.normalize({x=dir.x,y=0,z=dir.z}),4)
-				self.object:set_velocity({x=hvel.x,y=2,z=hvel.z})		
-			end			
+			petz.punch_tamagochi(self, puncher) --decrease affinity when in Tamagochi mode
+			--petz.do_punch(self, puncher, tool_capabilities)
+			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)					
+			petz.kick_back(self, dir) -- kickback	
 		else
-			-- kickback:
-			local hvel = vector.multiply(vector.normalize({x=dir.x,y=0,z=dir.z}),4)
-			self.object:set_velocity({x=hvel.x,y=2,z=hvel.z})
+			petz.kick_back(self, dir) -- kickback:
 		end		
+		mobkit.make_sound(self, 'hurt')
 	end
 end
 
@@ -788,7 +820,7 @@ petz.init_growth = function(self)
         if not(self.object:get_pos() == nil) then
 			self.is_baby = false
 			mobkit.remember(self, "is_baby", self.is_baby)
-			self.object:set_properties({
+			petz.set_properties(self, {
 				jump = false,
 				is_baby = false,
 				visual_size = {x=petz.settings.visual_size.x*self.scale_pony, y=petz.settings.visual_size.y*self.scale_pony},
@@ -810,9 +842,9 @@ end
 --do_punch event for all the mobs
 --
 
-petz.do_punch = function (self, hitter, time_from_last_punch, tool_capabilities, direction)
+petz.punch_tamagochi = function (self, puncher)
     if petz.settings.tamagochi_mode == true then         
-        if self.owner == hitter:get_player_name() then
+        if self.owner == puncher:get_player_name() then
             if self.affinity == nil then
                 self.affinity = 0       
             end
@@ -990,84 +1022,6 @@ petz.was_killed_by_player = function(self, puncher)
 		return false
 	end
 end
---
---Herbivore Behaviour
---
-
-function petz.herbivore_brain(self)
-
-	if self.object:get_hp() <= 100 then	
-		petz.drop_items(self)
-		mobkit.clear_queue_high(self)
-		mobkit.hq_die(self)
-		return
-	end
-	
-	if mobkit.timer(self, 1) then 
-		local prty = mobkit.get_queue_priority(self)		
-		
-		if prty < 20 and self.isinliquid then
-			mobkit.hq_liquid_recovery(self, 20)
-			return
-		end		
-		
-		local pos = self.object:get_pos() 		
-		
-		if prty < 11  then
-			local pred = mobkit.get_closest_entity(self, 'petz:wolf')
-			if pred and vector.distance(pos,pred:get_pos()) < 8 then 
-				mobkit.hq_runfrom(self, 11 ,pred) 
-				return
-			end
-		end
-		
-		if prty < 10 then
-			local player = mobkit.get_nearby_player(self)
-			if player then
-				local wielded_item_name = player:get_wielded_item():get_name()	
-				if self.tamed == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
-					mobkit.hq_runfrom(self, 10, player)
-					return
-				end
-			end
-		end
-				
-		if prty < 7 then
-			local player = mobkit.get_nearby_player(self)
-			if player then
-				local wielded_item_name = player:get_wielded_item():get_name()					
-				if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) < 8 then 
-					mobkit.hq_follow(self, 7, player)
-					return
-				end
-			end
-		end
-		
-		if prty == 7 then
-			local player = mobkit.get_nearby_player(self)
-			if player then
-				local wielded_item_name = player:get_wielded_item():get_name()
-				if wielded_item_name ~= self.follow then 
-					mobkit.hq_roam(self, 0)
-					mobkit.clear_queue_high(self)
-					return
-				end
-			else
-				mobkit.hq_roam(self, 0)
-				mobkit.clear_queue_high(self)
-			end			
-		end
-		
-		if prty < 6 then			
-			petz.replace(self) --Replace nodes by others
-		end
-			
-		if mobkit.is_queue_empty_high(self) then
-			mobkit.hq_roam(self, 0)
-		end
-		
-	end
-end
 
 petz.load_vars = function(self)
 	self.wool_color = mobkit.recall(self, "wool_color") or "white"
@@ -1087,6 +1041,12 @@ petz.load_vars = function(self)
 	self.pregnant_count = mobkit.recall(self, "pregnant_count") or 0
 	self.shaved = mobkit.recall(self, "shaved") or false
 	self.child = mobkit.recall(self, "child") or false
+end
+
+petz.set_properties = function(self, properties)
+    local hp = self.object:get_hp()
+	self.object:set_properties(properties) 		
+	self.object:set_hp(hp)
 end
 
 function petz.set_lamb(self, staticdata, dtime_s)	
@@ -1139,8 +1099,6 @@ function petz.set_lamb(self, staticdata, dtime_s)
     end
     local lamb_texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
     mobkit.remember(self, "textures", lamb_texture) 
-    local hp = self.object:get_hp()
-	self.object:set_properties({textures = {lamb_texture}}) 		
-	self.object:set_hp(hp)
+    petz.set_properties(self, {textures = {lamb_texture}})
 	--minetest.chat_send_player("singleplayer", staticdata)
 end

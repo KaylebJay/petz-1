@@ -1,5 +1,84 @@
 local modpath, S = ...
 
+--
+--Herbivore Behaviour
+--
+
+function petz.herbivore_brain(self)
+
+	if self.object:get_hp() <= 100 then	
+		petz.drop_items(self)
+		mobkit.clear_queue_high(self)
+		mobkit.hq_die(self)
+		return
+	end
+	
+	if mobkit.timer(self, 1) then 
+		local prty = mobkit.get_queue_priority(self)		
+		
+		if prty < 20 and self.isinliquid then
+			mobkit.hq_liquid_recovery(self, 20)
+			return
+		end		
+		
+		local pos = self.object:get_pos() 		
+		
+		if prty < 11  then
+			local pred = mobkit.get_closest_entity(self, 'petz:wolf')
+			if pred and vector.distance(pos,pred:get_pos()) < 8 then 
+				mobkit.hq_runfrom(self, 11 ,pred) 
+				return
+			end
+		end
+		
+		if prty < 10 then
+			local player = mobkit.get_nearby_player(self)
+			if player then
+				local wielded_item_name = player:get_wielded_item():get_name()	
+				if self.tamed == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
+					mobkit.hq_runfrom(self, 10, player)
+					return
+				end
+			end
+		end
+				
+		if prty < 7 then
+			local player = mobkit.get_nearby_player(self)
+			if player then
+				local wielded_item_name = player:get_wielded_item():get_name()					
+				if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) < 8 then 
+					mobkit.hq_follow(self, 7, player)
+					return
+				end
+			end
+		end
+		
+		if prty == 7 then
+			local player = mobkit.get_nearby_player(self)
+			if player then
+				local wielded_item_name = player:get_wielded_item():get_name()
+				if wielded_item_name ~= self.follow then 
+					mobkit.hq_roam(self, 0)
+					mobkit.clear_queue_high(self)
+					return
+				end
+			else
+				mobkit.hq_roam(self, 0)
+				mobkit.clear_queue_high(self)
+			end			
+		end
+		
+		if prty < 6 then			
+			petz.replace(self) --Replace nodes by others
+		end
+			
+		if mobkit.is_queue_empty_high(self) then
+			mobkit.hq_roam(self, 0)
+		end
+		
+	end
+end
+
 petz.set_behaviour= function(self, behaviour, fly_in)	
 	if behaviour == "aquatic" then
 		self.behaviour = "aquatic"
@@ -168,38 +247,3 @@ petz.fly_behaviour = function(self)
 		end
     end
 end
-
---
---Afraid Behaviour
---
-
-petz.lookat=function(self,pos2)
-   local pos1=self.object:get_pos()
-   local vec = {x=pos1.x-pos2.x, y=pos1.y-pos2.y, z=pos1.z-pos2.z}
-   local yaw = math.atan(vec.z/vec.x)-math.pi/2
-   if pos1.x >= pos2.x then yaw = yaw+math.pi end
-   self.object:set_yaw(yaw)
-end
-
-petz.walk=function(self,speed)
-   local yaw = self.object:get_yaw()
-   local speed = speed or 1
-   local x = math.sin(yaw) * -1
-   local z = math.cos(yaw) * 1
-   local y = self.object:get_velocity().y
-   self.object:set_velocity({
-      x = x*speed,
-      y = y,
-      z = z*speed
-   })
-   return self
-end
-
-petz.afraid_behaviour = function(self, clicker)
-	local pos = clicker:get_pos()
-	petz.lookat(self,pos)
-	local yaw = self.object:get_yaw()
-	self.object:set_yaw(yaw+math.pi)
-	petz.walk(self,3)
-end
-
