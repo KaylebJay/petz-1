@@ -123,38 +123,39 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		return false
 	end
     local pet = petz.pet[player:get_player_name()] 
-	if pet == nil then -- if pet dies after her formspec opened
+	--brewing.magic_sound("to_player", player, "brewing_select")
+	if pet then
+		if fields.btn_followme then
+			pet.type = "npc"
+			pet.order = "follow"
+		elseif fields.btn_standhere then
+			pet.type = "animal"
+			pet.order = "stand"
+			pet:set_animation("stand", true)
+		elseif fields.btn_ownthing then
+			petz.ownthing(pet)
+		elseif fields.btn_alight then
+			pet.object:set_acceleration({ x = 0, y = -1, z = 0 })
+			pet:set_animation("stand", true)
+		elseif fields.btn_fly then
+			pet.object:set_acceleration({ x = 0, y = 1, z = 0 })
+			pet:set_animation("fly", true)
+			minetest.after(2.5, function(pet) 
+				pet.object:set_acceleration({ x = 0, y = 0, z = 0 })    
+				pet.object:set_velocity({ x = 0, y = 0, z = 0 })    
+				petz.ownthing(pet)
+			end, pet)	
+		elseif fields.btn_perch_shoulder then
+			pet.object:set_attach(player, "Arm_Left", {x=0.5,y=-6.25,z=0}, {x=0,y=0,z=180}) 
+			pet:set_animation("stand", true)
+			minetest.after(120.0, function(pet) 
+				pet.object:set_detach()
+			end, pet)	
+		end
+		return true
+	else
 		return false
 	end
-	--brewing.magic_sound("to_player", player, "brewing_select")
-	if fields.btn_followme then
-        pet.type = "npc"
-		pet.order = "follow"
-	elseif fields.btn_standhere then
-        pet.type = "animal"
-		pet.order = "stand"
-		pet:set_animation("stand")
-	elseif fields.btn_ownthing then
-		petz.ownthing(pet)
-	elseif fields.btn_alight then
-		pet.object:set_acceleration({ x = 0, y = -1, z = 0 })
-		pet:set_animation("stand")
-	elseif fields.btn_fly then
-		pet.object:set_acceleration({ x = 0, y = 1, z = 0 })
-		pet:set_animation("fly")
-		minetest.after(2.5, function(pet) 
-			pet.object:set_acceleration({ x = 0, y = 0, z = 0 })    
-			pet.object:set_velocity({ x = 0, y = 0, z = 0 })    
-			petz.ownthing(pet)
-			end, pet)	
-	elseif fields.btn_perch_shoulder then
-		pet.object:set_attach(player, "Arm_Left", {x=0.5,y=-6.25,z=0}, {x=0,y=0,z=180}) 
-		pet:set_animation("stand")
-		minetest.after(120.0, function(pet) 
-			pet.object:set_detach()
-			end, pet)	
-	end
-	return true
 end)
 
 petz.ownthing= function(pet)	
@@ -316,13 +317,13 @@ petz.lamb_wool_regrow = function(self)
 end
 
 petz.lamb_wool_shave = function(self, clicker)
-    clicker:get_inventory():add_item("main", "wool:"..self.wool_color)
-    petz.do_sound_effect("object", self.object, "petz_lamb_moaning")
-	if petz.settings.type_model == "mesh" then
-		self.object:set_properties({textures = self.textures_shaved})
+	local inv = clicker:get_inventory()	
+	local new_stack = "wool:"..self.wool_color
+	if inv:room_for_item("main", new_stack) then
+		inv:add_item("main", new_stack)
 	else
-		self.object:set_properties({tiles = petz.lamb.tiles_shaved})
-	end 
+		minetest.add_item(self.object:get_pos(), new_stack)
+	end
 	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)
 	petz.afraid_behaviour(self, clicker)
 	self.shaved = true           	
