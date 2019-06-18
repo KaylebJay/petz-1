@@ -7,9 +7,7 @@ local modpath, S = ...
 function petz.herbivore_brain(self)
 
 	if self.object:get_hp() <= 100 then	
-		petz.drop_items(self)
-		mobkit.clear_queue_high(self)
-		mobkit.hq_die(self)
+		petz.on_die(self)
 		return
 	end
 	

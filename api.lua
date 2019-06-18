@@ -586,11 +586,9 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 		if type(puncher) == 'userdata' and puncher:is_player() then		
 			petz.punch_tamagochi(self, puncher) --decrease affinity when in Tamagochi mode
 			--petz.do_punch(self, puncher, tool_capabilities)
-			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)					
-			petz.kick_back(self, dir) -- kickback	
-		else
-			petz.kick_back(self, dir) -- kickback:
+			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)							
 		end		
+		petz.kick_back(self, dir) -- kickback	
 		mobkit.make_sound(self, 'hurt')
 	end
 end
@@ -832,10 +830,16 @@ petz.init_growth = function(self)
 end
 
 --
---ondie event for all the mobs
+--on_die event for all the mobs
 --
 
-petz.on_die = function(self, pos)
+petz.on_die = function(self)
+    local props = self.object:get_properties()
+    props.collisionbox[2] = props.collisionbox[1]
+	petz.set_properties(self, {collisionbox=props.collisionbox})
+	petz.drop_items(self)
+	mobkit.clear_queue_high(self)
+	mobkit.hq_die(self)
     petz.pet[self.owner]= nil
 end
 
