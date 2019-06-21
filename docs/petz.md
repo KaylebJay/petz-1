@@ -151,7 +151,7 @@ If this mode is activated (true by default) you have to take care of your pet. T
 In multiplayer games (servers) the Tamagochi Mode is paused if the pet owner is offline.
 
 #### Feed it!
--You have to feed your pet once each 2 days at least (Minetest time) (right click wielding its food) (the food is configurable via petz.conf). Your pet then would be happy. Check your pet status (right click), if "Hungry" feed it, but if 'Saciated' then don't bother. If you do not feed your pet every 48 hours, its health would damaged and it would be sad.
+-You have to feed your pet once each 2 days at least (Minetest time) (right click wielding its food) (the food is configurable via petz.conf). Your pet then would be happy. Check your pet status (right click), if "Hungry" feed it, but if 'Satiated' then don't bother. If you do not feed your pet every 48 hours, its health would damaged and it would be sad.
 This does not apply if your pet is inside its kennel.
 
 #### Brush it!
