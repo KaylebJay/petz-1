@@ -66,7 +66,7 @@ petz.create_form = function(player_name)
         if pet.fed == false then
             hungry_label = "Hungry"
         else
-            hungry_label = "Saciated"
+            hungry_label = "Satiated"
         end
         tamagochi_form_stuff = tamagochi_form_stuff .. "label[".. hungrystuff_pos.x +1 ..",".. hungrystuff_pos.y ..";"..S(hungry_label).."]"
     else
