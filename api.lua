@@ -285,7 +285,8 @@ petz.timer = function(self)
             --I the pet get bored of you
             elseif (self.has_affinity == true) and (self.affinity == 0) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.petz_type.." "..S("has abandoned you!!!"))
-                self.owner = "" --the pet abandon you
+                self.tamed = false --the pet abandon you
+                self.owner = ""
                 if self.is_wild == true then
                     self.type = "monster" -- if the animal was wild (ie a lion) can attack you!
                 end
@@ -399,6 +400,9 @@ petz.on_rightclick = function(self, clicker)
                 petz.set_affinity(self, true, 5)                
                 self.fed = true             
             end
+            if petz.settings.tamagochi_mode == true then
+				self.init_timer = true
+			end
             if self.petz_type == "lamb" then     
                 petz.lamb_wool_regrow(self)                       
             elseif self.petz_type == "calf" then     
