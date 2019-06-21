@@ -8,7 +8,7 @@ local pet_name = "lamb"
 local mesh = nil
 local fixed = {}
 local textures
-local scale_lamb = 1.7
+local scale_model = 1.7
 petz.lamb = {}
 local collisionbox = {}
 
@@ -35,15 +35,15 @@ if petz.settings.type_model == "cubic" then
 	}
 	petz.register_cubic(node_name, fixed, petz.lamb.tiles)		
 	textures= {"petz:lamb_block"}
-	collisionbox = {-0.35, -0.75*scale_lamb, -0.28, 0.35, -0.125, 0.28}
+	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
 else
 	mesh = 'petz_lamb.b3d'	
 	textures = {"petz_lamb_white.png"}
 	--petz.lamb.textures_shaved = {"petz_lamb_shaved_white.png"}
-	collisionbox = {-0.35, -0.75*scale_lamb, -0.28, 0.35, -0.3125, 0.28}
+	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
 end
 
-minetest.register_entity("petz:lamb",{          
+minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "lamb",	
 	init_timer = false,	
@@ -53,6 +53,7 @@ minetest.register_entity("petz:lamb",{
 	give_orders = false,
 	can_be_brushed = true,
 	capture_item = "lasso",
+	--predator = "wolf",
 	follow = petz.settings.lamb_follow,
 	drops = {
 		{name = "petz:mini_lamb_chop", chance = 1, min = 1, max = 1,},		
@@ -71,7 +72,7 @@ minetest.register_entity("petz:lamb",{
 	visual = petz.settings.visual,
 	mesh = mesh,
 	textures = textures,
-	visual_size = {x=petz.settings.visual_size.x*scale_lamb, y=petz.settings.visual_size.y*scale_lamb},
+	visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model},
 	static_save = true,
 	on_step = mobkit.stepfunc,	-- required
 	get_staticdata = mobkit.statfunc,
@@ -82,7 +83,7 @@ minetest.register_entity("petz:lamb",{
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
-	max_hp = 114,
+	max_hp = 108,
 	
 	attack={range=0.5, damage_groups={fleshy=3}},	
 	animation = {

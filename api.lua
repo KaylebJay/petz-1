@@ -128,13 +128,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if pet and pet.object then	
 		--brewing.magic_sound("to_player", player, "brewing_select")
 		if fields.btn_followme then
-			pet.type = "npc"
-			pet.order = "follow"
+			mobkit.clear_queue_low(pet)
+			mobkit.hq_follow(pet, 15, player)
 		elseif fields.btn_standhere then
-			pet.type = "animal"
-			pet.order = "stand"
-			pet:set_animation("stand", true)
+			mobkit.lq_idle(pet, 2400)
+			--pet:set_animation("stand", true)
 		elseif fields.btn_ownthing then
+			mobkit.clear_queue_low(pet)
 			petz.ownthing(pet)
 		elseif fields.btn_alight then
 			pet.object:set_acceleration({ x = 0, y = -1, z = 0 })
@@ -160,10 +160,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 end)
 
-petz.ownthing= function(pet)	
-    pet.type = "animal"
-	pet.order = ""
-	pet.state = "walk"	
+petz.ownthing= function(self)	
+	mobkit.hq_roam(self, 0)
+	mobkit.clear_queue_high(self)
 end
 
 --
@@ -211,7 +210,9 @@ petz.set_health = function(self, amount)
     else
         new_health = 100
     end
+    minetest.chat_send_player(self.owner, tostring(new_health))
     self.object:set_hp(new_health)
+    petz.update_nametag(self)
     return new_health
 end
 
@@ -258,6 +259,7 @@ petz.timer = function(self)
 			end
             --Decrease health if pet has not fed
             if self.fed == false then
+				minetest.chat_send_player(self.owner, "no alimentado")
 				local damage_amount = - petz.settings.tamagochi_hunger_damage
 				local new_health = petz.set_health(self, damage_amount) 
                 if (new_health > 100)  and (self.has_affinity == true) then
@@ -288,13 +290,17 @@ petz.timer = function(self)
                 end
             end            
             --If the pet starves to death            
-            if self:get_hp() <= 100 then
+            if self.object:get_hp() <= 100 then
                 minetest.chat_send_player(self.owner, S("Your").. " "..self.type.." "..S("has starved to death!!!"))
                 self.init_timer  = false -- no more timing
             --I the pet get bored of you
             elseif (self.has_affinity == true) and (self.affinity == 0) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("has abandoned you!!!"))
+                petz.delete_nametag(self)
                 self.owner = "" --the pet abandon you
+                mobkit.remember(self, "owner", self.owner)
+                self.tamed = false
+                mobkit.remember(self, "tamed", self.tamed)
                 --if self.is_wild == true then
                     --self.type = "monster" -- if the animal was wild (ie a lion) can attack you!
                 --end
@@ -611,6 +617,9 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", self.type, tostring(pet_hp)))							
 		end
 		self.object:set_hp(pet_hp)
+		if self.tamed== true then
+			petz.update_nametag(self)
+		end
 		-- Feed and Tame	
 		self.food_count = self.food_count + 1	
 		mobkit.remember(self, "food_count", self.food_count)
@@ -624,9 +633,12 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 					if not(self.owner) or self.owner == "" then
 						self.owner = clicker:get_player_name()
 						mobkit.remember(self, "owner", self.owner)
-						minetest.chat_send_player("singleplayer", "hola")
+						--minetest.chat_send_player("singleplayer", "hola")
 					end
-					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", self.type))					
+					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", self.type))
+					if petz.settings.tamagochi_mode == true then
+						self.init_timer = true
+					end
 				end
 			end			
 		end
@@ -1028,6 +1040,24 @@ petz.was_killed_by_player = function(self, puncher)
 	end
 end
 
+--
+--Calf Milk Mechanism
+--
+
+petz.calf_milk_refill = function(self)
+	self.food_count = (self.food_count or 0) + 1        
+	if self.food_count >= 5 then -- if calf replaces 5x grass then it refill milk
+		self.food_count = 0
+		self.milked= false
+	end
+end
+
+petz.calf_milk_milk = function(self, clicker)
+    clicker:set_wielded_item("petz:bucket_milk")
+    petz.do_sound_effect("object", self.object, "petz_calf_moaning")
+	self.milked = true           
+end
+
 petz.load_vars = function(self)
 	self.wool_color = mobkit.recall(self, "wool_color") or "white"
 	self.tamed = mobkit.recall(self, "tamed") or false
@@ -1052,6 +1082,14 @@ petz.set_properties = function(self, properties)
     local hp = self.object:get_hp()
 	self.object:set_properties(properties) 		
 	self.object:set_hp(hp)
+end
+
+petz.update_nametag = function(self)
+	self.object:set_nametag_attributes({text = "♥ "..tostring(self.object:get_hp()).."/"..tostring(self.max_hp),})
+end
+
+petz.delete_nametag = function(self)
+	self.object:set_nametag_attributes({text = nil,})
 end
 
 function petz.set_lamb(self, staticdata, dtime_s)	
@@ -1093,10 +1131,15 @@ function petz.set_lamb(self, staticdata, dtime_s)
 		--Load memory variables
 		petz.load_vars(self)
 		--minetest.chat_send_player("singleplayer", "lucas")	
-	else
-		wool_color = static_data_table["fields"]["wool_color"] 
-		self.wool_color = wool_color
-		--minetest.chat_send_player("singleplayer", static_data_table["fields"]["wool_color"])
+	else		
+		self.wool_color = static_data_table["fields"]["wool_color"]		
+		self.food_count = static_data_table["fields"]["food_count"]		
+		self.food_count_wool = static_data_table["fields"]["food_count_wool"]		
+		if static_data_table["fields"]["shaved"] == true then
+			self.shaved = true
+		else
+			self.shaved = false
+		end
 	end 		
 	local shaved_string = ""
     if self.shaved == true then
@@ -1105,5 +1148,37 @@ function petz.set_lamb(self, staticdata, dtime_s)
     local lamb_texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
     mobkit.remember(self, "textures", lamb_texture) 
     petz.set_properties(self, {textures = {lamb_texture}})
-	--minetest.chat_send_player("singleplayer", staticdata)
+	minetest.chat_send_player("singleplayer", staticdata)
+end
+
+function petz.set_herbibore(self, staticdata, dtime_s)	
+	local static_data_table = minetest.deserialize(staticdata)	
+	local captured_mob = false
+	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["food_count"] then 
+		captured_mob = true
+	end
+	if mobkit.recall(self, "tamed") == nil and captured_mob == false then	--set some vars
+		self.tamed = false
+		mobkit.remember(self, "tamed", self.tamed)
+		self.owner = ""
+		mobkit.remember(self, "owner", self.owner)				
+		self.food_count = 0
+		mobkit.remember(self, "food_count", self.food_count)							
+		self.was_killed_by_player = false
+		mobkit.remember(self, "was_killed_by_player", self.was_killed_by_player)	
+		if self.init_timer== true then
+			petz.init_timer(self)
+		end
+		if self.is_pet== true then
+			self.affinity = 100
+			mobkit.remember(self, "affinity", self.affinity)	
+		end
+	elseif captured_mob == false then
+		petz.load_vars(self) --Load memory variables
+	else
+		self.food_count = static_data_table["fields"]["food_count"]	
+	end		
+	if self.is_pet and self.tamed then
+		petz.update_nametag(self)
+	end
 end

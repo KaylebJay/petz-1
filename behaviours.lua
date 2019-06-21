@@ -21,37 +21,28 @@ function petz.herbivore_brain(self)
 		
 		local pos = self.object:get_pos() 		
 		
-		if prty < 11  then
-			local pred = mobkit.get_closest_entity(self, 'petz:wolf')
-			if pred and vector.distance(pos,pred:get_pos()) < 8 then 
-				mobkit.hq_runfrom(self, 11 ,pred) 
-				return
-			end
-		end
-		
-		if prty < 10 then
-			local player = mobkit.get_nearby_player(self)
-			if player then
-				local wielded_item_name = player:get_wielded_item():get_name()	
-				if self.tamed == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
-					mobkit.hq_runfrom(self, 10, player)
+		if prty < 18  then
+			if self.predator then			
+				local pred = mobkit.get_closest_entity(self, 'petz:'..self.predator)
+				if pred and vector.distance(pos,pred:get_pos()) < 8 then 
+					mobkit.hq_runfrom(self, 18 ,pred) 
 					return
 				end
 			end
 		end
-				
-		if prty < 7 then
+					
+		if prty < 16 then
 			local player = mobkit.get_nearby_player(self)
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()					
 				if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) < 8 then 
-					mobkit.hq_follow(self, 7, player)
+					mobkit.hq_follow(self, 16, player)
 					return
 				end
 			end
 		end
 		
-		if prty == 7 then
+		if prty == 16 then
 			local player = mobkit.get_nearby_player(self)
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()
@@ -61,9 +52,19 @@ function petz.herbivore_brain(self)
 					return
 				end
 			else
-				mobkit.hq_roam(self, 0)
-				mobkit.clear_queue_high(self)
+				petz.ownthing(self)
 			end			
+		end
+		
+		if prty < 14 then
+			local player = mobkit.get_nearby_player(self)
+			if player then
+				local wielded_item_name = player:get_wielded_item():get_name()	
+				if self.tamed == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
+					mobkit.hq_runfrom(self, 14, player)
+					return
+				end
+			end
 		end
 		
 		if prty < 6 then			
