@@ -16,10 +16,7 @@ assert(loadfile(modpath .. "/settings.lua"))(modpath, S) --Load the settings
 assert(loadfile(modpath .. "/nodes.lua"))(modpath, S) --Load the nodes
 assert(loadfile(modpath .. "/items.lua"))(modpath, S) --Load the items
 assert(loadfile(modpath .. "/food.lua"))(modpath, S) --Load the food items
-if minetest.get_modpath("mobkit") ~= nil then
-	--assert(loadfile(modpath .. "/mobkit_plus.lua"))
-	--assert(loadfile(modpath .. "/mobkit_spawn.lua"))
-end
+assert(loadfile(modpath .. "/spawn.lua"))(modpath, S) --Load the spawn engine
 
 if petz.settings.kitty_spawn then
     assert(loadfile(modpath .. "/kitty_"..petz.settings.type_api..".lua"))(S) 

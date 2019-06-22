@@ -24,6 +24,8 @@ petz.settings.visual_size = {}
 petz.settings.rotate = 0
 petz.settings.tamagochi_safe_nodes = {} --Table with safe nodes for tamagochi mode
 
+petz.mobs_list = {} --A table with all the petz names
+
 --
 --Form Dialog
 --
@@ -163,6 +165,25 @@ end)
 petz.ownthing= function(self)	
 	mobkit.hq_roam(self, 0)
 	mobkit.clear_queue_high(self)
+end
+
+--
+--Misc Functions
+--
+
+function petz:split(inSplitPattern, outResults)
+  if not outResults then
+    outResults = { }
+  end
+  local theStart = 1
+  local theSplitStart, theSplitEnd = string.find(self, inSplitPattern, theStart)
+  while theSplitStart do
+    table.insert(outResults, string.sub(self, theStart, theSplitStart-1))
+    theStart = theSplitEnd + 1
+    theSplitStart, theSplitEnd = string.find(self, inSplitPattern, theStart)
+  end
+  table.insert(outResults, string.sub(self, theStart))
+  return outResults
 end
 
 --
@@ -1148,7 +1169,7 @@ function petz.set_lamb(self, staticdata, dtime_s)
     local lamb_texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
     mobkit.remember(self, "textures", lamb_texture) 
     petz.set_properties(self, {textures = {lamb_texture}})
-	minetest.chat_send_player("singleplayer", staticdata)
+	--minetest.chat_send_player("singleplayer", staticdata)
 end
 
 function petz.set_herbibore(self, staticdata, dtime_s)	

@@ -4,7 +4,7 @@
 local S = ...
 
 local pet_name = "piggy"
-
+table.insert(petz.mobs_list, "piggy")
 local mesh = nil
 local fixed = {}
 local textures

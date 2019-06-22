@@ -5,13 +5,16 @@ local modpath, S = ...
 --
 
 function petz.herbivore_brain(self)
-
+	
+	-- Die Behaviour
+	
 	if self.object:get_hp() <= 100 then	
 		petz.on_die(self)
 		return
 	end
 	
 	if mobkit.timer(self, 1) then 
+	
 		local prty = mobkit.get_queue_priority(self)		
 		
 		if prty < 20 and self.isinliquid then
@@ -20,16 +23,19 @@ function petz.herbivore_brain(self)
 		end		
 		
 		local pos = self.object:get_pos() 		
-		
+	
+		--Runaway from predator
 		if prty < 18  then
 			if self.predator then			
 				local pred = mobkit.get_closest_entity(self, 'petz:'..self.predator)
 				if pred and vector.distance(pos,pred:get_pos()) < 8 then 
-					mobkit.hq_runfrom(self, 18 ,pred) 
+					mobkit.hq_runfrom(self, 18 , pred) 
 					return
 				end
 			end
 		end
+		
+		--Follow Behaviour
 					
 		if prty < 16 then
 			local player = mobkit.get_nearby_player(self)
@@ -56,20 +62,26 @@ function petz.herbivore_brain(self)
 			end			
 		end
 		
+		--Runaway from Player
+		
 		if prty < 14 then
 			local player = mobkit.get_nearby_player(self)
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()	
-				if self.tamed == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
+				if self.is_pet == false and self.tamed == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
 					mobkit.hq_runfrom(self, 14, player)
 					return
 				end
 			end
 		end
 		
+		--Replace nodes by others
+		
 		if prty < 6 then			
-			petz.replace(self) --Replace nodes by others
+			petz.replace(self)
 		end
+		
+		--Roam default
 			
 		if mobkit.is_queue_empty_high(self) then
 			mobkit.hq_roam(self, 0)
