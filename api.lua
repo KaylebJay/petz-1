@@ -1204,7 +1204,7 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 		texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
 	end
 	mobkit.remember(self, "texture", texture) 
-	petz.set_properties(self, {textures = {texture}})
+	petz.set_properties(self, {textures = texture})
 	--ALL the mobs
 	if self.is_pet and self.tamed then
 		petz.update_nametag(self)
