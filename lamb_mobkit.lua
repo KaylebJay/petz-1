@@ -4,7 +4,7 @@
 local S = ...
 
 local pet_name = "lamb"
-table.insert(petz.mobs_list, "lamb")
+table.insert(petz.mobs_list, pet_name)
 local mesh = nil
 local fixed = {}
 local textures
@@ -104,7 +104,7 @@ minetest.register_entity("petz:"..pet_name,{
 	
 	on_activate = function(self, staticdata, dtime_s) --on_activate, required
 		mobkit.actfunc(self, staticdata, dtime_s)
-		petz.set_lamb(self, staticdata, dtime_s)
+		petz.set_herbibore(self, staticdata, dtime_s)
 	end,
 	
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		

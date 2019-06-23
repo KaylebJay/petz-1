@@ -79,10 +79,15 @@ function petz.herbivore_brain(self)
 		
 		if prty < 6 then			
 			petz.replace(self)
+			if self.lay_eggs then
+				petz.lay_egg(self)
+			end
 		end
 		
-		--Roam default
-			
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		--Roam default			
 		if mobkit.is_queue_empty_high(self) then
 			mobkit.hq_roam(self, 0)
 		end

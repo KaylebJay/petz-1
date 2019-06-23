@@ -616,7 +616,8 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)							
 		end		
 		petz.kick_back(self, dir) -- kickback	
-		mobkit.make_sound(self, 'hurt')
+		petz.do_sound_effect("object", self.object, "petz_default_punch")
+		--minetest.chat_send_player("singleplayer", "hola")
 	end
 end
 
@@ -953,6 +954,14 @@ end
 --
 --Sound System
 --
+petz.random_mob_sound = function(self)
+	local random_number = math.random(1, petz.settings.misc_sound_chance)
+	if random_number == 1 then
+		if self.sounds and self.sounds['misc'] then 
+			petz.mob_sound(self, self.sounds['misc'], 1.0, 10)
+		end
+	end
+end
 
 -- play sound
 petz.mob_sound = function(self, sound, _gain, _max_hear_distance)
@@ -964,6 +973,7 @@ end
 petz.do_sound_effect = function(dest, dest_name, soundfile)
     minetest.sound_play(soundfile, {dest = dest_name, gain = 0.4})
 end
+
 
 --
 --Tame with a whip mechanic
@@ -1007,7 +1017,7 @@ end
 --Lay Egg
 petz.lay_egg = function(self)
 	local pos = self.object:get_pos()
-	if math.random(1, 150000) == 1 then
+	if math.random(1, petz.settings.lay_egg_chance) == 1 then
 		minetest.add_item(self.object:get_pos(), "petz:"..self.type.."_egg") --chicken egg!
 	end			
 	local lay_range = 1
@@ -1113,14 +1123,17 @@ petz.delete_nametag = function(self)
 	self.object:set_nametag_attributes({text = nil,})
 end
 
-function petz.set_lamb(self, staticdata, dtime_s)	
+function petz.set_herbibore(self, staticdata, dtime_s)	
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
-	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["wool_color"] then 
+	local texture = ""
+	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["set_vars"] then 
 		captured_mob = true
 	end
-	if (mobkit.recall(self, "wool_color") == nil and captured_mob == false) then
-		if petz.settings.type_model == "mesh" then --set a random color 
+	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars	
+		--Mob Specific
+		--Lamb
+		if self.type == "lamb" and petz.settings.type_model == "mesh" then --set a random color 
 			local wool_color
 			local random_number = math.random(1, 15)
 			if random_number == 1 then
@@ -1134,51 +1147,19 @@ function petz.set_lamb(self, staticdata, dtime_s)
 			end		
 			self.wool_color = wool_color
 			mobkit.remember(self, "wool_color", self.wool_color)
-			--set some vars
-			self.tamed = false
-			mobkit.remember(self, "tamed", self.tamed)
-			self.owner = ""
-			mobkit.remember(self, "owner", self.owner)				
-			self.food_count = 0
-			mobkit.remember(self, "food_count", self.food_count)	
 			self.food_count_wool = 0
 			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
 			self.shaved = false
-			mobkit.remember(self, "shaved", self.shaved)							
-			self.was_killed_by_player = false
-			mobkit.remember(self, "was_killed_by_player", self.was_killed_by_player)	
-		end
-	elseif captured_mob == false then
-		--Load memory variables
-		petz.load_vars(self)
-		--minetest.chat_send_player("singleplayer", "lucas")	
-	else		
-		self.wool_color = static_data_table["fields"]["wool_color"]		
-		self.food_count = static_data_table["fields"]["food_count"]		
-		self.food_count_wool = static_data_table["fields"]["food_count_wool"]		
-		if static_data_table["fields"]["shaved"] == true then
-			self.shaved = true
+			mobkit.remember(self, "shaved", self.shaved)
 		else
-			self.shaved = false
+			texture = self.object:get_properties().textures
+			if #texture > 1 then
+				texture = texture[math.random(#texture)]
+			end      
 		end
-	end 		
-	local shaved_string = ""
-    if self.shaved == true then
-		shaved_string = "_shaved"
-    end
-    local lamb_texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
-    mobkit.remember(self, "textures", lamb_texture) 
-    petz.set_properties(self, {textures = {lamb_texture}})
-	--minetest.chat_send_player("singleplayer", staticdata)
-end
-
-function petz.set_herbibore(self, staticdata, dtime_s)	
-	local static_data_table = minetest.deserialize(staticdata)	
-	local captured_mob = false
-	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["food_count"] then 
-		captured_mob = true
-	end
-	if mobkit.recall(self, "tamed") == nil and captured_mob == false then	--set some vars
+		--ALL the mobs
+		self.set_vars = true
+		mobkit.remember(self, "set_vars", self.set_vars)
 		self.tamed = false
 		mobkit.remember(self, "tamed", self.tamed)
 		self.owner = ""
@@ -1190,15 +1171,41 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 		if self.init_timer== true then
 			petz.init_timer(self)
 		end
-		if self.is_pet== true then
+		if self.has_affinitty == true then
 			self.affinity = 100
 			mobkit.remember(self, "affinity", self.affinity)	
 		end
 	elseif captured_mob == false then
-		petz.load_vars(self) --Load memory variables
+		petz.load_vars(self) --Load memory variables		
+		texture = mobkit.recall(self, "texture") or ""
 	else
+		--Mob Specific
+		--Lamb
+		if self.type == "lamb" then
+			self.wool_color = static_data_table["fields"]["wool_color"]		
+			self.food_count = static_data_table["fields"]["food_count"]		
+			self.food_count_wool = static_data_table["fields"]["food_count_wool"]		
+			if static_data_table["fields"]["shaved"] == true then
+				self.shaved = true
+			else
+				self.shaved = false
+			end		
+		end
+		--ALL the mobs
 		self.food_count = static_data_table["fields"]["food_count"]	
 	end		
+	--Mob Specific
+	--Lamb
+	if self.type == "lamb" then
+		local shaved_string = ""
+		if self.shaved == true then
+			shaved_string = "_shaved"
+		end
+		texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
+	end
+	mobkit.remember(self, "texture", texture) 
+	petz.set_properties(self, {textures = {texture}})
+	--ALL the mobs
 	if self.is_pet and self.tamed then
 		petz.update_nametag(self)
 	end

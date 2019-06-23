@@ -11,6 +11,11 @@ minetest.register_globalstep(function(dtime)
 	if spawn_pos then
 		local random_mob = petz.mobs_list[math.random(1, #petz.mobs_list)] --Get a random mob from the list of petz mobs
 		local spawn_chance = petz.settings[random_mob.."_spawn_chance"]
+		if spawn_chance < 0 then
+			spawn_chance = 0
+		elseif spawn_chance > 1 then
+			spawn_chance = 1
+		end
 		spawn_chance = 1 / spawn_chance
 		--minetest.chat_send_player("singleplayer", tostring(spawn_chance))
 		local random_chance = math.random(1, spawn_chance)

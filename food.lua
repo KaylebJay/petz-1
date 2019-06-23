@@ -67,7 +67,7 @@ minetest.register_craftitem("petz:raw_chicken", {
     wield_image = "petz_raw_chicken.png"
 })
 
-minetest.register_craftitem("petz:roasted_chickent", {
+minetest.register_craftitem("petz:roasted_chicken", {
 	description = S("Roasted Chicken"),
 	inventory_image = "petz_roasted_chicken.png",	
 	on_use = minetest.item_eat(3),
@@ -141,5 +141,26 @@ minetest.register_craft({
 	type = "cooking",
 	output = "petz:steak",
 	recipe = "petz:beef",
+	cooktime = 2,
+})
+
+--Duck
+minetest.register_craftitem("petz:raw_duck", {
+    description = S("Raw Duck"),
+    inventory_image = "petz_raw_duck.png",
+    wield_image = "petz_raw_duck.png"
+})
+
+minetest.register_craftitem("petz:roasted_duck", {
+	description = S("Roasted Duck"),
+	inventory_image = "petz_roasted_duck.png",	
+	on_use = minetest.item_eat(3),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:roasted_duck",
+	recipe = "petz:raw_duck",
 	cooktime = 2,
 })

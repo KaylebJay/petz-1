@@ -19,6 +19,10 @@ petz.settings.rob_mobs = settings:get_bool("rob_mobs", false)
 --Spawn Engine
 petz.settings.spawn_interval = tonumber(settings:get("spawn_interval"))
 petz.settings.max_mobs = tonumber(settings:get("max_mobs"))
+--Lay Eggs
+petz.settings.lay_egg_chance = tonumber(settings:get("lay_egg_chance"))
+--Misc Random Sound Chance
+petz.settings.misc_sound_chance = tonumber(settings:get("misc_sound_chance"))
 --Mobs Specific
 petz.settings.kitty_spawn = settings:get_bool("kitty_spawn", true)
 petz.settings.kitty_spawn_chance = tonumber(settings:get("kitty_spawn_chance"))

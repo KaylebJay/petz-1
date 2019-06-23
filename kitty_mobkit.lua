@@ -4,6 +4,7 @@
 local S = ...
 
 local pet_name = "kitty"
+table.insert(petz.mobs_list, pet_name)
 local mesh = nil
 local textures = {}
 local fixed = {}
@@ -38,8 +39,7 @@ if petz.settings.type_model == "cubic" then
 	collisionbox = {-0.35, -0.75, -0.28, 0.35, -0.125, 0.28}
 else
 	mesh = 'petz_kitty.b3d'	
-	--textures= {{"petz_kitty.png"}, {"petz_kitty2.png"}, {"petz_kitty3.png"}}
-	textures= {"petz_kitty.png"}
+	textures= {"petz_kitty.png", "petz_kitty2.png", "petz_kitty3.png"}
 	collisionbox = {-0.35, -0.75, -0.28, 0.35, -0.3125, 0.28}
 end
 
@@ -74,6 +74,7 @@ minetest.register_entity("petz:"..pet_name, {
 	view_range = 10,
 	lung_capacity = 10, -- seconds
 	max_hp = 108,
+	makes_footstep_sound = false,
 		
 	attack={range=0.5, damage_groups={fleshy=3}},	
 	animation = {
