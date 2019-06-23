@@ -41,7 +41,7 @@ if petz.settings.type_model == "cubic" then
 else
 	mesh = 'petz_puppy.b3d'	
 	textures= {"petz_puppy.png", "petz_puppy2.png", "petz_puppy3.png"}
-	collisionbox = {-0.35, -0.75*scale_model -0.28, 0.35, -0.3125, 0.28}
+	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
 end
 
 minetest.register_entity("petz:"..pet_name, {          
