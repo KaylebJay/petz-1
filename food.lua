@@ -101,3 +101,66 @@ minetest.register_craft({
 	recipe = "petz:raw_porkchop",
 	cooktime = 3,
 })
+
+--Lamb Chop
+minetest.register_craftitem("petz:mini_lamb_chop", {
+    description = S("Mini Lamb Chop"),
+    inventory_image = "petz_mini_lamb_chop.png",
+    wield_image = "petz_mini_lamb_chop.png"
+})
+
+minetest.register_craftitem("petz:roasted_lamb_chop", {
+	description = S("Roasted Lamb Chop"),
+	inventory_image = "petz_roasted_lamb_chop.png",	
+	on_use = minetest.item_eat(3),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:roasted_lamb_chop",
+	recipe = "petz:mini_lamb_chop",
+	cooktime = 3,
+})
+
+--Beef
+minetest.register_craftitem("petz:beef", {
+    description = S("Beef"),
+    inventory_image = "petz_beef.png",
+    wield_image = "petz_beef.png"
+})
+
+minetest.register_craftitem("petz:steak", {
+	description = S("Beef Steak"),
+	inventory_image = "petz_steak.png",	
+	on_use = minetest.item_eat(3),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:steak",
+	recipe = "petz:beef",
+	cooktime = 2,
+})
+
+--Duck
+minetest.register_craftitem("petz:raw_duck", {
+    description = S("Raw Duck"),
+    inventory_image = "petz_raw_duck.png",
+    wield_image = "petz_raw_duck.png"
+})
+
+minetest.register_craftitem("petz:roasted_duck", {
+	description = S("Roasted Duck"),
+	inventory_image = "petz_roasted_duck.png",	
+	on_use = minetest.item_eat(3),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:roasted_duck",
+	recipe = "petz:raw_duck",
+	cooktime = 2,
+})
