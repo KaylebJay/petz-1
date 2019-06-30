@@ -1289,6 +1289,11 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 		self.owner = static_data_table["fields"]["owner"]	
 		mobkit.remember(self, "owner", self.owner) 
 		self.food_count = static_data_table["fields"]["food_count"]	
+		mobkit.remember(self, "food_count", self.food_count) 
+		if self.has_affinity == true then
+			self.affinity = static_data_table["fields"]["affinity"]	
+			mobkit.remember(self, "affinity", self.affinity) 
+		end
 	end		
 	--Mob Specific
 	--Lamb
