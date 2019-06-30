@@ -87,9 +87,9 @@ petz.create_form = function(player_name)
 	elseif pet.type == "pony" then
 		local genre = ''
 		if pet.is_male == true then
-			genre = "Male"
+			genre = S("Male")
 		else
-			genre = "Female"
+			genre = S("Female")
 		end		
 		more_form_orders = more_form_orders..
 			"label[3,0;"..genre.."]"..
