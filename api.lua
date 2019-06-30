@@ -482,7 +482,7 @@ function petz:register_egg(pet_name, desc, inv_img, no_creative)
 				local mob = minetest.add_entity(pos, pet_name, sdata)
 				local ent = mob:get_luaentity()
 				-- set owner if not a monster
-				if ent.is_wild == false then
+				if ent.is_wild == false then					
 					ent.owner = placer:get_player_name()
 					mobkit.remember(ent, "owner", ent.owner)
 					ent.tamed = true
@@ -496,7 +496,7 @@ function petz:register_egg(pet_name, desc, inv_img, no_creative)
 	})
 end
 
-petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)
+petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)	
 	local capture_item_type
 	if wielded_item_name == "mobs:lasso" or wielded_item_name == "petz:lasso" then
 		capture_item_type = "lasso"
@@ -534,7 +534,8 @@ petz.capture = function(self, clicker)
 			--sett= sett .. ", ".. tostring(key).." : ".. tostring(self[key])
 			--minetest.chat_send_player("singleplayer", sett)				
 		end
-	end
+	end	
+	stack_meta:set_string("texture", self.texture)	 --Save the current texture
 	local inv = clicker:get_inventory()	
 	if inv:room_for_item("main", new_stack) then
 		inv:add_item("main", new_stack)
@@ -717,10 +718,10 @@ petz.on_rightclick = function(self, clicker)
             end     
             petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
-        elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then  
+        elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then          	
 			local player_name = clicker:get_player_name()
 			if (self.is_pet == true and self.owner and self.owner ~= player_name and petz.settings.rob_mobs == false) then
-				minetest.chat_send_player(self.owner, S("You are not the owner of the").." "..self.type..".")	
+				minetest.chat_send_player(player_name, S("You are not the owner of the").." "..self.type..".")	
 				return
 			end
 			if self.owner== nil or self.owner== "" or (self.owner ~= player_name and petz.settings.rob_mobs == true) then				
@@ -728,7 +729,7 @@ petz.on_rightclick = function(self, clicker)
 				mobkit.remember(self, "tamed", self.tamed )
 				self.owner = player_name
 				mobkit.remember(self, "owner", self.owner) 
-			end
+			end			
 			petz.capture(self, clicker)
 			minetest.chat_send_player("singleplayer", S("Your").." "..self.type.." "..S("has been captured")..".")				            
         elseif self.type == "lamb" and (wielded_item_name == "mobs:shears" or wielded_item_name == "petz:shears") and clicker:get_inventory() and not self.shaved then
@@ -1277,8 +1278,16 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 			else
 				self.saddle = false
 			end	
+		else			
+			self.texture = static_data_table["fields"]["texture"]
+			mobkit.remember(self, "texture", self.texture) 
+			texture = self.texture
 		end
 		--ALL the mobs
+		self.set_vars = true
+		mobkit.remember(self, "set_vars", self.set_vars) 
+		self.owner = static_data_table["fields"]["owner"]	
+		mobkit.remember(self, "owner", self.owner) 
 		self.food_count = static_data_table["fields"]["food_count"]	
 	end		
 	--Mob Specific
@@ -1307,8 +1316,9 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 	end
 	--minetest.chat_send_player("singleplayer", texture)	
 	if texture then
-		mobkit.remember(self, "texture", texture) 
-		petz.set_properties(self, {textures = {texture}})	
+		self.texture = texture
+		mobkit.remember(self, "texture", self.texture) 
+		petz.set_properties(self, {textures = {self.texture}})	
 	end
 	--ALL the mobs
 	if self.is_pet and self.tamed then
