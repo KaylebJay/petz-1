@@ -1148,7 +1148,7 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
 	local texture = ""
-	minetest.chat_send_player("singleplayer", staticdata)	
+	--minetest.chat_send_player("singleplayer", staticdata)	
 	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["owner"] then 
 		captured_mob = true		
 	end
