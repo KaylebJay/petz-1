@@ -102,7 +102,7 @@ minetest.register_craft({
 	cooktime = 3,
 })
 
---Raw Meat
+--Lamb
 minetest.register_craftitem("petz:mini_lamb_chop", {
     description = S("Mini Lamb Chop"),
     inventory_image = "petz_mini_lamb_chop.png",

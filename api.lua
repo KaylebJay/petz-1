@@ -373,8 +373,7 @@ end
 -- Drop Items Engine
 --
 
-petz.drop_items = function(self)
-	--minetest.chat_send_player("singleplayer", "prueba")	
+petz.drop_items = function(self)	
 	if not self.drops or #self.drops == 0 then 	-- check for nil or no drops
 		return
 	end	
@@ -856,8 +855,8 @@ petz.init_growth = function(self)
 			petz.set_properties(self, {
 				jump = false,
 				is_baby = false,
-				visual_size = {x=petz.settings.visual_size.x*self.scale_pony, y=petz.settings.visual_size.y*self.scale_pony},
-				collisionbox = {-0.5, -0.75*self.scale_pony, -0.5, 0.375, -0.375, 0.375}
+				visual_size = self.visual_size,
+				collisionbox = self.collisionbox 
 			})		
 		end
     end, self, max_speed_forward, max_speed_reverse, accel)
@@ -868,13 +867,23 @@ end
 --
 
 petz.on_die = function(self)
+	--Specific of each mob
+	if self.type == "pony" then
+		if self.saddle then -- drop saddle when horse is killed while riding
+			minetest.add_item(self.object:get_pos(), "petz:saddle")
+		end
+		if self.driver then -- also detach from horse properly
+			--petz.force_detach(self.driver)
+		end
+	end
+	--For all the mobs
     local props = self.object:get_properties()
     props.collisionbox[2] = props.collisionbox[1]
 	petz.set_properties(self, {collisionbox=props.collisionbox})
 	petz.drop_items(self)
 	mobkit.clear_queue_high(self)
 	mobkit.hq_die(self)
-    petz.pet[self.owner]= nil
+    petz.pet[self.owner]= nil 
 end
 
 --
@@ -1090,23 +1099,35 @@ petz.calf_milk_milk = function(self, clicker)
 end
 
 petz.load_vars = function(self)
-	self.wool_color = mobkit.recall(self, "wool_color") or "white"
-	self.tamed = mobkit.recall(self, "tamed") or false
-	self.owner = mobkit.recall(self, "owner") or ""	
-	self.affinity = mobkit.recall(self, "affinity") or 100	
-	self.fed = mobkit.recall(self, "fed") or false
-	self.brushed = mobkit.recall(self, "brushed") or false
-	self.lashed = mobkit.recall(self, "lashed") or false
-	self.food_count = mobkit.recall(self, "food_count") or 0
-	self.food_count_wool = mobkit.recall(self, "food_count_wool") or 0
-	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied") or false
-	self.milked = mobkit.recall(self, "milked") or false
-	self.is_baby = mobkit.recall(self, "is_baby") or false
-	self.is_male = mobkit.recall(self, "is_male") or false
-	self.is_pregnant = mobkit.recall(self, "is_pregnant") or false		
-	self.pregnant_count = mobkit.recall(self, "pregnant_count") or 0
-	self.shaved = mobkit.recall(self, "shaved") or false
-	self.child = mobkit.recall(self, "child") or false
+	--Only specific mobs
+	if self.type == "lamb" then
+		self.wool_color = mobkit.recall(self, "wool_color")
+		self.shaved = mobkit.recall(self, "shaved")
+	elseif self.type == "calf" then
+		self.milked = mobkit.recall(self, "milked")
+	elseif self.type == "pony" then
+		self.skin_color = mobkit.recall(self, "skin_color")
+		self.saddle = mobkit.recall(self, "saddle")
+		self.driver = mobkit.recall(self, "driver")
+		self.is_male = mobkit.recall(self, "is_male")
+		self.is_baby = mobkit.recall(self, "is_baby")
+		self.is_pregnant = mobkit.recall(self, "is_pregnant")
+		self.pregnant_count = mobkit.recall(self, "pregnant_count")
+		self.max_speed_forward = mobkit.recall(self, "max_speed_forward")
+		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse")
+		self.accel = mobkit.recall(self, "accel")
+	end	
+	--All the mobs	
+	self.tamed = mobkit.recall(self, "tamed")
+	self.owner = mobkit.recall(self, "owner")
+	self.affinity = mobkit.recall(self, "affinity")
+	self.fed = mobkit.recall(self, "fed")
+	self.brushed = mobkit.recall(self, "brushed")
+	self.lashed = mobkit.recall(self, "lashed")
+	self.food_count = mobkit.recall(self, "food_count")
+	self.food_count_wool = mobkit.recall(self, "food_count_wool")
+	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied")
+	self.child = mobkit.recall(self, "child")
 end
 
 petz.set_properties = function(self, properties)
@@ -1127,8 +1148,9 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
 	local texture = ""
-	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["set_vars"] then 
-		captured_mob = true
+	minetest.chat_send_player("singleplayer", staticdata)	
+	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["owner"] then 
+		captured_mob = true		
 	end
 	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars	
 		--Mob Specific
@@ -1151,6 +1173,58 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
 			self.shaved = false
 			mobkit.remember(self, "shaved", self.shaved)
+		elseif self.type == "pony" then		
+			if (staticdata== "baby") or (self.is_baby== true) then							
+				petz.set_properties(self, {				
+					visual_size = self.visual_size_baby,
+					collisionbox = self.collisionbox_baby
+				})		
+			end	
+			if not(staticdata== "baby") then
+				self.max_speed_forward= math.random(2, 4) --set a random velocity for walk and run
+				mobkit.remember(self, "max_speed_forward", self.max_speed_forward)				
+				self.max_speed_reverse= math.random(2, 4)	
+				mobkit.remember(self, "max_speed_reverse", self.max_speed_reverse)				
+				self.accel= math.random(2, 4)	
+				mobkit.remember(self, "accel", self.accel)	
+			end
+			--set a random genre
+			local random_number = math.random(1, 2)
+			if random_number == 1 then
+				self.is_male = true
+			else
+				self.is_male = false
+			end
+			mobkit.remember(self, "is_male", self.is_male)	
+    		local skin_color
+    		if petz.settings.type_model == "mesh" then --set a random color    
+    			local random_number = math.random(1, 6)
+    			if random_number == 1 then
+					skin_color = "brown"
+				elseif random_number == 2 then
+					skin_color = "white"				
+				elseif random_number == 3 then
+					skin_color = "yellow"				
+				elseif random_number == 4 then
+					skin_color = "white_dotted"				
+				elseif random_number == 5 then
+					skin_color = "gray_dotted"		
+				else
+					skin_color = "black"
+				end
+			else --if 'cubic'
+				self.tiles_color = petz.pony.tiles
+				mobkit.remember(self, "tiles_color", self.tiles_color)					
+				self.tiles_saddle = petz.pony.tiles_saddle
+				mobkit.remember(self, "tiles_saddle", self.tiles_saddle)	
+				skin_color = "brown" --cubic horse color is always brown
+			end
+			self.skin_color = skin_color														
+			mobkit.remember(self, "skin_color", self.skin_color)	
+			self.is_pregnant = false
+			mobkit.remember(self, "is_pregnant", self.is_pregnant)
+			self.is_baby = false
+			mobkit.remember(self, "is_baby", self.is_baby)
 		else
 			texture = self.object:get_properties().textures
 			if #texture > 1 then
@@ -1175,13 +1249,12 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 			self.affinity = 100
 			mobkit.remember(self, "affinity", self.affinity)	
 		end
-	elseif captured_mob == false then
+	elseif captured_mob == false then	
 		petz.load_vars(self) --Load memory variables		
-		texture = mobkit.recall(self, "texture") or ""
+		texture = mobkit.recall(self, "texture")
 	else
-		--Mob Specific
-		--Lamb
-		if self.type == "lamb" then
+		--Mob Specific		
+		if self.type == "lamb" then --Lamb
 			self.wool_color = static_data_table["fields"]["wool_color"]		
 			self.food_count = static_data_table["fields"]["food_count"]		
 			self.food_count_wool = static_data_table["fields"]["food_count_wool"]		
@@ -1189,6 +1262,20 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 				self.shaved = true
 			else
 				self.shaved = false
+			end		
+		elseif self.type == "pony" then
+			self.is_male = static_data_table["fields"]["is_male"]
+			self.is_pregnant = static_data_table["fields"]["is_pregnant"]
+			self.is_baby = static_data_table["fields"]["is_baby"]
+			self.pregnant_count = static_data_table["fields"]["pregnant_count"]
+			self.max_speed_forward =  static_data_table["fields"]["max_speed_forward"]
+			self.max_speed_reverse =  static_data_table["fields"]["max_speed_reverse"]
+			self.accel =  static_data_table["fields"]["accel"]		
+			self.skin_color = static_data_table["fields"]["skin_color"]			
+			if static_data_table["fields"]["saddle"] == true then
+				self.saddle = true
+			else
+				self.saddle = false
 			end		
 		end
 		--ALL the mobs
@@ -1202,9 +1289,25 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 			shaved_string = "_shaved"
 		end
 		texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
+	elseif self.type == "pony" then	
+	    if self.saddle then
+    		texture = "petz_pony_"..self.skin_color..".png" .. "^petz_pony_saddle.png"
+    	else
+    		texture = "petz_pony_"..self.skin_color..".png"
+    	end
+    	if self.is_pregnant == true then
+			petz.init_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)    		
+    	elseif self.is_baby == true then
+			petz.set_properties(self, {
+				visual_size = self.visual_size_baby,
+				collisionbox = self.collisionbox_baby 
+			})
+			petz.init_growth(self)
+		end
 	end
+	minetest.chat_send_player("singleplayer", texture)	
 	mobkit.remember(self, "texture", texture) 
-	petz.set_properties(self, {textures = texture})
+	petz.set_properties(self, {textures = {texture}})
 	--ALL the mobs
 	if self.is_pet and self.tamed then
 		petz.update_nametag(self)

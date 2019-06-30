@@ -10,8 +10,10 @@ function petz.herbivore_brain(self)
 	
 	if self.object:get_hp() <= 100 then	
 		petz.on_die(self)
+		return		
+	elseif self.type == "pony" and self.driver then
 		return
-	end
+	end		
 	
 	if mobkit.timer(self, 1) then 
 	

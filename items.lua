@@ -264,32 +264,48 @@ minetest.register_craft({
     }
 })
 
+-- Shears	
+minetest.register_tool("petz:shears", {
+	description = S("Shears"),
+	inventory_image = "petz_shears.png",
+	groups = {flammable = 2},
+})
 
-if minetest.get_modpath("mobkit") ~= nil then
-	-- Shears	
-	minetest.register_tool("petz:shears", {
-		description = S("Shears"),
-		inventory_image = "petz_shears.png",
-		groups = {flammable = 2},
-	})
-	minetest.register_craft({
-		output = 'petz:shears',
-		recipe = {
-			{'', 'default:steel_ingot', ''},
-			{'', 'group:stick', 'default:steel_ingot'},
-		}
-	})
-	-- Lasso
-	minetest.register_tool("petz:lasso", {
-		description = S("Lasso"),
-		inventory_image = "petz_lasso.png",
-		groups = {flammable = 2},
-	})
-	minetest.register_craft({
-		output = "petz:lasso",
-		recipe = {
-			{"farming:string", "", "farming:string"},
-			{"", "default:diamond", ""},
-			{"farming:string", "", "farming:string"},		}
-	})
-end
+minetest.register_craft({
+	output = 'petz:shears',
+	recipe = {
+		{'', 'default:steel_ingot', ''},
+		{'', 'group:stick', 'default:steel_ingot'},
+	}
+})
+-- Lasso
+minetest.register_tool("petz:lasso", {
+	description = S("Lasso"),
+	inventory_image = "petz_lasso.png",
+	groups = {flammable = 2},
+})
+
+minetest.register_craft({
+	output = "petz:lasso",
+	recipe = {
+		{"farming:string", "", "farming:string"},
+		{"", "default:diamond", ""},
+		{"farming:string", "", "farming:string"},		}
+})
+
+-- Saddle
+
+minetest.register_craftitem("petz:saddle", {
+	description = S("Saddle"),
+	inventory_image = "petz_saddle.png",
+	groups = {flammable = 2},
+})
+
+minetest.register_craft({
+	output = "petz:saddle",
+	recipe = {
+		{"petz:leather", "petz:leather", "petz:leather"},
+		{"petz:leather", "default:steel_ingot", "petz:leather"},
+		{"petz:leather", "default:steel_ingot", "petz:leather"},
+	}
+})
