@@ -1305,7 +1305,7 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 			petz.init_growth(self)
 		end
 	end
-	minetest.chat_send_player("singleplayer", texture)	
+	--minetest.chat_send_player("singleplayer", texture)	
 	mobkit.remember(self, "texture", texture) 
 	petz.set_properties(self, {textures = {texture}})
 	--ALL the mobs
