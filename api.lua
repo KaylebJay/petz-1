@@ -193,18 +193,18 @@ end
 -- Increase/Descrease the pet affinity
 
 petz.set_affinity = function(self, increase, amount)	
-    local new_affinitty    
+    local new_affinity    
     if increase == true then
-        new_affinitty = self.affinity +  amount
+        new_affinity = self.affinity +  amount
     else
-        new_affinitty = self.affinity - amount
+        new_affinity = self.affinity - amount
     end
-    if new_affinitty > 100 then
-        new_affinitty = 100
-    elseif new_affinitty <0 then     
-        new_affinitty = 0
+    if new_affinity > 100 then
+        new_affinity = 100
+    elseif new_affinity <0 then     
+        new_affinity = 0
     end
-    self.affinity = new_affinitty
+    self.affinity = new_affinity
     mobkit.remember(self, "affinity", self.affinity)
 end
 
@@ -1245,7 +1245,7 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 		if self.init_timer== true then
 			petz.init_timer(self)
 		end
-		if self.has_affinitty == true then
+		if self.has_affinity == true then
 			self.affinity = 100
 			mobkit.remember(self, "affinity", self.affinity)	
 		end
