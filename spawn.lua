@@ -4,7 +4,7 @@ minetest.register_globalstep(function(dtime)
 
 	local abr = minetest.get_mapgen_setting('active_block_range')
 	local radius =  abr * 16 --recommemded		
-	interval = petz.settings.spawn_interval	
+	local interval = petz.settings.spawn_interval	
 	
 	local spawn_pos = mobkit.get_spawn_pos_abr(dtime, interval, radius, 0.3, 0.2)
 	
