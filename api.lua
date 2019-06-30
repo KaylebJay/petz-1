@@ -1147,8 +1147,8 @@ end
 function petz.set_herbibore(self, staticdata, dtime_s)	
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
-	local texture = ""
-	--minetest.chat_send_player("singleplayer", staticdata)	
+	local texture = nil
+	minetest.chat_send_player("singleplayer", staticdata)	
 	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["owner"] then 
 		captured_mob = true		
 	end
@@ -1252,7 +1252,7 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 	elseif captured_mob == false then	
 		petz.load_vars(self) --Load memory variables		
 		texture = mobkit.recall(self, "texture")
-	else
+	else --Captured mob
 		--Mob Specific		
 		if self.type == "lamb" then --Lamb
 			self.wool_color = static_data_table["fields"]["wool_color"]		
@@ -1276,7 +1276,7 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 				self.saddle = true
 			else
 				self.saddle = false
-			end		
+			end	
 		end
 		--ALL the mobs
 		self.food_count = static_data_table["fields"]["food_count"]	
@@ -1306,8 +1306,10 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 		end
 	end
 	--minetest.chat_send_player("singleplayer", texture)	
-	mobkit.remember(self, "texture", texture) 
-	petz.set_properties(self, {textures = {texture}})
+	if texture then
+		mobkit.remember(self, "texture", texture) 
+		petz.set_properties(self, {textures = {texture}})	
+	end
 	--ALL the mobs
 	if self.is_pet and self.tamed then
 		petz.update_nametag(self)
