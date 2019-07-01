@@ -25,16 +25,26 @@ function petz.herbivore_brain(self)
 		end		
 		
 		local pos = self.object:get_pos() 		
+		
+
 	
 		--Runaway from predator
-		if prty < 18  then
-			if self.predator then			
-				local pred = mobkit.get_closest_entity(self, 'petz:'..self.predator)
-				if pred and vector.distance(pos,pred:get_pos()) < 8 then 
-					mobkit.hq_runfrom(self, 18 , pred) 
-					return
+		if prty < 18  then		
+			local predator_list = petz.settings[self.type.."_predators"]
+			if predator_list then
+				local predators = predator_list:split(", ")
+				for i = 1, #predators  do --loop  thru all preys
+					--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
+					--minetest.chat_send_player("singleplayer", "node name="..node.name)	
+					local predator = mobkit.get_closest_entity(self, predators[i])	-- look for predator						
+					if predator then									
+						if predator and vector.distance(pos, predator:get_pos()) < 8 then						
+							mobkit.hq_runfrom(self, 18, predator)
+							return
+						end
+					end					
 				end
-			end
+			end	
 		end
 		
 		--Follow Behaviour
@@ -118,6 +128,109 @@ petz.set_behaviour= function(self, behaviour, fly_in)
         self.object:set_acceleration({x = 0, y = 0.5, z = 0 })
 	end
 end
+
+--
+--Predator Behaviour
+--
+
+function petz.predator_brain(self)
+	
+	-- Die Behaviour
+	
+	if self.object:get_hp() <= 100 then	
+		petz.on_die(self)
+		return	
+	end	
+	
+	if mobkit.timer(self, 1) then 
+	
+		local prty = mobkit.get_queue_priority(self)		
+		
+		if prty < 20 and self.isinliquid then
+			mobkit.hq_liquid_recovery(self, 20)
+			return
+		end		
+		
+		local pos = self.object:get_pos() 		
+			
+		--Follow Behaviour
+					
+		if prty < 16 then
+			if self.tamed == true then
+				local player = mobkit.get_nearby_player(self)
+				if player then
+					local wielded_item_name = player:get_wielded_item():get_name()					
+					if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) < 8 then 	
+						mobkit.hq_follow(self, 16, player)
+						return
+					end
+				end
+			end
+		end
+		
+		if prty == 16 then
+			local player = mobkit.get_nearby_player(self)
+			if player then
+				local wielded_item_name = player:get_wielded_item():get_name()
+				if wielded_item_name ~= self.follow then 
+					mobkit.hq_roam(self, 0)
+					mobkit.clear_queue_high(self)
+					return
+				end
+			else
+				petz.ownthing(self)
+			end			
+		end
+		
+		-- hunt
+		if prty < 12 then							-- if not busy with anything important
+			if self.tamed == false then
+				local preys_list = petz.settings[self.type.."_preys"]
+				if preys_list then
+					local preys = preys_list:split(", ")
+					for i = 1, #preys  do --loop  thru all preys
+						--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
+						--minetest.chat_send_player("singleplayer", "node name="..node.name)	
+						local prey = mobkit.get_closest_entity(self, preys[i])	-- look for prey						
+						if prey then									
+							mobkit.hq_hunt(self, 12, prey) -- and chase it
+							return
+						end					
+					end
+				end				
+			end
+		end
+		
+		if prty < 10 then
+			if self.tamed == false then
+				local player = mobkit.get_nearby_player(self)					
+				if player and vector.distance(pos, player:get_pos()) < 10 then	-- if player close
+					mobkit.hq_warn(self, 10, player)	-- try to repel them
+				end	-- hq_warn will trigger subsequent bhaviors if needed
+			end
+		end
+		
+		--Replace nodes by others
+		
+		if prty < 6 then			
+			petz.replace(self)
+			if self.lay_eggs then
+				petz.lay_egg(self)
+			end
+		end
+		
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		--Roam default			
+		if mobkit.is_queue_empty_high(self) then
+			mobkit.hq_roam(self, 0)
+		end
+		
+	end
+end
+
+
 
 --
 --Semiaquatic beahaviour

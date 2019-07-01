@@ -3,7 +3,7 @@ local modpath, S = ...
 minetest.register_globalstep(function(dtime)
 
 	local abr = minetest.get_mapgen_setting('active_block_range')
-	local radius =  abr * 16 --recommemded		
+	local radius =  abr * 16 --recommended		
 	local interval = petz.settings.spawn_interval	
 	
 	local spawn_pos = mobkit.get_spawn_pos_abr(dtime, interval, radius, 0.3, 0.2)
@@ -43,7 +43,7 @@ minetest.register_globalstep(function(dtime)
 				--minetest.chat_send_player("singleplayer", random_mob)				
 				local spawn_nodes_list = petz.settings[random_mob.."_spawn_nodes"]
 				if spawn_nodes_list then
-					spawn_nodes = spawn_nodes_list:split(", ")
+					local spawn_nodes = spawn_nodes_list:split(", ")
 					for i = 1, #spawn_nodes do --loop  thru all spawn nodes
 						--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
 						--minetest.chat_send_player("singleplayer", "node name="..node.name)	

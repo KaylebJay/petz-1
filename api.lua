@@ -322,9 +322,6 @@ petz.timer = function(self)
                 mobkit.remember(self, "owner", self.owner)
                 self.tamed = false
                 mobkit.remember(self, "tamed", self.tamed)
-                --if self.is_wild == true then
-                    --self.type = "monster" -- if the animal was wild (ie a lion) can attack you!
-                --end
                 self.init_timer  = false -- no more timing
             --Else reinit the timer, to check again in the future
             else
@@ -610,6 +607,7 @@ end
 
 function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
 	if petz.is_alive(self) then
+		petz.tame_whip(self, puncher)
 		if type(puncher) == 'userdata' and puncher:is_player() then		
 			petz.punch_tamagochi(self, puncher) --decrease affinity when in Tamagochi mode
 			--petz.do_punch(self, puncher, tool_capabilities)
@@ -808,7 +806,7 @@ petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel
 			local pos = self.object:get_pos()		
 			self.is_pregnant = false
 			mobkit.remember(self, "is_pregnant", self.is_pregnant)
-			local baby = minetest.add_entity(pos, "petz:pony", "baby")	
+			local baby = minetest.add_entity(pos, "petz:pony", "baby")	--add a baby pony with staticdata = "baby"
 			local baby_entity = baby:get_luaentity()
 			baby_entity.is_baby = true
 			mobkit.remember(baby_entity, "is_baby", baby_entity.is_baby)
@@ -994,6 +992,7 @@ end
 petz.do_lashing = function(self)
     if self.lashed == false then        
         self.lashed = true
+        mobkit.remember(self, "lashed", self.lashed) 
     end
     petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
 end
@@ -1003,12 +1002,14 @@ petz.tame_whip= function(self, hitter)
 		if (wielded_item_name == "petz:whip") then
     		if self.tamed == false then
     		--The grizzly can be tamed lashed with a whip    	                	    	
-    			self.lashing_count = (self.lashing_count or 0) + 1        
-				if self.lashing_count >= petz.settings.grizzly_count_lashing_tame then -- tame grizzly
+    			self.lashing_count = self.lashing_count + 1        
+				if self.lashing_count >= petz.settings.lashing_tame_count then -- tame grizzly
 					self.lashing_count = 0
-					--self.type = "animal"
+					mobkit.remember(self, "lashing_count", self.lashing_count)					
 					self.tamed = true			
+					mobkit.remember(self, "tamed", self.tamed)
 					self.owner = hitter:get_player_name()
+					mobkit.remember(self, "owner", self.owner)
 					minetest.chat_send_player(self.owner, S("A").." "..self.type.." "..S("has been tamed."))					
 				end			
 			else
@@ -1124,7 +1125,10 @@ petz.load_vars = function(self)
 	self.affinity = mobkit.recall(self, "affinity")
 	self.fed = mobkit.recall(self, "fed")
 	self.brushed = mobkit.recall(self, "brushed")
-	self.lashed = mobkit.recall(self, "lashed")
+	if self.is_wild == true then
+		self.lashed = mobkit.recall(self, "lashed")
+		self.lashing_count = mobkit.recall(self, "lashing_count")
+	end
 	self.food_count = mobkit.recall(self, "food_count")
 	self.food_count_wool = mobkit.recall(self, "food_count_wool")
 	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied")
@@ -1145,7 +1149,7 @@ petz.delete_nametag = function(self)
 	self.object:set_nametag_attributes({text = nil,})
 end
 
-function petz.set_herbibore(self, staticdata, dtime_s)	
+function petz.set_initial_properties(self, staticdata, dtime_s)	
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
 	local texture = nil
@@ -1230,6 +1234,8 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 			texture = self.object:get_properties().textures
 			if #texture > 1 then
 				texture = texture[math.random(#texture)]
+			else
+				texture = texture[1]
 			end      
 		end
 		--ALL the mobs
@@ -1249,6 +1255,12 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 		if self.has_affinity == true then
 			self.affinity = 100
 			mobkit.remember(self, "affinity", self.affinity)	
+		end
+		if self.is_wild == true then
+			self.lashed = false
+			mobkit.remember(self, "lashed", self.lashed)	
+			self.lashing_count = 0
+			mobkit.remember(self, "lashing_count", self.lashing_count)	
 		end
 	elseif captured_mob == false then	
 		petz.load_vars(self) --Load memory variables		
@@ -1293,6 +1305,12 @@ function petz.set_herbibore(self, staticdata, dtime_s)
 		if self.has_affinity == true then
 			self.affinity = static_data_table["fields"]["affinity"]	
 			mobkit.remember(self, "affinity", self.affinity) 
+		end
+		if self.is_wild == true then
+			self.lashed = static_data_table["fields"]["lashed"]	
+			mobkit.remember(self, "lashed", self.lashed)	
+			self.lashing_count = static_data_table["fields"]["lashing_count"]	
+			mobkit.remember(self, "lashing_count", self.lashing_count)	
 		end
 	end		
 	--Mob Specific
