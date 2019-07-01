@@ -19,8 +19,16 @@ minetest.register_globalstep(function(dtime)
 		spawn_chance = 1 / spawn_chance
 		--minetest.chat_send_player("singleplayer", tostring(spawn_chance))
 		local random_chance = math.random(1, spawn_chance)
-		--minetest.chat_send_player("singleplayer", tostring(random_chance))
-		if random_chance == 1 then
+		--minetest.chat_send_player("singleplayer", tostring(random_chance))		
+		if random_chance == 1 then			
+			local random_mob_biome = petz.settings[random_mob.."_spawn_biome"]
+			--minetest.chat_send_player("singleplayer", "biome="..random_mob_biome)		
+			if random_mob_biome ~= "default" then --specific biome to spawn for this mob
+				local biome_name = minetest.get_biome_name(minetest.get_biome_data(spawn_pos).biome) --biome of the spawn pos
+				if biome_name ~= random_mob_biome then
+					return
+				end
+			end	
 			local objs = minetest.get_objects_inside_radius(spawn_pos, abr*16 + 5)		
 			local mob_count = 0	
 			for _, obj in ipairs(objs) do		-- count mobs in abrange
