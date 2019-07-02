@@ -11,6 +11,7 @@ local mg_name = minetest.get_mapgen_setting("mg_name")
 local S = minetest.get_translator(minetest.get_current_modname())
 
 assert(loadfile(modpath .. "/api.lua"))(modpath, S)
+--assert(loadfile(modpath .. "/mobkit.lua"))(modpath, S)
 assert(loadfile(modpath .. "/behaviours.lua"))(modpath, S)
 assert(loadfile(modpath .. "/settings.lua"))(modpath, S) --Load the settings
 assert(loadfile(modpath .. "/nodes.lua"))(modpath, S) --Load the nodes
@@ -53,7 +54,7 @@ if petz.settings.pony_spawn then
     assert(loadfile(modpath .. "/pony_"..petz.settings.type_api..".lua"))(S)
 end
 if petz.settings.parrot_spawn then
-    assert(loadfile(modpath .. "/parrot_"..petz.settings.type_api..".lua"))(S)
+    --assert(loadfile(modpath .. "/parrot_"..petz.settings.type_api..".lua"))(S)
 end
 if petz.settings.chicken_spawn then
     assert(loadfile(modpath .. "/chicken_"..petz.settings.type_api..".lua"))(S)

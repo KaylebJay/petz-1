@@ -230,6 +230,78 @@ function petz.predator_brain(self)
 	end
 end
 
+--
+--Flying Behaviour
+--
+
+function petz.flying_brain(self)
+	
+	-- Die Behaviour
+	
+	if self.object:get_hp() <= 100 then	
+		petz.on_die(self)
+		return	
+	end	
+	
+	if mobkit.timer(self, 1) then 
+	
+		local prty = mobkit.get_queue_priority(self)		
+		
+		if prty < 20 and self.isinliquid then
+			mobkit.hq_liquid_recovery(self, 20)
+			return
+		end		
+		
+		local pos = self.object:get_pos() 		
+			
+		--Follow Behaviour
+					
+		if prty < 16 then
+			if self.tamed == true then
+				local player = mobkit.get_nearby_player(self)
+				if player then
+					local wielded_item_name = player:get_wielded_item():get_name()					
+					if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) < 8 then 	
+						mobkit.hq_follow(self, 16, player)
+						return
+					end
+				end
+			end
+		end
+		
+		if prty == 16 then
+			local player = mobkit.get_nearby_player(self)
+			if player then
+				local wielded_item_name = player:get_wielded_item():get_name()
+				if wielded_item_name ~= self.follow then 
+					mobkit.hq_roam(self, 0)
+					mobkit.clear_queue_high(self)
+					return
+				end
+			else
+				petz.ownthing(self)
+			end			
+		end
+		
+		--Replace nodes by others
+		
+		if prty < 6 then			
+			petz.replace(self)
+			if self.lay_eggs then
+				petz.lay_egg(self)
+			end
+		end
+		
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		--Fly Wander default			
+		if mobkit.is_queue_empty_high(self) then
+			mobkit.hq_wander_fly(self, 0)			
+		end
+		
+	end
+end
 
 
 --
@@ -345,36 +417,4 @@ petz.aquatic_behaviour = function(self)
 				petz.set_health(self, air_damage)
 		end	
 	end
-end
-
---
---Fly Behaviour
---
-petz.fly_behaviour = function(self)		
-	local pos
-	if self == nil then
-		return
-	else
-		pos = self.object:get_pos()
-	end
-	local pos_under= { 
-       	x = pos.x,
-       	y = pos.y - 1,
-   		z = pos.z,
-   	}
-    local node_under = minetest.get_node_or_nil(pos_under) 
- 	if node_under == nil then
-		return
-	end   
-    if node_under.name == "air" or minetest.registered_nodes[node_under.name].groups.water then
-		if self.is_flying == false then
-			self.is_flying = true
-			self.animation = self.animation_fly
-		end
-	else
-		if self.is_flying == true then
-			self.is_flying = false
-			self.animation = self.animation_ground
-		end
-    end
 end

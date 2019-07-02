@@ -134,16 +134,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			mobkit.hq_follow(pet, 15, player)
 		elseif fields.btn_standhere then
 			mobkit.lq_idle(pet, 2400)
-			--pet:set_animation("stand", true)
 		elseif fields.btn_ownthing then
 			mobkit.clear_queue_low(pet)
 			petz.ownthing(pet)
 		elseif fields.btn_alight then
 			pet.object:set_acceleration({ x = 0, y = -1, z = 0 })
-			pet:set_animation("stand")
+			mobkit.animate(pet, "stand")	
 		elseif fields.btn_fly then
 			pet.object:set_acceleration({ x = 0, y = 1, z = 0 })
-			pet:set_animation("fly")
+			mobkit.animate(pet, "fly")	
 			minetest.after(2.5, function(pet) 
 				pet.object:set_acceleration({ x = 0, y = 0, z = 0 })    
 				pet.object:set_velocity({ x = 0, y = 0, z = 0 })    
@@ -151,7 +150,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end, pet)	
 		elseif fields.btn_perch_shoulder then
 			pet.object:set_attach(player, "Arm_Left", {x=0.5,y=-6.25,z=0}, {x=0,y=0,z=180}) 
-			pet:set_animation("stand")
+			mobkit.animate(pet, "stand")	
 			minetest.after(120.0, function(pet) 
 				pet.object:set_detach()
 			end, pet)	
@@ -1269,27 +1268,38 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		--Mob Specific		
 		if self.type == "lamb" then --Lamb
 			self.wool_color = static_data_table["fields"]["wool_color"]		
-			self.food_count = static_data_table["fields"]["food_count"]		
+			mobkit.remember(self, "wool_color", self.wool_color) 
 			self.food_count_wool = static_data_table["fields"]["food_count_wool"]		
+			mobkit.remember(self, "food_count_wool", self.food_count_wool) 
 			if static_data_table["fields"]["shaved"] == true then
 				self.shaved = true
 			else
 				self.shaved = false
 			end		
+			mobkit.remember(self, "shaved", self.shaved) 
 		elseif self.type == "pony" then
 			self.is_male = static_data_table["fields"]["is_male"]
+			mobkit.remember(self, "is_male", self.is_male) 
 			self.is_pregnant = static_data_table["fields"]["is_pregnant"]
+			mobkit.remember(self, "is_pregnant", self.is_pregnant) 
 			self.is_baby = static_data_table["fields"]["is_baby"]
+			mobkit.remember(self, "is_baby", self.is_baby) 
 			self.pregnant_count = static_data_table["fields"]["pregnant_count"]
+			mobkit.remember(self, "pregnant_count", self.pregnant_count) 
 			self.max_speed_forward =  static_data_table["fields"]["max_speed_forward"]
-			self.max_speed_reverse =  static_data_table["fields"]["max_speed_reverse"]
-			self.accel =  static_data_table["fields"]["accel"]		
-			self.skin_color = static_data_table["fields"]["skin_color"]			
+			mobkit.remember(self, "max_speed_forward", self.max_speed_forward) 
+			self.max_speed_reverse = static_data_table["fields"]["max_speed_reverse"]
+			mobkit.remember(self, "max_speed_reverse", self.max_speed_reverse) 
+			self.accel = static_data_table["fields"]["accel"]		
+			mobkit.remember(self, "accel", self.accel) 
+			self.skin_color = static_data_table["fields"]["skin_color"]
+			mobkit.remember(self, "skin_color", self.skin_color)
 			if static_data_table["fields"]["saddle"] == true then
 				self.saddle = true
 			else
 				self.saddle = false
 			end	
+			mobkit.remember(self, "saddle", self.saddle) 
 		else			
 			self.texture = static_data_table["fields"]["texture"]
 			mobkit.remember(self, "texture", self.texture) 

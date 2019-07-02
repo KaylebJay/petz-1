@@ -51,7 +51,7 @@ end
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "lion",	
-	init_timer = false,	
+	init_timer = true,	
 	is_pet = true,
 	has_affinity = true,
 	is_wild = true,
