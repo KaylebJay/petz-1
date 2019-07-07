@@ -23,6 +23,29 @@ petz.settings.rotate = 0
 petz.settings.tamagochi_safe_nodes = {} --Table with safe nodes for tamagochi mode
 
 --
+--Helper Functions
+--
+
+function petz:split(inSplitPattern, outResults)
+  if not inSplitPattern then
+    inSplitPattern = ','
+  end
+  if not outResults then
+    outResults = { }
+  end
+  self = self:gsub("%s+", "") --firstly trim spaces
+  local theStart = 1
+  local theSplitStart, theSplitEnd = string.find(self, inSplitPattern, theStart)
+  while theSplitStart do
+    table.insert(outResults, string.sub(self, theStart, theSplitStart-1))
+    theStart = theSplitEnd + 1
+    theSplitStart, theSplitEnd = string.find(self, inSplitPattern, theStart)
+  end
+  table.insert(outResults, string.sub(self, theStart))
+  return outResults
+end
+
+--
 --Form Dialog
 --
 

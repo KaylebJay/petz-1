@@ -7,24 +7,9 @@ petz.settings.tamagochi_mode = settings:get_bool("tamagochi_mode", true)
 petz.settings.tamagochi_check_time = tonumber(settings:get("tamagochi_check_time"))
 petz.settings.tamagochi_hunger_damage = tonumber(settings:get("tamagochi_hunger_damage"))
 petz.settings.tamagochi_check_if_player_online = settings:get_bool("tamagochi_check_if_player_online", true)
---Create a table with safe nodes
-function petz:split(inSplitPattern, outResults)
-  if not outResults then
-    outResults = { }
-  end
-  local theStart = 1
-  local theSplitStart, theSplitEnd = string.find(self, inSplitPattern, theStart)
-  while theSplitStart do
-    table.insert(outResults, string.sub(self, theStart, theSplitStart-1))
-    theStart = theSplitEnd + 1
-    theSplitStart, theSplitEnd = string.find(self, inSplitPattern, theStart)
-  end
-  table.insert(outResults, string.sub(self, theStart))
-  return outResults
-end
 --Safe Nodes
 local tamagochi_safe_nodes = settings:get("tamagochi_safe_nodes", "")
-petz.settings.tamagochi_safe_nodes = tamagochi_safe_nodes:split(", ")
+petz.settings.tamagochi_safe_nodes = tamagochi_safe_nodes:split()
 --Air Damage
 petz.settings.air_damage = tonumber(settings:get("air_damage"))
 --API Type
