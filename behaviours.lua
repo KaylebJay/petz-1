@@ -32,7 +32,7 @@ function petz.herbivore_brain(self)
 		if prty < 18  then		
 			local predator_list = petz.settings[self.type.."_predators"]
 			if predator_list then
-				local predators = predator_list:split(", ")
+				local predators = predator_list:split()
 				for i = 1, #predators  do --loop  thru all preys
 					--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
 					--minetest.chat_send_player("singleplayer", "node name="..node.name)	

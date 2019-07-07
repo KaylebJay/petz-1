@@ -9,7 +9,7 @@ petz.settings.tamagochi_hunger_damage = tonumber(settings:get("tamagochi_hunger_
 petz.settings.tamagochi_check_if_player_online = settings:get_bool("tamagochi_check_if_player_online", true)
 --Create a table with safe nodes
 local tamagochi_safe_nodes = settings:get("tamagochi_safe_nodes", "")
-petz.settings.tamagochi_safe_nodes = tamagochi_safe_nodes:split(", ")
+petz.settings.tamagochi_safe_nodes = tamagochi_safe_nodes:split()
 --Air Damage
 petz.settings.air_damage = tonumber(settings:get("air_damage"))
 --API Type

@@ -171,9 +171,13 @@ end
 --
 
 function petz:split(inSplitPattern, outResults)
+  if not inSplitPattern then
+    inSplitPattern = ','
+  end
   if not outResults then
     outResults = { }
   end
+  self = self:gsub("%s+", "") --firstly trim spaces
   local theStart = 1
   local theSplitStart, theSplitEnd = string.find(self, inSplitPattern, theStart)
   while theSplitStart do
