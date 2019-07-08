@@ -1,11 +1,11 @@
 local modpath, S = ...
 
---Duck/Chicken Eggs
+--Ducky/Chicken Eggs
 
-minetest.register_craftitem("petz:duck_egg", {
-    description = S("Duck Egg"),
-    inventory_image = "petz_duck_egg.png",
-    wield_image = "petz_duck_egg.png",
+minetest.register_craftitem("petz:ducky_egg", {
+    description = S("Ducky Egg"),
+    inventory_image = "petz_ducky_egg.png",
+    wield_image = "petz_ducky_egg.png",
     on_use = minetest.item_eat(2),
     groups = {flammable = 2, food = 2},
 })
@@ -144,23 +144,23 @@ minetest.register_craft({
 	cooktime = 2,
 })
 
---Duck
-minetest.register_craftitem("petz:raw_duck", {
-    description = S("Raw Duck"),
-    inventory_image = "petz_raw_duck.png",
-    wield_image = "petz_raw_duck.png"
+--Ducky
+minetest.register_craftitem("petz:raw_ducky", {
+    description = S("Raw Ducky"),
+    inventory_image = "petz_raw_ducky.png",
+    wield_image = "petz_raw_ducky.png"
 })
 
-minetest.register_craftitem("petz:roasted_duck", {
-	description = S("Roasted Duck"),
-	inventory_image = "petz_roasted_duck.png",	
+minetest.register_craftitem("petz:roasted_ducky", {
+	description = S("Roasted Ducky"),
+	inventory_image = "petz_roasted_ducky.png",	
 	on_use = minetest.item_eat(3),
 	groups = {flammable = 2, food = 2},
 })
 
 minetest.register_craft({
 	type = "cooking",
-	output = "petz:roasted_duck",
-	recipe = "petz:raw_duck",
+	output = "petz:roasted_ducky",
+	recipe = "petz:raw_ducky",
 	cooktime = 2,
 })

@@ -62,8 +62,8 @@ mobs:register_mob("petz:"..pet_name, {
 	jump = true,
 	follow = petz.settings.ducky_follow,
 	drops = {
-		{name = "mobs:meat_raw", chance = 3, min = 1, max = 1,},
-		{name = "petz:duck_feather", chance = 3, min = 1, max = 2,},
+		{name = "mobs:raw_ducky", chance = 3, min = 1, max = 1,},
+		{name = "petz:ducky_feather", chance = 3, min = 1, max = 2,},
 	},
 	water_damage = 0,
 	lava_damage = 6,
