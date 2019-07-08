@@ -57,10 +57,12 @@ minetest.register_craftitem("petz:kennel", {
     on_use = function (itemstack, user, pointed_thing)
         if pointed_thing.type ~= "node" then            
             return
-        end
+        end        
         local pt_above = pointed_thing.above
         local pt_under = pointed_thing.under
-        minetest.place_schematic(pt_above, modpath..'/schematics/kennel.mts', 0, nil, true)        
+        if not(minetest.is_protected(pt_above, user)) then
+			minetest.place_schematic(pt_above, modpath..'/schematics/kennel.mts', 0, nil, true)        
+		end
     end,
 })
 
