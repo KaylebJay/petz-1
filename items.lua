@@ -127,10 +127,10 @@ minetest.register_craftitem("petz:beaver_fur", {
     wield_image = "petz_beaver_fur.png"
 })
 
-minetest.register_craftitem("petz:duck", {
-    description = S("Duck Feather"),
-    inventory_image = "petz_duck_feather.png",
-    wield_image = "petz_duck_feather.png"
+minetest.register_craftitem("petz:ducky_feather", {
+    description = S("Ducky Feather"),
+    inventory_image = "petz_ducky_feather.png",
+    wield_image = "petz_ducky_feather.png"
 })
 
 --Material for Lion's Cage

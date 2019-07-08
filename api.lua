@@ -1038,7 +1038,7 @@ petz.lay_egg = function(self)
 	local nearby_nodes = minetest.find_nodes_in_area(
 		{x = pos.x - lay_range, y = pos.y - 1, z = pos.z - lay_range},
 		{x = pos.x + lay_range, y = pos.y + 1, z = pos.z + lay_range},
-		"petz:duck_nest")
+		"petz:ducky_nest")
 	if #nearby_nodes > 1 then
 		local nest_to_lay = nearby_nodes[math.random(1, #nearby_nodes)]
 		minetest.set_node(nest_to_lay, {name= "petz:"..self.type.."_nest_egg"})

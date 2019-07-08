@@ -64,20 +64,20 @@ minetest.register_craftitem("petz:kennel", {
     end,
 })
 
---Duck Nest
+--Ducky Nest
 
-minetest.register_node("petz:duck_nest", {
+minetest.register_node("petz:ducky_nest", {
     description = S("Nest"),
-    inventory_image = "petz_duck_nest_inv.png",
-    wield_image = "petz_duck_nest_inv.png",
-    tiles = {"petz_duck_nest.png"},
+    inventory_image = "petz_ducky_nest_inv.png",
+    wield_image = "petz_ducky_nest_inv.png",
+    tiles = {"petz_ducky_nest.png"},
     groups = {snappy=1, bendy=2, cracky=1},
     sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
     drawtype = "mesh",
-    mesh = 'petz_duck_nest.b3d',
+    mesh = 'petz_ducky_nest.b3d',
     visual_size = {x = 1.3, y = 1.3},
-    tiles = {"petz_duck_nest_egg.png"},
+    tiles = {"petz_ducky_nest_egg.png"},
     collision_box = {
         type = "fixed",
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
@@ -89,10 +89,10 @@ minetest.register_node("petz:duck_nest", {
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         if not(player == nil) then
             local itemstack_name = itemstack:get_name()
-            if itemstack_name == "petz:duck_egg" or itemstack_name == "petz:chicken_egg" then
+            if itemstack_name == "petz:ducky_egg" or itemstack_name == "petz:chicken_egg" then
 				local egg_type = "" 
-				if itemstack_name == "petz:duck_egg" then
-					egg_type = "duck"
+				if itemstack_name == "petz:ducky_egg" then
+					egg_type = "ducky"
 				else
 					egg_type = "chicken"
 				end
@@ -107,7 +107,7 @@ minetest.register_node("petz:duck_nest", {
  
 minetest.register_craft({
     type = "shaped",
-    output = 'petz:duck_nest',
+    output = 'petz:ducky_nest',
     recipe = {        
         {'', '', ''},
         {'group:leaves', '', 'group:leaves'},
@@ -115,18 +115,18 @@ minetest.register_craft({
     }
 })
 
-minetest.register_node("petz:duck_nest_egg", {
-    description = S("Duck Nest with Egg"),
-    inventory_image = "petz_duck_nest_egg_inv.png",
-    wield_image = "petz_duck_nest_egg_inv.png",
-    tiles = {"petz_duck_nest_egg.png"},
+minetest.register_node("petz:ducky_nest_egg", {
+    description = S("Ducky Nest with Egg"),
+    inventory_image = "petz_ducky_nest_egg_inv.png",
+    wield_image = "petz_ducky_nest_egg_inv.png",
+    tiles = {"petz_ducky_nest_egg.png"},
     groups = {snappy=1, bendy=2, cracky=1},
     sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
     drawtype = "mesh",
-    mesh = 'petz_duck_nest_egg.b3d',
+    mesh = 'petz_ducky_nest_egg.b3d',
     visual_size = {x = 1.3, y = 1.3},
-    tiles = {"petz_duck_nest_egg.png"},
+    tiles = {"petz_ducky_nest_egg.png"},
     collision_box = {
         type = "fixed",
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
@@ -146,7 +146,7 @@ minetest.register_node("petz:chicken_nest_egg", {
     sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
     drawtype = "mesh",
-    mesh = 'petz_duck_nest_egg.b3d',
+    mesh = 'petz_ducky_nest_egg.b3d',
     visual_size = {x = 1.3, y = 1.3},
     tiles = {"petz_chicken_nest_egg.png"},
     collision_box = {
@@ -161,17 +161,17 @@ minetest.register_node("petz:chicken_nest_egg", {
  
 minetest.register_craft({
     type = "shaped",
-    output = 'petz:duck_nest_egg',
+    output = 'petz:ducky_nest_egg',
     recipe = {        
         {'', '', ''},
-        {'group:leaves', 'petz:duck_egg', 'group:leaves'},
+        {'group:leaves', 'petz:ducky_egg', 'group:leaves'},
         {'default:papyrus', 'default:papyrus', 'default:papyrus'},
     }
 })
 
--- Chance to hatch an egg into a duck or chicken
+-- Chance to hatch an egg into a ducky or chicken
 minetest.register_abm({
-    nodenames = {"petz:duck_nest_egg"},
+    nodenames = {"petz:ducky_nest_egg"},
     neighbors = {},
     interval = 600.0, -- Run every 10 minuts
     chance = 5, -- Select every 1 in 3 nodes
@@ -184,7 +184,7 @@ minetest.register_abm({
             --pos.y = pos.y + 1
             local mob = minetest.add_entity(pos_above, "petz:ducky")
             local ent = mob:get_luaentity()
-            minetest.set_node(pos, {name= "petz:duck_nest"})
+            minetest.set_node(pos, {name= "petz:ducky_nest"})
         end
     end
 })
@@ -203,7 +203,7 @@ minetest.register_abm({
             --pos.y = pos.y + 1
             local mob = minetest.add_entity(pos_above, "petz:chicken")
             local ent = mob:get_luaentity()
-            minetest.set_node(pos, {name= "petz:duck_nest"})
+            minetest.set_node(pos, {name= "petz:ducky_nest"})
         end
     end
 })
