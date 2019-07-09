@@ -1,6 +1,5 @@
 local modpath, S = ...
 
-
 function mobkit.lq_dumbfly(self, dest, speed_factor)
 	local timer = 3			-- failsafe
 	speed_factor = speed_factor or 1

@@ -96,6 +96,30 @@ function petz.herbivore_brain(self)
 			end
 		end
 		
+		--if prty < 5 and self.type == "puppy" and self.tamed == true and self.square_ball_attached == false then --search for a squareball				
+			--local object_list = minetest.get_objects_inside_radius(self.object:get_pos(), 10)
+			--for i = 1,#object_list do
+				--local obj = object_list[i]
+				--local ent = obj:get_luaentity()				
+				--if ent and ent.name == "__builtin:item" then		
+					--minetest.chat_send_player("singleplayer", ent.itemstring)	
+					--if ent.itemstring == "petz:square_ball" then
+						--local spos = self.object:get_pos()
+						--local tpos = obj:get_pos()
+						--if vector.distance(spos, tpos) > 2 then
+							--if tpos then
+								--mobkit.hq_goto(self, 5, tpos)
+							--end
+						--else
+							--local meta = ent:get_meta()							
+							--local shooter_name = meta:get_string("shooter_name")
+							--petz.attach_squareball(ent, self, self.object, nil)
+						--end
+					--end
+				--end
+			--end
+		--end
+		
 		-- Default Random Sound		
 		petz.random_mob_sound(self)
 		

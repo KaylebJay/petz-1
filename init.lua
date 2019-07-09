@@ -11,7 +11,7 @@ local mg_name = minetest.get_mapgen_setting("mg_name")
 local S = minetest.get_translator(minetest.get_current_modname())
 
 assert(loadfile(modpath .. "/api.lua"))(modpath, S)
---assert(loadfile(modpath .. "/mobkit.lua"))(modpath, S)
+assert(loadfile(modpath .. "/mobkit.lua"))(modpath, S)
 assert(loadfile(modpath .. "/behaviours.lua"))(modpath, S)
 assert(loadfile(modpath .. "/settings.lua"))(modpath, S) --Load the settings
 assert(loadfile(modpath .. "/nodes.lua"))(modpath, S) --Load the nodes
