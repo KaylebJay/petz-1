@@ -704,7 +704,7 @@ end
 --Lay Egg
 petz.lay_egg = function(self)
 	local pos = self.object:get_pos()
-	if math.random(1, 150000) == 1 then
+	if math.random(1, 90000) == 1 then
 		minetest.add_item(self.object:get_pos(), "petz:"..self.petz_type.."_egg") --chicken egg!
 	end			
 	local lay_range = 1
