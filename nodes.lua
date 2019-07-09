@@ -137,6 +137,9 @@ minetest.register_node("petz:ducky_nest_egg", {
         type = "fixed",
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
     },
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		petz.extract_egg_from_nest(self, pos, player, "petz:ducky_egg") --extract the egg
+	end,
 })
 
 minetest.register_node("petz:chicken_nest_egg", {
@@ -159,6 +162,9 @@ minetest.register_node("petz:chicken_nest_egg", {
         type = "fixed",
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
     },
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		petz.extract_egg_from_nest(self, pos, player, "petz:chicken_egg") --extract the egg
+	end,
 })
  
 minetest.register_craft({

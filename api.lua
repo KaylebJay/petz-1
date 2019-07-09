@@ -718,6 +718,18 @@ petz.lay_egg = function(self)
 	end		
 end
 
+--Extract Egg from a Nest
+
+petz.extract_egg_from_nest = function(self, pos, player, egg_type)
+	local inv = player:get_inventory()			
+	if inv:room_for_item("main", egg_type) then
+		inv:add_item("main", egg_type)
+		minetest.set_node(pos, {name= "petz:ducky_nest"})
+	else
+		minetest.chat_send_player(player:get_player_name(), "No room in your inventory for the egg.")			
+	end
+end
+
 --
 --Create Dam Beaver Mechanic
 --
