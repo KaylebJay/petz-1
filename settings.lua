@@ -16,6 +16,8 @@ petz.settings.air_damage = tonumber(settings:get("air_damage"))
 petz.settings.type_api = settings:get("type_api", "mobs_redo")
 --Capture Mobs
 petz.settings.rob_mobs = settings:get_bool("rob_mobs", false)
+--Lay Eggs
+petz.settings.lay_egg_chance = tonumber(settings:get("lay_egg_chance"))
 --Mobs Specific
 petz.settings.kitty_spawn = settings:get_bool("kitty_spawn", true)
 petz.settings.kitty_spawn_chance = tonumber(settings:get("kitty_spawn_chance"))
