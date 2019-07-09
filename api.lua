@@ -1418,7 +1418,7 @@ minetest.register_craft({
 petz.attach_squareball = function(self, thing_ent, thing_ref, shooter_name)
 	self.object:set_properties({visual = "cube",  physical = true, visual_size = {x = 0.045, y = 0.045},
 			textures = {"petz_square_ball.png", "petz_square_ball.png", "petz_square_ball.png", "petz_square_ball.png",
-			"petz_square_ball.png", "petz_square_ball.png"}, groups = {immortal = 1},})
+			"petz_square_ball.png", "petz_square_ball.png"}, groups = {immortal = 1}, collisionbox = {-0.15, -0.15, -0.15, 0.15, 0.15, 0.15},})
 	self.object:set_attach(thing_ref, "head", {x=-0.0, y=0.5, z=-0.45}, {x=0, y=0, z=0}) 						
 	thing_ent.square_ball_attached = true
 	thing_ent.attached_squared_ball = self
@@ -1472,6 +1472,8 @@ minetest.register_entity("petz:ent_square_ball", {
 			mobkit.clear_queue_low(parent_ent)
 			petz.ownthing(parent_ent)			
 			self.object:remove()	--remove the square ball
+			mobkit.clear_queue_low(parent_ent)
+			petz.ownthing(parent_ent)
 		end
 	end,
 	
