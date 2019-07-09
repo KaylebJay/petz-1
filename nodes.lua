@@ -89,9 +89,9 @@ minetest.register_node("petz:ducky_nest", {
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
     },
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-        if not(player == nil) then
+        if player then
             local itemstack_name = itemstack:get_name()
-            if itemstack_name == "petz:ducky_egg" or itemstack_name == "petz:chicken_egg" then
+            if itemstack_name == "petz:ducky_egg" or itemstack_name == "petz:chicken_egg" then --pput the egg
 				local egg_type = "" 
 				if itemstack_name == "petz:ducky_egg" then
 					egg_type = "ducky"
@@ -101,7 +101,7 @@ minetest.register_node("petz:ducky_nest", {
                 itemstack:take_item()			
 				player:set_wielded_item(itemstack)
 				minetest.set_node(pos, {name= "petz:".. egg_type .."_nest_egg"})
-				return itemstack
+				return itemstack		
             end
         end
     end,
@@ -137,6 +137,9 @@ minetest.register_node("petz:ducky_nest_egg", {
         type = "fixed",
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
     },
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		petz.extract_egg_from_nest(self, pos, player, "petz:ducky_egg") --extract the egg
+	end,
 })
 
 minetest.register_node("petz:chicken_nest_egg", {
@@ -159,6 +162,9 @@ minetest.register_node("petz:chicken_nest_egg", {
         type = "fixed",
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
     },
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		petz.extract_egg_from_nest(self, pos, player, "petz:chicken_egg") --extract the egg
+	end,
 })
  
 minetest.register_craft({
