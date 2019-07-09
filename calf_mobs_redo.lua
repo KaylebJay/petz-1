@@ -127,7 +127,15 @@ petz.calf_milk_refill = function(self)
 end
 
 petz.calf_milk_milk = function(self, clicker)
-    clicker:set_wielded_item("petz:bucket_milk")
-    petz.do_sound_effect("object", self.object, "petz_calf_moaning")
+	local inv = clicker:get_inventory()	
+	if inv:room_for_item("main", "petz:bucket_milk") then		
+		local wielded_item = clicker:get_wielded_item()
+		wielded_item:take_item()
+		clicker:set_wielded_item("petz:bucket_milk")		
+		inv:add_item("main", wielded_item)
+		petz.do_sound_effect("object", self.object, "petz_calf_moaning")					
+	else					
+		minetest.add_item(self:get_pos(), "petz:bucket_milk")
+	end
 	self.milked = true           
 end
