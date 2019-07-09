@@ -194,6 +194,7 @@ In there your dog will be well cared for and you won't have to worry about its h
 You can breed ducks or chickens via its eggs:
 - Create a empty nest and put an egg inside (right click), optionally you can create a nest with an already egg inside. Await for the egg to hatch into a new ducky or chicken.
 - Also if a ducky or chicken has an empty nest near, it can lay an egg on it.
+- You can extract the egg from a nest (right-click on the nest).
 
 ### Capture Petz
 
@@ -232,3 +233,11 @@ The beaver's home
 - You should select the best parent ponies to get better descendency (fastest ponies) when breeding.
 - You can breed any pony even if you do not own it. But the owner of the baby ponies will be the mother's owner.
 - The male sperm is unlimited but a female pony only can give birth 5 babies máx. After those 5 ponies, the mommy pony turn into infertile.
+
+### Square Ball
+![Square Ball](/images/squareball.png)
+
+- Make a Square Ball.
+- Throw it to your puppy. You have to hit the target.
+- Your puppy bring back the square ball to you.
+- To get the ball, right click on it.
