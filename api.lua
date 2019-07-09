@@ -1387,7 +1387,7 @@ function petz.spawn_square_ball(user, strength)
 end
 
 minetest.register_node("petz:square_ball", {
-	description = S("Square Ball (use to launch)"),
+	description = S("Square Ball (use to throw)"),
 	--inventory_image = "petz_square_ball.png",
 	tiles = {"petz_square_ball.png", "petz_square_ball.png", "petz_square_ball.png", "petz_square_ball.png",
 					"petz_square_ball.png", "petz_square_ball.png"},
