@@ -42,6 +42,8 @@ In 3 colors: White (common), grey & dark gray (rare) and brown (very rare).
 - Lambs eat grass.
 - You can get Wool with the Shears (right click).
 - To wool to regrow feed your lamb or let it eats grass.
+- Lambs runaway from player, tame them with some wheat.
+- Predators: Wolf & Lion.
 
 #### Lion
 ![Lion](/images/lion.png)
@@ -51,6 +53,7 @@ In 3 colors: White (common), grey & dark gray (rare) and brown (very rare).
 In Tamagochi Mode:
 - You have to lash your lion in 48h or it lost affinitty with you.
 - Be careful, if you lost your lion as pet, it will attack you!
+- Preys: Lambs, piggies and ponies.
 
 #### Calf
 ![Calf](/images/calf.png)
@@ -59,6 +62,7 @@ In Tamagochi Mode:
 - It drops Leather when killed.
 - It can be milked with an empty bucket.
 - In order the calf to have more milk, you have to feed it or let it to eat some grass.
+- Predators: Calf.
 
 #### Panda
 ![Panda](/images/panda.png)
@@ -71,6 +75,7 @@ In Tamagochi Mode:
 #### Grizzly
 ![Grizzly](/images/grizzly.png)
 - Not a Teddy Bear, but a wild one. It lives in woods. It's tamable like the lion.
+- Preys: Lamb.
 
 #### Pony
 ![Pony](/images/pony.png)
@@ -78,6 +83,7 @@ In Tamagochi Mode:
 - You can give it orders.
 - The Saddle can be cut with the Shears.
 - Ponies are slow where you ride them. You can breeding them to get stronger and fastest ones.
+- Predators: Lion.
 
 #### Parrot
 ![Parrot](/images/parrot.png)
@@ -109,6 +115,7 @@ In Tamagochi Mode:
 ![Piggy](/images/piggy.png)
 - It's a source of meat.
 - It drops Porkchop to being cooked.
+- Predators: Lion.
 
 #### Turtle
 ![Turtle](/images/turtle.png)
@@ -125,6 +132,13 @@ Clownfish & Tropical Fish
 - It can be captured and put into a fish tank.
 - It suffocates when outside water.
 - In tamagochi mode you have only to feed it, but no if it is in a fish tank.
+
+#### Wolf
+Wolf
+- Wild animal.
+- Run away from players til players attack them, then agressive.
+- Tamable in the same way as lion.
+- Preys: Lambs.
 
 ### Things you can with Petz
 - Configure the models as "mesh" (by default) or "cubic" (nodebox, no animated, no too laggy) via the 'petz.conf'
