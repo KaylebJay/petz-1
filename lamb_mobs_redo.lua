@@ -60,6 +60,7 @@ mobs:register_mob("petz:"..pet_name, {
 	walk_velocity = 0.75,
     run_velocity = 1.5,    
     runaway = true,
+    runaway_from = {"petz:wolf", "petz:lion"},
     pushable = true,
     floats = 1,
 	jump = true,

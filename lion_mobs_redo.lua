@@ -52,6 +52,7 @@ mobs:register_mob("petz:"..pet_name, {
 	type = "monster",
 	rotate = petz.settings.rotate,
 	attack_type = 'dogfight',
+	attack_animals = true,
 	damage = 8,
     hp_min = 20,
     hp_max = 30,
