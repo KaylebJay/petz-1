@@ -1,65 +1,58 @@
 --
---LION
+--WOLF
 --
 local S = ...
 
-local pet_name = "lion"
+local pet_name = "wolf"
 table.insert(petz.mobs_list, pet_name)
 local mesh = nil
 local fixed = {}
 local textures
-local scale_model = 2.3
-petz.lion = {}
+local scale_model = 1.8
+petz.wolf = {}
 local collisionbox = {}
 
 if petz.settings.type_model == "cubic" then
 	local node_name = "petz:"..pet_name.."_block"
 	fixed = {
-		{-0.125, -0.5, 0.0625, -0.0625, -0.375, 0.125}, -- back_right_leg
-		{-0.125, -0.5, -0.1875, -0.0625, -0.375, -0.125}, -- front_right_leg
-		{0, -0.5, -0.1875, 0.0625, -0.375, -0.125}, -- front_left_leg
-		{0, -0.5, 0.0625, 0.0625, -0.375, 0.125}, -- back_left_leg
-		{-0.125, -0.375, -0.1875, 0.0625, -0.25, 0.125}, -- body
-		{-0.125, -0.375, -0.25, 0.0625, -0.0625, -0.1875}, -- head
-		{-0.0625, -0.3125, 0.125, 0.0, -0.25, 0.1875}, -- top_tail
-		{-0.1875, -0.0625, -0.1875, -0.125, 0.0, -0.125}, -- right_ear
-		{-0.0625, -0.375, 0.1875, 0.0, -0.3125, 0.25}, -- bottom_tail
-		{0.0625, -0.0625, -0.1875, 0.125, 0.0, -0.125}, -- left_ear
-		{-0.125, -0.25, -0.3125, 0.0625, -0.1875, -0.25}, -- snout
-		{0.0625, -0.3125, -0.25, 0.125, -0.1875, -0.1875}, -- mane_right
-		{-0.1875, -0.3125, -0.25, -0.125, -0.1875, -0.1875}, -- mane_left
-		{0.0625, -0.25, -0.1875, 0.125, -0.0625, -0.0625}, -- mane_back_right
-		{-0.1875, -0.25, -0.1875, -0.125, -0.0625, -0.0625}, -- mane_back_left
-		{-0.125, -0.25, -0.1875, 0.0625, 0.0, -0.0625}, -- mane_front
-		{-0.1875, -0.25, -0.0625, 0.125, -0.125, 0.0}, -- mane_back
-		{-0.1875, -0.3125, -0.1875, -0.125, -0.25, -0.125}, -- mane_bottom_left
-		{0.0625, -0.3125, -0.1875, 0.125, -0.25, -0.125}, -- mane_bottom_right
+			{-0.125, -0.375, -0.375, 0.0625, -0.3125, -0.25}, -- jaw
+			{-0.125, -0.5, -0.1875, -0.0625, -0.3125, -0.125}, -- right_front_leg
+			{0, -0.5, -0.1875, 0.0625, -0.3125, -0.125}, -- left_front_leg
+			{-0.125, -0.3125, -0.375, 0.0625, -0.25, -0.3125}, -- snout
+			{-0.125, -0.3125, -0.3125, 0.0625, -0.125, -0.1875}, -- head
+			{-0.1875, -0.3125, -0.1875, 0.125, -0.125, -0.0625}, -- mane
+			{-0.125, -0.3125, -0.0625, 0.0625, -0.125, 0.1875}, -- body
+			{-0.125, -0.125, -0.25, -0.0625, -0.0625, -0.1875}, -- right_ear
+			{0, -0.125, -0.25, 0.0625, -0.0625, -0.1875}, -- left_ear
+			{0, -0.5, 0.125, 0.0625, -0.3125, 0.1875}, -- left_back_leg
+			{-0.125, -0.5, 0.125, -0.0625, -0.3125, 0.1875}, -- right_back_leg
+			{-0.0625, -0.1875, 0.1875, 0, -0.125, 0.375}, -- tail
 	}
-	petz.lion.tiles = {
-		"petz_lion_top.png", "petz_lion_bottom.png", "petz_lion_right.png",
-		"petz_lion_left.png", "petz_lion_back.png", "petz_lion_front.png"
+	petz.wolf.tiles = {
+		"petz_wolf_top.png", "petz_wolf_bottom.png", "petz_wolf_right.png",
+		"petz_wolf_left.png", "petz_wolf_back.png", "petz_wolf_front.png"
 	}
-	petz.register_cubic(node_name, fixed, petz.lion.tiles)		
-	textures= {"petz:lion_block"}
+	petz.register_cubic(node_name, fixed, petz.wolf.tiles)		
+	textures= {"petz:wolf_block"}
 	collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
 else
-	mesh = 'petz_lion.b3d'	
-	textures = {"petz_lion.png"}	
+	mesh = 'petz_wolf.b3d'	
+	textures = {"petz_wolf.png", "petz_wolf2.png", "petz_wolf3.png"}	
 	collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
 end
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
-	type = "lion",	
+	type = "wolf",	
 	init_timer = true,	
 	is_pet = true,
 	has_affinity = true,
 	is_wild = true,
-	attack_player = true,
+	attack_player = false,
 	give_orders = true,
 	can_be_brushed = true,
 	capture_item = "lasso",
-	follow = petz.settings.lion_follow,	
+	follow = petz.settings.wolf_follow,	
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -92,8 +85,8 @@ minetest.register_entity("petz:"..pet_name,{
 		},	
 	},
 	sounds = {
-		misc = "petz_lion_roar",
-		moaning = "petz_lion_moaning",
+		misc = "petz_wolf_howl",
+		moaning = "petz_wolf_moaning",
 	},
 	
 	--punch_start = 83, stand4_end = 95,
@@ -107,7 +100,11 @@ minetest.register_entity("petz:"..pet_name,{
 	
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		
 		petz.tame_whip(self, puncher)
-		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
+		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)					
+		if self.tamed == false and self.attack_player == false then --if you hit it, will attack player
+			self.attack_player = true	
+			mobkit.clear_queue_high(self)
+		end
 	end,
 	
 	on_rightclick = function(self, clicker)
@@ -116,4 +113,4 @@ minetest.register_entity("petz:"..pet_name,{
     
 })
 
-petz:register_egg("petz:lion", S("Lion"), "petz_spawnegg_lion.png", 0)
+petz:register_egg("petz:wolf", S("Wolf"), "petz_spawnegg_wolf.png", 0)

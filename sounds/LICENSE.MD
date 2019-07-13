@@ -157,3 +157,13 @@ Author: Alexander
 http://www.orangefreesounds.com/pigeon-coo-sounds/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+--------------------------------------------
+filename: petz_wolf_howl.ogg
+Author: Alexander
+http://www.orangefreesounds.com/wolf-howl-sound/
+License: The sound effect is permitted for commercial use under license “public  domain”
+--------------------------------------------
+filename: petz_wolf_moaning.ogg
+Author: Alexander
+http://www.orangefreesounds.com/wolf-sounds/
+License: The following sound clip is public domain and may be used without prior permission.

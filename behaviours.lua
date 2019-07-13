@@ -224,16 +224,20 @@ function petz.predator_brain(self)
 				end				
 			end
 		end
-		
+						
 		if prty < 10 then
 			if self.tamed == false then
 				local player = mobkit.get_nearby_player(self)					
 				if player and vector.distance(pos, player:get_pos()) < 10 then	-- if player close
-					mobkit.hq_warn(self, 10, player)	-- try to repel them
-				end	-- hq_warn will trigger subsequent bhaviors if needed
+					if self.attack_player == true then --attack player				
+						mobkit.hq_warn(self, 10, player)	-- try to repel them
+					else
+						mobkit.hq_runfrom(self, 10, player)	
+					end	-- run away from player		
+				end
 			end
 		end
-		
+
 		--Replace nodes by others
 		
 		if prty < 6 then			
