@@ -681,7 +681,7 @@ petz.tame_whip= function(self, hitter)
     		if self.tamed == false then
     		--The grizzly can be tamed lashed with a whip    	                	    	
     			self.lashing_count = (self.lashing_count or 0) + 1        
-				if self.lashing_count >= petz.settings.grizzly_count_lashing_tame then -- tame grizzly
+				if self.lashing_count >= petz.settings.count_lashing_tame then -- tame grizzly
 					self.lashing_count = 0
 					self.type = "animal"
 					self.tamed = true			
