@@ -102,10 +102,16 @@ minetest.register_craft({
 --Bucket Milk
 minetest.register_craftitem("petz:bucket_milk", {
     description = S("Milk Bucket"),
+    stack_max = 1,
     wield_image = {"petz_bucket_milk.png"},
     inventory_image = "petz_bucket_milk.png",
-    groups = {milk_bucket = 1},
+    groups = {milk_bucket = 1, food = 3},
+    on_use = function (itemstack, user, pointed_thing)
+        return minetest.do_item_eat(3, "bucket:bucket_empty", itemstack, user, pointed_thing)
+    end,	
 })
+
+minetest.register_alias("petz:bucket_milk", "mobs:bucket_milk")
 
 --Turtle Shell
 minetest.register_craftitem("petz:turtle_shell", {
