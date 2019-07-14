@@ -326,6 +326,7 @@ petz.load_vars = function(self)
 	if self.type == "lamb" then
 		self.wool_color = mobkit.recall(self, "wool_color")
 		self.shaved = mobkit.recall(self, "shaved")
+		self.food_count_wool = mobkit.recall(self, "food_count_wool")
 	elseif self.type == "calf" then
 		self.milked = mobkit.recall(self, "milked")
 	elseif self.type == "pony" then
@@ -355,7 +356,6 @@ petz.load_vars = function(self)
 		self.lashing_count = mobkit.recall(self, "lashing_count")
 	end
 	self.food_count = mobkit.recall(self, "food_count")
-	self.food_count_wool = mobkit.recall(self, "food_count_wool")
 	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied")
 	self.child = mobkit.recall(self, "child")
 end
@@ -363,7 +363,7 @@ end
 function petz.set_initial_properties(self, staticdata, dtime_s)	
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
-	local texture = nil
+	local texture_no = nil
 	--minetest.chat_send_player("singleplayer", staticdata)	
 	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["owner"] then 
 		captured_mob = true		
@@ -481,7 +481,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 	elseif captured_mob == false then	
 		petz.load_vars(self) --Load memory variables		
-		texture = mobkit.recall(self, "texture")
+		--texture = mobkit.recall(self, "texture")
 	else --Captured mob
 		--Mob Specific		
 		if self.type == "lamb" then --Lamb
@@ -522,9 +522,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			end	
 			mobkit.remember(self, "saddle", self.saddle) 
 		else			
-			self.texture = static_data_table["fields"]["texture"]
-			mobkit.remember(self, "texture", self.texture) 
-			texture = self.texture
+			texture_no = static_data_table["fields"]["texture_no"]			
 		end
 		--ALL the mobs
 		self.set_vars = true
@@ -557,12 +555,12 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		if self.shaved == true then
 			shaved_string = "_shaved"
 		end
-		texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
+		texture_no = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
 	elseif self.type == "pony" then	
 	    if self.saddle then
-    		texture = "petz_pony_"..self.skin_color..".png" .. "^petz_pony_saddle.png"
+    		texture_no = "petz_pony_"..self.skin_color..".png" .. "^petz_pony_saddle.png"
     	else
-    		texture = "petz_pony_"..self.skin_color..".png"
+    		texture_no = "petz_pony_"..self.skin_color..".png"
     	end
     	if self.is_pregnant == true then
 			petz.init_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)    		
@@ -575,10 +573,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 	end
 	--minetest.chat_send_player("singleplayer", texture)	
-	if texture then
-		self.texture = texture
-		mobkit.remember(self, "texture", self.texture) 
-		petz.set_properties(self, {textures = {self.texture}})	
+	if texture_no then
+		self.texture_no = texture_no		
+		petz.set_properties(self, {textures = {self.texture_no}})	
 	end
 	--ALL the mobs
 	if self.is_pet and self.tamed then
@@ -662,14 +659,17 @@ end
 --
 
 petz.lamb_wool_regrow = function(self)	
+	if self.shaved == false then --only count if the lamb is shaved
+		return
+	end	
 	self.food_count_wool = self.food_count_wool + 1
 	mobkit.remember(self, "food_count_wool", self.food_count_wool)
 	if self.food_count_wool >= 5 then -- if lamb replaces 5x grass then it regrows wool
 		self.food_count_wool = 0
 		mobkit.remember(self, "food_count_wool", self.food_count_wool)
 		self.shaved = false
-		mobkit.remember(self, "shaved", self.shaved)	
-		local lamb_texture = "petz_lamb_"..self.wool_color..".png"		
+		mobkit.remember(self, "shaved", self.shaved)				
+		local lamb_texture = "petz_lamb_"..self.wool_color..".png"
 		if petz.settings.type_model == "mesh" then
 			petz.set_properties(self, {textures = {lamb_texture}})
 		else
@@ -695,7 +695,9 @@ petz.lamb_wool_shave = function(self, clicker)
 	end 
 	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)	
 	self.shaved = true
-	mobkit.remember(self, "shaved", self.shaved)        	
+	mobkit.remember(self, "shaved", self.shaved)        
+	self.food_count_wool = 0 --reset the food count
+	mobkit.remember(self, "food_count_wool", self.food_count_wool)	
 	petz.afraid(self, clicker:get_pos())
 end
 
@@ -786,7 +788,7 @@ petz.capture = function(self, clicker)
 		end
 	end	
 	--Save some extra values-->
-	stack_meta:set_string("texture", self.texture)	 --Save the current texture
+	stack_meta:set_string("texture_no", self.texture_no)	 --Save the current texture
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
 	local inv = clicker:get_inventory()	
 	if inv:room_for_item("main", new_stack) then

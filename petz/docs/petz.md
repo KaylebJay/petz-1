@@ -140,11 +140,11 @@ Clownfish & Tropical Fish
 - In tamagochi mode you have only to feed it, but no if it is in a fish tank.
 
 #### Wolf
-Wolf
 - Wild animal.
 - Run away from players til players attack them, then agressive.
 - Tamable in the same way as lion.
 - Preys: Lambs.
+- Wolves can be turned into puppies: Tame the wolf with a whip, then feed it with bones (until 5, configurable in petz.conf).
 
 ### Things you can with Petz
 - Configure the models as "mesh" (by default) or "cubic" (nodebox, no animated, no too laggy) via the 'petz.conf'
