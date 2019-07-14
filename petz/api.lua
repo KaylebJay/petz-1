@@ -873,7 +873,9 @@ end
 
 function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
 	if petz.is_alive(self) then
-		petz.tame_whip(self, puncher)
+		if self.is_wild == true then
+			petz.tame_whip(self, puncher)
+		end
 		if type(puncher) == 'userdata' and puncher:is_player() then		
 			petz.punch_tamagochi(self, puncher) --decrease affinity when in Tamagochi mode
 			--petz.do_punch(self, puncher, tool_capabilities)
