@@ -328,7 +328,10 @@ end
 --
 
 petz.lamb_wool_regrow = function(self)
-	self.food_count = (self.food_count or 0) + 1        
+	if self.shaved == false then --only for shaved lambs
+		return
+	end
+	self.food_count = self.food_count + 1        
 	if self.food_count >= 5 then -- if lamb replaces 5x grass then it regrows wool
 		self.food_count = 0
 		self.shaved = false
@@ -351,7 +354,8 @@ petz.lamb_wool_shave = function(self, clicker)
 	self.object:set_properties({textures = self.textures_shaved})
 	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)
 	petz.afraid_behaviour(self, clicker)
-	self.shaved = true           	
+	self.shaved = true  
+	self.food_count = 0 --important: reinit the count to 0         	
 end
 
 --
