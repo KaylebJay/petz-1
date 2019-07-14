@@ -309,18 +309,41 @@ function mobkit.isnear3d(p1,p2,thresh)
 end
 
 function mobkit.is_alive(thing)		-- thing can be luaentity or objectref.
-	if not thing then return false end
-	if type(thing) == 'table' then thing = thing.object end
+--	if not thing then return false end
+	if not mobkit.exists(thing) then return false end
+	if type(thing) == 'table' then return thing.hp > 0 end
 	if thing:is_player() then return thing:get_hp() > 0
 	else 
-		return thing:get_hp() > 100
+		local lua = thing:get_luaentity()
+		local hp = lua and lua.hp or nil
+		return hp and hp > 0
 	end
 end
 
 function mobkit.exists(thing)
 	if not thing then return false end
 	if type(thing) == 'table' then thing=thing.object end
-	if thing and thing:get_yaw() then return true end
+	if type(thing) == 'userdata' then 
+		if thing:is_player() then
+			if thing:get_look_horizontal() then return true end 
+		else
+			if thing:get_yaw() then return true end
+		end
+	end
+end
+
+function mobkit.hurt(luaent,dmg)
+	if not luaent then return false end
+	if type(luaent) == 'table' then
+		luaent.hp = (luaent.hp or 0) - dmg
+	end
+end
+
+function mobkit.heal(luaent,dmg)
+	if not luaent then return false end
+	if type(luaent) == 'table' then
+		luaent.hp = (luaent.hp or 0) + dmg
+	end
 end
 
 -- function mobkit.animate(self,anim)
@@ -675,11 +698,12 @@ function mobkit.lq_turn2pos(self,tpos)
 	mobkit.queue_low(self,func)
 end
 
-function mobkit.lq_idle(self,duration)
+function mobkit.lq_idle(self,duration,anim)
+	anim = anim or 'stand'
 	local init = true
 	local func=function(self)
 		if init then 
-			mobkit.animate(self,'stand') 
+			mobkit.animate(self,anim) 
 			init=false
 		end
 		duration = duration-self.dtime
@@ -722,13 +746,14 @@ function mobkit.lq_dumbwalk(self,dest,speed_factor)
 end
 
 -- initial velocity for jump height h, v= a*sqrt(h*2/a) ,add 20%
-function mobkit.lq_dumbjump(self,height)
+function mobkit.lq_dumbjump(self,height,anim)
+	anim = anim or 'stand'
 	local jump = true
 	local func=function(self)
 	local yaw = self.object:get_yaw()
 		if self.isonground then
 			if jump then
-				mobkit.animate(self,'stand')
+				mobkit.animate(self,anim)
 				local dir = minetest.yaw_to_dir(yaw)
 				dir.y = -mobkit.gravity*sqrt((height+0.35)*2/-mobkit.gravity)
 				self.object:set_velocity(dir)
@@ -937,16 +962,23 @@ end
 
 function mobkit.hq_runfrom(self,prty,tgtobj)
 	local init=true
+	local timer=6
 	local func = function(self)
-		if init then
-			mobkit.make_sound(self,'scared')
-			init=false
-		end
+	
 		if not mobkit.is_alive(tgtobj) then return true end
+		if init then
+			timer = timer-self.dtime
+			if timer <=0 or vector.distance(self.object:get_pos(),tgtobj:get_pos()) < 8 then
+				mobkit.make_sound(self,'scared')
+				init=false
+			end
+			return
+		end
+		
 		if mobkit.is_queue_empty_low(self) and self.isonground then
 			local pos = mobkit.get_stand_pos(self)
 			local opos = tgtobj:get_pos()
-			if vector.distance(pos,opos) < self.view_range then
+			if vector.distance(pos,opos) < self.view_range*1.1 then
 				local tpos = {x=2*pos.x - opos.x,
 								y=opos.y,
 								z=2*pos.z - opos.z}
@@ -1069,7 +1101,8 @@ function mobkit.hq_liquid_recovery(self,prty)	-- scan for nearest land
 			yaw = 0
 			radius=radius+1
 			if radius > self.view_range then	
-				self.object:set_hp(99)
+				self.hp = 0
+				return true
 			end	
 		end
 	end
@@ -1120,7 +1153,8 @@ end
 function mobkit.statfunc(self)
 	local tmptab={}
 	tmptab.memory = self.memory
-	tmptab._hp = self.object:get_hp()
+	tmptab.hp = self.hp
+	tmptab.texture_no = self.texture_no
 	return minetest.serialize(tmptab)
 end
 
@@ -1132,8 +1166,7 @@ function mobkit.actfunc(self, staticdata, dtime_s)
 	self.pos_history = {}
 	self.path_dir = 1
 	self.time_total = 0
-	if not self.memory then self.memory = {} end
-	
+
 	local sdata = minetest.deserialize(staticdata)
 	if sdata then 
 		for k,v in pairs(sdata) do
@@ -1144,9 +1177,30 @@ function mobkit.actfunc(self, staticdata, dtime_s)
 	if self.timeout and self.timeout>0 and dtime_s > self.timeout and next(self.memory)==nil then
 		self.object:remove()
 	end
+	
+	if not self.memory then 		-- this is the initial activation
+		self.memory = {} 
 		
-	self.object:set_hp(self._hp or self.max_hp)
-	self.object:set_armor_groups(self.armor_groups or {fleshy=100})
+		-- texture variation
+		if #self.textures > 1 then self.texture_no = random(#self.textures) end
+	end
+	
+	-- apply texture
+	if self.texture_no then
+		local props = {}
+		props.textures = {self.textures[self.texture_no]}
+		self.object:set_properties(props)
+	end
+
+--hp
+	self.hp = self.hp or (self.max_hp or 10)
+--armor
+	if type(self.armor_groups) ~= 'table' then
+		self.armor_groups={}
+	end
+	self.armor_groups.immortal = 1
+	self.object:set_armor_groups(self.armor_groups)
+	
 	self.oxygen = self.oxygen or self.lung_capacity
 	self.lastvelocity = {x=0,y=0,z=0}
 	self.height = self.collisionbox[5] - self.collisionbox[2]
@@ -1244,8 +1298,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 		vel = self.object:get_velocity()
 		local velocity_delta = abs(self.lastvelocity.y - vel.y)
 		if velocity_delta > mobkit.safe_velocity then
-			self.object:set_hp(self.object:get_hp() - floor((self.max_hp-100) * min(1, velocity_delta/mobkit.terminal_velocity)))
---			minetest.chat_send_all(dump(floor((self.max_hp-100) * min(1, velocity_delta/mobkit.terminal_velocity))))
+			self.hp = self.hp - floor((self.max_hp-100) * min(1, velocity_delta/mobkit.terminal_velocity))
 		end
 		
 		-- vitals: oxygen
@@ -1256,7 +1309,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 			self.oxygen = self.lung_capacity
 		end
 			
-		if self.oxygen <= 0 then self.object:set_hp(99) end	-- drown
+		if self.oxygen <= 0 then self.hp=0 end	-- drown
 
 		
 		self:sensefunc()
