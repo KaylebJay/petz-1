@@ -55,7 +55,7 @@ if petz.settings.pony_spawn then
     assert(loadfile(modpath .. "/pony_"..petz.settings.type_api..".lua"))(S)
 end
 if petz.settings.parrot_spawn then
-    assert(loadfile(modpath .. "/parrot_"..petz.settings.type_api..".lua"))(S)
+    --assert(loadfile(modpath .. "/parrot_"..petz.settings.type_api..".lua"))(S)
 end
 if petz.settings.chicken_spawn then
     assert(loadfile(modpath .. "/chicken_"..petz.settings.type_api..".lua"))(S)
