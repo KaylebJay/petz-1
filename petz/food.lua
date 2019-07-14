@@ -261,3 +261,29 @@ minetest.register_craft({
 
 minetest.register_alias("petz:cheese", "mobs:cheese")
 
+minetest.register_craftitem("petz:blueberry_cheese_cake", {
+	description = S("Blueberry Cheese Cake"),
+	inventory_image = "petz_blueberry_cake.png",	
+	on_use = minetest.item_eat(6),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "petz:blueberry_cheese_cake",
+    recipe = {"default:blueberries", "farming:wheat", "petz:cheese", "petz:chicken_egg"},
+})
+
+minetest.register_craftitem("petz:blueberry_ice_cream", {
+	description = S("Blueberry Ice Cream"),
+	inventory_image = "petz_blueberry_ice_cream.png",	
+	on_use = minetest.item_eat(7),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "petz:blueberry_ice_cream",
+    recipe = {"default:blueberries", "farming:wheat", "petz:bucket_milk", "petz:chicken_egg", "default:snow"},
+    replacements = {{"petz:bucket_milk", "bucket:bucket_empty"}},
+})
