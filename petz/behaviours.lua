@@ -22,12 +22,10 @@ function petz.herbivore_brain(self)
 		if prty < 20 and self.isinliquid then
 			mobkit.hq_liquid_recovery(self, 20)
 			return
-		end		
+		end
 		
 		local pos = self.object:get_pos() 		
-		
-
-	
+			
 		--Runaway from predator
 		if prty < 18  then		
 			local predator_list = petz.settings[self.type.."_predators"]
@@ -230,10 +228,10 @@ function petz.predator_brain(self)
 				local player = mobkit.get_nearby_player(self)					
 				if player and vector.distance(pos, player:get_pos()) < 10 then	-- if player close
 					if self.attack_player == true then --attack player				
-						mobkit.hq_warn(self, 10, player)	-- try to repel them
+						mobkit.hq_warn(self, 10, player) -- try to repel them
 					else
-						mobkit.hq_runfrom(self, 10, player)	
-					end	-- run away from player		
+						mobkit.hq_runfrom(self, 10, player)  -- run away from player
+					end	
 				end
 			end
 		end

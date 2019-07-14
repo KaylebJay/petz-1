@@ -339,6 +339,45 @@ end
 --'set_initial_properties' is call by 'on_activate' for each pet
 --
 
+petz.load_vars = function(self)
+	--Only specific mobs
+	if self.type == "lamb" then
+		self.wool_color = mobkit.recall(self, "wool_color")
+		self.shaved = mobkit.recall(self, "shaved")
+	elseif self.type == "calf" then
+		self.milked = mobkit.recall(self, "milked")
+	elseif self.type == "pony" then
+		self.skin_color = mobkit.recall(self, "skin_color")
+		self.saddle = mobkit.recall(self, "saddle")
+		self.driver = mobkit.recall(self, "driver")
+		self.is_male = mobkit.recall(self, "is_male")
+		self.is_baby = mobkit.recall(self, "is_baby")
+		self.is_pregnant = mobkit.recall(self, "is_pregnant")
+		self.pregnant_count = mobkit.recall(self, "pregnant_count")
+		self.max_speed_forward = mobkit.recall(self, "max_speed_forward")
+		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse")
+		self.accel = mobkit.recall(self, "accel")
+	elseif self.type == "puppy" then
+		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
+	elseif self.type == "wolf" then
+		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count")
+	end	
+	--All the mobs	
+	self.tamed = mobkit.recall(self, "tamed")
+	self.owner = mobkit.recall(self, "owner")
+	self.affinity = mobkit.recall(self, "affinity")
+	self.fed = mobkit.recall(self, "fed")
+	self.brushed = mobkit.recall(self, "brushed")
+	if self.is_wild == true then
+		self.lashed = mobkit.recall(self, "lashed")
+		self.lashing_count = mobkit.recall(self, "lashing_count")
+	end
+	self.food_count = mobkit.recall(self, "food_count")
+	self.food_count_wool = mobkit.recall(self, "food_count_wool")
+	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied")
+	self.child = mobkit.recall(self, "child")
+end
+
 function petz.set_initial_properties(self, staticdata, dtime_s)	
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
@@ -371,6 +410,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		elseif self.type == "puppy" then		
 			self.square_ball_attached = false
 			mobkit.remember(self, "square_ball_attached", self.square_ball_attached)
+		elseif self.type == "wolf" then		
+			self.wolf_to_puppy_count = petz.settings.wolf_to_puppy_count
+			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count)
 		elseif self.type == "pony" then		
 			if (staticdata== "baby") or (self.is_baby== true) then							
 				petz.set_properties(self, {				
@@ -470,7 +512,10 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			else
 				self.shaved = false
 			end		
-			mobkit.remember(self, "shaved", self.shaved) 					
+			mobkit.remember(self, "shaved", self.shaved) 		
+		elseif self.type == "wolf" then
+			self.wolf_to_puppy_count = static_data_table["fields"]["wolf_to_puppy_count"]	
+			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count) 
 		elseif self.type == "pony" then
 			self.is_male = static_data_table["fields"]["is_male"]
 			mobkit.remember(self, "is_male", self.is_male) 
@@ -889,6 +934,22 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 	return false
 end
 
+petz.wolf_to_puppy= function(self, player_name)
+	self.wolf_to_puppy_count = self.wolf_to_puppy_count - 1	
+	mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count)
+	if self.wolf_to_puppy_count <= 0 then
+		local pos = self.object:get_pos()
+		local puppy = minetest.add_entity(pos, "petz:puppy")
+		local puppy_entity = puppy:get_luaentity()
+		puppy_entity.tamed = true
+		mobkit.remember(puppy_entity, "tamed", puppy_entity.tamed)
+		puppy_entity.owner = player_name 
+		mobkit.remember(puppy_entity, "owner", puppy_entity.owner)
+		self.object:remove()	
+		minetest.chat_send_player(player_name , S("The wolf turn into puppy."))
+	end	
+end
+
 --
 --on_rightclick event for all the Mobs
 --
@@ -934,6 +995,8 @@ petz.on_rightclick = function(self, clicker)
                 petz.lamb_wool_regrow(self)                       
             elseif self.type == "calf" then     
                 petz.calf_milk_refill(self)
+            elseif self.type == "wolf" and wielded_item_name == "petz:bone" then
+				petz.wolf_to_puppy(self, player_name)
             end     
             petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
@@ -1234,7 +1297,7 @@ petz.tame_whip= function(self, hitter)
 		local wielded_item_name= hitter:get_wielded_item():get_name()
 		if (wielded_item_name == "petz:whip") then
     		if self.tamed == false then
-    		--The grizzly can be tamed lashed with a whip    	                	    	
+    		--The mob can be tamed lashed with a whip    	                	    	
     			self.lashing_count = self.lashing_count + 1        
 				if self.lashing_count >= petz.settings.lashing_tame_count then
 					self.lashing_count = 0
@@ -1243,7 +1306,8 @@ petz.tame_whip= function(self, hitter)
 					mobkit.remember(self, "tamed", self.tamed)
 					self.owner = hitter:get_player_name()
 					mobkit.remember(self, "owner", self.owner)
-					minetest.chat_send_player(self.owner, S("A").." "..self.type.." "..S("has been tamed."))					
+					minetest.chat_send_player(self.owner, S("A").." "..self.type.." "..S("has been tamed."))	
+					mobkit.clear_queue_high(self) -- do not attack				
 				end			
 			else
 				if (petz.settings.tamagochi_mode == true) and (self.owner == hitter:get_player_name()) then
@@ -1324,43 +1388,6 @@ petz.was_killed_by_player = function(self, puncher)
 	else
 		return false
 	end
-end
-
-petz.load_vars = function(self)
-	--Only specific mobs
-	if self.type == "lamb" then
-		self.wool_color = mobkit.recall(self, "wool_color")
-		self.shaved = mobkit.recall(self, "shaved")
-	elseif self.type == "calf" then
-		self.milked = mobkit.recall(self, "milked")
-	elseif self.type == "pony" then
-		self.skin_color = mobkit.recall(self, "skin_color")
-		self.saddle = mobkit.recall(self, "saddle")
-		self.driver = mobkit.recall(self, "driver")
-		self.is_male = mobkit.recall(self, "is_male")
-		self.is_baby = mobkit.recall(self, "is_baby")
-		self.is_pregnant = mobkit.recall(self, "is_pregnant")
-		self.pregnant_count = mobkit.recall(self, "pregnant_count")
-		self.max_speed_forward = mobkit.recall(self, "max_speed_forward")
-		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse")
-		self.accel = mobkit.recall(self, "accel")
-	elseif self.type == "puppy" then
-		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
-	end	
-	--All the mobs	
-	self.tamed = mobkit.recall(self, "tamed")
-	self.owner = mobkit.recall(self, "owner")
-	self.affinity = mobkit.recall(self, "affinity")
-	self.fed = mobkit.recall(self, "fed")
-	self.brushed = mobkit.recall(self, "brushed")
-	if self.is_wild == true then
-		self.lashed = mobkit.recall(self, "lashed")
-		self.lashing_count = mobkit.recall(self, "lashing_count")
-	end
-	self.food_count = mobkit.recall(self, "food_count")
-	self.food_count_wool = mobkit.recall(self, "food_count_wool")
-	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied")
-	self.child = mobkit.recall(self, "child")
 end
 
 petz.set_properties = function(self, properties)

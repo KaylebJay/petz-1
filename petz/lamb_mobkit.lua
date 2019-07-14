@@ -56,7 +56,8 @@ minetest.register_entity("petz:"..pet_name,{
 	--predator = "wolf",
 	follow = petz.settings.lamb_follow,
 	drops = {
-		{name = "petz:mini_lamb_chop", chance = 1, min = 1, max = 1,},		
+		{name = "petz:mini_lamb_chop", chance = 1, min = 1, max = 1,},
+		{name = "petz:bone", chance = 10, min = 1, max = 1,},
 	},
 	replace_rate = 10,
 	replace_offset = 0,

@@ -58,6 +58,7 @@ minetest.register_entity("petz:"..pet_name,{
 	drops = {
 		{name = "petz:raw_ducky", chance = 3, min = 1, max = 1,},
 		{name = "petz:ducky_feather", chance = 3, min = 1, max = 2,},
+		{name = "petz:bone", chance = 10, min = 1, max = 1,},
 	},
 	rotate = petz.settings.rotate,
 	physical = true,
