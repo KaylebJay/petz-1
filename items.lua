@@ -259,3 +259,10 @@ minetest.register_craft({
         {"default:steel_ingot", "", ""},
     }
 })
+
+--Bone
+minetest.register_craftitem("petz:bone", {
+    description = S("Bone"),
+    inventory_image = "petz_bone.png",
+    wield_image = "petz_bone.png"
+})

@@ -385,6 +385,21 @@ petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_
 	end
 end
 
+-- Wolf turn into Puppy Mechanism
+
+petz.wolf_to_puppy = function(self, player_name)
+	self.wolf_to_puppy_count = self.wolf_to_puppy_count - 1
+	if self.wolf_to_puppy_count <= 0 then
+		local pos = self.object:get_pos()
+		local puppy = minetest.add_entity(pos, "petz:puppy")
+		local puppy_entity = puppy:get_luaentity()
+		puppy_entity.tamed = true		
+		puppy_entity.owner = player_name 		
+		self.object:remove()	
+		minetest.chat_send_player(player_name , S("The wolf turn into puppy."))
+	end	
+end
+
 --
 --on_rightclick event for all the Mobs
 --
@@ -430,6 +445,8 @@ petz.on_rightclick = function(self, clicker)
                 petz.lamb_wool_regrow(self)                       
             elseif self.petz_type == "calf" then     
                 petz.calf_milk_refill(self)
+            elseif self.petz_type == "wolf" and wielded_item_name == "petz:bone" then
+				petz.wolf_to_puppy(self, player_name)			
             end     
             petz.do_sound_effect("object", self.object, "petz_"..self.petz_type.."_moaning")
             petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   

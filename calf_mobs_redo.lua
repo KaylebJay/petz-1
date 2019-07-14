@@ -59,8 +59,9 @@ mobs:register_mob("petz:"..pet_name, {
 	jump = true,
 	follow = petz.settings.calf_follow,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1,},		
+		{name = "petz:beef", chance = 1, min = 1, max = 1,},		
 		{name = "mobs:leather", chance = 2, min = 1, max = 1,},	
+		{name = "petz:bone", chance = 10, min = 1, max = 1,},
 	},
 	water_damage = 0,
 	lava_damage = 6,
