@@ -260,3 +260,44 @@ minetest.register_craft({
 })
 
 minetest.register_alias("petz:cheese", "mobs:cheese")
+
+minetest.register_craftitem("petz:blueberry_cheese_cake", {
+	description = S("Blueberry Cheese Cake"),
+	inventory_image = "petz_blueberry_cake.png",	
+	on_use = minetest.item_eat(6),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "petz:blueberry_cheese_cake",
+    recipe = {"default:blueberries", "farming:wheat", "petz:cheese", "petz:chicken_egg"},
+})
+
+minetest.register_craftitem("petz:blueberry_ice_cream", {
+	description = S("Blueberry Ice Cream"),
+	inventory_image = "petz_blueberry_ice_cream.png",	
+	on_use = minetest.item_eat(7),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "petz:blueberry_ice_cream 3",
+    recipe = {"default:blueberries", "petz:bucket_milk", "petz:chicken_egg", "default:snow", "petz:chicken_egg", "default:snow", "farming:wheat"},
+    replacements = {{"petz:bucket_milk", "bucket:bucket_empty"}},
+})
+
+minetest.register_craftitem("petz:blueberry_muffin", {
+	description = S("Blueberry Muffin"),
+	inventory_image = "petz_blueberry_muffin.png",	
+	on_use = minetest.item_eat(4),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "petz:blueberry_muffin 8",
+    recipe = {"default:blueberries", "farming:wheat", "farming:wheat", "petz:chicken_egg", "petz:chicken_egg", "default:paper", "petz:bucket_milk"},
+    replacements = {{"petz:bucket_milk", "bucket:bucket_empty"}},
+})
