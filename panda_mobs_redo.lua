@@ -64,11 +64,9 @@ mobs:register_mob("petz:"..pet_name, {
 	floats = 1,
 	follow = petz.settings.panda_follow,	
 	drops = {
-		{name = "mobs:meat_raw",
-		chance = 1,
-		min = 1,
-		max = 1,},
-		},
+		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1,},
+		{name = "petz:bone", chance = 5, min = 1, max = 1,},
+	},
 	stay_near= {
     	nodes = "petz:pet_bowl",
     	chance = 1,

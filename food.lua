@@ -67,7 +67,7 @@ minetest.register_craftitem("petz:raw_chicken", {
     wield_image = "petz_raw_chicken.png"
 })
 
-minetest.register_craftitem("petz:roasted_chickent", {
+minetest.register_craftitem("petz:roasted_chicken", {
 	description = S("Roasted Chicken"),
 	inventory_image = "petz_roasted_chicken.png",	
 	on_use = minetest.item_eat(3),
