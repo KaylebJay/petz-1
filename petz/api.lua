@@ -546,9 +546,16 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 		--ALL the mobs
 		self.set_vars = true
-		mobkit.remember(self, "set_vars", self.set_vars) 
+		mobkit.remember(self, "set_vars", self.set_vars) 		
+		if static_data_table["fields"]["tamed"] == "true" then
+			self.tamed = true
+		else
+			self.tamed = false
+		end
+		mobkit.remember(self, "tamed", self.tamed)	
 		self.owner = static_data_table["fields"]["owner"]	
 		mobkit.remember(self, "owner", self.owner) 
+		--minetest.chat_send_player("singleplayer", tostring(self.tamed))	
 		self.food_count = static_data_table["fields"]["food_count"]	
 		mobkit.remember(self, "food_count", self.food_count) 
 		if self.has_affinity == true then
@@ -799,6 +806,7 @@ petz.capture = function(self, clicker)
 		end
 	end	
 	stack_meta:set_string("texture", self.texture)	 --Save the current texture
+	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
 	local inv = clicker:get_inventory()	
 	if inv:room_for_item("main", new_stack) then
 		inv:add_item("main", new_stack)

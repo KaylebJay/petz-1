@@ -99,7 +99,6 @@ minetest.register_entity("petz:"..pet_name,{
 	end,
 	
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		
-		petz.tame_whip(self, puncher)
 		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)					
 		if self.tamed == false and self.attack_player == false then --if you hit it, will attack player
 			self.attack_player = true	
