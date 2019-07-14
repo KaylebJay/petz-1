@@ -25,6 +25,8 @@ The PetZ are here now for you!
 - They can put duck eggs from time to time.You can tame it but not give it any order.
 - You can breed ducks creating a nest with an egg inside, optionally you can leave an empty nest near a ducky so it lay an egg.
 - It drops feathers when killed.
+- You can fry the eggs.
+- Fried egg and bacon: A fried egg plus a porkchop.
 
 #### Beaver
 ![Beaver](/images/beaver.png)
@@ -62,6 +64,8 @@ In Tamagochi Mode:
 - It drops Leather when killed.
 - It can be milked with an empty bucket.
 - In order the calf to have more milk, you have to feed it or let it to eat some grass.
+- Milk is drinkable.
+- Put a bucket of milk in the oven to get Cheese.
 - Predators: Calf.
 
 #### Panda
@@ -100,6 +104,8 @@ In Tamagochi Mode:
 - Farm Animal.
 - It can lay Chicken Eggs like the duckies.
 - It drops Raw Chicken to cook it as food.
+- Get Chicken Legs with Raw Chichen.
+- Put a lot of Roasted Chicken Legs into a bucket, to get a super-delicious bucket of Chicken Legs.
 
 #### Pigeon
 ![Pigeon](/images/pigeon.png)
@@ -255,3 +261,9 @@ The beaver's home
 - Throw it to your puppy. You have to hit the target.
 - Your puppy bring back the square ball to you.
 - To get the ball, right click on it.
+
+### Recipes
+
+- Blueberry Cheese Cake = Blueberries, wheat, cheese and egg.
+- Blueberry Ice Cream: Blueberries, wheat, milk, 2 eggs and 2 snows = 3 ice creams.
+- Blueberry Muffin: Blueberries, 2 wheat, milk, 2 eggs and paper = 8 muffins.
