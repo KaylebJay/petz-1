@@ -8,7 +8,7 @@ function petz.herbivore_brain(self)
 	
 	-- Die Behaviour
 	
-	if self.object:get_hp() <= 100 then	
+	if self.hp <= 0 then	
 		petz.on_die(self)
 		return		
 	elseif self.type == "pony" and self.driver then
@@ -123,7 +123,11 @@ function petz.herbivore_brain(self)
 		
 		--Roam default			
 		if mobkit.is_queue_empty_high(self) then
-			mobkit.hq_roam(self, 0)
+			if not(self.fly) then
+				mobkit.hq_roam(self, 0)
+			else
+				mobkit.hq_wanderfly(self, 0)
+			end
 		end
 		
 	end
@@ -159,7 +163,7 @@ function petz.predator_brain(self)
 	
 	-- Die Behaviour
 	
-	if self.object:get_hp() <= 100 then	
+	if self.hp <= 0 then	
 		petz.on_die(self)
 		return	
 	end	
@@ -264,7 +268,7 @@ function petz.flying_brain(self)
 	
 	-- Die Behaviour
 	
-	if self.object:get_hp() <= 100 then	
+	if self.hp <= 0 then	
 		petz.on_die(self)
 		return	
 	end	

@@ -59,6 +59,9 @@ minetest.register_entity("petz:"..pet_name,{
 	can_be_brushed = true,
 	capture_item = "lasso",
 	follow = petz.settings.grizzly_follow,	
+	drops = {
+		{name = "petz:bone", chance = 5, min = 1, max = 1,},
+	},
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -78,7 +81,7 @@ minetest.register_entity("petz:"..pet_name,{
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
-	max_hp = 125,  		
+	max_hp = 25,  		
 	
 	attack={range=0.5, damage_groups={fleshy=3}},	
 	animation = {

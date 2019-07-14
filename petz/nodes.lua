@@ -66,6 +66,16 @@ minetest.register_craftitem("petz:kennel", {
     end,
 })
 
+minetest.register_craft({
+    type = "shaped",
+    output = 'petz:kennel',
+    recipe = {        
+        {'group:wood', 'dye:red', 'group:wood'},
+        {'group:wood', 'dye:blue', 'group:wood'},
+        {'group:stone', 'dye:yellow', 'group:stone'},
+    }
+})
+
 --Ducky Nest
 
 minetest.register_node("petz:ducky_nest", {

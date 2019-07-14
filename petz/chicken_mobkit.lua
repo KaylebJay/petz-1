@@ -53,11 +53,10 @@ minetest.register_entity("petz:"..pet_name,{
 	can_be_brushed = false,
 	capture_item = "net",
 	lay_eggs = true,
-	--predator = "wolf",
 	follow = petz.settings.chicken_follow,
 	drops = {
 		{name = "petz:raw_chicken", chance = 3, min = 1, max = 1,},
-		{name = "petz:bone", chance = 8, min = 1, max = 1,},
+		{name = "petz:bone", chance = 6, min = 1, max = 1,},
 	},
 	rotate = petz.settings.rotate,
 	physical = true,
@@ -78,7 +77,7 @@ minetest.register_entity("petz:"..pet_name,{
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
-	max_hp = 108,
+	max_hp = 8,
 	
 	attack={range=0.5, damage_groups={fleshy=3}},		
 	animation = {

@@ -222,24 +222,6 @@ petz.init_timer = function(self)
     end
 end
 
-petz.set_health = function(self, amount)	
-	local current_health = self.object:get_hp()
-    local new_health = current_health + amount
-    if new_health > 100  then
-		if new_health >= self.max_hp then
-			new_health = self.max_hp
-		else
-			new_health = new_health
-		end
-    else
-        new_health = 100
-    end
-    minetest.chat_send_player(self.owner, tostring(new_health))
-    self.object:set_hp(new_health)
-    petz.update_nametag(self)
-    return new_health
-end
-
 local function round(x, n)
 	return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
 end
@@ -285,8 +267,8 @@ petz.timer = function(self)
             if self.fed == false then
 				minetest.chat_send_player(self.owner, "no alimentado")
 				local damage_amount = - petz.settings.tamagochi_hunger_damage
-				local new_health = petz.set_health(self, damage_amount) 
-                if (new_health > 100)  and (self.has_affinity == true) then
+				mobkit.hurt(self, damage_amount)
+                if (self.hp > 0)  and (self.has_affinity == true) then
 					petz.set_affinity(self, false, 33)
 				end                
             else
@@ -314,7 +296,7 @@ petz.timer = function(self)
                 end
             end            
             --If the pet starves to death            
-            if self.object:get_hp() <= 100 then
+            if self.hp <= 0 then
                 minetest.chat_send_player(self.owner, S("Your").. " "..self.type.." "..S("has starved to death!!!"))
                 self.init_timer  = false -- no more timing
             --I the pet get bored of you
@@ -466,12 +448,12 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.is_baby = false
 			mobkit.remember(self, "is_baby", self.is_baby)
 		else
-			texture = self.object:get_properties().textures
-			if #texture > 1 then
-				texture = texture[math.random(#texture)]
-			else
-				texture = texture[1]
-			end      
+			--texture = self.object:get_properties().textures
+			--if #texture > 1 then
+				--texture = texture[math.random(#texture)]
+			--else
+				--texture = texture[1]
+			--end      
 		end
 		--ALL the mobs
 		self.set_vars = true
@@ -555,7 +537,6 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		mobkit.remember(self, "tamed", self.tamed)	
 		self.owner = static_data_table["fields"]["owner"]	
 		mobkit.remember(self, "owner", self.owner) 
-		--minetest.chat_send_player("singleplayer", tostring(self.tamed))	
 		self.food_count = static_data_table["fields"]["food_count"]	
 		mobkit.remember(self, "food_count", self.food_count) 
 		if self.has_affinity == true then
@@ -756,10 +737,9 @@ function petz:register_egg(pet_name, desc, inv_img, no_creative)
 					ent.owner = placer:get_player_name()
 					mobkit.remember(ent, "owner", ent.owner)
 					ent.tamed = true
-					mobkit.remember(ent, "tamed", true)
+					mobkit.remember(ent, "tamed", ent.tamed)
 				end
-				-- since mob is unique we remove egg once spawned
-				itemstack:take_item()
+				itemstack:take_item() -- since mob is unique we remove egg once spawned
 			end
 			return itemstack
 		end,
@@ -805,6 +785,7 @@ petz.capture = function(self, clicker)
 			--minetest.chat_send_player("singleplayer", sett)				
 		end
 	end	
+	--Save some extra values-->
 	stack_meta:set_string("texture", self.texture)	 --Save the current texture
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
 	local inv = clicker:get_inventory()	
@@ -834,25 +815,13 @@ end
 petz.do_punch = function(self, puncher, tool_capabilities)
 	local puncher_pos = puncher:get_pos()
 	local petz_pos = self.object:get_pos()
-	if vector.distance(puncher_pos, petz_pos) <= 5 then	-- a way to decrease punch range without dependences
-		local petz_hp = self.object:get_hp()
+	if vector.distance(puncher_pos, petz_pos) <= 5 then	-- a way to decrease punch range without dependences		
 		--minetest.chat_send_player("singleplayer", "OLD hp : "..tostring(petz_hp))	
 		local weapon_damage = petz.calculate_damage(tool_capabilities)
 		--minetest.chat_send_player("singleplayer", "damage points: ".. weapon_damage)	
-		local new_hp = petz_hp - weapon_damage
+		mobkit.hurt(self, weapon_damage)
 		--minetest.chat_send_player("singleplayer", "NEW hp : "..tostring(new_hp))	
-		self.object:set_hp(new_hp)
 	end
-end
-
-petz.is_alive = function(thing) -- thing can be luaentity or objectref.
-	if not thing then
-		return false
-	end
-	if type(thing) == 'table' then
-		thing = thing.object
-	end
-	return thing:get_hp() > 0	
 end
 
 petz.kick_back= function(self, dir) 
@@ -880,18 +849,18 @@ petz.afraid= function(self, pos)
 end
 
 function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
-	if petz.is_alive(self) then
+	if mobkit.is_alive(self) then
 		if self.is_wild == true then
 			petz.tame_whip(self, puncher)
 		end
 		if type(puncher) == 'userdata' and puncher:is_player() then		
 			petz.punch_tamagochi(self, puncher) --decrease affinity when in Tamagochi mode
 			--petz.do_punch(self, puncher, tool_capabilities)
+			mobkit.hurt(self,tool_capabilities.damage_groups.fleshy or 1)
 			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)							
 		end		
 		petz.kick_back(self, dir) -- kickback	
 		petz.do_sound_effect("object", self.object, "petz_default_punch")
-		--minetest.chat_send_player("singleplayer", "hola")
 	end
 end
 
@@ -905,14 +874,12 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 		if creative_mode == false then -- if not in creative then take item
 			wielded_item:take_item()
 			clicker:set_wielded_item(wielded_item)
-		end
-		local pet_hp = self.object:get_hp()			
-		pet_hp = pet_hp + 4 -- increase health
-		if pet_hp >= self.max_hp then
-			pet_hp = self.max_hp
-			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", self.type, tostring(pet_hp)))							
-		end
-		self.object:set_hp(pet_hp)
+		end		
+		mobkit.heal(self, 4)				
+		if self.hp >= self.max_hp then
+			self.hp = self.max_hp
+			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", self.type, tostring(self.hp)))							
+		end		
 		if self.tamed== true then
 			petz.update_nametag(self)
 		end
@@ -1389,7 +1356,7 @@ petz.create_dam = function(self, pos)
 end
 
 petz.was_killed_by_player = function(self, puncher)	
-	if self.object:get_hp() <= 100 then
+	if self.hp <= 0 then
 		if puncher:is_player() then
 			return true
 		else
@@ -1401,13 +1368,11 @@ petz.was_killed_by_player = function(self, puncher)
 end
 
 petz.set_properties = function(self, properties)
-    local hp = self.object:get_hp()
-	self.object:set_properties(properties) 		
-	self.object:set_hp(hp)
+	self.object:set_properties(properties) 			
 end
 
 petz.update_nametag = function(self)
-	self.object:set_nametag_attributes({text = "♥ "..tostring(self.object:get_hp()).."/"..tostring(self.max_hp),})
+	self.object:set_nametag_attributes({text = "♥ "..tostring(self.hp).."/"..tostring(self.max_hp),})
 end
 
 petz.delete_nametag = function(self)

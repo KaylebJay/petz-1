@@ -54,7 +54,6 @@ minetest.register_entity("petz:"..pet_name, {
 	give_orders = true,
 	can_be_brushed = true,
 	capture_item = "lasso",
-	--predator = "wolf",
 	follow = petz.settings.puppy_follow,
 	rotate = petz.settings.rotate,
 	physical = true,
@@ -74,7 +73,7 @@ minetest.register_entity("petz:"..pet_name, {
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
-	max_hp = 108,
+	max_hp = 8,
 	makes_footstep_sound = false,
 		
 	attack={range=0.5, damage_groups={fleshy=3}},	

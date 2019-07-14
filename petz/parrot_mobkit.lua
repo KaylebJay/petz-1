@@ -54,6 +54,8 @@ minetest.register_entity("petz:"..pet_name,{
 	type = "parrot",	
 	init_timer = true,	
 	is_pet = true,
+	fly = true,
+	max_height = 5,
 	has_affinity = true,
 	is_wild = false,
 	give_orders = true,
@@ -81,7 +83,7 @@ minetest.register_entity("petz:"..pet_name,{
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
-	max_hp = 108,
+	max_hp = 8,
 	
 	attack={range=0.5, damage_groups={fleshy=3}},	
 	animation = {

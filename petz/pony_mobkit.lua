@@ -70,8 +70,10 @@ minetest.register_entity("petz:"..pet_name, {
 	driver_attach_at = {x = -0.0325, y = -0.125, z = -0.2},
 	driver_eye_offset = {x = 0, y = 0, z = 0},	
 	pregnant_count = 5,
-	--predator = "wolf",
 	follow = petz.settings.pony_follow,
+	drops = {
+		{name = "petz:bone", chance = 6, min = 1, max = 1,},
+	},
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -92,8 +94,8 @@ minetest.register_entity("petz:"..pet_name, {
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
-	max_hp = 108,
-	makes_footstep_sound = false,
+	max_hp = 15,
+	makes_footstep_sound = false,	
 		
 	attack={range=0.5, damage_groups={fleshy=3}},	
 	
