@@ -18,6 +18,40 @@ minetest.register_craftitem("petz:chicken_egg", {
     groups = {flammable = 2, food = 2},
 })
 
+minetest.register_craftitem("petz:fried_egg", {
+	description = S("Fried Egg"),
+	inventory_image = "petz_fried_egg.png",	
+	on_use = minetest.item_eat(4),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:fried_egg",
+	recipe = "petz:ducky_egg",
+	cooktime = 2,
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:fried_egg",
+	recipe = "petz:chicken_egg",
+	cooktime = 2,
+})
+
+minetest.register_craftitem("petz:fried_egg_bacon", {
+	description = S("Fried Egg and Bacon"),
+	inventory_image = "petz_fried_egg_bacon.png",	
+	on_use = minetest.item_eat(6),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "petz:fried_egg_bacon",
+    recipe = {"petz:fried_egg", "petz:roasted_porkchop"},
+})
+
 --Frog Leg and Roasted Frog Leg
 minetest.register_craftitem("petz:frog_leg", {
     description = S("Frog Leg"),
@@ -65,6 +99,50 @@ minetest.register_craftitem("petz:raw_chicken", {
     description = S("Raw Chicken"),
     inventory_image = "petz_raw_chicken.png",
     wield_image = "petz_raw_chicken.png"
+})
+
+minetest.register_craftitem("petz:chicken_legs", {
+    description = S("Chicken Legs"),
+    inventory_image = "petz_chicken_legs.png",
+    wield_image = "petz_chicken_legs.png",
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "petz:chicken_legs",
+    recipe = {"petz:raw_chicken"},
+})
+
+minetest.register_craftitem("petz:roasted_chicken_legs", {
+	description = S("Roasted Chicken Legs"),
+	inventory_image = "petz_roasted_chicken_legs.png",	
+	on_use = minetest.item_eat(5),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craftitem("petz:chicken_legs_bucket", {
+	description = S("Chicken Legs Bucket"),
+	inventory_image = "petz_chicken_legs_bucket.png",
+	stack_max = 1,
+	on_use = function (itemstack, user, pointed_thing)
+        return minetest.do_item_eat(12, "bucket:bucket_empty", itemstack, user, pointed_thing)
+    end,	
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "petz:chicken_legs_bucket",
+    recipe = {"petz:roasted_chicken_legs", "petz:roasted_chicken_legs",
+				"petz:roasted_chicken_legs", "bucket:bucket_empty"     
+    },
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:roasted_chicken_legs",
+	recipe = "petz:chicken_legs",
+	cooktime = 3,
 })
 
 minetest.register_craftitem("petz:roasted_chicken", {
@@ -164,3 +242,21 @@ minetest.register_craft({
 	recipe = "petz:raw_ducky",
 	cooktime = 2,
 })
+
+--Cheese (from Milk)
+minetest.register_craftitem("petz:cheese", {
+	description = S("Cheese"),
+	inventory_image = "petz_cheese.png",	
+	on_use = minetest.item_eat(5),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:cheese",
+	recipe = "petz:bucket_milk",
+	cooktime = 4,
+	replacements = {{ "petz:bucket_milk", "bucket:bucket_empty"}},
+})
+
+minetest.register_alias("petz:cheese", "mobs:cheese")
