@@ -119,7 +119,7 @@ mobs:register_egg("petz:wolf", S("Wolf"), "petz_spawnegg_wolf.png", 0)
 
 mobs:spawn({
 	name = "petz:wolf",
-	nodes = {"default:dirt_with_dry_grass"},
+	nodes = {"default:dirt_with_dry_grass", "default:dirt_with_grass"},
 	--neighbors = {"group:grass"},
 	min_light = 14,
 	interval = 90,
