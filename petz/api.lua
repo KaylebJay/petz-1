@@ -480,17 +480,19 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "lashing_count", self.lashing_count)	
 		end
 	elseif captured_mob == false then	
-		petz.load_vars(self) --Load memory variables		
-		--texture = mobkit.recall(self, "texture")
-	else --Captured mob
+		petz.load_vars(self) --Load memory variables				
+	--
+	--CAPTURED MOBS
+	--
+	else 
 		--Mob Specific		
 		if self.type == "lamb" then --Lamb
 			self.wool_color = static_data_table["fields"]["wool_color"]		
 			mobkit.remember(self, "wool_color", self.wool_color) 
 			self.food_count_wool = static_data_table["fields"]["food_count_wool"]		
 			mobkit.remember(self, "food_count_wool", self.food_count_wool) 
-			if static_data_table["fields"]["shaved"] == true then
-				self.shaved = true
+			if static_data_table["fields"]["shaved"] == "true" then
+				self.shaved = true				
 			else
 				self.shaved = false
 			end		
@@ -790,6 +792,9 @@ petz.capture = function(self, clicker)
 	--Save some extra values-->
 	stack_meta:set_string("texture_no", self.texture_no)	 --Save the current texture
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
+	if self.type == 'lamb' then
+		stack_meta:set_string("shaved", tostring(self.shaved))	 --Save if shaved
+	end
 	local inv = clicker:get_inventory()	
 	if inv:room_for_item("main", new_stack) then
 		inv:add_item("main", new_stack)
@@ -798,7 +803,6 @@ petz.capture = function(self, clicker)
 	end
 	self.object:remove()
 end
-
 
 --
 --on_punch event for all the Mobs
