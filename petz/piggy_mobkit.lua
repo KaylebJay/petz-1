@@ -5,41 +5,11 @@ local S = ...
 
 local pet_name = "piggy"
 table.insert(petz.mobs_list, "piggy")
-local mesh = nil
-local fixed = {}
-local textures
 local scale_model = 0.85
 petz.piggy = {}
-local collisionbox = {}
-
-if petz.settings.type_model == "cubic" then
-	local node_name = "petz:"..pet_name.."_block"
-	fixed = {
-			{-0.1875, -0.5, 0.3125, -0.0625, -0.25, 0.4375}, -- back_right_leg
-			{-0.1875, -0.5, -0.125, -0.0625, -0.25, 7.45058e-09}, -- front_right_leg
-			{0.0625, -0.5, -0.125, 0.1875, -0.25, 1.11759e-08}, -- front_left_leg
-			{0.0625, -0.5, 0.3125, 0.1875, -0.25, 0.4375}, -- back_left_leg
-			{-0.1875, -0.25, -0.1875, 0.1875, 0.0625, 0.375}, -- body
-			{-0.1875, -0.0625, -0.3125, 0.1875, 0.375, 0.0625}, -- head
-			{0, -0.0625, 0.375, 0.0624999, -6.70552e-08, 0.4375}, -- top_tail
-			{-0.3125, 0.1875, -0.1875, -0.1875, 0.3125, -0.0625}, -- right_ear
-			{0, -0.1875, 0.375, 0.0625, -0.125, 0.4375}, -- bottom_tail
-			{0.1875, 0.1875, -0.1875, 0.3125, 0.3125, -0.0625}, -- left_ear
-			{-0.0625, -0.125, 0.375, -2.98023e-08, -0.0625001, 0.4375}, -- middle_tail
-			{-0.125, 0, -0.375, 0.125, 0.1875, -0.3125}, -- snout
-	}
-	petz.piggy.tiles = {
-		"petz_piggy_top.png", "petz_piggy_bottom.png", "petz_piggy_right.png",
-		"petz_piggy_left.png", "petz_piggy_back.png", "petz_piggy_front.png"
-	}
-	petz.register_cubic(node_name, fixed, petz.piggy.tiles)		
-	textures= {"petz:piggy_block"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
-else
-	mesh = 'petz_piggy.b3d'	
-	textures = {"petz_piggy.png"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, 0.35, 0.28}
-end
+local mesh = 'petz_piggy.b3d'	
+local textures = {"petz_piggy.png"}
+local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, 0.35, 0.28}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	

@@ -567,6 +567,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	end		
 	--Custom textures
 	if captured_mob == true or self.type == "lamb" or self.type == "pony" then
+		local texture
 		--Mob Specific
 		--Lamb
 		if self.type == "lamb" then

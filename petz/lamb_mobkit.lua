@@ -5,43 +5,15 @@ local S = ...
 
 local pet_name = "lamb"
 table.insert(petz.mobs_list, pet_name)
-local mesh = nil
-local fixed = {}
-local textures
 local scale_model = 1.7
 petz.lamb = {}
-local collisionbox = {}
-
-if petz.settings.type_model == "cubic" then
-	local node_name = "petz:"..pet_name.."_block"
-	fixed = {
-		{-0.125, -0.5, 0.0625, -0.0625, -0.375, 0.125}, -- back_right_leg
-		{-0.125, -0.5, -0.125, -0.0625, -0.375, -0.0625}, -- front_right_leg
-		{0, -0.5, -0.125, 0.0625, -0.375, -0.0625}, -- front_left_leg
-		{0, -0.5, 0.0625, 0.0625, -0.375, 0.125}, -- back_left_leg
-		{-0.125, -0.375, -0.125, 0.0625, -0.25, 0.125}, -- body
-		{-0.125, -0.3125, -0.25, 0.0625, -0.125, -0.0625}, -- head
-		{-0.0625, -0.3125, 0.125, 0.0, -0.25, 0.1875}, -- tail
-		{-0.1875, -0.1875, -0.1875, -0.125, -0.125, -0.125}, -- right_ear
-		{0.0625, -0.1875, -0.1875, 0.125, -0.125, -0.125}, -- left_ear
-	}
-	petz.lamb.tiles = {
-		"petz_lamb_top.png", "petz_lamb_bottom.png", "petz_lamb_right.png",
-		"petz_lamb_left.png", "petz_lamb_back.png", "petz_lamb_front.png"
-	}
-	petz.lamb.tiles_shaved = {
-		"petz_lamb_shaved_top.png", "petz_lamb_shaved_bottom.png", "petz_lamb_shaved_right.png",
-		"petz_lamb_shaved_left.png", "petz_lamb_shaved_back.png", "petz_lamb_shaved_front.png"
-	}
-	petz.register_cubic(node_name, fixed, petz.lamb.tiles)		
-	textures= {"petz:lamb_block"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
-else
-	mesh = 'petz_lamb.b3d'	
-	textures = {"petz_lamb_white.png", "petz_lamb_grey.png", "petz_lamb_dark_grey.png", "petz_lamb_brown.png"}
-	--petz.lamb.textures_shaved = {"petz_lamb_shaved_white.png"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
+mesh = 'petz_lamb.b3d'	
+local wool_colors = {"white", "grey", "dark_grey", "brown"}
+local textures = {}
+for n = 1, #wool_colors do
+	textures[n] = "petz_"..pet_name.."_"..wool_colors[n]..".png"
 end
+local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
@@ -54,7 +26,6 @@ minetest.register_entity("petz:"..pet_name,{
 	can_be_brushed = true,
 	capture_item = "lasso",
 	follow = petz.settings.lamb_follow,
-	wool_colors = {"white", "grey", "dark_grey", "brown"},
 	drops = {
 		{name = "petz:mini_lamb_chop", chance = 1, min = 1, max = 1,},
 		{name = "petz:bone", chance = 5, min = 1, max = 1,},
@@ -73,6 +44,7 @@ minetest.register_entity("petz:"..pet_name,{
 	visual = petz.settings.visual,
 	mesh = mesh,
 	textures = textures,
+	wool_colors = wool_colors,
 	visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model},
 	static_save = true,
 	on_step = mobkit.stepfunc,	-- required

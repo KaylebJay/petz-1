@@ -2,52 +2,10 @@ local S = ...
 
 local pet_name = "parrot"
 table.insert(petz.mobs_list, pet_name)
-local mesh = nil
 local scale_model = 0.7
-local textures = {}
-local collisionbox = {}
-
-if petz.settings.type_model == "cubic" then
-	local node_name = "petz:"..pet_name.."_block"
-	fixed = {
-		{-0.0625, -0.375, -0.1875, 0.125, -0.0625, -2.98023e-08}, -- bottom_body
-		{-0.0625, -0.5, -0.125, 2.79397e-08, -0.375, -0.0625}, -- right_leg
-		{0.0625, -0.5, -0.125, 0.125, -0.375, -0.0625}, -- left_leg
-		{-0.0625, -0.0625, -0.125, 0.125, 0.0625, -1.49012e-08}, -- bottom_head
-		{0, -0.0625, -0.25, 0.0625, 0.0625, -0.125}, -- beak
-		{-0.0625, 0.0625, -0.1875, 0.125, 0.125, 1.49012e-08}, -- top_head
-		{0, 0.125, -0.125, 0.0625, 0.1875, 0}, -- bottom_crest
-		{0, 0.1875, -0.125, 0.0625, 0.25, -0.0625}, -- top_crest
-		{0, 0.25, -0.0625, 0.0625, 0.3125, -2.04891e-08}, -- 01_crest
-		{0, 0.1875, 0, 0.0625, 0.25, 0.0625}, -- 02_crest
-		{0, 0.25, 0.0625, 0.0625, 0.3125, 0.125}, -- 03_crest
-		{-0.125, -0.25, -0.1875, -0.0624999, -0.0624999, 3.72529e-09}, -- top_right_wing
-		{-0.125, -0.25, 0, -0.0625, -0.125, 0.0625}, -- back_right_wing
-		{-0.125, -0.3125, -0.125, -0.0625, -0.25, -0.0625}, -- front_right_wing
-		{-0.125, -0.375, -0.0625, -0.0625, -0.25, 0.125}, -- bottom_right_wing
-		{0.125, -0.25, -0.1875, 0.1875, -0.0625, 4.47035e-08}, -- top_left_wing
-		{0.125, -0.25, 0, 0.1875, -0.125, 0.0624999}, -- back_left_wing
-		{0.125, -0.3125, -0.125, 0.1875, -0.25, -0.0625}, -- front_left_wing
-		{0.125, -0.375, -0.0625, 0.1875, -0.25, 0.125}, -- bottom_left_wing
-		{-0.0625, -0.4375, 0, 0.125, -0.375, 0.125}, -- top_tail
-		{-0.0625, -0.5, 0.0625, 0.125, -0.4375, 0.1875}, -- bottom_tail
-	}
-	tiles = {
-		"petz_parrot_top.png",
-		"petz_parrot_bottom.png",
-		"petz_parrot_right.png",
-		"petz_parrot_left.png",
-		"petz_parrot_back.png",
-		"petz_parrot_front.png"
-	}
-	petz.register_cubic(node_name, fixed, tiles)		
-	textures= {"petz:parrot_block"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
-else
-	mesh = 'petz_parrot.b3d'	
-	textures= {"petz_parrot.png", "petz_parrot2.png", "petz_parrot3.png"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, 0.35, 0.28}
-end
+local mesh = 'petz_parrot.b3d'	
+local textures= {"petz_parrot.png", "petz_parrot2.png", "petz_parrot3.png"}
+local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, 0.35, 0.28}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	

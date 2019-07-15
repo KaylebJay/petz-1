@@ -5,42 +5,10 @@ local S = ...
 
 local pet_name = "ducky"
 table.insert(petz.mobs_list, pet_name)
-local mesh = nil
 local scale_model = 1.3
-local textures = {}
-local collisionbox = {}
-
-if petz.settings.type_model == "cubic" then
-	local node_name = "petz:"..pet_name.."_block"
-	fixed = {
-		{-0.125, -0.5, -0.0625, -0.0625, -0.4375, 0.0}, -- right_leg
-		{0, -0.5, -0.0625, 0.0625, -0.4375, 0.0}, -- left_leg
-		{-0.125, -0.4375, -0.125, 0.0625, -0.25, 0.0625}, -- body
-		{-0.125, -0.3125, 0.0625, 0.0625, -0.25, 0.125}, -- tail_top
-		{-0.125, -0.25, -0.1875, 0.0625, -0.1875, -0.125}, -- beak
-		{-0.125, -0.25, -0.125, 0.0625, -0.0625, 9.68575e-08}, -- head
-		{0.0625, -0.3125, -0.0625, 0.125, -0.25, 0.0625}, -- left_wing_top
-		{0.0625, -0.375, -0.0625, 0.125, -0.3125, 0}, -- left_wing_bottom
-		{-0.1875, -0.3125, -0.0625, -0.125, -0.25, 0.0625}, -- right_wing_top
-		{-0.1875, -0.375, -0.0625, -0.125, -0.3125, 0}, -- right_wing_bottom
-		{-0.0625, -0.375, 0.0625, -3.35276e-08, -0.3125, 0.125}, -- tail_bottom
-	}
-	tiles = {
-		"petz_ducky_top.png",
-		"petz_ducky_bottom.png",
-		"petz_ducky_right.png",
-		"petz_ducky_left.png",
-		"petz_ducky_back.png",
-		"petz_ducky_front.png"
-	}
-	petz.register_cubic(node_name, fixed, tiles)		
-	textures= {"petz:ducky_block"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
-else
-	mesh = 'petz_ducky.b3d'	
-	textures= {"petz_ducky.png", "petz_ducky2.png", "petz_ducky3.png"}	
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
-end
+local mesh = 'petz_ducky.b3d'	
+local textures= {"petz_ducky.png", "petz_ducky2.png", "petz_ducky3.png"}	
+local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	

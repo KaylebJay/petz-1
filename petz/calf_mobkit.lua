@@ -5,37 +5,11 @@ local S = ...
 
 local pet_name = "calf"
 table.insert(petz.mobs_list, pet_name)
-local mesh = nil
-local fixed = {}
-local textures
 local scale_model = 3.0
 petz.calf = {}
-local collisionbox = {}
-
-if petz.settings.type_model == "cubic" then
-	local node_name = "petz:"..pet_name.."_block"
-	fixed = {
-		{-0.125, -0.5, 0.125, -0.0625, -0.375, 0.1875}, -- back_right_leg
-		{-0.125, -0.5, -0.125, -0.0625, -0.375, -0.0625}, -- front_right_leg
-		{0, -0.5, -0.125, 0.0625, -0.375, -0.0625}, -- front_left_leg
-		{0, -0.5, 0.125, 0.0625, -0.375, 0.1875}, -- back_left_leg
-		{-0.125, -0.375, -0.125, 0.0625, -0.1875, 0.1875}, -- body
-		{-0.125, -0.25, -0.1875, 0.0625, -0.0625001, 0.0}, -- head
-		{-0.0625, -0.3125, 0.1875, 0.0, -0.1875, 0.25}, -- tail
-		{0.0625, -0.125, -0.125, 0.125, 0.0, -0.0625}, -- left_horn
-		{-0.1875, -0.125, -0.125, -0.125, 0.0, -0.0625}, -- right_horn
-	}
-	petz.calf.tiles = {
-		"petz_calf_top.png", "petz_calf_bottom.png", "petz_calf_right.png",
-		"petz_calf_left.png", "petz_calf_back.png", "petz_calf_front.png"
-	}
-	petz.register_cubic(node_name, fixed, petz.calf.tiles)			
-	collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
-else
-	mesh = 'petz_calf.b3d'	
-	textures= {"petz_calf.png", "petz_calf2.png", "petz_calf3.png"}	
-	collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
-end
+local mesh = 'petz_calf.b3d'	
+local textures= {"petz_calf.png", "petz_calf2.png", "petz_calf3.png"}	
+local collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	

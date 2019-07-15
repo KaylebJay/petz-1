@@ -5,42 +5,10 @@ local S = ...
 
 local pet_name = "chicken"
 table.insert(petz.mobs_list, pet_name)
-local mesh = nil
 local scale_model = 1.4
-local textures = {}
-local collisionbox = {}
-
-if petz.settings.type_model == "cubic" then
-	local node_name = "petz:"..pet_name.."_block"
-	fixed = {
-		{-0.125, -0.5, -0.0625, -0.0625, -0.4375, 7.45058e-09}, -- right_leg
-		{0, -0.5, -0.0625, 0.0625, -0.4375, 1.86265e-08}, -- left_leg
-		{-0.125, -0.4375, -0.125, 0.0625, -0.25, 0.0625}, -- body
-		{-0.0625, -0.3125, 0.0625, 9.31323e-09, -0.25, 0.125}, -- tail
-		{-0.0625, -0.25, -0.1875, 1.11759e-08, -0.1875, -0.125}, -- beak
-		{-0.0625, -0.125, -0.125, -3.72529e-09, -0.0625, -0.0625}, -- crest
-		{-0.125, -0.25, -0.125, 0.0625, -0.125, 9.68575e-08}, -- head
-		{0.0625, -0.3125, -0.0625, 0.125, -0.25, 0.0625}, -- left_wing_top
-		{0.0625, -0.375, -0.0625, 0.125, -0.3125, 0}, -- left_wing_bottom
-		{-0.1875, -0.3125, -0.0625, -0.125, -0.25, 0.0625}, -- right_wing_top
-		{-0.1875, -0.375, -0.0625, -0.125, -0.3125, 0}, -- right_wing_bottom
-	}
-	tiles = {
-		"petz_chicken_top.png",
-		"petz_chicken_bottom.png",
-		"petz_chicken_right.png",
-		"petz_chicken_left.png",
-		"petz_chicken_back.png",
-		"petz_chicken_front.png"
-	}
-	petz.register_cubic(node_name, fixed, tiles)		
-	textures= {"petz:chicken_block"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
-else
-	mesh = 'petz_chicken.b3d'	
-	textures= {"petz_chicken.png", "petz_chicken2.png", "petz_chicken3.png"}	
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
-end
+local mesh = 'petz_chicken.b3d'	
+local textures= {"petz_chicken.png", "petz_chicken2.png", "petz_chicken3.png"}	
+local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	

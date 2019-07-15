@@ -5,53 +5,20 @@ local S = ...
 
 local pet_name = "pony"
 table.insert(petz.mobs_list, pet_name)
-local mesh = nil
-local textures = {}
-local textures_baby = {}
-local fixed = {}
 local scale_model = 2.2
 local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model}
 local scale_baby = 0.5
 local visual_size_baby = {x=petz.settings.visual_size.x*scale_model*scale_baby, y=petz.settings.visual_size.y*scale_model*scale_baby}
 petz.pony = {}
-local collisionbox = {}
-local collisionbox_baby = {-0.5*scale_baby, -0.75*scale_model*scale_baby, -0.25, 0.375, -0.375, 0.375}
-
-if petz.settings.type_model == "cubic" then
-	local node_name = "petz:"..pet_name.."_block"
-	fixed = {
-		{-0.0625, -0.0625, -0.375, 0.125, 0.125, -0.0625}, -- head
-		{0.0625, -0.5, -0.1875, 0.125, -0.3125, -0.125}, -- front_left_leg
-		{-0.0625, -0.3125, -0.1875, 0.125, -0.125, 0.25}, -- body
-		{-0.0625, -0.125, -0.1875, 0.125, -0.0625, -0.0625}, -- neck
-		{-0.0625, -0.5, -0.1875, -1.49012e-08, -0.3125, -0.125}, -- front_right_leg
-		{0.0625, -0.5, 0.1875, 0.125, -0.3125, 0.25}, -- back_left_leg
-		{-0.0625, 0.125, -0.125, 5.58794e-09, 0.25, -0.0625}, -- right_ear
-		{0.0625, 0.125, -0.125, 0.125, 0.25, -0.0625}, -- left_ear
-		{-0.0625, -0.5, 0.1875, 0, -0.3125, 0.25}, -- back_right_leg
-		{0, -0.1875, 0.25, 0.0625, -0.125, 0.3125}, -- top_tail
-		{0, -0.25, 0.3125, 0.0625, -0.1875, 0.375}, -- middle_tail
-		{0, 0.125, -0.125, 0.0625, 0.1875, -0.0625}, -- mane_top
-		{0, -0.125, -0.0625, 0.0625, 0.125, -6.14673e-08}, -- mane_bottom
-		{0, -0.3125, 0.3125, 0.0625, -0.25, 0.375}, -- bottom_tail
-	}
-	petz.pony.tiles = {
-		"petz_pony_top.png", "petz_pony_bottom.png", "petz_pony_right.png",
-		"petz_pony_left.png", "petz_pony_back.png", "petz_pony_front.png"
-	}
-	petz.pony.tiles_saddle = {
-		"petz_pony_top_saddle.png", "petz_pony_bottom.png", "petz_pony_right_saddle.png",
-		"petz_pony_left_saddle.png", "petz_pony_back.png", "petz_pony_front.png"
-	}	
-	petz.register_cubic(node_name, fixed, petz.pony.tiles)			
-	collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
-else
-	mesh = 'petz_pony.b3d'	
-	textures = {"petz_pony_brown.png", "petz_pony_white.png", "petz_pony_yellow.png", "petz_pony_white_dotted.png",
-	"petz_gray_dotted.png", "petz_pony_black.png"}	
-	textures_baby = {"petz_pony_baby.png"}	
-	collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
+local mesh = 'petz_pony.b3d'	
+local skin_colors = {"brown", "white", "yellow", "white_dotted", "gray_dotted", "black"}
+local textures = {}
+for n = 1, #skin_colors do
+	textures[n] = "petz_"..pet_name.."_"..skin_colors[n]..".png"
 end
+local textures_baby = {"petz_pony_baby.png"}	
+local collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
+local collisionbox_baby = {-0.5*scale_baby, -0.75*scale_model*scale_baby, -0.25, 0.375, -0.375, 0.375}
 
 minetest.register_entity("petz:"..pet_name, {          
 	--Petz specifics	
@@ -63,7 +30,6 @@ minetest.register_entity("petz:"..pet_name, {
 	give_orders = true,
 	can_be_brushed = true,
 	capture_item = "lasso",
-	skin_colors = {"brown", "white", "yellow", "white_dotted", "gray_dotted", "black"},
 	--Pony specific
 	terrain_type = 3,
 	scale_model = scale_model,
@@ -85,6 +51,7 @@ minetest.register_entity("petz:"..pet_name, {
 	visual = petz.settings.visual,
 	mesh = mesh,
 	textures = textures,
+	skin_colors = skin_colors,
 	visual_size = visual_size,
 	visual_size_baby = visual_size_baby,
 	static_save = true,
