@@ -370,7 +370,6 @@ petz.load_vars = function(self)
 	elseif self.type == "calf" then
 		self.milked = mobkit.recall(self, "milked")
 	elseif self.type == "pony" then
-		self.skin_color = mobkit.recall(self, "skin_color")
 		self.saddle = mobkit.recall(self, "saddle")
 		self.driver = mobkit.recall(self, "driver")
 		self.is_male = mobkit.recall(self, "is_male")
@@ -415,13 +414,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		if self.type == "lamb" and petz.settings.type_model == "mesh" then --set a random color 
 			local random_number = math.random(1, 15)
 			if random_number == 1 then
-				self.texture_no = 4
+				self.texture_no = 4 --brown
 			elseif random_number >= 2 and random_number <= 4 then
-				self.texture_no = 3
+				self.texture_no = 3 --drak grey
 			elseif random_number >= 5 and random_number <= 7 then				
-				self.texture_no = 2
+				self.texture_no = 2 --grey
 			else				
-				self.texture_no = 1 --from 8 to 15
+				self.texture_no = 1 --white, from 8 to 15
 			end
 			self.food_count_wool = 0
 			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
