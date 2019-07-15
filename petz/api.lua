@@ -618,7 +618,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	end
 	--minetest.chat_send_player("singleplayer", texture)	
 	if texture then
-		self.texture = texture		
+		self.texture = texture	
+		mobkit.remember(self, "texture", self.texture) 	
 		petz.set_properties(self, {textures = {self.texture}})	
 	end
 	--ALL the mobs
