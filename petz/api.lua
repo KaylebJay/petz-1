@@ -371,8 +371,8 @@ end
 function petz.set_initial_properties(self, staticdata, dtime_s)	
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
-	local texture_no = nil
-	minetest.chat_send_player("singleplayer", staticdata)	
+	local texture = nil
+	--minetest.chat_send_player("singleplayer", staticdata)	
 	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["owner"] then 
 		captured_mob = true		
 	end
@@ -458,12 +458,12 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.driver = false
 			mobkit.remember(self, "driver", self.driver)
 		else
-			--texture = self.object:get_properties().textures
-			--if #texture > 1 then
-				--texture = texture[math.random(#texture)]
-			--else
-				--texture = texture[1]
-			--end      
+					--texture = self.object:get_properties().textures
+					--if #texture > 1 then
+						--texture = texture[math.random(#texture)]
+					--else
+						--texture = texture[1]
+					--end      
 		end
 		--ALL the mobs
 		self.set_vars = true
@@ -529,8 +529,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "skin_color", self.skin_color)
 			mobkit.remember(self, "saddle", false) --no shaddle
 			mobkit.remember(self, "driver", false) --no driver
-		else			
-			texture_no = static_data_table["fields"]["texture_no"]			
+		else
+			texture = self.textures[tonumber(static_data_table["fields"]["texture_no"])]
 		end
 		--ALL the mobs
 		self.set_vars = true
@@ -559,12 +559,12 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		if self.shaved == true then
 			shaved_string = "_shaved"
 		end
-		texture_no = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
+		texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
 	elseif self.type == "pony" then	
 	    if self.saddle then
-    		texture_no = "petz_pony_"..self.skin_color..".png" .. "^petz_pony_saddle.png"
+    		texture = "petz_pony_"..self.skin_color..".png" .. "^petz_pony_saddle.png"
     	else
-    		texture_no = "petz_pony_"..self.skin_color..".png"
+    		texture = "petz_pony_"..self.skin_color..".png"
     	end
     	if self.is_pregnant == true then
 			petz.init_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)    		
@@ -577,9 +577,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 	end
 	--minetest.chat_send_player("singleplayer", texture)	
-	if texture_no then
-		self.texture_no = texture_no		
-		petz.set_properties(self, {textures = {self.texture_no}})	
+	if texture then
+		self.texture = texture		
+		petz.set_properties(self, {textures = {self.texture}})	
 	end
 	--ALL the mobs
 	if self.is_pet and self.tamed then
@@ -792,7 +792,7 @@ petz.capture = function(self, clicker)
 		end
 	end	
 	--Save some extra values-->
-	stack_meta:set_string("texture_no", self.texture_no)	 --Save the current texture
+	stack_meta:set_string("texture_no", self.texture_no)	 --Save the current texture number
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
 	if self.type == 'lamb' then
 		stack_meta:set_string("shaved", tostring(self.shaved))	 --Save if shaved
