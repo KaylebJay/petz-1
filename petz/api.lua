@@ -35,15 +35,16 @@ petz.pet = {} -- A table of pet["owner_name"]="owner_name"
 
 petz.create_form = function(player_name)
     local pet = petz.pet[player_name]
-    local form_size = {w = 3, h = 2}
+    local form_size = {w = 3, h = 3}
     local hungrystuff_pos = {x= 0, y = 0}
-    local buttonexit_pos = {x = 1, y = 4}
+    local buttonexit_pos = {x = 1, y = 6}
     local form_title = ""
     local tamagochi_form_stuff = ''
     local affinity_stuff = ''
     local form_orders = ''
     local more_form_orders = ''
     local final_form = ''	
+    local pet_icon = "image[0,0;1,1;petz_spawnegg_"..pet.type..".png]"
     if pet.affinity == nil then
        pet.affinity = 0
     end
@@ -51,19 +52,19 @@ petz.create_form = function(player_name)
     	form_size.w= form_size.w + 2
 		if pet.has_affinity == true then
 			form_title = S("Orders")
-			hungrystuff_pos = {x= 3, y = 1}
+			hungrystuff_pos = {x= 3, y = 2}
 			affinity_stuff =
-				"image[3,2;1,1;petz_affinity_heart.png]"..
-				"label[4,2;".. tostring(pet.affinity).."%]"
+				"image[3,3;1,1;petz_affinity_heart.png]"..
+				"label[4,3;".. tostring(pet.affinity).."%]"
 		else
 			form_size.w= form_size.w - 1
-			form_size.h= form_size.h + 1
+			form_size.h= form_size.h + 2
 			form_title = S("Status")
-			hungrystuff_pos = {x= 1, y = 1}
+			hungrystuff_pos = {x= 1, y = 3}
 		end
 		tamagochi_form_stuff = 
-            "image[0,0;1,1;petz_spawnegg_"..pet.type..".png]"..
-            "label[1,0;".. form_title .."]"..
+            pet_icon ..
+            "label[1,2;".. form_title .."]"..
             "image[".. hungrystuff_pos.x ..",".. hungrystuff_pos.y ..";1,1;petz_pet_bowl_inv.png]"..
             affinity_stuff            
         local hungry_label = ""
@@ -74,16 +75,37 @@ petz.create_form = function(player_name)
         end
         tamagochi_form_stuff = tamagochi_form_stuff .. "label[".. hungrystuff_pos.x +1 ..",".. hungrystuff_pos.y ..";"..S(hungry_label).."]"
     else
-        tamagochi_form_stuff =
-            "image[1,0;1,1;petz_spawnegg_"..pet.type..".png]"
+        tamagochi_form_stuff = pet_icon 
+        if pet.has_affinity == true then
+			tamagochi_form_stuff = tamagochi_form_stuff .. "label[1,2;".. S("Orders") .."]"	
+		end
+		if pet.type == "pony" then
+			form_size.w= form_size.w + 2
+		elseif pet.type == "parrot" then
+			form_size.w= form_size.w + 1
+		end
     end
+    if pet.is_pet == true and pet.tamed == true then
+		if not(pet.tag) then
+			pet.tag = ""
+		end
+		local selected
+		if pet.show_tag == true then
+			selected = "true"
+		else
+			selected = "false"
+		end
+		tamagochi_form_stuff = tamagochi_form_stuff..
+		"field[1,1;2,1;ipt_name;"..S("Name")..":"..";"..pet.tag.."]"..		
+		"checkbox[3,1;btn_show_tag;"..S("Show tag")..";"..selected.."]"
+	end
     if pet.type == "parrot" then
 		form_size.h = form_size.h + 1
 		buttonexit_pos.y = buttonexit_pos.y + 1
 		more_form_orders = more_form_orders..
-		"button_exit[0,4;1,1;btn_alight;"..S("Alight").."]"	..
-		"button_exit[1,4;1,1;btn_fly;"..S("Fly").."]"..
-		"button_exit[2,4;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"
+		"button_exit[0,6;1,1;btn_alight;"..S("Alight").."]"	..
+		"button_exit[1,6;1,1;btn_fly;"..S("Fly").."]"..
+		"button_exit[2,6;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"
 	elseif pet.type == "pony" then
 		local genre = ''
 		if pet.is_male == true then
@@ -93,26 +115,30 @@ petz.create_form = function(player_name)
 		end		
 		more_form_orders = more_form_orders..
 			"label[3,0;"..genre.."]"..
-			"image[3,3;1,1;petz_pony_velocity_icon.png]"..
-			"label[4,3;".. tostring(pet.max_speed_forward).."/"..tostring(pet.max_speed_reverse)..'/'..tostring(pet.accel).."]"
+			"image[3,4;1,1;petz_pony_velocity_icon.png]"..
+			"label[4,4;".. tostring(pet.max_speed_forward).."/"..tostring(pet.max_speed_reverse)..'/'..tostring(pet.accel).."]"
 		if pet.is_male == false and pet.is_pregnant == true then
 			more_form_orders = more_form_orders..
-				"image[3,4;1,1;petz_pony_pregnant_icon.png]"..
-				"label[4,4;"..S("Pregnant").."]"
+				"image[3,5;1,1;petz_pony_pregnant_icon.png]"..
+				"label[4,5;"..S("Pregnant").."]"
 		elseif pet.is_male == false and pet.pregnant_count <= 0 then
 			more_form_orders = more_form_orders..				
-				"label[3,4;"..S("Infertile").."]"
+				"label[3,5;"..S("Infertile").."]"
 		end
     end
     if pet.give_orders == true then
-		form_size.h= form_size.h + 3
+		form_size.h= form_size.h + 4
 		form_orders =
-			"button_exit[0,1;3,1;btn_followme;"..S("Follow me").."]"..
-			"button_exit[0,2;3,1;btn_standhere;"..S("Stand here").."]"..
-			"button_exit[0,3;3,1;btn_ownthing;"..S("Do your own thing").."]"..	
+			"button_exit[0,3;3,1;btn_followme;"..S("Follow me").."]"..
+			"button_exit[0,4;3,1;btn_standhere;"..S("Stand here").."]"..
+			"button_exit[0,5;3,1;btn_ownthing;"..S("Do your own thing").."]"..	
 			more_form_orders
 	else
-		buttonexit_pos.y = buttonexit_pos.y - 2
+		if petz.settings.tamagochi_mode == true then
+			buttonexit_pos.y = buttonexit_pos.y - 2
+		else
+			buttonexit_pos.y = buttonexit_pos.y - 4
+		end
     end
     final_form =
 		"size["..form_size.w..","..form_size.h..";]"..
@@ -153,8 +179,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			mobkit.animate(pet, "stand")	
 			minetest.after(120.0, function(pet) 
 				pet.object:set_detach()
-			end, pet)	
+			end, pet)
+		elseif fields.btn_show_tag then			
+			pet.show_tag = petz.to_boolean(fields.btn_show_tag)
+			mobkit.remember(pet, "show_tag", pet.show_tag)
 		end
+		pet.tag = fields.ipt_name
+		mobkit.remember(pet, "tag", pet.tag)
+		petz.update_nametag(pet)
 		return true
 	else
 		return false
@@ -273,9 +305,10 @@ petz.timer = function(self)
 			end
             --Decrease health if pet has not fed
             if self.fed == false then
-				minetest.chat_send_player(self.owner, "no alimentado")
+				--minetest.chat_send_player(self.owner, "no alimentado")
 				local damage_amount = - petz.settings.tamagochi_hunger_damage
 				mobkit.hurt(self, damage_amount)
+				petz.update_nametag(self)
                 if (self.hp > 0)  and (self.has_affinity == true) then
 					petz.set_affinity(self, false, 33)
 				end                
@@ -354,6 +387,8 @@ petz.load_vars = function(self)
 		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count")
 	end	
 	--All the mobs	
+	self.tag = mobkit.recall(self, "tag")
+	self.show_tag = mobkit.recall(self, "show_tag")
 	self.tamed = mobkit.recall(self, "tamed")
 	self.owner = mobkit.recall(self, "owner")
 	self.affinity = mobkit.recall(self, "affinity")
@@ -461,16 +496,14 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "driver", self.driver)
 		else
 			texture = self.textures[self.texture_no]
-					--texture = self.object:get_properties().textures
-					--if #texture > 1 then
-						--texture = texture[math.random(#texture)]
-					--else
-						--texture = texture[1]
-					--end      
 		end
 		--ALL the mobs
 		self.set_vars = true
 		mobkit.remember(self, "set_vars", self.set_vars)
+		self.tag = ""
+		mobkit.remember(self, "tag", self.tag)
+		self.show_tag = false
+		mobkit.remember(self, "show_tag", self.show_tag)
 		self.tamed = false
 		mobkit.remember(self, "tamed", self.tamed)
 		self.owner = ""
@@ -538,6 +571,10 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		--ALL the mobs
 		self.set_vars = true
 		mobkit.remember(self, "set_vars", self.set_vars) 		
+		self.tag = static_data_table["fields"]["tag"]	
+		mobkit.remember(self, "tag", self.tag) 
+		self.show_tag = petz.to_boolean(static_data_table["fields"]["show_tag"])
+		mobkit.remember(self, "show_tag", self.show_tag) 
 		self.tamed = petz.to_boolean(static_data_table["fields"]["tamed"])		
 		mobkit.remember(self, "tamed", self.tamed)	
 		self.owner = static_data_table["fields"]["owner"]	
@@ -795,8 +832,10 @@ petz.capture = function(self, clicker)
 		end
 	end	
 	--Save some extra values-->
-	stack_meta:set_string("texture", self.texture)	 --Save the current texture number
+	stack_meta:set_string("texture", self.texture)	 --Save the current texture
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
+	stack_meta:set_string("tag", self.tag) --Save the current tag
+	stack_meta:set_string("show_tag", tostring(self.show_tag))
 	if self.type == 'lamb' then
 		stack_meta:set_string("shaved", tostring(self.shaved))	 --Save if shaved
 	elseif self.type == 'pony' then
@@ -835,6 +874,7 @@ petz.do_punch = function(self, puncher, tool_capabilities)
 		local weapon_damage = petz.calculate_damage(tool_capabilities)
 		--minetest.chat_send_player("singleplayer", "damage points: ".. weapon_damage)	
 		mobkit.hurt(self, weapon_damage)
+		petz.update_nametag(self)
 		--minetest.chat_send_player("singleplayer", "NEW hp : "..tostring(new_hp))	
 	end
 end
@@ -872,6 +912,7 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			petz.punch_tamagochi(self, puncher) --decrease affinity when in Tamagochi mode
 			--petz.do_punch(self, puncher, tool_capabilities)
 			mobkit.hurt(self,tool_capabilities.damage_groups.fleshy or 1)
+			petz.update_nametag(self)
 			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)							
 		end		
 		petz.kick_back(self, dir) -- kickback	
@@ -890,7 +931,8 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 			wielded_item:take_item()
 			clicker:set_wielded_item(wielded_item)
 		end		
-		mobkit.heal(self, 4)				
+		mobkit.heal(self, 4)	
+		petz.update_nametag(self)		
 		if self.hp >= self.max_hp then
 			self.hp = self.max_hp
 			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", self.type, tostring(self.hp)))							
@@ -1387,7 +1429,13 @@ petz.set_properties = function(self, properties)
 end
 
 petz.update_nametag = function(self)
-	self.object:set_nametag_attributes({text = "♥ "..tostring(self.hp).."/"..tostring(self.max_hp),})
+	local name_tag
+	if self.show_tag == true and self.tag and not(self.tag == "") then
+		name_tag = self.tag
+		self.object:set_nametag_attributes({text = name_tag .." ♥ "..tostring(self.hp).."/"..tostring(self.max_hp),})
+	else
+		self.object:set_nametag_attributes({text = "",})
+	end	
 end
 
 petz.delete_nametag = function(self)
