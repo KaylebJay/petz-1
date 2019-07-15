@@ -165,6 +165,9 @@ mobs:register_mob("petz:"..pet_name, {
 			return false -- skip rest of mob functions
 		end		
 	end,
+	do_punch = function (self, hitter, time_from_last_punch, tool_capabilities, direction)
+    	petz.do_punch(self, hitter, time_from_last_punch, tool_capabilities, direction)
+	end,
 	on_die = function(self, pos)
 		if self.saddle then -- drop saddle when horse is killed while riding
 			minetest.add_item(pos, "mobs:saddle")

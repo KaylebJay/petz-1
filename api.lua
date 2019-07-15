@@ -605,7 +605,7 @@ petz.do_punch = function (self, hitter, time_from_last_punch, tool_capabilities,
             if self.affinity == nil then
                 self.affinity = 0       
             end
-            self.affinity = self.affinity - 20
+            petz.set_affinity(self, false, 20)            
         end
     end
 end
