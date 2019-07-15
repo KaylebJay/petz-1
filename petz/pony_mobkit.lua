@@ -47,7 +47,8 @@ if petz.settings.type_model == "cubic" then
 	collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
 else
 	mesh = 'petz_pony.b3d'	
-	textures = {"petz_pony_white.png"}	
+	textures = {"petz_pony_brown.png", "petz_pony_white.png", "petz_pony_yellow.png", "petz_pony_white_dotted.png",
+	"petz_gray_dotted.png", "petz_pony_black.png"}	
 	textures_baby = {"petz_pony_baby.png"}	
 	collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
 end
@@ -62,6 +63,7 @@ minetest.register_entity("petz:"..pet_name, {
 	give_orders = true,
 	can_be_brushed = true,
 	capture_item = "lasso",
+	skin_colors = {"brown", "white", "yellow", "white_dotted", "gray_dotted", "black"},
 	--Pony specific
 	terrain_type = 3,
 	scale_model = scale_model,
@@ -136,7 +138,7 @@ minetest.register_entity("petz:"..pet_name, {
 			elseif self.saddle and clicker:get_wielded_item():get_name() == "petz:shears" then
 				minetest.add_item(self.object:get_pos(), "petz:saddle")
 				if petz.settings.type_model == "mesh" then
-					petz.set_properties(self, {textures = {"petz_pony_"..self.skin_color..".png"}})
+					petz.set_properties(self, {textures = {"petz_pony_"..self.skin_colors[self.texture_no]..".png"}})
 				else
 					self.object:set_properties({tiles = petz.pony.tiles})
 				end 
@@ -146,7 +148,7 @@ minetest.register_entity("petz:"..pet_name, {
 				local w = clicker:get_wielded_item() -- Put on saddle and take saddle from player's inventory
 				if petz.settings.type_model == "mesh" then
 					petz.set_properties(self, {textures =
-						{"petz_pony_"..self.skin_color..".png" .. "^petz_pony_saddle.png"}
+						{"petz_pony_"..self.skin_colors[self.texture_no]..".png" .. "^petz_pony_saddle.png"}
 					})									
 				else
 					self.object:set_properties({tiles = petz.pony.tiles_saddle})

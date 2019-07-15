@@ -365,7 +365,6 @@ end
 petz.load_vars = function(self)
 	--Only specific mobs
 	if self.type == "lamb" then
-		self.wool_color = mobkit.recall(self, "wool_color")
 		self.shaved = mobkit.recall(self, "shaved")
 		self.food_count_wool = mobkit.recall(self, "food_count_wool")
 	elseif self.type == "calf" then
@@ -387,7 +386,6 @@ petz.load_vars = function(self)
 		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count")
 	end	
 	--All the mobs	
-	self.texture = mobkit.recall(self, "texture")
 	self.tag = mobkit.recall(self, "tag")
 	self.show_tag = mobkit.recall(self, "show_tag")
 	self.tamed = mobkit.recall(self, "tamed")
@@ -407,7 +405,6 @@ end
 function petz.set_initial_properties(self, staticdata, dtime_s)	
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
-	local texture = nil
 	--minetest.chat_send_player("singleplayer", staticdata)	
 	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["owner"] then 
 		captured_mob = true		
@@ -416,31 +413,26 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		--Mob Specific
 		--Lamb
 		if self.type == "lamb" and petz.settings.type_model == "mesh" then --set a random color 
-			local wool_color
 			local random_number = math.random(1, 15)
 			if random_number == 1 then
-				wool_color = "brown"
+				self.texture_no = 4
 			elseif random_number >= 2 and random_number <= 4 then
-				wool_color = "dark_grey"
+				self.texture_no = 3
 			elseif random_number >= 5 and random_number <= 7 then				
-				wool_color = "grey"
+				self.texture_no = 2
 			else				
-				wool_color = "white" --from 8 to 15
-			end		
-			self.wool_color = wool_color
-			mobkit.remember(self, "wool_color", self.wool_color)
+				self.texture_no = 1 --from 8 to 15
+			end
 			self.food_count_wool = 0
 			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
 			self.shaved = false
 			mobkit.remember(self, "shaved", self.shaved)
 		elseif self.type == "puppy" then		
 			self.square_ball_attached = false
-			mobkit.remember(self, "square_ball_attached", self.square_ball_attached)
-			texture = self.textures[self.texture_no]
+			mobkit.remember(self, "square_ball_attached", self.square_ball_attached)			
 		elseif self.type == "wolf" then		
 			self.wolf_to_puppy_count = petz.settings.wolf_to_puppy_count
 			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count)
-			texture = self.textures[self.texture_no]
 		elseif self.type == "pony" then		
 			if (staticdata== "baby") or (self.is_baby== true) then							
 				petz.set_properties(self, {				
@@ -464,39 +456,28 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				self.is_male = false
 			end
 			mobkit.remember(self, "is_male", self.is_male)	
-    		local skin_color
     		if petz.settings.type_model == "mesh" then --set a random color    
     			local random_number = math.random(1, 6)
     			if random_number == 1 then
-					skin_color = "brown"
+					self.texture_no = 1
 				elseif random_number == 2 then
-					skin_color = "white"				
+					self.texture_no = 2				
 				elseif random_number == 3 then
-					skin_color = "yellow"				
+					self.texture_no = 3
 				elseif random_number == 4 then
-					skin_color = "white_dotted"				
+					self.texture_no = 4
 				elseif random_number == 5 then
-					skin_color = "gray_dotted"		
+					self.texture_no = 5
 				else
-					skin_color = "black"
-				end
-			else --if 'cubic'
-				self.tiles_color = petz.pony.tiles
-				mobkit.remember(self, "tiles_color", self.tiles_color)					
-				self.tiles_saddle = petz.pony.tiles_saddle
-				mobkit.remember(self, "tiles_saddle", self.tiles_saddle)	
-				skin_color = "brown" --cubic horse color is always brown
+					self.texture_no = 6
+				end		
 			end
-			self.skin_color = skin_color														
-			mobkit.remember(self, "skin_color", self.skin_color)	
 			self.is_pregnant = false
 			mobkit.remember(self, "is_pregnant", self.is_pregnant)
 			self.is_baby = false
 			mobkit.remember(self, "is_baby", self.is_baby)
 			self.driver = false
-			mobkit.remember(self, "driver", self.driver)
-		else
-			texture = self.textures[self.texture_no]
+			mobkit.remember(self, "driver", self.driver)			
 		end
 		--ALL the mobs
 		self.set_vars = true
@@ -527,23 +508,16 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "lashing_count", self.lashing_count)	
 		end
 	elseif captured_mob == false then	
-		petz.load_vars(self) --Load memory variables		
-		texture = self.texture		
+		petz.load_vars(self) --Load memory variables			
 	--
 	--CAPTURED MOBS
 	--
 	else 
 		--Mob Specific		
 		if self.type == "lamb" then --Lamb
-			self.wool_color = static_data_table["fields"]["wool_color"]		
-			mobkit.remember(self, "wool_color", self.wool_color) 
 			self.food_count_wool = tonumber(static_data_table["fields"]["food_count_wool"])
 			mobkit.remember(self, "food_count_wool", self.food_count_wool) 
-			if static_data_table["fields"]["shaved"] == "true" then
-				self.shaved = true				
-			else
-				self.shaved = false
-			end		
+			self.shaved = petz.to_boolean(static_data_table["fields"]["shaved"])				
 			mobkit.remember(self, "shaved", self.shaved) 		
 		elseif self.type == "wolf" then
 			self.wolf_to_puppy_count = tonumber(static_data_table["fields"]["wolf_to_puppy_count"])
@@ -563,14 +537,11 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "max_speed_reverse", self.max_speed_reverse) 
 			self.accel = tonumber(static_data_table["fields"]["accel"])
 			mobkit.remember(self, "accel", self.accel) 
-			self.skin_color = static_data_table["fields"]["skin_color"]
-			mobkit.remember(self, "skin_color", self.skin_color)
 			mobkit.remember(self, "saddle", false) --no shaddle
 			mobkit.remember(self, "driver", false) --no driver
-		else
-			texture = static_data_table["fields"]["texture"]
 		end
 		--ALL the mobs
+		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])
 		self.set_vars = true
 		mobkit.remember(self, "set_vars", self.set_vars) 		
 		self.tag = static_data_table["fields"]["tag"]	
@@ -594,35 +565,36 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "lashing_count", self.lashing_count)	
 		end
 	end		
-	--Mob Specific
-	--Lamb
-	if self.type == "lamb" then
-		local shaved_string = ""
-		if self.shaved == true then
-			shaved_string = "_shaved"
+	--Custom textures
+	if captured_mob == true or self.type == "lamb" or self.type == "pony" then
+		--Mob Specific
+		--Lamb
+		if self.type == "lamb" then
+			local shaved_string = ""
+			if self.shaved == true then
+				shaved_string = "_shaved"
+			end
+			texture = "petz_lamb".. shaved_string .."_"..self.wool_colors[self.texture_no]..".png"
+		elseif self.type == "pony" then	
+			if self.saddle then
+				texture = "petz_pony_"..self.skin_colors[self.texture_no]..".png" .. "^petz_pony_saddle.png"
+			else
+				texture = "petz_pony_"..self.skin_colors[self.texture_no]..".png"
+			end
+			if self.is_pregnant == true then
+				petz.init_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)    		
+			elseif self.is_baby == true then
+				petz.set_properties(self, {
+					visual_size = self.visual_size_baby,
+					collisionbox = self.collisionbox_baby 
+				})
+				petz.init_growth(self)
+			end
+		else
+			texture = self.textures[self.texture_no]
 		end
-		texture = "petz_lamb".. shaved_string .."_"..self.wool_color..".png"
-	elseif self.type == "pony" then	
-	    if self.saddle then
-    		texture = "petz_pony_"..self.skin_color..".png" .. "^petz_pony_saddle.png"
-    	else
-    		texture = "petz_pony_"..self.skin_color..".png"
-    	end
-    	if self.is_pregnant == true then
-			petz.init_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)    		
-    	elseif self.is_baby == true then
-			petz.set_properties(self, {
-				visual_size = self.visual_size_baby,
-				collisionbox = self.collisionbox_baby 
-			})
-			petz.init_growth(self)
-		end
-	end
-	--minetest.chat_send_player("singleplayer", texture)	
-	if texture then
-		self.texture = texture	
-		mobkit.remember(self, "texture", self.texture) 	
-		petz.set_properties(self, {textures = {self.texture}})	
+		mobkit.remember(self, "texture_no", self.texture_no) 	
+		petz.set_properties(self, {textures = {texture}})	
 	end
 	--ALL the mobs
 	if self.is_pet and self.tamed then
@@ -716,25 +688,21 @@ petz.lamb_wool_regrow = function(self)
 		mobkit.remember(self, "food_count_wool", self.food_count_wool)
 		self.shaved = false
 		mobkit.remember(self, "shaved", self.shaved)				
-		local lamb_texture = "petz_lamb_"..self.wool_color..".png"
-		if petz.settings.type_model == "mesh" then
-			petz.set_properties(self, {textures = {lamb_texture}})
-		else
-			petz.set_properties(self, {tiles = petz.lamb.tiles})			
-		end
+		local lamb_texture = "petz_lamb_"..self.wool_colors[self.texture_no]..".png"
+		petz.set_properties(self, {textures = {lamb_texture}})
 	end
 end
 
 petz.lamb_wool_shave = function(self, clicker)
 	local inv = clicker:get_inventory()	
-	local new_stack = "wool:"..self.wool_color
+	local new_stack = "wool:"..self.wool_colors[self.texture_no]
 	if inv:room_for_item("main", new_stack) then
 		inv:add_item("main", new_stack)
 	else
 		minetest.add_item(self.object:get_pos(), new_stack)
 	end
     petz.do_sound_effect("object", self.object, "petz_lamb_moaning")
-    local lamb_texture = "petz_lamb_shaved_"..self.wool_color..".png"
+    local lamb_texture = "petz_lamb_shaved_"..self.wool_colors[self.texture_no]..".png"
 	if petz.settings.type_model == "mesh" then
 		petz.set_properties(self, {textures = {lamb_texture}})		
 	else
@@ -835,7 +803,7 @@ petz.capture = function(self, clicker)
 		end
 	end	
 	--Save some extra values-->
-	stack_meta:set_string("texture", self.texture)	 --Save the current texture
+	stack_meta:set_string("texture_no", tostring(self.texture_no)) --Save the current texture_no
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
 	stack_meta:set_string("tag", self.tag) --Save the current tag
 	stack_meta:set_string("show_tag", tostring(self.show_tag))

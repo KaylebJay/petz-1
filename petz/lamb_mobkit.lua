@@ -38,7 +38,7 @@ if petz.settings.type_model == "cubic" then
 	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
 else
 	mesh = 'petz_lamb.b3d'	
-	textures = {"petz_lamb_white.png"}
+	textures = {"petz_lamb_white.png", "petz_lamb_grey.png", "petz_lamb_dark_grey.png", "petz_lamb_brown.png"}
 	--petz.lamb.textures_shaved = {"petz_lamb_shaved_white.png"}
 	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
 end
@@ -54,6 +54,7 @@ minetest.register_entity("petz:"..pet_name,{
 	can_be_brushed = true,
 	capture_item = "lasso",
 	follow = petz.settings.lamb_follow,
+	wool_colors = {"white", "grey", "dark_grey", "brown"},
 	drops = {
 		{name = "petz:mini_lamb_chop", chance = 1, min = 1, max = 1,},
 		{name = "petz:bone", chance = 5, min = 1, max = 1,},
