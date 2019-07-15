@@ -184,8 +184,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			pet.show_tag = petz.to_boolean(fields.btn_show_tag)
 			mobkit.remember(pet, "show_tag", pet.show_tag)
 		end
-		pet.tag = fields.ipt_name
-		mobkit.remember(pet, "tag", pet.tag)
+		if fields.ipt_name then
+			pet.tag = string.sub(fields.ipt_name, 1 , 12)
+			mobkit.remember(pet, "tag", pet.tag)
+		end
 		petz.update_nametag(pet)
 		return true
 	else
