@@ -376,7 +376,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["owner"] then 
 		captured_mob = true		
 	end
-	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars	
+	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars		
 		--Mob Specific
 		--Lamb
 		if self.type == "lamb" and petz.settings.type_model == "mesh" then --set a random color 
@@ -400,9 +400,11 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		elseif self.type == "puppy" then		
 			self.square_ball_attached = false
 			mobkit.remember(self, "square_ball_attached", self.square_ball_attached)
+			texture = self.textures[self.texture_no]
 		elseif self.type == "wolf" then		
 			self.wolf_to_puppy_count = petz.settings.wolf_to_puppy_count
 			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count)
+			texture = self.textures[self.texture_no]
 		elseif self.type == "pony" then		
 			if (staticdata== "baby") or (self.is_baby== true) then							
 				petz.set_properties(self, {				
@@ -458,6 +460,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.driver = false
 			mobkit.remember(self, "driver", self.driver)
 		else
+			texture = self.textures[self.texture_no]
 					--texture = self.object:get_properties().textures
 					--if #texture > 1 then
 						--texture = texture[math.random(#texture)]
@@ -530,7 +533,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "saddle", false) --no shaddle
 			mobkit.remember(self, "driver", false) --no driver
 		else
-			texture = self.textures[tonumber(static_data_table["fields"]["texture_no"])]
+			texture = static_data_table["fields"]["texture"]
 		end
 		--ALL the mobs
 		self.set_vars = true
@@ -792,7 +795,7 @@ petz.capture = function(self, clicker)
 		end
 	end	
 	--Save some extra values-->
-	stack_meta:set_string("texture_no", self.texture_no)	 --Save the current texture number
+	stack_meta:set_string("texture", self.texture)	 --Save the current texture number
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
 	if self.type == 'lamb' then
 		stack_meta:set_string("shaved", tostring(self.shaved))	 --Save if shaved
