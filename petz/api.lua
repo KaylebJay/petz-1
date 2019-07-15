@@ -235,7 +235,7 @@ end
 
 -- Increase/Descrease the pet affinity
 
-petz.set_affinity = function(self, increase, amount)	
+petz.set_affinity = function(self, increase, amount)
     local new_affinity    
     if increase == true then
         new_affinity = self.affinity +  amount
@@ -244,7 +244,7 @@ petz.set_affinity = function(self, increase, amount)
     end
     if new_affinity > 100 then
         new_affinity = 100
-    elseif new_affinity <0 then     
+    elseif new_affinity < 0 then     
         new_affinity = 0
     end
     self.affinity = new_affinity
@@ -1223,10 +1223,9 @@ petz.punch_tamagochi = function (self, puncher)
     if petz.settings.tamagochi_mode == true then         
         if self.owner == puncher:get_player_name() then
             if self.affinity == nil then
-                self.affinity = 0       
+                self.affinity = 100       
             end
-            self.affinity = self.affinity - 20
-            mobkit.remember(self, "affinity", self.affinity)
+            petz.set_affinity(self, false, 20)            
         end
     end
 end
