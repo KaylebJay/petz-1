@@ -142,7 +142,7 @@ minetest.register_entity("petz:"..pet_name, {
 				end 
 				self.saddle = false	
 				mobkit.remember(self, "saddle", self.saddle)					
-			elseif not self.driver and not self.saddle and not(self.is_baby) and clicker:get_wielded_item():get_name() == "petz:saddle" then -- Put on saddle if tamed
+			elseif not(self.driver) and not(self.saddle) and not(self.is_baby) and clicker:get_wielded_item():get_name() == "petz:saddle" then -- Put on saddle if tamed
 				local w = clicker:get_wielded_item() -- Put on saddle and take saddle from player's inventory
 				if petz.settings.type_model == "mesh" then
 					petz.set_properties(self, {textures =

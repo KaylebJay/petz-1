@@ -189,6 +189,14 @@ function petz:split(inSplitPattern, outResults)
   return outResults
 end
 
+function petz.to_boolean(val)
+	if val and (val == "true" or val == 1) then
+		return true
+	else
+		return false
+	end	
+end
+
 --
 --The Tamagochi Mode
 --
@@ -364,7 +372,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
 	local texture_no = nil
-	--minetest.chat_send_player("singleplayer", staticdata)	
+	minetest.chat_send_player("singleplayer", staticdata)	
 	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["owner"] then 
 		captured_mob = true		
 	end
@@ -447,6 +455,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "is_pregnant", self.is_pregnant)
 			self.is_baby = false
 			mobkit.remember(self, "is_baby", self.is_baby)
+			self.driver = false
+			mobkit.remember(self, "driver", self.driver)
 		else
 			--texture = self.object:get_properties().textures
 			--if #texture > 1 then
@@ -489,7 +499,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		if self.type == "lamb" then --Lamb
 			self.wool_color = static_data_table["fields"]["wool_color"]		
 			mobkit.remember(self, "wool_color", self.wool_color) 
-			self.food_count_wool = static_data_table["fields"]["food_count_wool"]		
+			self.food_count_wool = tonumber(static_data_table["fields"]["food_count_wool"])
 			mobkit.remember(self, "food_count_wool", self.food_count_wool) 
 			if static_data_table["fields"]["shaved"] == "true" then
 				self.shaved = true				
@@ -498,55 +508,47 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			end		
 			mobkit.remember(self, "shaved", self.shaved) 		
 		elseif self.type == "wolf" then
-			self.wolf_to_puppy_count = static_data_table["fields"]["wolf_to_puppy_count"]	
+			self.wolf_to_puppy_count = tonumber(static_data_table["fields"]["wolf_to_puppy_count"])
 			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count) 
 		elseif self.type == "pony" then
-			self.is_male = static_data_table["fields"]["is_male"]
+			self.is_male = petz.to_boolean(static_data_table["fields"]["is_male"])			
 			mobkit.remember(self, "is_male", self.is_male) 
-			self.is_pregnant = static_data_table["fields"]["is_pregnant"]
+			self.is_pregnant = petz.to_boolean(static_data_table["fields"]["is_pregnant"])
 			mobkit.remember(self, "is_pregnant", self.is_pregnant) 
-			self.is_baby = static_data_table["fields"]["is_baby"]
+			self.is_baby = petz.to_boolean(static_data_table["fields"]["is_baby"])
 			mobkit.remember(self, "is_baby", self.is_baby) 
-			self.pregnant_count = static_data_table["fields"]["pregnant_count"]
-			mobkit.remember(self, "pregnant_count", self.pregnant_count) 
-			self.max_speed_forward =  static_data_table["fields"]["max_speed_forward"]
+			self.pregnant_count = tonumber(static_data_table["fields"]["pregnant_count"])
+			mobkit.remember(self, "pregnant_count", self.pregnant_count) 			
+			self.max_speed_forward =  tonumber(static_data_table["fields"]["max_speed_forward"]	)
 			mobkit.remember(self, "max_speed_forward", self.max_speed_forward) 
-			self.max_speed_reverse = static_data_table["fields"]["max_speed_reverse"]
+			self.max_speed_reverse = tonumber(static_data_table["fields"]["max_speed_reverse"])
 			mobkit.remember(self, "max_speed_reverse", self.max_speed_reverse) 
-			self.accel = static_data_table["fields"]["accel"]		
+			self.accel = tonumber(static_data_table["fields"]["accel"])
 			mobkit.remember(self, "accel", self.accel) 
 			self.skin_color = static_data_table["fields"]["skin_color"]
 			mobkit.remember(self, "skin_color", self.skin_color)
-			if static_data_table["fields"]["saddle"] == true then
-				self.saddle = true
-			else
-				self.saddle = false
-			end	
-			mobkit.remember(self, "saddle", self.saddle) 
+			mobkit.remember(self, "saddle", false) --no shaddle
+			mobkit.remember(self, "driver", false) --no driver
 		else			
 			texture_no = static_data_table["fields"]["texture_no"]			
 		end
 		--ALL the mobs
 		self.set_vars = true
 		mobkit.remember(self, "set_vars", self.set_vars) 		
-		if static_data_table["fields"]["tamed"] == "true" then
-			self.tamed = true
-		else
-			self.tamed = false
-		end
+		self.tamed = petz.to_boolean(static_data_table["fields"]["tamed"])		
 		mobkit.remember(self, "tamed", self.tamed)	
 		self.owner = static_data_table["fields"]["owner"]	
 		mobkit.remember(self, "owner", self.owner) 
-		self.food_count = static_data_table["fields"]["food_count"]	
+		self.food_count = tonumber(static_data_table["fields"]["food_count"])
 		mobkit.remember(self, "food_count", self.food_count) 
 		if self.has_affinity == true then
-			self.affinity = static_data_table["fields"]["affinity"]	
+			self.affinity = tonumber(static_data_table["fields"]["affinity"])
 			mobkit.remember(self, "affinity", self.affinity) 
 		end
 		if self.is_wild == true then
-			self.lashed = static_data_table["fields"]["lashed"]	
+			self.lashed = false
 			mobkit.remember(self, "lashed", self.lashed)	
-			self.lashing_count = static_data_table["fields"]["lashing_count"]	
+			self.lashing_count = tonumber(static_data_table["fields"]["lashing_count"]	)
 			mobkit.remember(self, "lashing_count", self.lashing_count)	
 		end
 	end		
@@ -794,6 +796,10 @@ petz.capture = function(self, clicker)
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
 	if self.type == 'lamb' then
 		stack_meta:set_string("shaved", tostring(self.shaved))	 --Save if shaved
+	elseif self.type == 'pony' then
+		stack_meta:set_string("is_male", tostring(self.is_male))
+		stack_meta:set_string("is_baby", tostring(self.is_baby))
+		stack_meta:set_string("is_pregnant", tostring(self.is_pregnant))
 	end
 	local inv = clicker:get_inventory()	
 	if inv:room_for_item("main", new_stack) then
