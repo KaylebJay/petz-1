@@ -387,6 +387,7 @@ petz.load_vars = function(self)
 		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count")
 	end	
 	--All the mobs	
+	self.texture = mobkit.recall(self, "texture")
 	self.tag = mobkit.recall(self, "tag")
 	self.show_tag = mobkit.recall(self, "show_tag")
 	self.tamed = mobkit.recall(self, "tamed")
@@ -526,7 +527,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "lashing_count", self.lashing_count)	
 		end
 	elseif captured_mob == false then	
-		petz.load_vars(self) --Load memory variables				
+		petz.load_vars(self) --Load memory variables		
+		texture = self.texture		
 	--
 	--CAPTURED MOBS
 	--
