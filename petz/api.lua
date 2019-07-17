@@ -394,7 +394,7 @@ petz.set_random_gender = function()
 end
 
 petz.get_second_gen = function(self)
-	return math.random(1, #self.skin_colors)
+	return math.random(1, #self.skin_colors-1)
 end
 
 petz.genetics_lamb_texture  = function(self)	
@@ -404,8 +404,10 @@ petz.genetics_lamb_texture  = function(self)
 		return 2
 	elseif self.genes["gen1"] == 3 or self.genes["gen2"] == 3 then
 		return 3
-	else
+	elseif self.genes["gen1"] == 4 or self.genes["gen2"] == 4 then
 		return 4
+	else
+		return 5
 	end
 end
 
@@ -514,24 +516,36 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "is_baby", self.is_baby)			
 			--Genetics
 			self.genes = {}
-			if baby_born == false then
-				self.genes["gen1"] = self.texture_no
-				self.genes["gen2"] = petz.get_second_gen(self)
-			else
+			if not(self.type == "pony") then
+				local genes_mutation = false
 				if math.random(1, 2) == 1 then
-					self.genes["gen1"] = static_data_table["gen1_father"]					
-				else
-					self.genes["gen1"] = static_data_table["gen2_father"]
+					genes_mutation = true
 				end
-				if math.random(1, 2) == 1 then
-					self.genes["gen2"] = static_data_table["gen1_mother"]					
-				else
-					self.genes["gen2"] = static_data_table["gen2_mother"]
-				end		
-				self.texture_no = petz.genetics_lamb_texture(self)		
+				if genes_mutation == false then
+					if baby_born == false then
+						self.genes["gen1"] = self.texture_no
+						self.genes["gen2"] = petz.get_second_gen(self)
+					else
+						if math.random(1, 2) == 1 then
+							self.genes["gen1"] = static_data_table["gen1_father"]					
+						else
+							self.genes["gen1"] = static_data_table["gen2_father"]
+						end
+						if math.random(1, 2) == 1 then
+							self.genes["gen2"] = static_data_table["gen1_mother"]					
+						else
+							self.genes["gen2"] = static_data_table["gen2_mother"]
+						end		
+						self.texture_no = petz.genetics_lamb_texture(self)		
+					end				
+				else -- mutation
+					self.genes["gen1"] = 5 --vanilla
+					self.genes["gen2"] = 5 -- vanilla
+					self.texture_no = 5 -- vanilla
+				end
 			end
-			mobkit.remember(self, "genes", self.genes)				
-		end
+			mobkit.remember(self, "genes", self.genes)
+		end		
 		--ALL the mobs
 		self.set_vars = true
 		mobkit.remember(self, "set_vars", self.set_vars)
@@ -632,7 +646,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		---DELETE FROM THIS LINE...
 		---
 		if self.type == "lamb" or self.type == "pony" then
-			if not(self.texture_no) then
+			if self.texture_no == nil then
 				self.texture_no = math.random(1, #self.skin_colors)
 			end
 		end
@@ -1220,15 +1234,15 @@ petz.childbirth = function(self, father)
 		baby_properties["gen1_father"] = father.genes["gen1"]
 		baby_properties["gen2_father"] = father.genes["gen2"]
 	else
-		baby_properties["gen1_father"] = math.random(1, #self.skin_colors)
-		baby_properties["gen2_father"] = math.random(1, #self.skin_colors)
+		baby_properties["gen1_father"] = math.random(1, #self.skin_colors-1)
+		baby_properties["gen2_father"] = math.random(1, #self.skin_colors-1)
 	end
 	if self and self.genes then
 		baby_properties["gen1_mother"] = self.genes["gen1"]
 		baby_properties["gen2_mother"] = self.genes["gen2"]
 	else
-		baby_properties["gen1_mother"] = math.random(1, #self.skin_colors)
-		baby_properties["gen2_mother"] = math.random(1, #self.skin_colors)
+		baby_properties["gen1_mother"] = math.random(1, #self.skin_colors-1)
+		baby_properties["gen2_mother"] = math.random(1, #self.skin_colors-1)
 	end
 	local baby = minetest.add_entity(pos, "petz:"..self.type, minetest.serialize(baby_properties)) --add a baby petz with staticdata = "baby"
 	local baby_entity = baby:get_luaentity()

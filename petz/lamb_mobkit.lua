@@ -11,7 +11,7 @@ local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.
 local visual_size_baby = {x=petz.settings.visual_size.x*scale_model*scale_baby, y=petz.settings.visual_size.y*scale_model*scale_baby}
 petz.lamb = {}
 mesh = 'petz_lamb.b3d'	
-local skin_colors = {"white", "grey", "dark_grey", "brown"}
+local skin_colors = {"white", "grey", "dark_grey", "brown", "vanilla"}
 local textures = {}
 for n = 1, #skin_colors do
 	textures[n] = "petz_"..pet_name.."_"..skin_colors[n]..".png"

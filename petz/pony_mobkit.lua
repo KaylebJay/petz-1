@@ -53,6 +53,7 @@ minetest.register_entity("petz:"..pet_name, {
 	mesh = mesh,
 	textures = textures,
 	skin_colors = skin_colors,
+	skin_color_mutation = {"vanilla"},
 	visual_size = visual_size,
 	visual_size_baby = visual_size_baby,
 	static_save = true,

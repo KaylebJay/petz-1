@@ -225,3 +225,14 @@ minetest.register_abm({
         end
     end
 })
+
+--Vanilla Wool
+minetest.register_node("petz:wool_vanilla", {
+	description = S("Vanilla Wool"),
+	tiles = {"wool_vanilla.png"},
+	is_ground_content = false,
+	groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 3,
+		flammable = 3, wool = 1},
+	sounds = default.node_sound_defaults(),
+})
+minetest.register_alias("wool:vanilla", "petz:wool_vanilla")
