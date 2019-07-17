@@ -518,7 +518,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.genes = {}
 			if not(self.type == "pony") then
 				local genes_mutation = false
-				if math.random(1, 2) == 1 then
+				if math.random(1, 200) == 1 then
 					genes_mutation = true
 				end
 				if genes_mutation == false then
