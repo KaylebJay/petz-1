@@ -26,6 +26,7 @@ minetest.register_entity("petz:"..pet_name, {
 	init_timer = true,	
 	is_pet = true,
 	has_affinity = true,
+	breed = true,
 	is_wild = false,
 	give_orders = true,
 	can_be_brushed = true,
@@ -103,12 +104,8 @@ minetest.register_entity("petz:"..pet_name, {
 				petz.detach(clicker, {x = 1, y = 0, z = 1})
 				mobkit.clear_queue_low(self)
 			elseif self.saddle and clicker:get_wielded_item():get_name() == "petz:shears" then
-				minetest.add_item(self.object:get_pos(), "petz:saddle")
-				if petz.settings.type_model == "mesh" then
-					petz.set_properties(self, {textures = {"petz_pony_"..self.skin_colors[self.texture_no]..".png"}})
-				else
-					self.object:set_properties({tiles = petz.pony.tiles})
-				end 
+				minetest.add_item(self.object:get_pos(), "petz:saddle")				
+				petz.set_properties(self, {textures = {"petz_pony_"..self.skin_colors[self.texture_no]..".png"}})
 				self.saddle = false	
 				mobkit.remember(self, "saddle", self.saddle)					
 			elseif not(self.driver) and not(self.saddle) and not(self.is_baby) and clicker:get_wielded_item():get_name() == "petz:saddle" then -- Put on saddle if tamed

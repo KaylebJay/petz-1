@@ -23,6 +23,7 @@ minetest.register_entity("petz:"..pet_name,{
 	drops = {
 		{name = "petz:raw_parrot", chance = 3, min = 1, max = 1,},
 	},
+	automatic_face_movement_dir = 0.0,
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!

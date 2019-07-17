@@ -35,7 +35,7 @@ petz.pet = {} -- A table of pet["owner_name"]="owner_name"
 
 petz.create_form = function(player_name)
     local pet = petz.pet[player_name]
-    local form_size = {w = 3, h = 3}
+    local form_size = {w = 4, h = 3}
     local hungrystuff_pos = {x= 0, y = 0}
     local buttonexit_pos = {x = 1, y = 6}
     local form_title = ""
@@ -49,7 +49,7 @@ petz.create_form = function(player_name)
        pet.affinity = 0
     end
     if petz.settings.tamagochi_mode == true then     
-    	form_size.w= form_size.w + 2
+    	form_size.w= form_size.w + 1
 		if pet.has_affinity == true then
 			form_title = S("Orders")
 			hungrystuff_pos = {x= 3, y = 2}
@@ -57,8 +57,8 @@ petz.create_form = function(player_name)
 				"image[3,3;1,1;petz_affinity_heart.png]"..
 				"label[4,3;".. tostring(pet.affinity).."%]"
 		else
-			form_size.w= form_size.w - 1
-			form_size.h= form_size.h + 2
+			form_size.w= form_size.w
+			form_size.h= form_size.h + 1
 			form_title = S("Status")
 			hungrystuff_pos = {x= 1, y = 3}
 		end
@@ -79,11 +79,6 @@ petz.create_form = function(player_name)
         if pet.has_affinity == true then
 			tamagochi_form_stuff = tamagochi_form_stuff .. "label[1,2;".. S("Orders") .."]"	
 		end
-		if pet.type == "pony" then
-			form_size.w= form_size.w + 2
-		elseif pet.type == "parrot" then
-			form_size.w= form_size.w + 1
-		end
     end
     if pet.is_pet == true and pet.tamed == true then
 		if not(pet.tag) then
@@ -99,6 +94,45 @@ petz.create_form = function(player_name)
 		"field[1,1;2,1;ipt_name;"..S("Name")..":"..";"..pet.tag.."]"..		
 		"checkbox[3,1;btn_show_tag;"..S("Show tag")..";"..selected.."]"
 	end
+	if pet.breed == true then --Show the Gender
+		local gender = ''
+		if pet.is_male == true then
+			gender = S("Male")
+		else
+			gender = S("Female")
+		end				
+		tamagochi_form_stuff = tamagochi_form_stuff..
+			"label[3,0;"..gender.."]"
+		local pregnant_icon_x
+		local pregnant_icon_y 
+		local pregnant_text_x
+		local pregnant_text_y
+		local infertile_text_x
+		local infertile_text_y
+		if pet.type == "pony" then
+			pregnant_icon_x = 3
+			pregnant_icon_y = 5
+			pregnant_text_x = 4
+			pregnant_text_y = 5
+			infertile_text_x = 3 
+			infertile_text_y = 5
+		else			
+			pregnant_icon_x = 3
+			pregnant_icon_y = 2
+			pregnant_text_x = 4
+			pregnant_text_y = 2
+			infertile_text_x = 3 
+			infertile_text_y = 3
+		end			
+		if pet.is_male == false and pet.is_pregnant == true then
+			tamagochi_form_stuff = tamagochi_form_stuff..
+				"image["..pregnant_icon_x..","..pregnant_icon_y..";1,1;petz_pony_pregnant_icon.png]"..
+				"label["..pregnant_text_x..","..pregnant_text_y..";"..S("Pregnant").."]"
+		elseif pet.is_male == false and pet.pregnant_count <= 0 then
+			tamagochi_form_stuff = tamagochi_form_stuff..				
+				"label["..infertile_text_x..","..infertile_text_y..";"..S("Infertile").."]"
+		end
+	end
     if pet.type == "parrot" then
 		form_size.h = form_size.h + 1
 		buttonexit_pos.y = buttonexit_pos.y + 1
@@ -106,28 +140,14 @@ petz.create_form = function(player_name)
 		"button_exit[0,6;1,1;btn_alight;"..S("Alight").."]"	..
 		"button_exit[1,6;1,1;btn_fly;"..S("Fly").."]"..
 		"button_exit[2,6;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"
-	elseif pet.type == "pony" then
-		local genre = ''
-		if pet.is_male == true then
-			genre = S("Male")
-		else
-			genre = S("Female")
-		end		
-		more_form_orders = more_form_orders..
-			"label[3,0;"..genre.."]"..
+	elseif pet.type == "pony" then		
+		more_form_orders = more_form_orders..			
 			"image[3,4;1,1;petz_pony_velocity_icon.png]"..
 			"label[4,4;".. tostring(pet.max_speed_forward).."/"..tostring(pet.max_speed_reverse)..'/'..tostring(pet.accel).."]"
-		if pet.is_male == false and pet.is_pregnant == true then
-			more_form_orders = more_form_orders..
-				"image[3,5;1,1;petz_pony_pregnant_icon.png]"..
-				"label[4,5;"..S("Pregnant").."]"
-		elseif pet.is_male == false and pet.pregnant_count <= 0 then
-			more_form_orders = more_form_orders..				
-				"label[3,5;"..S("Infertile").."]"
-		end
     end
     if pet.give_orders == true then
 		form_size.h= form_size.h + 4
+		form_size.w= form_size.w + 1
 		form_orders =
 			"button_exit[0,3;3,1;btn_followme;"..S("Follow me").."]"..
 			"button_exit[0,4;3,1;btn_standhere;"..S("Stand here").."]"..
@@ -136,8 +156,10 @@ petz.create_form = function(player_name)
 	else
 		if petz.settings.tamagochi_mode == true then
 			buttonexit_pos.y = buttonexit_pos.y - 2
+			form_size.h= form_size.h + 1
 		else
 			buttonexit_pos.y = buttonexit_pos.y - 4
+			form_size.w= form_size.w + 1
 		end
     end
     final_form =
@@ -306,8 +328,7 @@ petz.timer = function(self)
 				petz.set_affinity(self, false, 10)
 			end
             --Decrease health if pet has not fed
-            if self.fed == false then
-				--minetest.chat_send_player(self.owner, "no alimentado")
+            if self.fed == false then				
 				local damage_amount = - petz.settings.tamagochi_hunger_damage
 				mobkit.hurt(self, damage_amount)
 				petz.update_nametag(self)
@@ -364,20 +385,40 @@ end
 --'set_initial_properties' is call by 'on_activate' for each pet
 --
 
+petz.set_random_gender = function()	
+	if math.random(1, 2) == 1 then	    
+		return true
+	else		
+		return false
+	end	
+end
+
+petz.get_second_gen = function(self)
+	return math.random(1, #self.skin_colors)
+end
+
+petz.genetics_lamb_texture  = function(self)	
+	if self.genes["gen1"] == 1 or self.genes["gen2"] == 1 then 
+		return 1
+	elseif self.genes["gen1"] == 2 or self.genes["gen2"] == 2 then
+		return 2
+	elseif self.genes["gen1"] == 3 or self.genes["gen2"] == 3 then
+		return 3
+	else
+		return 4
+	end
+end
+
 petz.load_vars = function(self)
 	--Only specific mobs
 	if self.type == "lamb" then
 		self.shaved = mobkit.recall(self, "shaved")
-		self.food_count_wool = mobkit.recall(self, "food_count_wool")
+		self.food_count_wool = mobkit.recall(self, "food_count_wool")		
 	elseif self.type == "calf" then
 		self.milked = mobkit.recall(self, "milked")
 	elseif self.type == "pony" then
 		self.saddle = mobkit.recall(self, "saddle")
 		self.driver = mobkit.recall(self, "driver")
-		self.is_male = mobkit.recall(self, "is_male")
-		self.is_baby = mobkit.recall(self, "is_baby")
-		self.is_pregnant = mobkit.recall(self, "is_pregnant")
-		self.pregnant_count = mobkit.recall(self, "pregnant_count")
 		self.max_speed_forward = mobkit.recall(self, "max_speed_forward")
 		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse")
 		self.accel = mobkit.recall(self, "accel")
@@ -386,6 +427,15 @@ petz.load_vars = function(self)
 	elseif self.type == "wolf" then
 		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count")
 	end	
+	--Mobs that can have babies
+	if self.breed == true then		
+		self.is_male = mobkit.recall(self, "is_male")
+		self.is_rut = mobkit.recall(self, "is_rut")
+		self.is_pregnant = mobkit.recall(self, "is_pregnant")				
+		self.pregnant_count = mobkit.recall(self, "pregnant_count")
+		self.is_baby = mobkit.recall(self, "is_baby")
+		self.genes = mobkit.recall(self, "genes")
+	end
 	--All the mobs	
 	self.tag = mobkit.recall(self, "tag")
 	self.show_tag = mobkit.recall(self, "show_tag")
@@ -406,9 +456,12 @@ end
 function petz.set_initial_properties(self, staticdata, dtime_s)	
 	local static_data_table = minetest.deserialize(staticdata)	
 	local captured_mob = false
+	local baby_born = false
 	--minetest.chat_send_player("singleplayer", staticdata)	
-	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["owner"] then 
-		captured_mob = true		
+	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["captured"] then 
+		captured_mob = true
+	elseif static_data_table and static_data_table["baby_born"] and static_data_table["baby_born"] == true then
+		baby_born = true	
 	end
 	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars		
 		--Mob Specific
@@ -427,7 +480,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.food_count_wool = 0
 			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
 			self.shaved = false
-			mobkit.remember(self, "shaved", self.shaved)
+			mobkit.remember(self, "shaved", self.shaved)			
 		elseif self.type == "puppy" then		
 			self.square_ball_attached = false
 			mobkit.remember(self, "square_ball_attached", self.square_ball_attached)			
@@ -435,50 +488,49 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.wolf_to_puppy_count = petz.settings.wolf_to_puppy_count
 			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count)
 		elseif self.type == "pony" then		
-			if (staticdata== "baby") or (self.is_baby== true) then							
-				petz.set_properties(self, {				
-					visual_size = self.visual_size_baby,
-					collisionbox = self.collisionbox_baby
-				})		
-			end	
-			if not(staticdata== "baby") then
+			if baby_born == false then
 				self.max_speed_forward= math.random(2, 4) --set a random velocity for walk and run
 				mobkit.remember(self, "max_speed_forward", self.max_speed_forward)				
 				self.max_speed_reverse= math.random(2, 4)	
 				mobkit.remember(self, "max_speed_reverse", self.max_speed_reverse)				
 				self.accel= math.random(2, 4)	
 				mobkit.remember(self, "accel", self.accel)	
-			end
-			--set a random genre
-			local random_number = math.random(1, 2)
-			if random_number == 1 then
-				self.is_male = true
-			else
-				self.is_male = false
-			end
-			mobkit.remember(self, "is_male", self.is_male)	
-    		if petz.settings.type_model == "mesh" then --set a random color    
-    			local random_number = math.random(1, 6)
-    			if random_number == 1 then
-					self.texture_no = 1
-				elseif random_number == 2 then
-					self.texture_no = 2				
-				elseif random_number == 3 then
-					self.texture_no = 3
-				elseif random_number == 4 then
-					self.texture_no = 4
-				elseif random_number == 5 then
-					self.texture_no = 5
-				else
-					self.texture_no = 6
-				end		
-			end
-			self.is_pregnant = false
-			mobkit.remember(self, "is_pregnant", self.is_pregnant)
-			self.is_baby = false
-			mobkit.remember(self, "is_baby", self.is_baby)
+			end							
+    		self.texture_no = math.random(1, #self.skin_colors) --set a random texture
 			self.driver = false
 			mobkit.remember(self, "driver", self.driver)			
+		end
+		--Mobs that can have babies
+		if self.breed == true then
+			self.is_male = petz.set_random_gender() --set a random gender			
+			mobkit.remember(self, "is_male", self.is_male)
+			self.is_rut = false
+			mobkit.remember(self, "is_rut", self.is_rut)
+			self.is_pregnant = false
+			mobkit.remember(self, "is_pregnant", self.is_pregnant)
+			self.pregnant_count = petz.settings.pregnant_count
+			mobkit.remember(self, "pregnant_count", self.pregnant_count)			
+			self.is_baby = false
+			mobkit.remember(self, "is_baby", self.is_baby)			
+			--Genetics
+			self.genes = {}
+			if baby_born == false then
+				self.genes["gen1"] = self.texture_no
+				self.genes["gen2"] = petz.get_second_gen(self)
+			else
+				if math.random(1, 2) == 1 then
+					self.genes["gen1"] = static_data_table["gen1_father"]					
+				else
+					self.genes["gen1"] = static_data_table["gen2_father"]
+				end
+				if math.random(1, 2) == 1 then
+					self.genes["gen2"] = static_data_table["gen1_mother"]					
+				else
+					self.genes["gen2"] = static_data_table["gen2_mother"]
+				end		
+				self.texture_no = petz.genetics_lamb_texture(self)		
+			end
+			mobkit.remember(self, "genes", self.genes)				
 		end
 		--ALL the mobs
 		self.set_vars = true
@@ -523,24 +575,31 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		elseif self.type == "wolf" then
 			self.wolf_to_puppy_count = tonumber(static_data_table["fields"]["wolf_to_puppy_count"])
 			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count) 
-		elseif self.type == "pony" then
+		elseif self.type == "pony" then		
+			self.max_speed_forward =  tonumber(static_data_table["fields"]["max_speed_forward"]	)
+			mobkit.remember(self, "max_speed_forward", self.max_speed_forward) 
+			self.max_speed_reverse = tonumber(static_data_table["fields"]["max_speed_reverse"])
+			mobkit.remember(self, "max_speed_reverse", self.max_speed_reverse) 
+			self.accel = tonumber(static_data_table["fields"]["accel"])			
+			mobkit.remember(self, "accel", self.accel) 
+			mobkit.remember(self, "saddle", false) --no shaddle
+			mobkit.remember(self, "driver", false) --no driver
+		end
+		--Mobs that can have babies
+		if self.breed == true then
 			self.is_male = petz.to_boolean(static_data_table["fields"]["is_male"])			
 			mobkit.remember(self, "is_male", self.is_male) 
+			self.is_rut = petz.to_boolean(static_data_table["fields"]["is_rut"])
+			mobkit.remember(self, "is_rut", self.is_rut) 
 			self.is_pregnant = petz.to_boolean(static_data_table["fields"]["is_pregnant"])
 			mobkit.remember(self, "is_pregnant", self.is_pregnant) 
 			self.is_baby = petz.to_boolean(static_data_table["fields"]["is_baby"])
 			mobkit.remember(self, "is_baby", self.is_baby) 
 			self.pregnant_count = tonumber(static_data_table["fields"]["pregnant_count"])
-			mobkit.remember(self, "pregnant_count", self.pregnant_count) 			
-			self.max_speed_forward =  tonumber(static_data_table["fields"]["max_speed_forward"]	)
-			mobkit.remember(self, "max_speed_forward", self.max_speed_forward) 
-			self.max_speed_reverse = tonumber(static_data_table["fields"]["max_speed_reverse"])
-			mobkit.remember(self, "max_speed_reverse", self.max_speed_reverse) 
-			self.accel = tonumber(static_data_table["fields"]["accel"])
-			mobkit.remember(self, "accel", self.accel) 
-			mobkit.remember(self, "saddle", false) --no shaddle
-			mobkit.remember(self, "driver", false) --no driver
-		end
+			mobkit.remember(self, "pregnant_count", self.pregnant_count) 	
+			self.genes = minetest.deserialize(static_data_table["fields"]["genes"])
+			mobkit.remember(self, "genes", self.genes) 	
+		end		
 		--ALL the mobs
 		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])
 		self.set_vars = true
@@ -576,27 +635,33 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			if self.shaved == true then
 				shaved_string = "_shaved"
 			end
-			texture = "petz_lamb".. shaved_string .."_"..self.wool_colors[self.texture_no]..".png"
+			texture = "petz_lamb".. shaved_string .."_"..self.skin_colors[self.texture_no]..".png"
 		elseif self.type == "pony" then	
 			if self.saddle then
 				texture = "petz_pony_"..self.skin_colors[self.texture_no]..".png" .. "^petz_pony_saddle.png"
 			else
 				texture = "petz_pony_"..self.skin_colors[self.texture_no]..".png"
 			end
-			if self.is_pregnant == true then
-				petz.init_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)    		
-			elseif self.is_baby == true then
-				petz.set_properties(self, {
-					visual_size = self.visual_size_baby,
-					collisionbox = self.collisionbox_baby 
-				})
-				petz.init_growth(self)
-			end
 		else
 			texture = self.textures[self.texture_no]
 		end
 		mobkit.remember(self, "texture_no", self.texture_no) 	
 		petz.set_properties(self, {textures = {texture}})	
+	end
+	if self.breed == true then
+		if self.is_pregnant == true then
+			if self.type == "pony" then
+				petz.init_pony_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)				
+			else
+				petz.init_pregnancy(self)
+			end
+		elseif (self.is_baby == true) or (baby_born == true) then
+			petz.set_properties(self, {
+				visual_size = self.visual_size_baby,
+				collisionbox = self.collisionbox_baby 
+			})
+			petz.init_growth(self)
+		end
 	end
 	--ALL the mobs
 	if self.is_pet and self.tamed then
@@ -690,21 +755,21 @@ petz.lamb_wool_regrow = function(self)
 		mobkit.remember(self, "food_count_wool", self.food_count_wool)
 		self.shaved = false
 		mobkit.remember(self, "shaved", self.shaved)				
-		local lamb_texture = "petz_lamb_"..self.wool_colors[self.texture_no]..".png"
+		local lamb_texture = "petz_lamb_"..self.skin_colors[self.texture_no]..".png"
 		petz.set_properties(self, {textures = {lamb_texture}})
 	end
 end
 
 petz.lamb_wool_shave = function(self, clicker)
 	local inv = clicker:get_inventory()	
-	local new_stack = "wool:"..self.wool_colors[self.texture_no]
+	local new_stack = "wool:"..self.skin_colors[self.texture_no]
 	if inv:room_for_item("main", new_stack) then
 		inv:add_item("main", new_stack)
 	else
 		minetest.add_item(self.object:get_pos(), new_stack)
 	end
     petz.do_sound_effect("object", self.object, "petz_lamb_moaning")
-    local lamb_texture = "petz_lamb_shaved_"..self.wool_colors[self.texture_no]..".png"
+    local lamb_texture = "petz_lamb_shaved_"..self.skin_colors[self.texture_no]..".png"
 	if petz.settings.type_model == "mesh" then
 		petz.set_properties(self, {textures = {lamb_texture}})		
 	else
@@ -805,6 +870,7 @@ petz.capture = function(self, clicker)
 		end
 	end	
 	--Save some extra values-->
+	stack_meta:set_string("captured", "true") --mark as captured
 	stack_meta:set_string("texture_no", tostring(self.texture_no)) --Save the current texture_no
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
 	stack_meta:set_string("tag", self.tag) --Save the current tag
@@ -812,9 +878,17 @@ petz.capture = function(self, clicker)
 	if self.type == 'lamb' then
 		stack_meta:set_string("shaved", tostring(self.shaved))	 --Save if shaved
 	elseif self.type == 'pony' then
+		stack_meta:set_string("max_speed_forward", tostring(self.max_speed_forward))
+		stack_meta:set_string("max_speed_reverse", tostring(self.max_speed_reverse))
+		stack_meta:set_string("accel", tostring(self.accel))
+	end
+	if self.breed == true then
 		stack_meta:set_string("is_male", tostring(self.is_male))
+		stack_meta:set_string("is_rut", tostring(self.is_rut))
 		stack_meta:set_string("is_baby", tostring(self.is_baby))
 		stack_meta:set_string("is_pregnant", tostring(self.is_pregnant))
+		stack_meta:set_string("pregnant_count", tostring(self.pregnant_count))
+		stack_meta:set_string("genes", minetest.serialize(self.genes))
 	end
 	local inv = clicker:get_inventory()	
 	if inv:room_for_item("main", new_stack) then
@@ -968,6 +1042,7 @@ petz.on_rightclick = function(self, clicker)
         local player_name = clicker:get_player_name()
         local wielded_item = clicker:get_wielded_item()
         local wielded_item_name = wielded_item:get_name()
+        local show_form = false
         if ((self.is_pet == true) and (self.owner == player_name) and (self.can_be_brushed == true))-- If brushing or spread beaver oil
             and ((wielded_item_name == "petz:hairbrush") or (wielded_item_name == "petz:beaver_oil")) then                       
                 if petz.settings.tamagochi_mode == true then
@@ -1021,8 +1096,14 @@ petz.on_rightclick = function(self, clicker)
 			end			
 			petz.capture(self, clicker)
 			minetest.chat_send_player("singleplayer", S("Your").." "..self.type.." "..S("has been captured")..".")				            
-        elseif self.type == "lamb" and (wielded_item_name == "mobs:shears" or wielded_item_name == "petz:shears") and clicker:get_inventory() and not self.shaved then
-            petz.lamb_wool_shave(self, clicker)
+        elseif self.type == "lamb" then
+			if (wielded_item_name == "mobs:shears" or wielded_item_name == "petz:shears") and clicker:get_inventory() and not self.shaved then
+				petz.lamb_wool_shave(self, clicker) --shear it!
+			elseif wielded_item_name == "default:blueberries" and not(self.is_baby) then
+				petz.breed(self, clicker, wielded_item, wielded_item_name)		
+			else
+				show_form = true
+			end
         elseif self.type == "calf" and wielded_item_name == "bucket:bucket_empty" and clicker:get_inventory() then
 			if not(self.milked) then
 				petz.calf_milk_milk(self, clicker)
@@ -1031,11 +1112,14 @@ petz.on_rightclick = function(self, clicker)
 			end
 		elseif self.type == "pony" and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm") then
 			if not(self.is_baby) then
-				petz.breed(self, clicker, wielded_item, wielded_item_name)	
+				petz.pony_breed(self, clicker, wielded_item, wielded_item_name)	
 			end
         --Else open the Form
         elseif (self.tamed == true) and (self.is_pet == true) then
-            petz.pet[player_name]= self
+			show_form = true
+        end
+        if show_form == true then
+			petz.pet[player_name]= self
             minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name))
         end
 end
@@ -1075,6 +1159,22 @@ end
 --
 
 petz.breed = function(self, clicker, wielded_item, wielded_item_name)
+	if self.is_rut == false and self.is_pregnant == false then
+		wielded_item:take_item()
+		clicker:set_wielded_item(wielded_item)
+		self.is_rut = true
+		mobkit.remember(self, "is_rut", self.is_rut)
+		petz.do_particles_effect(self.object, self.object:get_pos(), "heart")
+	else
+		if self.is_rut then
+			minetest.chat_send_player(clicker:get_player_name(), S("This animal is already rut."))			
+		else
+			minetest.chat_send_player(clicker:get_player_name(), S("This animal is already pregnant."))
+		end
+	end
+end
+
+petz.pony_breed = function(self, clicker, wielded_item, wielded_item_name)
 	if wielded_item_name == "petz:glass_syringe" and self.is_male== true then		
 		local new_wielded_item = ItemStack("petz:glass_syringe_sperm")
 		local meta = new_wielded_item:get_meta()
@@ -1092,23 +1192,58 @@ petz.breed = function(self, clicker, wielded_item, wielded_item_name)
 			local max_speed_forward = meta:get_int("max_speed_forward")
 			local max_speed_reverse = meta:get_int("max_speed_reverse")
 			local accel = meta:get_int("accel")		
-			petz.init_pregnancy(self, max_speed_forward, max_speed_reverse, accel)
+			petz.init_pony_pregnancy(self, max_speed_forward, max_speed_reverse, accel)
 			petz.do_particles_effect(self.object, self.object:get_pos(), "pregnant")
 		end
 		clicker:set_wielded_item("petz:glass_syringe")	
 	end
 end
 
-petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel)
-    minetest.after(petz.settings.pony_pregnancy_time, function(self, max_speed_forward, max_speed_reverse, accel)         
+petz.childbirth = function(self, father)
+	local pos = self.object:get_pos()		
+	self.is_pregnant = false
+	mobkit.remember(self, "is_pregnant", self.is_pregnant)
+	local baby_properties = {}
+	baby_properties["baby_born"] = true
+	if father and father.genes then
+		baby_properties["gen1_father"] = father.genes["gen1"]
+		baby_properties["gen2_father"] = father.genes["gen2"]
+	else
+		baby_properties["gen1_father"] = math.random(1, #self.skin_colors)
+		baby_properties["gen2_father"] = math.random(1, #self.skin_colors)
+	end
+	if self and self.genes then
+		baby_properties["gen1_mother"] = self.genes["gen1"]
+		baby_properties["gen2_mother"] = self.genes["gen2"]
+	else
+		baby_properties["gen1_mother"] = math.random(1, #self.skin_colors)
+		baby_properties["gen2_mother"] = math.random(1, #self.skin_colors)
+	end
+	local baby = minetest.add_entity(pos, "petz:"..self.type, minetest.serialize(baby_properties)) --add a baby petz with staticdata = "baby"
+	local baby_entity = baby:get_luaentity()
+	baby_entity.is_baby = true
+	mobkit.remember(baby_entity, "is_baby", baby_entity.is_baby)
+	if not(self.owner== nil) and not(self.owner== "") then					
+		baby_entity.tamed = true
+		mobkit.remember(baby_entity, "tamed", baby_entity.tamed)
+		baby_entity.owner = self.owner
+		mobkit.remember(baby_entity, "owner", baby_entity.owner)
+	end	
+	return baby_entity
+end
+
+petz.init_pregnancy = function(self, father)	
+    minetest.after(petz.settings.pregnancy_time, function(self, father)         
         if not(self.object:get_pos() == nil) then
-			local pos = self.object:get_pos()		
-			self.is_pregnant = false
-			mobkit.remember(self, "is_pregnant", self.is_pregnant)
-			local baby = minetest.add_entity(pos, "petz:pony", "baby")	--add a baby pony with staticdata = "baby"
-			local baby_entity = baby:get_luaentity()
-			baby_entity.is_baby = true
-			mobkit.remember(baby_entity, "is_baby", baby_entity.is_baby)
+			local baby_entity = petz.childbirth(self, father)
+		end
+    end, self, father)
+end
+
+petz.init_pony_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel)
+    minetest.after(petz.settings.pregnancy_time, function(self, max_speed_forward, max_speed_reverse, accel)         
+        if not(self.object:get_pos() == nil) then
+			local baby_entity = petz.childbirth(self)
 			--Set the genetics accordingly the father and the mother
 			local random_number = math.random(-1, 1)
 			local new_max_speed_forward = round((max_speed_forward + self.max_speed_forward)/2, 0) + random_number
@@ -1134,19 +1269,13 @@ petz.init_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel
 			baby_entity.max_speed_reverse = new_max_speed_reverse
 			mobkit.remember(baby_entity, "max_speed_reverse", baby_entity.max_speed_reverse)
 			baby_entity.accel = new_accel
-			mobkit.remember(baby_entity, "accel", baby_entity.accel)
-			if not(self.owner== nil) and not(self.owner== "") then					
-				baby_entity.tamed = true
-				mobkit.remember(baby_entity, "tamed", baby_entity.tamed)
-				baby_entity.owner = self.owner
-				mobkit.remember(baby_entity, "owner", baby_entity.owner)
-			end			
+			mobkit.remember(baby_entity, "accel", baby_entity.accel)	
 		end
     end, self, max_speed_forward, max_speed_reverse, accel)
 end
 
 petz.init_growth = function(self)
-    minetest.after(petz.settings.pony_growth_time, function(self)         
+    minetest.after(petz.settings.growth_time, function(self)         
         if not(self.object:get_pos() == nil) then
 			self.is_baby = false
 			mobkit.remember(self, "is_baby", self.is_baby)
@@ -1157,7 +1286,7 @@ petz.init_growth = function(self)
 				collisionbox = self.collisionbox 
 			})		
 		end
-    end, self, max_speed_forward, max_speed_reverse, accel)
+    end, self)
 end
 
 --

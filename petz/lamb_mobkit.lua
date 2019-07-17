@@ -6,21 +6,26 @@ local S = ...
 local pet_name = "lamb"
 table.insert(petz.mobs_list, pet_name)
 local scale_model = 1.7
+local scale_baby = 0.5
+local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model}
+local visual_size_baby = {x=petz.settings.visual_size.x*scale_model*scale_baby, y=petz.settings.visual_size.y*scale_model*scale_baby}
 petz.lamb = {}
 mesh = 'petz_lamb.b3d'	
-local wool_colors = {"white", "grey", "dark_grey", "brown"}
+local skin_colors = {"white", "grey", "dark_grey", "brown"}
 local textures = {}
-for n = 1, #wool_colors do
-	textures[n] = "petz_"..pet_name.."_"..wool_colors[n]..".png"
+for n = 1, #skin_colors do
+	textures[n] = "petz_"..pet_name.."_"..skin_colors[n]..".png"
 end
-local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
+local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.35, 0.28}
+local collisionbox_baby = {-0.35*scale_baby, -0.75*scale_model*scale_baby, -0.28, 0.35, -0.35, 0.28}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "lamb",	
 	init_timer = false,	
-	is_pet = false,
+	is_pet = true,
 	has_affinity = false,
+	breed = true,
 	is_wild = false,
 	give_orders = false,
 	can_be_brushed = true,
@@ -41,11 +46,13 @@ minetest.register_entity("petz:"..pet_name,{
 	stepheight = 0.1,	--EVIL!
 	collide_with_objects = true,
 	collisionbox = collisionbox,
-	visual = petz.settings.visual,
+	collisionbox_baby = collisionbox_baby,
+	visual = petz.settings.visual,	
 	mesh = mesh,
 	textures = textures,
-	wool_colors = wool_colors,
-	visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model},
+	skin_colors = skin_colors,
+	visual_size = visual_size,
+	visual_size_baby = visual_size_baby,
 	static_save = true,
 	on_step = mobkit.stepfunc,	-- required
 	get_staticdata = mobkit.statfunc,

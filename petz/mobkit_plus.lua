@@ -61,6 +61,16 @@ function mobkit.lq_dumbfly(self, speed_factor)
 		if random_num <= 1 then	
 			local yaw = self.object:get_yaw() or 0
 			yaw = self.object:set_yaw(yaw + 1.35, 8)		
+			if yaw then
+				local x = math.sin(yaw) * -1
+				local z = math.cos(yaw) * 1
+				local y = self.object:get_velocity().y
+				self.object:set_velocity({
+					x = x,
+					y = y,
+					z = z,
+				})
+			end
 			minetest.chat_send_player("singleplayer", "test")	
 		end
 		mobkit.animate(self, 'fly')

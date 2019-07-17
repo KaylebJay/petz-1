@@ -23,6 +23,10 @@ petz.settings.max_mobs = tonumber(settings:get("max_mobs"))
 petz.settings.lay_egg_chance = tonumber(settings:get("lay_egg_chance"))
 --Misc Random Sound Chance
 petz.settings.misc_sound_chance = tonumber(settings:get("misc_sound_chance"))
+--Breed Engine
+petz.settings.pregnant_count = tonumber(settings:get("pregnant_count"))
+petz.settings.pregnancy_time = tonumber(settings:get("pregnancy_time"))
+petz.settings.growth_time = tonumber(settings:get("growth_time"))
 --Lashing
 petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "3"))
 --Mobs Specific
@@ -92,8 +96,6 @@ petz.settings.pony_spawn_chance = tonumber(settings:get("pony_spawn_chance"))
 petz.settings.pony_spawn_nodes = settings:get("pony_spawn_nodes", "")
 petz.settings.pony_spawn_biome = settings:get("pony_spawn_biome", "default")
 petz.settings.pony_follow = settings:get("pony_follow", "")
-petz.settings.pony_pregnancy_time = tonumber(settings:get("pony_pregnancy_time"))
-petz.settings.pony_growth_time = tonumber(settings:get("pony_growth_time"))
 petz.settings.pony_predators = settings:get("pony_predators", "")
 petz.settings.parrot_spawn = settings:get_bool("parrot_spawn", true)
 petz.settings.parrot_spawn_chance = tonumber(settings:get("parrot_spawn_chance"))
