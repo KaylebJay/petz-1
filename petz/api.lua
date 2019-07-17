@@ -627,12 +627,18 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	end		
 	--Custom textures
 	if captured_mob == true or self.type == "lamb" or self.type == "pony" then
-		local texture
+		local texture		
+		---
+		---DELETE FROM THIS LINE...
+		---
 		if self.type == "lamb" or self.type == "pony" then
 			if not(self.texture_no) then
 				self.texture_no = math.random(1, #self.skin_colors)
 			end
 		end
+		----
+		----TO THIS LINE
+		----
 		--Mob Specific
 		--Lamb
 		if self.type == "lamb" then
