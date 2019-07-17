@@ -267,3 +267,19 @@ The beaver's home
 - Blueberry Cheese Cake = Blueberries, wheat, cheese and egg.
 - Blueberry Ice Cream: Blueberries, wheat, milk, 2 eggs and 2 snows = 3 ice creams.
 - Blueberry Muffin: Blueberries, 2 wheat, milk, 2 eggs and paper = 8 muffins.
+
+### Lambs Breed
+
+You can get baby lambs.
+
+1) Lambs could be male/female. Right-click on them to check its gender.
+2) Get blueberries.
+3) Use (right-click) blueberries with the lambs to heat them.
+4) When a rut male lamb found a oestrus female (close), she get pregnant.
+5) Affer one day a baby lamb will born.
+6) Genetics: The baby will inherit the color from its parents. From dominant to recessive genes: white, gray, dark gray and brown. This means: white color is the most common, parents both white could have a child of any color, if both brown all their descendants will be brown, etc.
+6) The little lamb growns in one day.
+
+#### Mutation! Vanilla lamb!
+
+Also lambs can suffer from a very rare mutation in its genes when spawn or breed, in a 1:200. You can get 'Vanilla Wool'.
