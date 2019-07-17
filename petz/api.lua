@@ -425,7 +425,7 @@ petz.load_vars = function(self)
 	elseif self.type == "puppy" then
 		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
 	elseif self.type == "wolf" then
-		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count")
+		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count") or petz.settings.wolf_to_puppy_count 
 	end	
 	--Mobs that can have babies
 	if self.breed == true then		
@@ -443,7 +443,7 @@ petz.load_vars = function(self)
 	self.owner = mobkit.recall(self, "owner") or nil
 	self.affinity = mobkit.recall(self, "affinity") or 100
 	self.fed = mobkit.recall(self, "fed") or true
-	self.brushed = mobkit.recall(self, "brushed")
+	self.brushed = mobkit.recall(self, "brushed") or false
 	if self.is_wild == true then
 		self.lashed = mobkit.recall(self, "lashed") or false
 		self.lashing_count = mobkit.recall(self, "lashing_count") or 0
