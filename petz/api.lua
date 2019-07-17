@@ -412,16 +412,16 @@ end
 petz.load_vars = function(self)
 	--Only specific mobs
 	if self.type == "lamb" then
-		self.shaved = mobkit.recall(self, "shaved")
-		self.food_count_wool = mobkit.recall(self, "food_count_wool")		
+		self.shaved = mobkit.recall(self, "shaved") or false
+		self.food_count_wool = mobkit.recall(self, "food_count_wool") or 0
 	elseif self.type == "calf" then
-		self.milked = mobkit.recall(self, "milked")
+		self.milked = mobkit.recall(self, "milked") or false
 	elseif self.type == "pony" then
-		self.saddle = mobkit.recall(self, "saddle")
-		self.driver = mobkit.recall(self, "driver")
-		self.max_speed_forward = mobkit.recall(self, "max_speed_forward")
-		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse")
-		self.accel = mobkit.recall(self, "accel")
+		self.saddle = mobkit.recall(self, "saddle") or false
+		self.driver = mobkit.recall(self, "driver") or false
+		self.max_speed_forward = mobkit.recall(self, "max_speed_forward") or 1
+		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse") or 1
+		self.accel = mobkit.recall(self, "accel") or 1
 	elseif self.type == "puppy" then
 		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
 	elseif self.type == "wolf" then
@@ -429,28 +429,28 @@ petz.load_vars = function(self)
 	end	
 	--Mobs that can have babies
 	if self.breed == true then		
-		self.is_male = mobkit.recall(self, "is_male")
-		self.is_rut = mobkit.recall(self, "is_rut")
-		self.is_pregnant = mobkit.recall(self, "is_pregnant")				
-		self.pregnant_count = mobkit.recall(self, "pregnant_count")
-		self.is_baby = mobkit.recall(self, "is_baby")
-		self.genes = mobkit.recall(self, "genes")
+		self.is_male = mobkit.recall(self, "is_male") or false
+		self.is_rut = mobkit.recall(self, "is_rut") or false
+		self.is_pregnant = mobkit.recall(self, "is_pregnant") or false				
+		self.pregnant_count = mobkit.recall(self, "pregnant_count") or petz.settings.pregnant_count 
+		self.is_baby = mobkit.recall(self, "is_baby") or false
+		self.genes = mobkit.recall(self, "genes") or {}
 	end
 	--All the mobs	
-	self.tag = mobkit.recall(self, "tag")
-	self.show_tag = mobkit.recall(self, "show_tag")
-	self.tamed = mobkit.recall(self, "tamed")
-	self.owner = mobkit.recall(self, "owner")
-	self.affinity = mobkit.recall(self, "affinity")
-	self.fed = mobkit.recall(self, "fed")
+	self.tag = mobkit.recall(self, "tag") or ""
+	self.show_tag = mobkit.recall(self, "show_tag") or false
+	self.tamed = mobkit.recall(self, "tamed") or false
+	self.owner = mobkit.recall(self, "owner") or nil
+	self.affinity = mobkit.recall(self, "affinity") or 100
+	self.fed = mobkit.recall(self, "fed") or true
 	self.brushed = mobkit.recall(self, "brushed")
 	if self.is_wild == true then
-		self.lashed = mobkit.recall(self, "lashed")
-		self.lashing_count = mobkit.recall(self, "lashing_count")
+		self.lashed = mobkit.recall(self, "lashed") or false
+		self.lashing_count = mobkit.recall(self, "lashing_count") or 0
 	end
-	self.food_count = mobkit.recall(self, "food_count")
-	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied")
-	self.child = mobkit.recall(self, "child")
+	self.food_count = mobkit.recall(self, "food_count") or 0
+	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied") or false
+	self.child = mobkit.recall(self, "child") or false
 end
 
 function petz.set_initial_properties(self, staticdata, dtime_s)	
