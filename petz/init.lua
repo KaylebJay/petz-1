@@ -10,7 +10,7 @@ local mg_name = minetest.get_mapgen_setting("mg_name")
 -- internationalization boilerplate
 local S = minetest.get_translator(minetest.get_current_modname())
 
-assert(loadfile(modpath .. "/api.lua"))(modpath, S)
+assert(loadfile(modpath .. "/api.lua"))(modpath, modname, S)
 assert(loadfile(modpath .. "/mobkit.lua"))(modpath, S)
 assert(loadfile(modpath .. "/mobkit_plus.lua"))(modpath, S)
 assert(loadfile(modpath .. "/behaviours.lua"))(modpath, S)
@@ -21,63 +21,8 @@ assert(loadfile(modpath .. "/food.lua"))(modpath, S) --Load the food items
 assert(loadfile(modpath .. "/spawn.lua"))(modpath, S) --Load the spawn engine
 assert(loadfile(modpath .. "/mount.lua"))(modpath, S) --Load the mount engine
 
-if petz.settings.kitty_spawn then
-    assert(loadfile(modpath .. "/kitty_"..petz.settings.type_api..".lua"))(S) 
-end
-if petz.settings.puppy_spawn then
-    assert(loadfile(modpath .. "/puppy_"..petz.settings.type_api..".lua"))(S) 
-end
-if petz.settings.ducky_spawn then
-    assert(loadfile(modpath .. "/ducky_"..petz.settings.type_api..".lua"))(S) 
-end
-if petz.settings.beaver_spawn then
-    assert(loadfile(modpath .. "/beaver_"..petz.settings.type_api..".lua"))(S, modpath, mg_name)    
-end
-if petz.settings.lamb_spawn then
-    assert(loadfile(modpath .. "/lamb_"..petz.settings.type_api..".lua"))(S)    
-end
-if petz.settings.lion_spawn then
-    assert(loadfile(modpath .. "/lion_"..petz.settings.type_api..".lua"))(S)    
-end
-if petz.settings.calf_spawn then
-    assert(loadfile(modpath .. "/calf_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.panda_spawn then
-    assert(loadfile(modpath .. "/panda_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.frog_spawn then
-    assert(loadfile(modpath .. "/frog_"..petz.settings.type_api..".lua"))(S, modpath, mg_name)
-end
-if petz.settings.grizzly_spawn then
-    assert(loadfile(modpath .. "/grizzly_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.pony_spawn then
-    assert(loadfile(modpath .. "/pony_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.parrot_spawn then
-    --assert(loadfile(modpath .. "/parrot_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.chicken_spawn then
-    assert(loadfile(modpath .. "/chicken_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.chimp_spawn then
-    assert(loadfile(modpath .. "/chimp_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.piggy_spawn then
-    assert(loadfile(modpath .. "/piggy_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.pigeon_spawn then
-    assert(loadfile(modpath .. "/pigeon_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.turtle_spawn then
-    assert(loadfile(modpath .. "/turtle_"..petz.settings.type_api..".lua"))(S, modpath, mg_name)
-end
-if petz.settings.clownfish_spawn then
-    assert(loadfile(modpath .. "/clownfish_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.tropicalfish_spawn then
-    assert(loadfile(modpath .. "/tropicalfish_"..petz.settings.type_api..".lua"))(S)
-end
-if petz.settings.wolf_spawn then
-    assert(loadfile(modpath .. "/wolf_"..petz.settings.type_api..".lua"))(S)
-end
+ for i = 1, #petz.petz_list do --load all the petz.lua files
+	if petz.settings[petz.petz_list[i].."_spawn"] then
+		assert(loadfile(modpath .. "/"..petz.petz_list[i].."_"..petz.settings.type_api..".lua"))(S) 
+	end	
+ end

@@ -1,30 +1,24 @@
-local modpath, S = ...
+local modpath, modname, S = ...
 
 petz = {}
 
 local creative_mode = minetest.settings:get_bool("creative_mode")
 
-petz.register_cubic = function(node_name, fixed, tiles)
-		minetest.register_node(node_name, {
-		drawtype = "nodebox",
-		node_box = {
-			type = "fixed",
-			fixed = fixed,
-		},
-		tiles = tiles,
-		paramtype = "light",
-		paramtype2 = "facedir",
-    	groups = {not_in_creative_inventory = 1},
-	})		
-end
+--
+--The Petz
+--
 
+petz.petz_list = {"kitty", "puppy", "ducky", "lamb", "lion", "calf", "panda", --A table with all the petz names
+	"grizzly", "pony", "parrot", "chicken", "piggy", "wolf"}
+
+--
+--Settings
+--
 petz.settings = {}
 petz.settings.mesh = nil
 petz.settings.visual_size = {}
 petz.settings.rotate = 0
 petz.settings.tamagochi_safe_nodes = {} --Table with safe nodes for tamagochi mode
-
-petz.mobs_list = {} --A table with all the petz names
 
 --
 --Form Dialog
@@ -126,7 +120,7 @@ petz.create_form = function(player_name)
 		end			
 		if pet.is_male == false and pet.is_pregnant == true then
 			tamagochi_form_stuff = tamagochi_form_stuff..
-				"image["..pregnant_icon_x..","..pregnant_icon_y..";1,1;petz_pony_pregnant_icon.png]"..
+				"image["..pregnant_icon_x..","..pregnant_icon_y..";1,1;petz_"..pet.type.."_pregnant_icon.png]"..
 				"label["..pregnant_text_x..","..pregnant_text_y..";"..S("Pregnant").."]"
 		elseif pet.is_male == false and pet.pregnant_count <= 0 then
 			tamagochi_form_stuff = tamagochi_form_stuff..				
@@ -178,24 +172,41 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if pet and pet.object then	
 		--brewing.magic_sound("to_player", player, "brewing_select")
 		if fields.btn_followme then
-			mobkit.clear_queue_low(pet)
-			mobkit.hq_follow(pet, 15, player)
+			if not(pet.can_fly) then
+				mobkit.clear_queue_low(pet)
+				mobkit.hq_follow(pet, 15, player)
+			end			
 		elseif fields.btn_standhere then
-			mobkit.lq_idle(pet, 2400)
+			mobkit.clear_queue_high(pet)
+			petz.stand(pet)
+			mobkit.lq_idle(pet, 2400)		
+			if pet.can_fly == true then						
+				if mobkit.node_name_in(pet, "below") == "air" then		
+					mobkit.animate(pet, "fly")
+				else					
+					mobkit.animate(pet, "stand")
+				end
+			end
 		elseif fields.btn_ownthing then
-			mobkit.clear_queue_low(pet)
+			mobkit.clear_queue_low(pet)			
 			petz.ownthing(pet)
 		elseif fields.btn_alight then
-			pet.object:set_acceleration({ x = 0, y = -1, z = 0 })
-			mobkit.animate(pet, "stand")	
-		elseif fields.btn_fly then
-			pet.object:set_acceleration({ x = 0, y = 1, z = 0 })
-			mobkit.animate(pet, "fly")	
+			mobkit.clear_queue_low(pet)
+			mobkit.clear_queue_high(pet)	
+			if not(mobkit.node_name_in(pet, "below") == "air") then		
+				mobkit.animate(pet, "fly")				
+			end					
+			mobkit.hq_alight(pet, 0)			
+		elseif fields.btn_fly then	
+			mobkit.clear_queue_low(pet)		
+			mobkit.clear_queue_high(pet)	
+			pet.mov_status = "free"
+			mobkit.hq_fly(pet, 0)		
 			minetest.after(2.5, function(pet) 
+				mobkit.clear_queue_low(pet)
 				pet.object:set_acceleration({ x = 0, y = 0, z = 0 })    
 				pet.object:set_velocity({ x = 0, y = 0, z = 0 })    
-				petz.ownthing(pet)
-			end, pet)	
+			end, pet)			
 		elseif fields.btn_perch_shoulder then
 			pet.object:set_attach(player, "Arm_Left", {x=0.5,y=-6.25,z=0}, {x=0,y=0,z=180}) 
 			mobkit.animate(pet, "stand")	
@@ -217,8 +228,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 end)
 
-petz.ownthing= function(self)	
+petz.ownthing = function(self)	
+	self.mov_status = "free"
 	mobkit.hq_roam(self, 0)
+	mobkit.clear_queue_high(self)
+end
+
+petz.stand = function(self)	
+	self.mov_status = "stand"	
+	self.object:set_velocity({ x = 0, y = 0, z = 0 })   
+	self.object:set_acceleration({ x = 0, y = 0, z = 0 }) 
 	mobkit.clear_queue_high(self)
 end
 
@@ -986,9 +1005,12 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			mobkit.hurt(self,tool_capabilities.damage_groups.fleshy or 1)
 			petz.update_nametag(self)
 			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)							
-		end		
+		end	
 		petz.kick_back(self, dir) -- kickback	
-		petz.do_sound_effect("object", self.object, "petz_default_punch")
+		petz.do_sound_effect("object", self.object, "petz_default_punch")	
+		if self.hp <= 0 and self.driver then --important for ponies!		
+			petz.force_detach(self.driver)
+		end
 	end
 end
 
@@ -1140,7 +1162,7 @@ petz.on_rightclick = function(self, clicker)
 				petz.pony_breed(self, clicker, wielded_item, wielded_item_name)	
 			end
         --Else open the Form
-        elseif (self.tamed == true) and (self.is_pet == true) then
+        elseif (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then
 			show_form = true
         end
         if show_form == true then
@@ -1218,7 +1240,7 @@ petz.pony_breed = function(self, clicker, wielded_item, wielded_item_name)
 			local max_speed_reverse = meta:get_int("max_speed_reverse")
 			local accel = meta:get_int("accel")		
 			petz.init_pony_pregnancy(self, max_speed_forward, max_speed_reverse, accel)
-			petz.do_particles_effect(self.object, self.object:get_pos(), "pregnant")
+			petz.do_particles_effect(self.object, self.object:get_pos(), "pregnant".."_"..self.type)
 		end
 		clicker:set_wielded_item("petz:glass_syringe")	
 	end
@@ -1318,14 +1340,11 @@ end
 --on_die event for all the mobs
 --
 
-petz.on_die = function(self)
+petz.on_die = function(self)	
 	--Specific of each mob
 	if self.type == "pony" then
 		if self.saddle then -- drop saddle when horse is killed while riding
 			minetest.add_item(self.object:get_pos(), "petz:saddle")
-		end
-		if self.driver then -- also detach from horse properly
-			--petz.force_detach(self.driver)
 		end
 	elseif self.type == "puppy" then
 		if self.square_ball_attached == true and self.attached_squared_ball then
@@ -1388,8 +1407,13 @@ petz.do_particles_effect = function(obj, pos, particle_type)
         particles_amount = 10
  		min_size = 1.0
 		max_size = 1.5
-    elseif particle_type == "pregnant" then
+    elseif particle_type == "pregnant_pony" then
         texture_name = "petz_pony_pregnant_icon.png"
+        particles_amount = 10
+        min_size = 5.0
+		max_size = 6.0 
+	elseif particle_type == "pregnant_lamb" then
+        texture_name = "petz_lamb_pregnant_icon.png"
         particles_amount = 10
         min_size = 5.0
 		max_size = 6.0 

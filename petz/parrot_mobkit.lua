@@ -1,7 +1,6 @@
 local S = ...
 
 local pet_name = "parrot"
-table.insert(petz.mobs_list, pet_name)
 local scale_model = 0.7
 local mesh = 'petz_parrot.b3d'	
 local textures= {"petz_parrot.png", "petz_parrot2.png", "petz_parrot3.png"}
@@ -12,7 +11,7 @@ minetest.register_entity("petz:"..pet_name,{
 	type = "parrot",	
 	init_timer = true,	
 	is_pet = true,
-	fly = true,
+	can_fly = true,	
 	max_height = 5,
 	has_affinity = true,
 	is_wild = false,
@@ -23,7 +22,7 @@ minetest.register_entity("petz:"..pet_name,{
 	drops = {
 		{name = "petz:raw_parrot", chance = 3, min = 1, max = 1,},
 	},
-	automatic_face_movement_dir = 0.0,
+	--automatic_face_movement_dir = 0.0,
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -78,7 +77,7 @@ minetest.register_entity("petz:"..pet_name,{
 	end,
 	
 	on_step = function(self, dtime)	
-		mobkit.stepfunc(self, dtime) -- required
+		mobkit.stepfunc(self, dtime) -- required		
 		petz.init_timer(self)
 	end,
     

@@ -4,7 +4,6 @@
 local S = ...
 
 local pet_name = "panda"
-table.insert(petz.mobs_list, pet_name)
 local scale_model = 1.0
 local mesh = 'petz_panda.b3d'	
 local textures= {"petz_panda.png"}

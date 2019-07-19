@@ -4,7 +4,6 @@
 local S = ...
 
 local pet_name= "puppy"
-table.insert(petz.mobs_list, pet_name)
 local scale_model = 1.5
 local mesh = nil
 local textures = {}

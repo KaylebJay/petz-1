@@ -8,11 +8,9 @@ function petz.herbivore_brain(self)
 	
 	-- Die Behaviour
 	
-	if self.hp <= 0 then	
+	if self.hp <= 0 then
 		petz.on_die(self)
 		return		
-	elseif self.type == "pony" and self.driver then
-		return
 	end		
 	
 	if mobkit.timer(self, 1) then 
@@ -109,7 +107,7 @@ function petz.herbivore_brain(self)
 							mobkit.remember(couple, "is_rut", couple.is_rut)				
 							couple.is_pregnant = true
 							mobkit.remember(couple, "is_pregnant", couple.is_pregnant)	
-							petz.do_particles_effect(couple.object, couple.object:get_pos(), "pregnant")
+							petz.do_particles_effect(couple.object, couple.object:get_pos(), "pregnant".."_"..couple.type)
 							petz.init_pregnancy(couple, self)	
 						end
 					end
@@ -145,8 +143,8 @@ function petz.herbivore_brain(self)
 		petz.random_mob_sound(self)
 		
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) then
-			if not(self.fly) then
+		if mobkit.is_queue_empty_high(self) and not(self.mov_status == "stand") then			
+			if not(self.can_fly) then
 				mobkit.hq_roam(self, 0)
 			else
 				mobkit.hq_wanderfly(self, 0)

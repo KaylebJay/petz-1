@@ -4,7 +4,6 @@
 local S = ...
 
 local pet_name = "lamb"
-table.insert(petz.mobs_list, pet_name)
 local scale_model = 1.7
 local scale_baby = 0.5
 local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model}

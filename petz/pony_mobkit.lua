@@ -4,7 +4,6 @@
 local S = ...
 
 local pet_name = "pony"
-table.insert(petz.mobs_list, pet_name)
 local scale_model = 2.2
 local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model}
 local scale_baby = 0.5
@@ -23,6 +22,7 @@ local collisionbox_baby = {-0.5*scale_baby, -0.75*scale_model*scale_baby, -0.25,
 minetest.register_entity("petz:"..pet_name, {          
 	--Petz specifics	
 	type = pet_name,	
+	is_mountable = true,
 	init_timer = true,	
 	is_pet = true,
 	has_affinity = true,
@@ -91,12 +91,8 @@ minetest.register_entity("petz:"..pet_name, {
 		petz.set_initial_properties(self, staticdata, dtime_s)
 	end,
 	
-	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)	
-		if not(self.driver) then
-			petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
-		else
-			petz.force_detach(self.driver)
-		end
+	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)				
+			petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)		
 	end,
 	
 	on_rightclick = function(self, clicker)
