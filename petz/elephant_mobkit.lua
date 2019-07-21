@@ -20,14 +20,14 @@ for i=1, 2 do
 		description = "Elephant"
 		is_male = true
 		mesh = "petz_elephant.b3d"
-		scale_model = 5.0
+		scale_model = 4.0
 		skin_colors = {"gray", "white"}
 	else --if female
 		pet_name= "elephant_female"
 		description = "Elephant (Female)"
 		mesh = "petz_elephant_female.b3d"
 		is_male = false
-		scale_model = 4.5
+		scale_model = 3.5
 		skin_colors = {"brown", "white"}
 	end
 	for n = 1, #skin_colors do
@@ -45,6 +45,7 @@ for i=1, 2 do
 		breed = true,
 		has_affinity = true,
 		is_wild = false,
+		attack_player = false,
 		give_orders = true,
 		can_be_brushed = true,
 		--breed = true,

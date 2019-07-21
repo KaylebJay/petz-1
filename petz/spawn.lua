@@ -45,7 +45,7 @@ minetest.register_globalstep(function(dtime)
 		elseif spawn_chance > 1 then
 			spawn_chance = 1
 		end
-		spawn_chance = 1 / spawn_chance
+		spawn_chance = math.floor((1 / spawn_chance)+0.5)
 		--minetest.chat_send_player("singleplayer", tostring(spawn_chance))
 		local random_chance = math.random(1, spawn_chance)
 		--minetest.chat_send_player("singleplayer", tostring(random_chance))		
@@ -70,7 +70,7 @@ minetest.register_globalstep(function(dtime)
 			end
 			local pet_name = "petz:"..random_mob
 			if mob_count < petz.settings.max_mobs then --check for bigger mobs:
-				spawn_pos = petz.pos_to_spawn(pet_name, spawn_pos)--recalculate pos.y for bigger mobs
+				spawn_pos = petz.pos_to_spawn(pet_name, spawn_pos) --recalculate pos.y for bigger mobs
 				minetest.add_entity(spawn_pos, pet_name)	
 				--minetest.chat_send_player("singleplayer", "spawned!!!")					
 			end
@@ -82,13 +82,15 @@ petz.pos_to_spawn = function(pet_name, pos)
 	local x = pos.x
 	local y = pos.y
 	local z = pos.z
-	if minetest.registered_entities[pet_name].visual_size.x >= 45 and
+	if minetest.registered_entities[pet_name] and minetest.registered_entities[pet_name].visual_size.x then
+		if minetest.registered_entities[pet_name].visual_size.x >= 45 and
 			minetest.registered_entities[pet_name].visual_size.x <= 64 then
-		y = y + 2
-	elseif minetest.registered_entities[pet_name].visual_size.x > 64 then
-		y = y + 5
-	else
-		y = y + 1
+				y = y + 2
+		elseif minetest.registered_entities[pet_name].visual_size.x > 64 then
+			y = y + 5
+		else
+			y = y + 1
+		end
 	end
 	spawn_pos = { x = x, y = y, z = z}
 	return spawn_pos
