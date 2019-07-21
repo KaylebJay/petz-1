@@ -130,10 +130,12 @@ end
 
 function mobkit.lq_dumbfly(self, speed_factor)
 	local timer = 3
+	local status = "ascend"
 	speed_factor = speed_factor or 1
 	local func = function(self)
 		timer = timer - self.dtime
 		local vel = self.object:getvelocity()
+		local velocity = {}
 		local mob = self.object
 		local pos = mob:getpos()			
 		local random_num
@@ -149,26 +151,31 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				mobkit.set_velocity(self, self.object:getvelocity())
 			end			
 		end
-		if mobkit.check_height(self) == false then
+		if mobkit.check_height(self) == false then --check if max height, then stand or descend
 			random_num = math.random(1, 100)
 			if random_num < 70 then
 				status = "descend"
 			else
 				status = "stand"
 			end
+		else --check if water below, if yes ascend
+			local node_name = mobkit.node_name_in(self, "below")
+			if minetest.get_item_group(node_name, "water") > 1  then
+				status = "ascend"
+			end
 		end		
 		--local node_name_in_front = mobkit.node_name_in(self, "front")
 		if status == "stand" and timer < 0 then -- stand
-			local velocity = {
-				x= vel.x*self.max_speed* speed_factor,
+			velocity = {
+				x= vel.x*self.max_speed* speed_factor *2,
 				y= 0,
-				z= vel.z*self.max_speed* speed_factor,
+				z= vel.z*self.max_speed* speed_factor *2,
 			}
 			mobkit.set_velocity(self, velocity)
 			random_num = math.random(1, 100)
-			if random_num < 10 and mobkit.check_height(self) == false then
+			if random_num < 20 and mobkit.check_height(self) == false then
 				status = "descend"				
-			elseif random_num < 60 then		
+			elseif random_num < 40 then		
 				status = "ascend"							
 			end		
 			--minetest.chat_send_player("singleplayer", "stand")
@@ -176,7 +183,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 		elseif status == "descend"  and timer < 0 then -- descend
 			local y			
 			y = -self.max_speed * speed_factor
-			local velocity = {
+			velocity = {
 				x = self.max_speed* speed_factor,
 				y = y,
 				z = self.max_speed* speed_factor,
@@ -185,7 +192,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 			random_num = math.random(1, 100)
 			if random_num < 20 then
 				status = "stand"
-			elseif random_num < 60 then		
+			elseif random_num < 40 then		
 				status = "ascend"											
 			end
 			--minetest.chat_send_player("singleplayer", "descend")	
@@ -194,7 +201,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 			local y
 			y = self.max_speed * speed_factor * 2
 			status = "ascend"
-			local velocity ={
+			velocity ={
 				x = self.max_speed* speed_factor,				
 				y = y,
 				z = self.max_speed* speed_factor,

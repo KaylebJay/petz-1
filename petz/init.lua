@@ -21,8 +21,21 @@ assert(loadfile(modpath .. "/food.lua"))(modpath, S) --Load the food items
 assert(loadfile(modpath .. "/spawn.lua"))(modpath, S) --Load the spawn engine
 assert(loadfile(modpath .. "/mount.lua"))(modpath, S) --Load the mount engine
 
+petz.file_exists = function(name)
+   local f = io.open(name,"r")
+   if f ~= nil then
+		io.close(f)
+		return true
+	else
+		return false
+	end
+end
+
  for i = 1, #petz.petz_list do --load all the petz.lua files
 	if petz.settings[petz.petz_list[i].."_spawn"] then
-		assert(loadfile(modpath .. "/"..petz.petz_list[i].."_"..petz.settings.type_api..".lua"))(S) 
+		local file_name = modpath .. "/"..petz.petz_list[i].."_"..petz.settings.type_api..".lua"
+		if petz.file_exists(file_name) then
+			assert(loadfile(file_name))(S) 
+		end
 	end	
  end

@@ -9,7 +9,8 @@ local creative_mode = minetest.settings:get_bool("creative_mode")
 --
 
 petz.petz_list = {"kitty", "puppy", "ducky", "lamb", "lion", "calf", "panda", --A table with all the petz names
-	"grizzly", "pony", "parrot", "chicken", "piggy", "wolf"}
+	"grizzly", "pony", "parrot", "chicken", "piggy", "wolf", "elephant",
+	"elephant_female", "pigeon"}
 
 --
 --Settings
@@ -416,17 +417,25 @@ petz.get_second_gen = function(self)
 	return math.random(1, #self.skin_colors-1)
 end
 
-petz.genetics_lamb_texture  = function(self)	
-	if self.genes["gen1"] == 1 or self.genes["gen2"] == 1 then 
-		return 1
-	elseif self.genes["gen1"] == 2 or self.genes["gen2"] == 2 then
-		return 2
-	elseif self.genes["gen1"] == 3 or self.genes["gen2"] == 3 then
-		return 3
-	elseif self.genes["gen1"] == 4 or self.genes["gen2"] == 4 then
-		return 4
-	else
-		return 5
+petz.genetics_texture  = function(self)	
+	if self.type == "lamb" then
+		if self.genes["gen1"] == 1 or self.genes["gen2"] == 1 then 
+			return 1 --white
+		elseif self.genes["gen1"] == 2 or self.genes["gen2"] == 2 then
+			return 2 --light gray
+		elseif self.genes["gen1"] == 3 or self.genes["gen2"] == 3 then
+			return 3 --dark gray
+		elseif self.genes["gen1"] == 4 or self.genes["gen2"] == 4 then
+			return 4 --brown
+		else
+			return 5 --vanilla mutation
+		end
+	elseif self.type == "elephant" then 
+		if self.genes["gen1"] == 1 or self.genes["gen2"] == 1 then 
+			return 1 --default
+		else
+			return 2 --white mutation
+		end
 	end
 end
 
@@ -501,7 +510,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.food_count_wool = 0
 			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
 			self.shaved = false
-			mobkit.remember(self, "shaved", self.shaved)			
+			mobkit.remember(self, "shaved", self.shaved)	
+		elseif self.type == "elephant" then		
+			self.texture_no = math.random(1, #self.skin_colors-1) --set a random texture
 		elseif self.type == "puppy" then		
 			self.square_ball_attached = false
 			mobkit.remember(self, "square_ball_attached", self.square_ball_attached)			
@@ -523,7 +534,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 		--Mobs that can have babies
 		if self.breed == true then
-			self.is_male = petz.set_random_gender() --set a random gender			
+			if self.is_male == nil then
+				self.is_male = petz.set_random_gender() --set a random gender			
+			end
 			mobkit.remember(self, "is_male", self.is_male)
 			self.is_rut = false
 			mobkit.remember(self, "is_rut", self.is_rut)
@@ -555,12 +568,18 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 						else
 							self.genes["gen2"] = static_data_table["gen2_mother"]
 						end		
-						self.texture_no = petz.genetics_lamb_texture(self)		
+						self.texture_no = petz.genetics_texture(self)		
 					end				
 				else -- mutation
-					self.genes["gen1"] = 5 --vanilla
-					self.genes["gen2"] = 5 -- vanilla
-					self.texture_no = 5 -- vanilla
+					local mutation_gen
+					if self.type == "lamb" then
+						mutation_gen= 5 --vanilla						
+					elseif self.type == "elephant" then
+						mutation_gen = 2 --white						
+					end
+					self.genes["gen1"] = mutation_gen --white
+					self.genes["gen2"] = mutation_gen --white
+					self.texture_no = mutation_gen -- white
 				end
 			end
 			mobkit.remember(self, "genes", self.genes)
@@ -659,7 +678,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 	end		
 	--Custom textures
-	if captured_mob == true or self.type == "lamb" or self.type == "pony" then
+	if captured_mob == true or self.breed == true then
 		local texture		
 		---
 		---DELETE FROM THIS LINE...
@@ -843,22 +862,22 @@ function petz:register_egg(pet_name, desc, inv_img, no_creative)
 		groups = {spawn_egg = 2},
 		stack_max = 1,
 		on_place = function(itemstack, placer, pointed_thing)
-			local pos = pointed_thing.above
+			local spawn_pos = pointed_thing.above
 			-- am I clicking on something with existing on_rightclick function?
 			local under = minetest.get_node(pointed_thing.under)
 			local def = minetest.registered_nodes[under.name]
 			if def and def.on_rightclick then
 				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
 			end
-			if pos and not minetest.is_protected(pos, placer:get_player_name()) then
+			if spawn_pos and not minetest.is_protected(spawn_pos, placer:get_player_name()) then
 				if not minetest.registered_entities[pet_name] then
 					return
 				end
-				pos.y = pos.y + 1
+				spawn_pos = petz.pos_to_spawn(pet_name, spawn_pos)
 				local meta = itemstack:get_meta()				
 				local meta_table = meta:to_table()
 				local sdata = minetest.serialize(meta_table)
-				local mob = minetest.add_entity(pos, pet_name, sdata)
+				local mob = minetest.add_entity(spawn_pos, pet_name, sdata)
 				local ent = mob:get_luaentity()
 				-- set owner if not a monster
 				if ent.is_wild == false then					
@@ -1143,11 +1162,14 @@ petz.on_rightclick = function(self, clicker)
 			end			
 			petz.capture(self, clicker)
 			minetest.chat_send_player("singleplayer", S("Your").." "..self.type.." "..S("has been captured")..".")				            
+		elseif self.breed and wielded_item_name == petz.settings[self.type.."_breed"] and not(self.is_baby) and self.type ~= "pony" then
+			petz.breed(self, clicker, wielded_item, wielded_item_name)
+		--			
+		--Pet Specifics
+		--below here
         elseif self.type == "lamb" then
 			if (wielded_item_name == "mobs:shears" or wielded_item_name == "petz:shears") and clicker:get_inventory() and not self.shaved then
-				petz.lamb_wool_shave(self, clicker) --shear it!
-			elseif wielded_item_name == "default:blueberries" and not(self.is_baby) then
-				petz.breed(self, clicker, wielded_item, wielded_item_name)		
+				petz.lamb_wool_shave(self, clicker) --shear it!					
 			else
 				show_form = true
 			end
@@ -1212,6 +1234,7 @@ petz.breed = function(self, clicker, wielded_item, wielded_item_name)
 		self.is_rut = true
 		mobkit.remember(self, "is_rut", self.is_rut)
 		petz.do_particles_effect(self.object, self.object:get_pos(), "heart")
+		petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
 	else
 		if self.is_rut then
 			minetest.chat_send_player(clicker:get_player_name(), S("This animal is already rut."))			
@@ -1266,7 +1289,7 @@ petz.childbirth = function(self, father)
 		baby_properties["gen1_mother"] = math.random(1, #self.skin_colors-1)
 		baby_properties["gen2_mother"] = math.random(1, #self.skin_colors-1)
 	end
-	local baby = minetest.add_entity(pos, "petz:"..self.type, minetest.serialize(baby_properties)) --add a baby petz with staticdata = "baby"
+	local baby = minetest.add_entity(pos, "petz:"..self.type, minetest.serialize(baby_properties))
 	local baby_entity = baby:get_luaentity()
 	baby_entity.is_baby = true
 	mobkit.remember(baby_entity, "is_baby", baby_entity.is_baby)

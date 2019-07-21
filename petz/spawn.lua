@@ -68,24 +68,28 @@ minetest.register_globalstep(function(dtime)
 					end
 				end
 			end
-			--minetest.chat_send_player("singleplayer", tostring(mob_count))	
-			if mob_count < petz.settings.max_mobs then						
-				--check for bigger mobs:
-				pos_below = {
-					x = spawn_pos.x,
-					y = spawn_pos.y - 0.5,
-					z = spawn_pos.z,
-				}		
-				if minetest.get_node(pos_below).name ~= "air" then
-					spawn_pos = {
-						x = spawn_pos.x,
-						y = spawn_pos.y + 1.0,
-						z = spawn_pos.z,
-					}	
-				end
-				minetest.add_entity(spawn_pos, "petz:"..random_mob)	
+			local pet_name = "petz:"..random_mob
+			if mob_count < petz.settings.max_mobs then --check for bigger mobs:
+				spawn_pos = petz.pos_to_spawn(pet_name, spawn_pos)--recalculate pos.y for bigger mobs
+				minetest.add_entity(spawn_pos, pet_name)	
 				--minetest.chat_send_player("singleplayer", "spawned!!!")					
 			end
 		end
 	end
 end)
+
+petz.pos_to_spawn = function(pet_name, pos)	
+	local x = pos.x
+	local y = pos.y
+	local z = pos.z
+	if minetest.registered_entities[pet_name].visual_size.x >= 45 and
+			minetest.registered_entities[pet_name].visual_size.x <= 64 then
+		y = y + 2
+	elseif minetest.registered_entities[pet_name].visual_size.x > 64 then
+		y = y + 5
+	else
+		y = y + 1
+	end
+	spawn_pos = { x = x, y = y, z = z}
+	return spawn_pos
+end

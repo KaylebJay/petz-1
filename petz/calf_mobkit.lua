@@ -66,12 +66,11 @@ minetest.register_entity("petz:"..pet_name,{
 		stand={
 			{range={x=26, y=46}, speed=5, loop=true},
 			{range={x=47, y=59}, speed=5, loop=true},
-			{range={x=82, y=94}, speed=5, loop=true},		
 		},	
 	},
 	sounds = {
 		misc = "petz_calf_moo",
-		moaning = "petz_lamb_moaning",
+		moaning = "petz_calf_moaning",
 	},
 	
 	brainfunc = petz.herbivore_brain,

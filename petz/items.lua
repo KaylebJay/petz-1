@@ -322,3 +322,11 @@ minetest.register_craftitem("petz:bone", {
     inventory_image = "petz_bone.png",
     wield_image = "petz_bone.png"
 })
+
+-- Elephant Tusk
+
+minetest.register_craftitem("petz:elephant_tusk", {
+	description = S("Elephant Tusk"),
+	inventory_image = "petz_elephant_tusk.png",
+	groups = {},
+})
