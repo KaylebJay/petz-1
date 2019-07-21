@@ -83,10 +83,10 @@ petz.pos_to_spawn = function(pet_name, pos)
 	local y = pos.y
 	local z = pos.z
 	if minetest.registered_entities[pet_name] and minetest.registered_entities[pet_name].visual_size.x then
-		if minetest.registered_entities[pet_name].visual_size.x >= 45 and
-			minetest.registered_entities[pet_name].visual_size.x <= 64 then
+		if minetest.registered_entities[pet_name].visual_size.x >= 32 and
+			minetest.registered_entities[pet_name].visual_size.x <= 48 then
 				y = y + 2
-		elseif minetest.registered_entities[pet_name].visual_size.x > 64 then
+		elseif minetest.registered_entities[pet_name].visual_size.x > 48 then
 			y = y + 5
 		else
 			y = y + 1
