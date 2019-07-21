@@ -1289,7 +1289,13 @@ petz.childbirth = function(self, father)
 		baby_properties["gen1_mother"] = math.random(1, #self.skin_colors-1)
 		baby_properties["gen2_mother"] = math.random(1, #self.skin_colors-1)
 	end
-	local baby = minetest.add_entity(pos, "petz:"..self.type, minetest.serialize(baby_properties))
+	local baby_type = "petz:"..self.type
+	if self.type == "elephant_female" then
+		if math.random(1, 2) == 1 then
+			baby_type = "petz:elephant" --could be a baby male elephant
+		end
+	end
+	local baby = minetest.add_entity(pos, baby_type, minetest.serialize(baby_properties))
 	local baby_entity = baby:get_luaentity()
 	baby_entity.is_baby = true
 	mobkit.remember(baby_entity, "is_baby", baby_entity.is_baby)
