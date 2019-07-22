@@ -82,7 +82,7 @@ for i=1, 2 do
 		jump_height = 2.0,
 		view_range = 10,
 		lung_capacity = 10, -- seconds
-		max_hp = 15,
+		max_hp = 40,
 		makes_footstep_sound = true,
 
 		attack={range=0.5, damage_groups={fleshy=3}},	
