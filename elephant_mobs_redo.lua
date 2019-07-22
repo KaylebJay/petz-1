@@ -4,30 +4,11 @@
 local S = ...
 
 local pet_name = "elephant"
-
-local mesh = nil
-local fixed = {}
-local textures
 local scale_model = 3.0
 petz.elephant = {}
-local collisionbox = {}
-
-if petz.settings.type_model == "cubic" then
-	local node_name = "petz:"..pet_name.."_block"
-	fixed = {
-	}
-	petz.elephant.tiles = {
-		"petz_elephant_top.png", "petz_elephant_bottom.png", "petz_elephant_right.png",
-		"petz_elephant_left.png", "petz_elephant_back.png", "petz_elephant_front.png"
-	}
-	petz.register_cubic(node_name, fixed, petz.elephant.tiles)		
-	textures= {"petz:elephant_block"}
-	collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
-else
-	mesh = 'petz_elephant.b3d'	
-	textures = {"petz_elephant_gray.png"}	
-	collisionbox = {-0.187500*scale_model, -0.75*scale_model, -0.187500*scale_model, 0.125*scale_model, -0.0625*scale_model, 0.3125*scale_model}
-end
+local mesh = 'petz_elephant.b3d'	
+local textures = {"petz_elephant_gray.png"}	
+local collisionbox = {-0.187500*scale_model, -0.75*scale_model, -0.187500*scale_model, 0.125*scale_model, -0.0625*scale_model, 0.3125*scale_model}
 
 mobs:register_mob("petz:"..pet_name, {
 	type = "animal",
