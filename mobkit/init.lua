@@ -1228,7 +1228,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	end
 	
 -- bounciness
-	if self.springiness and self.springiness > 0 then
+	if self.springiness and self.springiness > 0 and not(self.can_fly) then
 		local vnew = vector.new(vel)
 		
 		if not self.collided then						-- ugly workaround for inconsistent collisions
