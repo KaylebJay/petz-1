@@ -154,6 +154,11 @@ petz.settings.elephant_female_spawn_biome = petz.settings.elephant_spawn_biome
 petz.settings.elephant_female_follow = petz.settings.elephant_follow
 petz.settings.elephant_female_breed = petz.settings.elephant_breed
 petz.settings.elephant_female_copulation_distance = petz.settings.elephant_copulation_distance
+petz.settings.moth_spawn = settings:get_bool("moth_spawn", true)
+petz.settings.moth_spawn_chance = tonumber(settings:get("moth_spawn_chance"))
+petz.settings.moth_spawn_nodes = settings:get("moth_spawn_nodes", "")
+petz.settings.moth_spawn_biome = settings:get("moth_spawn_biome", "default")
+petz.settings.moth_follow = settings:get("moth_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

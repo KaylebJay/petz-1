@@ -10,7 +10,7 @@ local creative_mode = minetest.settings:get_bool("creative_mode")
 
 petz.petz_list = {"kitty", "puppy", "ducky", "lamb", "lion", "calf", "panda", --A table with all the petz names
 	"grizzly", "pony", "parrot", "chicken", "piggy", "wolf", "elephant",
-	"elephant_female", "pigeon"}
+	"elephant_female", "pigeon", "moth"}
 
 --
 --Settings
@@ -243,7 +243,7 @@ petz.stand = function(self)
 end
 
 --
---Misc Functions
+--Helper Functions
 --
 
 function petz:split(inSplitPattern, outResults)
@@ -273,6 +273,15 @@ function petz.to_boolean(val)
 	end	
 end
 
+function petz.is_night()
+	local timeofday = minetest.get_timeofday() * 24000
+	if (timeofday < 4500) or (timeofday > 19500) then
+		return true
+	else
+		return false
+	end 
+end
+	
 --
 --The Tamagochi Mode
 --
@@ -1383,6 +1392,9 @@ petz.on_die = function(self)
 		if self.square_ball_attached == true and self.attached_squared_ball then
 			self.attached_squared_ball.object:set_detach()
 		end
+	end
+	if self.can_fly then
+		self.can_fly = false
 	end
 	--For all the mobs
     local props = self.object:get_properties()

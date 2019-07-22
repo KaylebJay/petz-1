@@ -38,8 +38,15 @@ minetest.register_globalstep(function(dtime)
 		end
 			
 		local random_mob = candidates_list[math.random(1, #candidates_list)] --Get a random mob from the list of candidates
-		local spawn_chance = petz.settings[random_mob.."_spawn_chance"]
+		random_mob_name = "petz:" .. random_mob
 		--minetest.chat_send_player("singleplayer", random_mob)
+		--Firstly check if this mob spawns at night
+		if minetest.registered_entities[random_mob_name] and minetest.registered_entities[random_mob_name].spawn_at_night then			
+			if not(petz.is_night()) then --if not at night
+				return
+			end
+		end
+		local spawn_chance = petz.settings[random_mob.."_spawn_chance"]
 		if spawn_chance < 0 then
 			spawn_chance = 0
 		elseif spawn_chance > 1 then
@@ -68,10 +75,9 @@ minetest.register_globalstep(function(dtime)
 					end
 				end
 			end
-			local pet_name = "petz:"..random_mob
 			if mob_count < petz.settings.max_mobs then --check for bigger mobs:
-				spawn_pos = petz.pos_to_spawn(pet_name, spawn_pos) --recalculate pos.y for bigger mobs
-				minetest.add_entity(spawn_pos, pet_name)	
+				spawn_pos = petz.pos_to_spawn(random_mob_name, spawn_pos) --recalculate pos.y for bigger mobs
+				minetest.add_entity(spawn_pos, random_mob_name)	
 				--minetest.chat_send_player("singleplayer", "spawned!!!")					
 			end
 		end
