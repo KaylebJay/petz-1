@@ -866,7 +866,7 @@ end
 function petz:register_egg(pet_name, desc, inv_img, no_creative)
 	local grp = {spawn_egg = 1}
 	minetest.register_craftitem(pet_name .. "_set", { -- register new spawn egg containing mob information
-		description = S("@1 (Tamed)", desc),
+		description = S("@1 (", desc)..S("Tamed")..")",
 		inventory_image = inv_img,
 		groups = {spawn_egg = 2},
 		stack_max = 1,
