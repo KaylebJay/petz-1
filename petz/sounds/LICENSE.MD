@@ -167,3 +167,9 @@ filename: petz_wolf_moaning.ogg
 Author: Alexander
 http://www.orangefreesounds.com/wolf-sounds/
 License: The following sound clip is public domain and may be used without prior permission.
+--------------------------------------------
+filename: petz_magical_chime.ogg
+Author: Alexander
+http://www.orangefreesounds.com/magical-chime-sound-effect/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”

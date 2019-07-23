@@ -308,6 +308,7 @@ minetest.register_craftitem("petz:saddle", {
 })
 
 minetest.register_craft({
+	type = "shaped",
 	output = "petz:saddle",
 	recipe = {
 		{"petz:leather", "petz:leather", "petz:leather"},
@@ -329,4 +330,22 @@ minetest.register_craftitem("petz:elephant_tusk", {
 	description = S("Elephant Tusk"),
 	inventory_image = "petz_elephant_tusk.png",
 	groups = {},
+})
+
+-- Dreamcatcher
+
+minetest.register_craftitem("petz:dreamcatcher", {
+	description = S("Pet Dreamcatcher"),
+	inventory_image = "petz_dreamcatcher.png",
+	groups = {},
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "petz:dreamcatcher",
+	recipe = {
+		{"", "group:wood", ""},
+		{"farming:string", "farming:string", "farming:string"},
+		{"petz:ducky_feather", "petz:ducky_feather", "petz:ducky_feather"},
+	}
 })

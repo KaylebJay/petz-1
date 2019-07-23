@@ -85,6 +85,10 @@ petz.create_form = function(player_name)
 		else
 			selected = "false"
 		end
+		if pet.dreamcatcher == true then
+			tamagochi_form_stuff = tamagochi_form_stuff..
+			"image_button_exit[4,0;1,1;petz_dreamcatcher.png;btn_dreamcatcher;]"
+		end
 		tamagochi_form_stuff = tamagochi_form_stuff..
 		"field[1,1;2,1;ipt_name;"..S("Name")..":"..";"..pet.tag.."]"..		
 		"checkbox[3,1;btn_show_tag;"..S("Show tag")..";"..selected.."]"
@@ -217,9 +221,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		elseif fields.btn_show_tag then			
 			pet.show_tag = petz.to_boolean(fields.btn_show_tag)
 			mobkit.remember(pet, "show_tag", pet.show_tag)
+		elseif fields.btn_dreamcatcher then		
+			minetest.add_item(pet.object:get_pos(), "petz:dreamcatcher")
+			pet.dreamcatcher = false
+			mobkit.remember(pet, "dreamcatcher", pet.dreamcatcher)
 		end
 		if fields.ipt_name then
-			pet.tag = string.sub(fields.ipt_name, 1 , 12)
+			pet.tag = minetest.formspec_escape(string.sub(fields.ipt_name, 1 , 12))
 			mobkit.remember(pet, "tag", pet.tag)
 		end
 		petz.update_nametag(pet)
@@ -490,6 +498,7 @@ petz.load_vars = function(self)
 	self.food_count = mobkit.recall(self, "food_count") or 0
 	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied") or false
 	self.child = mobkit.recall(self, "child") or false
+	self.dreamcatcher = mobkit.recall(self, "dreamcatcher") or false
 end
 
 function petz.set_initial_properties(self, staticdata, dtime_s)	
@@ -608,6 +617,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		mobkit.remember(self, "food_count", self.food_count)							
 		self.was_killed_by_player = false
 		mobkit.remember(self, "was_killed_by_player", self.was_killed_by_player)	
+		self.dreamcatcher = false
+		mobkit.remember(self, "dreamcatcher", self.dreamcatcher)	
 		if self.init_timer== true then
 			petz.init_timer(self)
 		end
@@ -668,6 +679,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.tag = static_data_table["fields"]["tag"]	
 		mobkit.remember(self, "tag", self.tag) 
 		self.show_tag = petz.to_boolean(static_data_table["fields"]["show_tag"])
+		mobkit.remember(self, "dreamcatcher", self.dreamcatcher) 
+		self.dreamcatcher = petz.to_boolean(static_data_table["fields"]["dreamcatcher"])
 		mobkit.remember(self, "show_tag", self.show_tag) 
 		self.tamed = petz.to_boolean(static_data_table["fields"]["tamed"])		
 		mobkit.remember(self, "tamed", self.tamed)	
@@ -947,6 +960,7 @@ petz.capture = function(self, clicker)
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
 	stack_meta:set_string("tag", self.tag) --Save the current tag
 	stack_meta:set_string("show_tag", tostring(self.show_tag))
+	stack_meta:set_string("dreamcatcher", tostring(self.dreamcatcher))
 	if self.type == 'lamb' then
 		stack_meta:set_string("shaved", tostring(self.shaved))	 --Save if shaved
 	elseif self.type == 'pony' then
@@ -1028,6 +1042,9 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			petz.tame_whip(self, puncher)
 		end
 		if type(puncher) == 'userdata' and puncher:is_player() then		
+			if self.dreamcatcher == true and self.owner ~= puncher:get_player_name() then --The dreamcatcher protects the petz
+				return
+			end
 			petz.punch_tamagochi(self, puncher) --decrease affinity when in Tamagochi mode
 			--petz.do_punch(self, puncher, tool_capabilities)
 			mobkit.hurt(self,tool_capabilities.damage_groups.fleshy or 1)
@@ -1044,6 +1061,22 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			mobkit.clear_queue_high(self)
 		end
 	end
+end
+
+--
+-- Dreamcatcher (protector for Petz)
+--
+petz.put_dreamcatcher = function(self, clicker, wielded_item, wielded_item_name)
+	if self.dreamcatcher == true then
+		minetest.chat_send_player(clicker:get_player_name(), S("This pet already has a Dreamcatcher."))	
+		return
+	end
+	wielded_item:take_item() --quit one from player's inventory
+	clicker:set_wielded_item(wielded_item)
+	self.dreamcatcher = true
+	mobkit.remember(self, "dreamcatcher", self.dreamcatcher)
+	petz.do_sound_effect("object", self.object, "petz_magical_chime")
+	petz.do_particles_effect(self.object, self.object:get_pos(), "dreamcatcher")
 end
 
 --
@@ -1177,6 +1210,8 @@ petz.on_rightclick = function(self, clicker)
 			minetest.chat_send_player("singleplayer", S("Your").." "..self.type.." "..S("has been captured")..".")				            
 		elseif self.breed and wielded_item_name == petz.settings[self.type.."_breed"] and not(self.is_baby) and self.type ~= "pony" then
 			petz.breed(self, clicker, wielded_item, wielded_item_name)
+		elseif (wielded_item_name == "petz:dreamcatcher") and (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then
+			petz.put_dreamcatcher(self, clicker, wielded_item, wielded_item_name)
 		--			
 		--Pet Specifics
 		--below here
@@ -1393,6 +1428,9 @@ petz.on_die = function(self)
 			self.attached_squared_ball.object:set_detach()
 		end
 	end
+	if self.dreamcatcher == true then --drop the dreamcatcher
+		minetest.add_item(self.object:get_pos(), "petz:dreamcatcher")
+	end
 	if self.can_fly then
 		self.can_fly = false
 	end
@@ -1462,6 +1500,11 @@ petz.do_particles_effect = function(obj, pos, particle_type)
         particles_amount = 10
         min_size = 5.0
 		max_size = 6.0 
+	elseif particle_type == "dreamcatcher" then
+        texture_name = "petz_dreamcatcher_particle.png"
+        particles_amount = 15
+        min_size = 1.0
+		max_size = 2.0 
     end
     minetest.add_particlespawner({
         --attached = obj,

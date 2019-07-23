@@ -11,6 +11,11 @@ function petz.herbivore_brain(self)
 	if self.hp <= 0 then
 		petz.on_die(self)
 		return		
+	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up
+		if minetest.get_node_light(self.object:get_pos(), minetest.get_timeofday()) >= self.max_daylight_level then
+			petz.on_die(self)
+			return
+		end
 	end		
 	
 	if mobkit.timer(self, 1) then 
@@ -118,6 +123,13 @@ function petz.herbivore_brain(self)
 				end
 			end
 		end
+		
+		--if prty < 5 and self.type == "moth" then --search for a squareball			
+			--local pos_torch_near = minetest.find_node_near(self.object:get_pos(), 10, "default:torch")	
+			--if pos_torch_near then				
+				--mobkit.hq_goto(self, 5, pos_torch_near)
+			--end
+		--end
 		
 		--if prty < 5 and self.type == "puppy" and self.tamed == true and self.square_ball_attached == false then --search for a squareball				
 			--local object_list = minetest.get_objects_inside_radius(self.object:get_pos(), 10)
