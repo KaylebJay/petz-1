@@ -222,9 +222,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			pet.show_tag = petz.to_boolean(fields.btn_show_tag)
 			mobkit.remember(pet, "show_tag", pet.show_tag)
 		elseif fields.btn_dreamcatcher then		
-			minetest.add_item(pet.object:get_pos(), "petz:dreamcatcher")
-			pet.dreamcatcher = false
-			mobkit.remember(pet, "dreamcatcher", pet.dreamcatcher)
+			petz.drop_dreamcatcher(pet)
 		end
 		if fields.ipt_name then
 			pet.tag = minetest.formspec_escape(string.sub(fields.ipt_name, 1 , 12))
@@ -408,7 +406,8 @@ petz.timer = function(self)
                 mobkit.remember(self, "owner", self.owner)
                 self.tamed = false
                 mobkit.remember(self, "tamed", self.tamed)
-                self.init_timer  = false -- no more timing
+                petz.drop_dreamcatcher(self)
+                self.init_timer  = false -- no more timing				
             --Else reinit the timer, to check again in the future
             else
                 self.init_timer  = true
@@ -1079,6 +1078,14 @@ petz.put_dreamcatcher = function(self, clicker, wielded_item, wielded_item_name)
 	petz.do_particles_effect(self.object, self.object:get_pos(), "dreamcatcher")
 end
 
+petz.drop_dreamcatcher = function(self)
+	if self.dreamcatcher == true then --drop the dreamcatcher
+		minetest.add_item(self.object:get_pos(), "petz:dreamcatcher")
+		self.dreamcatcher = false
+		mobkit.remember(self, "dreamcatcher", self.dreamcatcher)
+	end
+end
+
 --
 --Feed/Tame Function
 --
@@ -1428,9 +1435,7 @@ petz.on_die = function(self)
 			self.attached_squared_ball.object:set_detach()
 		end
 	end
-	if self.dreamcatcher == true then --drop the dreamcatcher
-		minetest.add_item(self.object:get_pos(), "petz:dreamcatcher")
-	end
+	petz.drop_dreamcatcher(self)
 	if self.can_fly then
 		self.can_fly = false
 	end
