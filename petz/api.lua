@@ -602,6 +602,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "genes", self.genes)
 		end		
 		--ALL the mobs
+		if not(self.texture_no) then --for piggy, moth... petz with only one texture
+			self.texture_no = 1
+		end
 		self.set_vars = true
 		mobkit.remember(self, "set_vars", self.set_vars)
 		self.tag = ""
@@ -875,6 +878,17 @@ end
 -- Register Egg
 --
 
+petz.set_owner = function(self, placer_name)
+	-- set owner if not a monster
+	if self.is_wild == false then					
+		self.owner = placer_name
+		mobkit.remember(self, "owner", self.owner)
+		self.tamed = true
+		mobkit.remember(self, "tamed", self.tamed)
+	end
+end
+
+
 function petz:register_egg(pet_name, desc, inv_img, no_creative)
 	local grp = {spawn_egg = 1}
 	minetest.register_craftitem(pet_name .. "_set", { -- register new spawn egg containing mob information
@@ -900,13 +914,7 @@ function petz:register_egg(pet_name, desc, inv_img, no_creative)
 				local sdata = minetest.serialize(meta_table)
 				local mob = minetest.add_entity(spawn_pos, pet_name, sdata)
 				local ent = mob:get_luaentity()
-				-- set owner if not a monster
-				if ent.is_wild == false then					
-					ent.owner = placer:get_player_name()
-					mobkit.remember(ent, "owner", ent.owner)
-					ent.tamed = true
-					mobkit.remember(ent, "tamed", ent.tamed)
-				end
+				petz.set_owner(ent, placer:get_player_name()) --set owner
 				itemstack:take_item() -- since mob is unique we remove egg once spawned
 			end
 			return itemstack
@@ -941,7 +949,7 @@ petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_
 	end
 end
 
-petz.capture = function(self, clicker)
+petz.capture = function(self, clicker, put_in_inventory)
 	local new_stack = ItemStack(self.name .. "_set") 	-- add special mob egg with all mob information
 	local stack_meta = new_stack:get_meta()	
 	--local sett ="---TABLE---: "
@@ -975,13 +983,16 @@ petz.capture = function(self, clicker)
 		stack_meta:set_string("pregnant_count", tostring(self.pregnant_count))
 		stack_meta:set_string("genes", minetest.serialize(self.genes))
 	end
-	local inv = clicker:get_inventory()	
-	if inv:room_for_item("main", new_stack) then
-		inv:add_item("main", new_stack)
-	else
-		minetest.add_item(clicker:get_pos(), new_stack)
+	if put_in_inventory == true then
+		local inv = clicker:get_inventory()	
+		if inv:room_for_item("main", new_stack) then
+			inv:add_item("main", new_stack)
+		else
+			minetest.add_item(clicker:get_pos(), new_stack)
+		end
 	end
 	self.object:remove()
+	return stack_meta
 end
 
 --
@@ -1213,7 +1224,7 @@ petz.on_rightclick = function(self, clicker)
 				self.owner = player_name
 				mobkit.remember(self, "owner", self.owner) 
 			end			
-			petz.capture(self, clicker)
+			petz.capture(self, clicker, true)
 			minetest.chat_send_player("singleplayer", S("Your").." "..self.type.." "..S("has been captured")..".")				            
 		elseif self.breed and wielded_item_name == petz.settings[self.type.."_breed"] and not(self.is_baby) and self.type ~= "pony" then
 			petz.breed(self, clicker, wielded_item, wielded_item_name)
@@ -1237,6 +1248,17 @@ petz.on_rightclick = function(self, clicker)
 		elseif self.type == "pony" and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm") then
 			if not(self.is_baby) then
 				petz.pony_breed(self, clicker, wielded_item, wielded_item_name)	
+			end
+		elseif self.type == "moth" and (wielded_item_name == "vessels:glass_bottle") then
+			--capture the moth in the bottle			
+			local new_stack = ItemStack("petz:bottle_moth") 	-- add special mob egg with all mob information
+			local stack_meta = new_stack:get_meta()	
+			stack_meta = petz.capture(self, clicker, false)
+			local inv = clicker:get_inventory()	
+			if inv:room_for_item("main", new_stack) then
+				inv:add_item("main", new_stack)
+			else
+				minetest.add_item(clicker:get_pos(), new_stack)
 			end
         --Else open the Form
         elseif (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then

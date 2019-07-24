@@ -349,3 +349,39 @@ minetest.register_craft({
 		{"petz:ducky_feather", "petz:ducky_feather", "petz:ducky_feather"},
 	}
 })
+
+minetest.register_node("petz:bottle_moth", {
+	description = S("Bottle with Moth"),
+	drawtype = "plantlike",
+	tiles = {"petz_bottle_moth.png"},
+	inventory_image = "petz_bottle_moth_inv.png",
+	walkable = false,
+	groups = {snappy = 2},
+	paramtype = "light",
+	paramtype2 = "glasslikeliquidlevel",
+	param2 = 50,
+	sunlight_propagates = true,
+	use_texture_alpha = true,
+	light_source = LIGHT_MAX - 1,
+	sounds = default.node_sound_glass_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = { -0.25, -0.5, -0.25, 0.25, 0.4, 0.25 },
+	},
+	after_place_node = function(pos, placer, itemstack, pointed_thing)
+		--local meta_itemstack = itemstack:get_meta()
+		local meta = minetest.get_meta(pos)
+		--meta = meta_itemstack
+		local placer_name = ""
+		if placer:is_player() then
+			placer_name = placer:get_player_name()
+		end		
+		meta:set_string("owner", placer_name)
+	end,
+	on_destruct = function(pos)
+		local ent = minetest.add_entity(pos, "petz:moth")
+		local meta = minetest.get_meta(pos)		
+		petz.set_owner(ent, meta:get_string("owner")) --set owner
+		--minetest.chat_send_player("singleplayer", meta:get_string("owner"))
+	end,
+})
