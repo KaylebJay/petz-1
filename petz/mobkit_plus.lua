@@ -218,7 +218,7 @@ end
 --
 
 function mobkit.hq_alight(self, prty)
-	local func=function(self)
+	local func = function(self)
 		local node_name = mobkit.node_name_in(self, "below")
 		if node_name == "air" then
 			mobkit.lq_alight(self)
@@ -226,7 +226,7 @@ function mobkit.hq_alight(self, prty)
 			mobkit.hq_wanderfly(self, 0)
 			return true
 		else
-			minetest.chat_send_player("singleplayer", "on ground")				
+			--minetest.chat_send_player("singleplayer", "on ground")				
 			mobkit.animate(self, "stand")
 			mobkit.lq_idle(self, 2400)	
 			self.mov_status = "stand"		
@@ -238,7 +238,7 @@ end
 
 function mobkit.lq_alight(self)
 	local func=function(self)
-		minetest.chat_send_player("singleplayer", "alight")	
+		--minetest.chat_send_player("singleplayer", "alight")	
 		self.object:set_acceleration({ x = 0, y = -1, z = 0 })
 		return true
 	end
