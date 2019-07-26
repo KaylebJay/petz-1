@@ -94,6 +94,15 @@ function mobkit.dumbstepfly(self)
 	mobkit.lq_dumbfly(self, 0.3)	
 end
 
+--3 fly status: ascend, descend and stand right.
+--Each 3 seconds:
+--1) Search if 'max_height' defined for each mob is reached, if yes: descend or stand.
+--2) Check if over water, if yes: ascend.
+--3) Check if node in front, if yes: random rotation backwards. This does mobs not stuck.
+--4) Random rotation, to avoid mob go too much further.
+--5) In each status a chance to change of status, important: more preference for 'ascend'
+--than descend, cos this does the mobs stand on air, and climb mountains and trees.
+
 function mobkit.lq_dumbfly(self, speed_factor)
 	local timer = 3
 	local status = "ascend"
