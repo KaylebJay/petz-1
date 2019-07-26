@@ -1,3 +1,11 @@
+--
+-- FLY BRAIN
+--
+
+--
+-- Function Helpers
+--
+
 function mobkit.check_height(self)
 	local yaw = self.object:get_yaw()
 	local dir_x = -math.sin(yaw) * (self.collisionbox[4] + 0.5)
@@ -11,74 +19,13 @@ function mobkit.check_height(self)
 	return true
 end
 
-
-function mobkit.hq_wanderfly(self, prty)
-	local func=function(self)
-		if mobkit.is_queue_empty_low(self) then									
-			mobkit.dumbstepfly(self)
-		end
-	end
-	mobkit.queue_high(self,func,prty)
-end
-
-function mobkit.hq_alight(self, prty)
-	local func=function(self)
-		local node_name = mobkit.node_name_in(self, "below")
-		if node_name == "air" then
-			mobkit.lq_alight(self)
-		elseif minetest.get_item_group(node_name, "water") > 1  then
-			mobkit.hq_wanderfly(self, 0)
-			return true
-		else
-			minetest.chat_send_player("singleplayer", "on ground")				
-			mobkit.animate(self, "stand")
-			mobkit.lq_idle(self, 2400)	
-			self.mov_status = "stand"		
-			return true
-		end
-	end
-	mobkit.queue_high(self, func, prty)
-end
-
-
-function mobkit.lq_alight(self)
-	local func=function(self)
-		minetest.chat_send_player("singleplayer", "alight")	
-		self.object:set_acceleration({ x = 0, y = -1, z = 0 })
-		return true
-	end
-	mobkit.queue_low(self, func)
-end
-
-function mobkit.lq_fly(self)
-	local func=function(self)
-		self.object:set_acceleration({ x = 0, y = 1, z = 0 })
-	end
-	mobkit.queue_low(self,func)
-end
-
-function mobkit.hq_fly(self, prty)
-	local func=function(self)		
-		mobkit.animate(self, "fly")	
-		mobkit.lq_fly(self)	
-		mobkit.clear_queue_high(self)
-	end
-	mobkit.queue_high(self, func, prty)
-end
-
-function mobkit.dumbstepfly(self)
-	--mobkit.set_velocity(self, {x=1, y=0, z=1})
-	if mobkit.node_name_in(self, "front") ~= "air" then			
-		local yaw = self.object:get_yaw()
-		if yaw then
-			local rotation_integer = math.random(0, 5)
-			local rotation_decimals = math.random()				
-			local new_yaw = yaw + rotation_integer + rotation_decimals
-			self.object:set_yaw(new_yaw)		
-			mobkit.set_velocity(self, self.object:getvelocity())
-		end
-	end
-	mobkit.lq_dumbfly(self, 0.3)	
+function mobkit.set_velocity(self, velocity)
+	local yaw = self.object:get_yaw() or 0
+	self.object:set_velocity({
+		x = (math.sin(yaw) * -velocity.x),
+		y = velocity.y,
+		z = (math.cos(yaw) * velocity.z),
+	})
 end
 
 function mobkit.node_name_in(self, where)
@@ -119,13 +66,32 @@ function mobkit.node_name_in(self, where)
 	end
 end
 
-function mobkit.set_velocity(self, velocity)
-	local yaw = self.object:get_yaw() or 0
-	self.object:set_velocity({
-		x = (math.sin(yaw) * -velocity.x),
-		y = velocity.y,
-		z = (math.cos(yaw) * velocity.z),
-	})
+--
+-- Wander Fly Behaviour (3 functions)
+--
+
+function mobkit.hq_wanderfly(self, prty)
+	local func=function(self)
+		if mobkit.is_queue_empty_low(self) then									
+			mobkit.dumbstepfly(self)
+		end
+	end
+	mobkit.queue_high(self,func,prty)
+end
+
+function mobkit.dumbstepfly(self)
+	--mobkit.set_velocity(self, {x=1, y=0, z=1})
+	if mobkit.node_name_in(self, "front") ~= "air" then			
+		local yaw = self.object:get_yaw()
+		if yaw then
+			local rotation_integer = math.random(0, 5)
+			local rotation_decimals = math.random()				
+			local new_yaw = yaw + rotation_integer + rotation_decimals
+			self.object:set_yaw(new_yaw)		
+			mobkit.set_velocity(self, self.object:getvelocity())
+		end
+	end
+	mobkit.lq_dumbfly(self, 0.3)	
 end
 
 function mobkit.lq_dumbfly(self, speed_factor)
@@ -216,4 +182,56 @@ function mobkit.lq_dumbfly(self, speed_factor)
 		end
 	end
 	mobkit.queue_low(self,func)
+end
+
+--
+-- 'Take Off' Behaviour ( 2 funtions)
+--
+
+function mobkit.hq_fly(self, prty)
+	local func=function(self)		
+		mobkit.animate(self, "fly")	
+		mobkit.lq_fly(self)	
+		mobkit.clear_queue_high(self)
+	end
+	mobkit.queue_high(self, func, prty)
+end
+
+function mobkit.lq_fly(self)
+	local func=function(self)
+		self.object:set_acceleration({ x = 0, y = 1, z = 0 })
+	end
+	mobkit.queue_low(self,func)
+end
+
+--
+-- Alight Behaviour ( 2 funtions)
+--
+
+function mobkit.hq_alight(self, prty)
+	local func=function(self)
+		local node_name = mobkit.node_name_in(self, "below")
+		if node_name == "air" then
+			mobkit.lq_alight(self)
+		elseif minetest.get_item_group(node_name, "water") > 1  then
+			mobkit.hq_wanderfly(self, 0)
+			return true
+		else
+			minetest.chat_send_player("singleplayer", "on ground")				
+			mobkit.animate(self, "stand")
+			mobkit.lq_idle(self, 2400)	
+			self.mov_status = "stand"		
+			return true
+		end
+	end
+	mobkit.queue_high(self, func, prty)
+end
+
+function mobkit.lq_alight(self)
+	local func=function(self)
+		minetest.chat_send_player("singleplayer", "alight")	
+		self.object:set_acceleration({ x = 0, y = -1, z = 0 })
+		return true
+	end
+	mobkit.queue_low(self, func)
 end
