@@ -625,7 +625,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				self.accel= math.random(2, 4)	
 				mobkit.remember(self, "accel", self.accel)	
 			end							
-    		self.texture_no = math.random(1, #self.skin_colors) --set a random texture
+    		self.texture_no = math.random(1, #self.skin_colors-1) --set a random texture
 			self.driver = false
 			mobkit.remember(self, "driver", self.driver)			
 			--Saddlebag

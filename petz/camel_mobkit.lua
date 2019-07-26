@@ -42,7 +42,7 @@ minetest.register_entity("petz:"..pet_name, {
 	pregnant_count = 5,
 	follow = petz.settings.camel_follow,
 	drops = {
-		{name = "petz:bone", chance = 6, min = 1, max = 1,},
+		{name = "petz:bone", chance = 5, min = 1, max = 1,},
 	},
 	rotate = petz.settings.rotate,
 	physical = true,
@@ -80,7 +80,7 @@ minetest.register_entity("petz:"..pet_name, {
 		},	
 	},
 	sounds = {
-		misc = "petz_camel_neigh",
+		misc = "petz_camel_grunting",
 		moaning = "petz_camel_moaning",
 	},
 	
