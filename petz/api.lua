@@ -10,7 +10,7 @@ local creative_mode = minetest.settings:get_bool("creative_mode")
 
 petz.petz_list = {"kitty", "puppy", "ducky", "lamb", "lion", "calf", "panda", --A table with all the petz names
 	"grizzly", "pony", "parrot", "chicken", "piggy", "wolf", "elephant",
-	"elephant_female", "pigeon", "moth"}
+	"elephant_female", "pigeon", "moth", "camel"}
 
 --
 --Settings
@@ -20,6 +20,7 @@ petz.settings.mesh = nil
 petz.settings.visual_size = {}
 petz.settings.rotate = 0
 petz.settings.tamagochi_safe_nodes = {} --Table with safe nodes for tamagochi mode
+
 
 --
 --Form Dialog
@@ -108,7 +109,7 @@ petz.create_form = function(player_name)
 		local pregnant_text_y
 		local infertile_text_x
 		local infertile_text_y
-		if pet.type == "pony" then
+		if pet.is_mountable == true then
 			pregnant_icon_x = 3
 			pregnant_icon_y = 5
 			pregnant_text_x = 4
@@ -139,10 +140,14 @@ petz.create_form = function(player_name)
 		"button_exit[0,6;1,1;btn_alight;"..S("Alight").."]"	..
 		"button_exit[1,6;1,1;btn_fly;"..S("Fly").."]"..
 		"button_exit[2,6;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"
-	elseif pet.type == "pony" then		
+	elseif pet.is_mountable == true then		
 		more_form_orders = more_form_orders..			
-			"image[3,4;1,1;petz_pony_velocity_icon.png]"..
+			"image[3,4;1,1;petz_"..pet.type.."_velocity_icon.png]"..
 			"label[4,4;".. tostring(pet.max_speed_forward).."/"..tostring(pet.max_speed_reverse)..'/'..tostring(pet.accel).."]"
+		if pet.has_saddlebag == true and pet.saddlebag == true then
+			more_form_orders = more_form_orders..	
+				"image_button[5,0;1,1;petz_saddlebag.png;btn_saddlebag;]"
+		end
     end
     if pet.give_orders == true then
 		form_size.h= form_size.h + 4
@@ -173,9 +178,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if (formname ~= "petz:form_orders") then
 		return false
 	end
-    local pet = petz.pet[player:get_player_name()] 
+	local player_name = player:get_player_name()
+    local pet = petz.pet[player_name] 
 	if pet and pet.object then	
-		--brewing.magic_sound("to_player", player, "brewing_select")
 		if fields.btn_followme then
 			if not(pet.can_fly) then
 				mobkit.clear_queue_low(pet)
@@ -223,6 +228,22 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			mobkit.remember(pet, "show_tag", pet.show_tag)
 		elseif fields.btn_dreamcatcher then		
 			petz.drop_dreamcatcher(pet)
+		elseif fields.btn_saddlebag then	
+			--Load the inventory from the petz			
+			local inv = minetest.get_inventory({ type="detached", name="saddlebag_inventory" })
+			inv:set_list("saddlebag", {})
+			if pet.saddlebag_inventory then
+				for key, value in pairs(pet.saddlebag_inventory) do
+					inv:set_stack("saddlebag", key, value)
+				end						
+			end
+			--Show the inventory:	
+			local formspec = "size[8,8;]"..
+							"image[3,0;1,1;petz_saddle.png]"..
+							"label[4,0;"..S("Saddlebag").."]"..
+							"list[detached:saddlebag_inventory;saddlebag;0,1;8,2;]"..
+							"list[current_player;main;0,4;8,4;]"		
+			minetest.show_formspec(player_name, "petz:saddlebag_inventory", formspec)		
 		end
 		if fields.ipt_name then
 			pet.tag = minetest.formspec_escape(string.sub(fields.ipt_name, 1 , 12))
@@ -234,6 +255,52 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		return false
 	end
 end)
+
+--On receive fields
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname ~= "petz:saddlebag_inventory" then
+		return false
+	end	
+	--Save the saddlebag content
+	local player_name = player:get_player_name()
+	local ent = petz.pet[player_name] 
+	if ent and ent.object then			
+		local inv = minetest.get_inventory({ type="detached", name="saddlebag_inventory" })
+		local itemstacks_table = {}			
+		for i = 1, inv:get_size("saddlebag") do
+			itemstacks_table[i] = inv:get_stack("saddlebag", i):to_table()
+		end		
+		ent.saddlebag_inventory = itemstacks_table 		
+		mobkit.remember(ent, "saddlebag_inventory", itemstacks_table)
+	end
+	return true
+end)
+
+--Saddlebag detached inventory
+
+local function allow_put(pos, listname, index, stack, player)	
+	return stack:get_count()
+end
+
+petz.create_detached_saddlebag_inventory = function(name)
+	local saddlebag_inventory = minetest.create_detached_inventory(name, {
+		allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
+			local stack = inv:get_stack(from_list, from_index)
+			return allow_put(pos, to_list, to_index, stack, player)
+			end,
+		allow_put = function(inv, listname, index, stack, player)
+			return stack:get_count()
+		end,
+		allow_take = function(inv, listname, index, stack, player)
+			return stack:get_count()
+		end,
+	})
+	-- Size and width of saddlebag inventory
+	saddlebag_inventory:set_size("saddlebag", 16)
+	saddlebag_inventory:set_width("saddlebag", 8)
+end
+
+petz.create_detached_saddlebag_inventory("saddlebag_inventory")
 
 petz.ownthing = function(self)	
 	self.mov_status = "free"
@@ -452,6 +519,14 @@ petz.genetics_texture  = function(self)
 		else
 			return 2 --white mutation
 		end
+	elseif self.type == "camel" then
+		if self.genes["gen1"] == 1 or self.genes["gen2"] == 1 then 
+			return 1 --camel
+		elseif self.genes["gen1"] == 2 or self.genes["gen2"] == 2 then
+			return 2 --camel dark
+		else
+			return 3 --white mutation
+		end
 	end
 end
 
@@ -462,12 +537,17 @@ petz.load_vars = function(self)
 		self.food_count_wool = mobkit.recall(self, "food_count_wool") or 0
 	elseif self.type == "calf" then
 		self.milked = mobkit.recall(self, "milked") or false
-	elseif self.type == "pony" then
+	elseif self.is_mountable == true then
 		self.saddle = mobkit.recall(self, "saddle") or false
+		self.saddlebag = mobkit.recall(self, "saddlebag") or false
 		self.driver = mobkit.recall(self, "driver") or false
 		self.max_speed_forward = mobkit.recall(self, "max_speed_forward") or 1
 		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse") or 1
 		self.accel = mobkit.recall(self, "accel") or 1
+		if self.has_saddlebag == true then
+			--minetest.chat_send_player("singleplayer", "prueba")
+			self.saddlebag_inventory = mobkit.recall(self, "saddlebag_inventory") or {}
+		end
 	elseif self.type == "puppy" then
 		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
 	elseif self.type == "wolf" then
@@ -536,7 +616,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		elseif self.type == "wolf" then		
 			self.wolf_to_puppy_count = petz.settings.wolf_to_puppy_count
 			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count)
-		elseif self.type == "pony" then		
+		elseif self.is_mountable == true then		
 			if baby_born == false then
 				self.max_speed_forward= math.random(2, 4) --set a random velocity for walk and run
 				mobkit.remember(self, "max_speed_forward", self.max_speed_forward)				
@@ -548,6 +628,12 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
     		self.texture_no = math.random(1, #self.skin_colors) --set a random texture
 			self.driver = false
 			mobkit.remember(self, "driver", self.driver)			
+			--Saddlebag
+			if self.has_saddlebag == true then			
+				self.saddlebag_ref = nil
+				self.saddlebag_inventory = {}
+				mobkit.remember(self, "saddlebag_inventory", self.saddlebag_inventory)
+			end
 		end
 		--Mobs that can have babies
 		if self.breed == true then
@@ -588,12 +674,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 						self.texture_no = petz.genetics_texture(self)		
 					end				
 				else -- mutation
-					local mutation_gen
-					if self.type == "lamb" then
-						mutation_gen= 5 --vanilla						
-					elseif self.type == "elephant" then
-						mutation_gen = 2 --white						
-					end
+					local mutation_gen = #self.skin_colors --the last skin is always the mutation
 					self.genes["gen1"] = mutation_gen --white
 					self.genes["gen2"] = mutation_gen --white
 					self.texture_no = mutation_gen -- white
@@ -649,7 +730,10 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		elseif self.type == "wolf" then
 			self.wolf_to_puppy_count = tonumber(static_data_table["fields"]["wolf_to_puppy_count"])
 			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count) 
-		elseif self.type == "pony" then		
+		elseif self.is_mountable == true then		
+			self.saddle = petz.to_boolean(static_data_table["fields"]["saddle"])	
+			self.saddlebag = petz.to_boolean(static_data_table["fields"]["saddlebag"])	
+			self.saddlebag_inventory = minetest.deserialize(static_data_table["fields"]["saddlebag_inventory"])
 			self.max_speed_forward =  tonumber(static_data_table["fields"]["max_speed_forward"]	)
 			mobkit.remember(self, "max_speed_forward", self.max_speed_forward) 
 			self.max_speed_reverse = tonumber(static_data_table["fields"]["max_speed_reverse"])
@@ -723,11 +807,14 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				shaved_string = "_shaved"
 			end
 			texture = "petz_lamb".. shaved_string .."_"..self.skin_colors[self.texture_no]..".png"
-		elseif self.type == "pony" then	
+		elseif self.is_mountable == true then	
 			if self.saddle then
-				texture = "petz_pony_"..self.skin_colors[self.texture_no]..".png" .. "^petz_pony_saddle.png"
+				texture = "petz_"..self.type.."_"..self.skin_colors[self.texture_no]..".png" .. "^petz_"..self.type.."_saddle.png"
 			else
-				texture = "petz_pony_"..self.skin_colors[self.texture_no]..".png"
+				texture = "petz_"..self.type.."_"..self.skin_colors[self.texture_no]..".png"
+			end
+			if self.saddlebag then
+				texture = texture .. "^petz_"..self.type.."_saddlebag.png"
 			end
 		else
 			texture = self.textures[self.texture_no]
@@ -737,8 +824,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	end
 	if self.breed == true then
 		if self.is_pregnant == true then
-			if self.type == "pony" then
-				petz.init_pony_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)				
+			if self.is_mountable == true then
+				petz.init_mountable_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)				
 			else
 				petz.init_pregnancy(self)
 			end
@@ -970,7 +1057,10 @@ petz.capture = function(self, clicker, put_in_inventory)
 	stack_meta:set_string("dreamcatcher", tostring(self.dreamcatcher))
 	if self.type == 'lamb' then
 		stack_meta:set_string("shaved", tostring(self.shaved))	 --Save if shaved
-	elseif self.type == 'pony' then
+	elseif self.is_mountable == true then
+		stack_meta:set_string("saddle", tostring(self.saddle))
+		stack_meta:set_string("saddlebag", tostring(self.saddlebag))
+		stack_meta:set_string("saddlebag_inventory", minetest.serialize(self.saddlebag_inventory))
 		stack_meta:set_string("max_speed_forward", tostring(self.max_speed_forward))
 		stack_meta:set_string("max_speed_reverse", tostring(self.max_speed_reverse))
 		stack_meta:set_string("accel", tostring(self.accel))
@@ -1162,6 +1252,79 @@ petz.wolf_to_puppy= function(self, player_name)
 end
 
 --
+-- Mount Engine
+--
+
+petz.mount = function(self, clicker)
+	local wielded_item_name = clicker:get_wielded_item():get_name()
+	if self.tamed and self.owner == clicker:get_player_name() then    			
+		if self.driver and clicker == self.driver then -- detatch player already riding horse
+			petz.detach(clicker, {x = 1, y = 0, z = 1})
+			mobkit.clear_queue_low(self)
+			return false
+		elseif (self.saddle or self.saddlebag) and wielded_item_name == "petz:shears" then
+			if self.saddle then
+				minetest.add_item(self.object:get_pos(), "petz:saddle")				
+				self.saddle = false	
+				mobkit.remember(self, "saddle", self.saddle)	
+			end	
+			if self.saddlebag then
+				minetest.add_item(self.object:get_pos(), "petz:saddlebag")				
+				self.saddlebag = false
+				mobkit.remember(self, "saddlebag", self.saddlebag)		
+			end
+			petz.set_properties(self, {textures = {"petz_"..self.type.."_"..self.skin_colors[self.texture_no]..".png"}})
+			return false		
+		elseif (not(self.driver) and not(self.is_baby)) and ((wielded_item_name == "petz:saddle") or (wielded_item_name == "petz:saddlebag")) then -- Put on saddle if tamed
+			local put_saddle = false
+			if wielded_item_name == "petz:saddle" and not(self.saddle) then				
+				put_saddle = true
+			elseif wielded_item_name == "petz:saddlebag" and not(self.saddlebag) and not(self.type == "pony") then	
+				put_saddle = true
+			end
+			if put_saddle == true then
+				petz.put_saddle(self, clicker, wielded_item_name)					
+				return false
+			end
+		elseif not self.driver and self.saddle then -- Mount petz	
+			petz.set_properties(self, {stepheight = 1.1})					
+			petz.attach(self, clicker)
+			return false	
+		else
+			return true
+		end
+	else
+		return true
+	end
+end
+
+petz.put_saddle = function(self, clicker, wielded_item_name)
+	local saddle_type = ""
+	local another_saddle = ""	
+	if wielded_item_name == "petz:saddle" then
+		saddle_type = "saddle"
+		self.saddle = true    			
+		mobkit.remember(self, "saddle", self.saddle)	
+		if self.saddlebag == true then
+			another_saddle = "^petz_"..self.type.."_saddlebag.png"
+		end
+	else
+		saddle_type = "saddlebag"
+		self.saddlebag = true    			
+		mobkit.remember(self, "saddlebag", self.saddlebag)	
+		if self.saddle == true then
+			another_saddle = "^petz_"..self.type.."_saddle.png"
+		end
+	end	
+	local texture = "petz_"..self.type.."_"..self.skin_colors[self.texture_no]..".png" .. "^petz_"..self.type.."_"..saddle_type..".png"..another_saddle	
+	petz.set_properties(self, {textures = {texture}})			
+	if not minetest.settings:get_bool("creative_mode") then
+		w:take_item()
+		clicker:set_wielded_item(w)
+	end
+end
+
+--
 --on_rightclick event for all the Mobs
 --
 
@@ -1229,7 +1392,7 @@ petz.on_rightclick = function(self, clicker)
 		elseif self.breed and wielded_item_name == petz.settings[self.type.."_breed"] and not(self.is_baby) and self.type ~= "pony" then
 			petz.breed(self, clicker, wielded_item, wielded_item_name)
 		elseif (wielded_item_name == "petz:dreamcatcher") and (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then
-			petz.put_dreamcatcher(self, clicker, wielded_item, wielded_item_name)
+			petz.put_dreamcatcher(self, clicker, wielded_item, wielded_item_name)			
 		--			
 		--Pet Specifics
 		--below here
@@ -1260,13 +1423,17 @@ petz.on_rightclick = function(self, clicker)
 			else
 				minetest.add_item(clicker:get_pos(), new_stack)
 			end
+		elseif self.is_mountable == true then
+			show_form = petz.mount(self, clicker)
         --Else open the Form
-        elseif (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then
+        else
 			show_form = true
         end
         if show_form == true then
-			petz.pet[player_name]= self
-            minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name))
+			if (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then
+				petz.pet[player_name]= self
+				minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name))
+			end
         end
 end
 
@@ -1339,7 +1506,7 @@ petz.pony_breed = function(self, clicker, wielded_item, wielded_item_name)
 			local max_speed_forward = meta:get_int("max_speed_forward")
 			local max_speed_reverse = meta:get_int("max_speed_reverse")
 			local accel = meta:get_int("accel")		
-			petz.init_pony_pregnancy(self, max_speed_forward, max_speed_reverse, accel)
+			petz.init_mountable_pregnancy(self, max_speed_forward, max_speed_reverse, accel)
 			petz.do_particles_effect(self.object, self.object:get_pos(), "pregnant".."_"..self.type)
 		end
 		clicker:set_wielded_item("petz:glass_syringe")	
@@ -1393,7 +1560,7 @@ petz.init_pregnancy = function(self, father)
     end, self, father)
 end
 
-petz.init_pony_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel)
+petz.init_mountable_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel)
     minetest.after(petz.settings.pregnancy_time, function(self, max_speed_forward, max_speed_reverse, accel)         
         if not(self.object:get_pos() == nil) then
 			local baby_entity = petz.childbirth(self)
@@ -1448,10 +1615,27 @@ end
 
 petz.on_die = function(self)	
 	--Specific of each mob
-	if self.type == "pony" then
-		if self.saddle then -- drop saddle when horse is killed while riding
+	if self.is_mountable == true then
+		if self.saddle then -- drop saddle when petz is killed while riding
 			minetest.add_item(self.object:get_pos(), "petz:saddle")
 		end
+		if self.saddlebag then -- drop saddlebag
+			minetest.add_item(self.object:get_pos(), "petz:saddlebag")
+		end
+		-- Drop the items from petz inventory
+		local inv = minetest.get_inventory({ type="detached", name="saddlebag_inventory" })
+		inv:set_list("saddlebag", {})
+		if self.saddlebag_inventory then
+			for key, value in pairs(self.saddlebag_inventory) do
+				inv:set_stack("saddlebag", key, value)
+			end						
+			for i = 1, inv:get_size("saddlebag") do
+				local stack = inv:get_stack("saddlebag", i)
+				if stack:get_count() > 0 then
+					minetest.item_drop(stack, self.object, self.object:get_pos())
+				end
+			end
+		end				
 	elseif self.type == "puppy" then
 		if self.square_ball_attached == true and self.attached_squared_ball then
 			self.attached_squared_ball.object:set_detach()
@@ -1524,6 +1708,11 @@ petz.do_particles_effect = function(obj, pos, particle_type)
 		max_size = 6.0 
 	elseif particle_type == "pregnant_lamb" then
         texture_name = "petz_lamb_pregnant_icon.png"
+        particles_amount = 10
+        min_size = 5.0
+		max_size = 6.0 
+	elseif particle_type == "pregnant_camel" then
+        texture_name = "petz_camel_pregnant_icon.png"
         particles_amount = 10
         min_size = 5.0
 		max_size = 6.0 
@@ -1861,3 +2050,6 @@ minetest.register_entity("petz:ent_square_ball", {
 		self.old_pos = pos
 	end,
 })
+
+
+

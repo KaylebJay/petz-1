@@ -108,7 +108,8 @@ function petz.herbivore_brain(self)
 					couple = couple_obj:get_luaentity()
 					if couple and couple.is_rut == true and couple.is_pregnant == false and couple.is_male == false then --if couple and female and is not pregnant and is rut
 						local couple_pos = couple.object:get_pos() --get couple pos						
-						if vector.distance(pos, couple_pos) <= petz.settings[self.type.."_copulation_distance"] then --if close
+						local copulation_distance = petz.settings[self.type.."_copulation_distance"] or 1
+						if vector.distance(pos, couple_pos) <= copulation_distance then --if close
 							--Changue some vars						
 							self.is_rut = false
 							mobkit.remember(self, "is_rut", self.is_rut)

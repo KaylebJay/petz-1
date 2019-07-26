@@ -1,28 +1,29 @@
 --
---PONY
+--CAMEL
 --
 local S = ...
 
-local pet_name = "pony"
-local scale_model = 2.2
+local pet_name = "camel"
+local scale_model = 1.8
 local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model}
 local scale_baby = 0.5
 local visual_size_baby = {x=petz.settings.visual_size.x*scale_model*scale_baby, y=petz.settings.visual_size.y*scale_model*scale_baby}
-petz.pony = {}
-local mesh = 'petz_pony.b3d'	
-local skin_colors = {"brown", "white", "yellow", "white_dotted", "gray_dotted", "black"}
+petz.camel = {}
+local mesh = 'petz_camel.b3d'	
+local skin_colors = {"camel", "dark_camel", "white"}
 local textures = {}
 for n = 1, #skin_colors do
 	textures[n] = "petz_"..pet_name.."_"..skin_colors[n]..".png"
 end
-local textures_baby = {"petz_pony_baby.png"}	
-local collisionbox = {-0.5, -0.75*scale_model, -0.5, 0.375, -0.375, 0.375}
+local textures_baby = {"petz_camel_baby.png"}	
+local collisionbox = {-0.75, -0.75*scale_model, -0.75, 0.5, 0.30, 0.5}
 local collisionbox_baby = {-0.5*scale_baby, -0.75*scale_model*scale_baby, -0.25, 0.375, -0.375, 0.375}
 
 minetest.register_entity("petz:"..pet_name, {          
 	--Petz specifics	
 	type = pet_name,	
 	is_mountable = true,
+	has_saddlebag = true,
 	init_timer = true,	
 	is_pet = true,
 	has_affinity = true,
@@ -31,15 +32,15 @@ minetest.register_entity("petz:"..pet_name, {
 	give_orders = true,
 	can_be_brushed = true,
 	capture_item = "lasso",
-	--Pony specific
+	--Camel specific
 	terrain_type = 3,
 	scale_model = scale_model,
 	scale_baby =scale_baby,
 	driver_scale = {x = 1/visual_size.x, y = 1/visual_size.y},			
-	driver_attach_at = {x = -0.0325, y = -0.125, z = -0.2},
+	driver_attach_at = {x = 0.0625, y = 0.25, z = -0.3},
 	driver_eye_offset = {x = 0, y = 0, z = 0},	
 	pregnant_count = 5,
-	follow = petz.settings.pony_follow,
+	follow = petz.settings.camel_follow,
 	drops = {
 		{name = "petz:bone", chance = 6, min = 1, max = 1,},
 	},
@@ -76,12 +77,11 @@ minetest.register_entity("petz:"..pet_name, {
 		stand={
 			{range={x=26, y=46}, speed=5, loop=true},
 			{range={x=47, y=59}, speed=5, loop=true},
-			{range={x=82, y=94}, speed=5, loop=true},		
 		},	
 	},
 	sounds = {
-		misc = "petz_pony_neigh",
-		moaning = "petz_pony_moaning",
+		misc = "petz_camel_neigh",
+		moaning = "petz_camel_moaning",
 	},
 	
 	brainfunc = petz.herbivore_brain,
@@ -102,11 +102,11 @@ minetest.register_entity("petz:"..pet_name, {
 	on_step = function(self, dtime)	
 		petz.init_timer(self)
 		if self.driver then
-			petz.drive(self, "walk", "stand", false, dtime) -- if driver present allow control of horse		
+			petz.drive(self, "walk", "stand", false, dtime) -- if driver present allow control of camel		
 		else
 			mobkit.stepfunc(self, dtime) -- required
 		end	
 	end,
 })
 
-petz:register_egg("petz:pony", S("Pony"), "petz_spawnegg_pony.png", 0)
+petz:register_egg("petz:camel", S("Camel"), "petz_spawnegg_camel.png", 0)

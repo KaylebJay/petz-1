@@ -98,6 +98,6 @@ petz.pos_to_spawn = function(pet_name, pos)
 			y = y + 1
 		end
 	end
-	spawn_pos = { x = x, y = y, z = z}
+	local spawn_pos = { x = x, y = y, z = z}
 	return spawn_pos
 end

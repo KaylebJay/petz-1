@@ -317,6 +317,22 @@ minetest.register_craft({
 	}
 })
 
+minetest.register_craftitem("petz:saddlebag", {
+	description = S("Saddlebag"),
+	inventory_image = "petz_saddlebag.png",
+	groups = {flammable = 2},
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "petz:saddlebag",
+	recipe = {
+		{"petz:leather", "petz:leather", "petz:leather"},
+		{"petz:leather", "", "petz:leather"},
+		{"petz:leather", "petz:leather", "petz:leather"},
+	}
+})
+
 --Bone
 minetest.register_craftitem("petz:bone", {
     description = S("Bone"),
