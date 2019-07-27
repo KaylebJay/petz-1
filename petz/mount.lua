@@ -68,7 +68,7 @@ petz.force_detach = function(player)
 	default.player_attached[player:get_player_name()] = false
 	player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 	default.player_set_animation(player, "stand" , 30)
-	player:set_properties({visual_size = {x = 1, y = 1} })	
+	player:set_properties({visual_size = {x = 1, y = 1}, pointable = true })	
 end
 
 -------------------------------------------------------------------------------
@@ -105,13 +105,15 @@ function petz.attach(entity, player)
 	entity.driver = player	
 	petz.force_detach(player)
 	player:set_attach(entity.object, "", attach_at, entity.player_rotation)
+	player:set_armor_groups({immortal=1})
 	default.player_attached[player:get_player_name()] = true
 	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
 	player:set_properties({
 		visual_size = {
 			x = entity.driver_scale.x,
 			y = entity.driver_scale.y
-		}
+		},
+		pointable = false
 	})
 	minetest.after(0.2, function()
 		default.player_set_animation(player, "sit" , 30)
