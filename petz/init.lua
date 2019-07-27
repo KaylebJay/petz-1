@@ -11,6 +11,7 @@ local mg_name = minetest.get_mapgen_setting("mg_name")
 local S = minetest.get_translator(minetest.get_current_modname())
 
 assert(loadfile(modpath .. "/api.lua"))(modpath, modname, S)
+assert(loadfile(modpath .. "/mount.lua"))(modpath, S) --Load the mount engine
 assert(loadfile(modpath .. "/mobkit.lua"))(modpath, S)
 assert(loadfile(modpath .. "/mobkit_plus.lua"))(modpath, S)
 assert(loadfile(modpath .. "/behaviours.lua"))(modpath, S)
@@ -19,7 +20,6 @@ assert(loadfile(modpath .. "/nodes.lua"))(modpath, S) --Load the nodes
 assert(loadfile(modpath .. "/items.lua"))(modpath, S) --Load the items
 assert(loadfile(modpath .. "/food.lua"))(modpath, S) --Load the food items
 assert(loadfile(modpath .. "/spawn.lua"))(modpath, S) --Load the spawn engine
-assert(loadfile(modpath .. "/mount.lua"))(modpath, S) --Load the mount engine
 
 petz.file_exists = function(name)
    local f = io.open(name,"r")
