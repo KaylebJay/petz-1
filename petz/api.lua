@@ -10,7 +10,7 @@ local creative_mode = minetest.settings:get_bool("creative_mode")
 
 petz.petz_list = {"kitty", "puppy", "ducky", "lamb", "lion", "calf", "panda", --A table with all the petz names
 	"grizzly", "pony", "parrot", "chicken", "piggy", "wolf", "elephant",
-	"elephant_female", "pigeon", "moth", "camel"}
+	"elephant_female", "pigeon", "moth", "camel", "clownfish"}
 
 --
 --Settings
@@ -535,24 +535,24 @@ petz.load_vars = function(self)
 	if self.type == "lamb" then
 		self.shaved = mobkit.recall(self, "shaved") or false
 		self.food_count_wool = mobkit.recall(self, "food_count_wool") or 0
-	elseif self.type == "calf" then
-		self.milked = mobkit.recall(self, "milked") or false
 	elseif self.is_mountable == true then
 		self.saddle = mobkit.recall(self, "saddle") or false
-		self.saddlebag = mobkit.recall(self, "saddlebag") or false
+		self.saddlebag = mobkit.recall(self, "saddlebag") or false		
 		self.driver = mobkit.recall(self, "driver") or false
 		self.max_speed_forward = mobkit.recall(self, "max_speed_forward") or 1
 		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse") or 1
 		self.accel = mobkit.recall(self, "accel") or 1
-		if self.has_saddlebag == true then
-			--minetest.chat_send_player("singleplayer", "prueba")
+		if self.has_saddlebag == true then		
 			self.saddlebag_inventory = mobkit.recall(self, "saddlebag_inventory") or {}
 		end
 	elseif self.type == "puppy" then
 		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
 	elseif self.type == "wolf" then
 		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count") or petz.settings.wolf_to_puppy_count 
-	end	
+	end
+	if self.milkable == true then
+		self.milked = mobkit.recall(self, "milked") or false
+	end
 	--Mobs that can have babies
 	if self.breed == true then		
 		self.is_male = mobkit.recall(self, "is_male") or false
@@ -873,6 +873,7 @@ petz.replace = function(self)
 		end
 		if on_replace_return ~= false then
 			minetest.set_node(pos, {name = with})
+			petz.refill(self) --Refill wool, milk or nothing
 		end
 	end
 end
@@ -1255,8 +1256,7 @@ end
 -- Mount Engine
 --
 
-petz.mount = function(self, clicker)
-	local wielded_item_name = clicker:get_wielded_item():get_name()
+petz.mount = function(self, clicker, wielded_item, wielded_item_name)
 	if self.tamed and self.owner == clicker:get_player_name() then    			
 		if self.driver and clicker == self.driver then -- detatch player already riding horse
 			petz.detach(clicker, {x = 1, y = 0, z = 1})
@@ -1283,7 +1283,7 @@ petz.mount = function(self, clicker)
 				put_saddle = true
 			end
 			if put_saddle == true then
-				petz.put_saddle(self, clicker, wielded_item_name)					
+				petz.put_saddle(self, clicker, wielded_item, wielded_item_name)					
 				return false
 			end
 		elseif not self.driver and self.saddle then -- Mount petz	
@@ -1298,7 +1298,7 @@ petz.mount = function(self, clicker)
 	end
 end
 
-petz.put_saddle = function(self, clicker, wielded_item_name)
+petz.put_saddle = function(self, clicker, wielded_item, wielded_item_name)
 	local saddle_type = ""
 	local another_saddle = ""	
 	if wielded_item_name == "petz:saddle" then
@@ -1319,8 +1319,8 @@ petz.put_saddle = function(self, clicker, wielded_item_name)
 	local texture = "petz_"..self.type.."_"..self.skin_colors[self.texture_no]..".png" .. "^petz_"..self.type.."_"..saddle_type..".png"..another_saddle	
 	petz.set_properties(self, {textures = {texture}})			
 	if not minetest.settings:get_bool("creative_mode") then
-		w:take_item()
-		clicker:set_wielded_item(w)
+		wielded_item:take_item()
+		clicker:set_wielded_item(wielded_item)
 	end
 end
 
@@ -1366,11 +1366,8 @@ petz.on_rightclick = function(self, clicker)
                 self.fed = true
                 mobkit.remember(self, "fed", self.fed)            
             end
-            if self.type == "lamb" then     
-                petz.lamb_wool_regrow(self)                       
-            elseif self.type == "calf" then     
-                petz.calf_milk_refill(self)
-            elseif self.type == "wolf" and wielded_item_name == "petz:bone" then
+			petz.refill(self) --Refill wool, milk or nothing
+            if self.type == "wolf" and wielded_item_name == "petz:bone" then
 				petz.wolf_to_puppy(self, player_name)
             end     
             petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
@@ -1402,11 +1399,11 @@ petz.on_rightclick = function(self, clicker)
 			else
 				show_form = true
 			end
-        elseif self.type == "calf" and wielded_item_name == "bucket:bucket_empty" and clicker:get_inventory() then
+        elseif self.milkable == true and wielded_item_name == "bucket:bucket_empty" and clicker:get_inventory() then
 			if not(self.milked) then
-				petz.calf_milk_milk(self, clicker)
+				petz.milk_milk(self, clicker)
 			else
-				minetest.chat_send_player(clicker:get_player_name(), S("This calf has already been milked."))
+				minetest.chat_send_player(clicker:get_player_name(), S("This animal has already been milked."))
 			end
 		elseif self.type == "pony" and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm") then
 			if not(self.is_baby) then
@@ -1424,7 +1421,7 @@ petz.on_rightclick = function(self, clicker)
 				minetest.add_item(clicker:get_pos(), new_stack)
 			end
 		elseif self.is_mountable == true then
-			show_form = petz.mount(self, clicker)
+			show_form = petz.mount(self, clicker, wielded_item, wielded_item_name)
         --Else open the Form
         else
 			show_form = true
@@ -1438,10 +1435,22 @@ petz.on_rightclick = function(self, clicker)
 end
 
 ---
+---Refill lamb or milk
+---
+
+petz.refill = function(self)
+	if self.type == "lamb" then
+		petz.lamb_wool_regrow(self)                       
+	elseif self.milkable == true then     
+		petz.milk_refill(self)
+	end
+end
+
+---
 --Calf Milk
 ---
 
-petz.calf_milk_refill = function(self)
+petz.milk_refill = function(self)
 	self.food_count = self.food_count + 1
 	mobkit.remember(self, "food_count", self.food_count)      
 	if self.food_count >= 5 then -- if calf replaces 5x grass then it refill milk
@@ -1452,14 +1461,14 @@ petz.calf_milk_refill = function(self)
 	end
 end
 
-petz.calf_milk_milk = function(self, clicker)
+petz.milk_milk = function(self, clicker)
 	local inv = clicker:get_inventory()	
 	if inv:room_for_item("main", "petz:bucket_milk") then		
 		local wielded_item = clicker:get_wielded_item()
 		wielded_item:take_item()
 		clicker:set_wielded_item("petz:bucket_milk")		
 		inv:add_item("main", wielded_item)
-		petz.do_sound_effect("object", self.object, "petz_calf_moaning")					
+		petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")					
 	else					
 		minetest.add_item(self:get_pos(), "petz:bucket_milk")
 	end

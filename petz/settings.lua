@@ -167,6 +167,10 @@ petz.settings.camel_follow = settings:get("camel_follow", "")
 petz.settings.camel_predators = settings:get("camel_predators", "")
 petz.settings.camel_breed = settings:get("camel_breed", "")
 petz.settings.camel_copulation_distance = tonumber(settings:get("camel_copulation_distance"))
+petz.settings.clownfish_spawn_chance = tonumber(settings:get("clownfish_spawn_chance"))
+petz.settings.clownfish_spawn_nodes = settings:get("clownfish_spawn_nodes", "")
+petz.settings.clownfish_spawn_biome = settings:get("clownfish_spawn_biome", "default")
+petz.settings.clownfish_follow = settings:get("clownfish_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

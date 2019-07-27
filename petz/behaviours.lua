@@ -299,40 +299,57 @@ function petz.predator_brain(self)
 end
 
 --
---Flying Behaviour
+--Aquatic Behaviour
 --
 
-function petz.flying_brain(self)
+function petz.aquatic_brain(self)
 	
 	-- Die Behaviour
 	
-	if self.hp <= 0 then	
+	if self.hp <= 0 then
 		petz.on_die(self)
-		return	
-	end	
+		return		
+	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up
+		if minetest.get_node_light(self.object:get_pos(), minetest.get_timeofday()) >= self.max_daylight_level then
+			petz.on_die(self)
+			return
+		end
+	end		
 	
 	if mobkit.timer(self, 1) then 
 	
 		local prty = mobkit.get_queue_priority(self)		
 		
-		if prty < 20 and self.isinliquid then
-			mobkit.hq_liquid_recovery(self, 20)
-			return
-		end		
-		
 		local pos = self.object:get_pos() 		
 			
+		--Runaway from predator
+		if prty < 18  then		
+			local predator_list = petz.settings[self.type.."_predators"]
+			if predator_list then
+				local predators = predator_list:split()
+				for i = 1, #predators  do --loop  thru all preys
+					--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
+					--minetest.chat_send_player("singleplayer", "node name="..node.name)	
+					local predator = mobkit.get_closest_entity(self, predators[i])	-- look for predator						
+					if predator then									
+						if predator and vector.distance(pos, predator:get_pos()) < 8 then						
+							mobkit.hq_runfrom(self, 18, predator)
+							return
+						end
+					end					
+				end
+			end	
+		end
+		
 		--Follow Behaviour
 					
 		if prty < 16 then
-			if self.tamed == true then
-				local player = mobkit.get_nearby_player(self)
-				if player then
-					local wielded_item_name = player:get_wielded_item():get_name()					
-					if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) < 8 then 	
-						mobkit.hq_follow(self, 16, player)
-						return
-					end
+			local player = mobkit.get_nearby_player(self)
+			if player then
+				local wielded_item_name = player:get_wielded_item():get_name()					
+				if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) < 8 then 
+					mobkit.hq_follow(self, 16, player)
+					return
 				end
 			end
 		end
@@ -351,25 +368,30 @@ function petz.flying_brain(self)
 			end			
 		end
 		
-		--Replace nodes by others
+		--Runaway from Player
 		
-		if prty < 6 then			
-			petz.replace(self)
-			if self.lay_eggs then
-				petz.lay_egg(self)
+		if prty < 14 then
+			local player = mobkit.get_nearby_player(self)
+			if player then
+				local wielded_item_name = player:get_wielded_item():get_name()	
+				if self.is_pet == false and self.tamed == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
+					mobkit.hq_runfrom(self, 14, player)
+					return
+				end
 			end
-		end
+		end				
 		
 		-- Default Random Sound		
 		petz.random_mob_sound(self)
 		
-		--Fly Wander default			
-		if mobkit.is_queue_empty_high(self) then
-			mobkit.hq_wander_fly(self, 0)			
+		--Roam default			
+		if mobkit.is_queue_empty_high(self) and not(self.mov_status == "stand") then			
+			mobkit.hq_wanderswin(self, 0)
 		end
 		
 	end
 end
+
 
 
 --

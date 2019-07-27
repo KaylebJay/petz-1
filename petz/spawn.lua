@@ -6,7 +6,7 @@ minetest.register_globalstep(function(dtime)
 	local radius =  abr * 16 --recommended		
 	local interval = petz.settings.spawn_interval	
 	
-	local spawn_pos = mobkit.get_spawn_pos_abr(dtime, interval, radius, 0.3, 0.2)	
+	local spawn_pos, liquidflag = mobkit.get_spawn_pos_abr(dtime, interval, radius, 0.3, 0.2)	
 	
 	if spawn_pos then
 		local pos_below = {

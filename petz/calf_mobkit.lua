@@ -16,6 +16,7 @@ minetest.register_entity("petz:"..pet_name,{
 	init_timer = false,	
 	is_pet = true,
 	has_affinity = false,
+	milkable = true,
 	is_wild = false,
 	give_orders = false,
 	can_be_brushed = true,
