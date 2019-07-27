@@ -61,10 +61,8 @@ petz.force_detach = function(player)
 		return
 	end
 	local entity = attached_to:get_luaentity()
-	if entity.driver
-	and entity.driver == player then
+	if entity.driver and entity.driver == player then
 		entity.driver = nil
-		mobkit.remember(entity, "driver", entity.driver)
 	end
 	player:set_detach()
 	default.player_attached[player:get_player_name()] = false
@@ -104,8 +102,7 @@ function petz.attach(entity, player)
 	end
 	attach_at = entity.driver_attach_at
 	eye_offset = entity.driver_eye_offset
-	entity.driver = player
-	mobkit.remember(entity, "driver", entity.driver)	
+	entity.driver = player	
 	petz.force_detach(player)
 	player:set_attach(entity.object, "", attach_at, entity.player_rotation)
 	default.player_attached[player:get_player_name()] = true
@@ -121,7 +118,6 @@ function petz.attach(entity, player)
 	end)
 	player:set_look_horizontal(entity.object:get_yaw() - rot_view)
 end
-
 
 function petz.detach(player, offset)
 	petz.force_detach(player)

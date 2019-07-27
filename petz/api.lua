@@ -267,11 +267,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if ent and ent.object then			
 		local inv = minetest.get_inventory({ type="detached", name="saddlebag_inventory" })
 		local itemstacks_table = {}			
-		for i = 1, inv:get_size("saddlebag") do
-			itemstacks_table[i] = inv:get_stack("saddlebag", i):to_table()
-		end		
-		ent.saddlebag_inventory = itemstacks_table 		
-		mobkit.remember(ent, "saddlebag_inventory", itemstacks_table)
+		local inv_size = inv:get_size("saddlebag") 
+		if inv_size > 0 then
+			for i = 1, inv_size do
+				itemstacks_table[i] = inv:get_stack("saddlebag", i):to_table()
+			end		
+			ent.saddlebag_inventory = itemstacks_table 		
+			mobkit.remember(ent, "saddlebag_inventory", itemstacks_table)
+		end
 	end
 	return true
 end)
@@ -538,12 +541,12 @@ petz.load_vars = function(self)
 	elseif self.is_mountable == true then
 		self.saddle = mobkit.recall(self, "saddle") or false
 		self.saddlebag = mobkit.recall(self, "saddlebag") or false		
-		self.driver = mobkit.recall(self, "driver") or false
+		self.driver = mobkit.recall(self, "driver") or nil
 		self.max_speed_forward = mobkit.recall(self, "max_speed_forward") or 1
 		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse") or 1
 		self.accel = mobkit.recall(self, "accel") or 1
 		if self.has_saddlebag == true then		
-			self.saddlebag_inventory = mobkit.recall(self, "saddlebag_inventory") or {}
+			self.saddlebag_inventory = mobkit.recall(self, "saddlebag_inventory") or nil
 		end
 	elseif self.type == "puppy" then
 		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
@@ -626,7 +629,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				mobkit.remember(self, "accel", self.accel)	
 			end							
     		self.texture_no = math.random(1, #self.skin_colors-1) --set a random texture
-			self.driver = false
+			self.driver = nil
 			mobkit.remember(self, "driver", self.driver)			
 			--Saddlebag
 			if self.has_saddlebag == true then			
@@ -741,7 +744,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.accel = tonumber(static_data_table["fields"]["accel"])			
 			mobkit.remember(self, "accel", self.accel) 
 			mobkit.remember(self, "saddle", false) --no shaddle
-			mobkit.remember(self, "driver", false) --no driver
+			mobkit.remember(self, "driver", nil) --no driver
 		end
 		--Mobs that can have babies
 		if self.breed == true then

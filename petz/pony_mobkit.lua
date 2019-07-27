@@ -23,6 +23,7 @@ minetest.register_entity("petz:"..pet_name, {
 	--Petz specifics	
 	type = pet_name,	
 	is_mountable = true,
+	driver = nil,
 	init_timer = true,	
 	is_pet = true,
 	has_affinity = true,

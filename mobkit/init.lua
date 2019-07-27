@@ -554,6 +554,7 @@ end
 -- Stuff in memory is serialized, never try to remember objectrefs.
 function mobkit.remember(self,key,val)
 	self.memory[key]=val
+	return val
 end
 
 function mobkit.forget(self,key)
