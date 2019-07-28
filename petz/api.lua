@@ -109,7 +109,7 @@ petz.create_form = function(player_name)
 		local pregnant_text_y
 		local infertile_text_x
 		local infertile_text_y
-		if pet.is_mountable == true then
+		if pet.is_mountable == true or pet.type == "elephant" then
 			pregnant_icon_x = 3
 			pregnant_icon_y = 5
 			pregnant_text_x = 4
@@ -1157,7 +1157,7 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 		end	
 		petz.kick_back(self, dir) -- kickback	
 		petz.do_sound_effect("object", self.object, "petz_default_punch")	
-		if self.hp <= 0 and self.driver then --important for ponies!		
+		if self.hp <= 0 and self.driver then --important for mountable petz!
 			petz.force_detach(self.driver)
 		end
 		if self.tamed == false and self.attack_player == false then --if you hit it, will attack player
@@ -2062,6 +2062,3 @@ minetest.register_entity("petz:ent_square_ball", {
 		self.old_pos = pos
 	end,
 })
-
-
-

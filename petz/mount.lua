@@ -105,7 +105,6 @@ function petz.attach(entity, player)
 	entity.driver = player	
 	petz.force_detach(player)
 	player:set_attach(entity.object, "", attach_at, entity.player_rotation)
-	player:set_armor_groups({immortal=1})
 	default.player_attached[player:get_player_name()] = true
 	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
 	player:set_properties({
