@@ -278,12 +278,14 @@ minetest.register_tool("petz:shears", {
 })
 
 minetest.register_craft({
+	type = "shaped",
 	output = 'petz:shears',
 	recipe = {
 		{'', 'default:steel_ingot', ''},
 		{'', 'group:stick', 'default:steel_ingot'},
 	}
 })
+
 -- Lasso
 minetest.register_tool("petz:lasso", {
 	description = S("Lasso"),
@@ -401,3 +403,12 @@ minetest.register_node("petz:bottle_moth", {
 		--minetest.chat_send_player("singleplayer", meta:get_string("owner"))
 	end,
 })
+
+--Bonemeal support
+if minetest.get_modpath("bonemeal") ~= nil then	
+	minetest.register_craft({
+		type = "shapeless",
+		output = "bonemeal:bonemeal",
+		recipe = {"petz:bone"},
+	})
+end

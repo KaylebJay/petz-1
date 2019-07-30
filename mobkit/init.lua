@@ -240,6 +240,7 @@ function mobkit.get_spawn_pos_abr(dtime,intrvl,radius,chance,reduction)
 			end
 		elseif liquidflag then --added petz
 			return pos2, liquidflag --added petz
+		
 		end		
 	end
 end
