@@ -173,3 +173,9 @@ Author: Alexander
 http://www.orangefreesounds.com/magical-chime-sound-effect/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filenames: petz_bat_sound.ogg & petz_bat_moaning.ogg
+Author: Alexander
+http://www.orangefreesounds.com/bat-sounds/
+License: The sound effect is permitted for commercial use
+under license “Attribution 3.0 Unported (CC BY 3.0)“

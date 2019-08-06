@@ -46,6 +46,7 @@ function mobkit.dir2neighbor(dir)
 	for k,v in ipairs(neighbors) do
 		if v.x == dir.x and v.z == dir.z then return k end
 	end
+	return 1
 end
 
 function mobkit.neighbor_shift(neighbor,shift)	-- int shift: minus is left, plus is right
@@ -238,10 +239,7 @@ function mobkit.get_spawn_pos_abr(dtime,intrvl,radius,chance,reduction)
 				end
 				return pos2, liquidflag
 			end
-		elseif liquidflag then --added petz
-			return pos2, liquidflag --added petz
-		
-		end		
+		end
 	end
 end
 
@@ -345,7 +343,7 @@ end
 function mobkit.heal(luaent,dmg)
 	if not luaent then return false end
 	if type(luaent) == 'table' then
-		luaent.hp = (luaent.hp or 0) + dmg
+		luaent.hp = min(self.max_hp,(luaent.hp or 0) + dmg)
 	end
 end
 
@@ -1225,14 +1223,14 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	end
 	
 	-- dumb friction
-	if self.isonground and not(self.can_fly) and not(self.can_swin) then
+	if self.isonground and not(self.can_fly) then
 		self.object:set_velocity({x= vel.x> 0.2 and vel.x*mobkit.friction or 0,
 								y=vel.y,
 								z=vel.z > 0.2 and vel.z*mobkit.friction or 0})
 	end
 	
 -- bounciness
-	if self.springiness and self.springiness > 0 and not(self.can_fly) and not(self.can_swin) then
+	if self.springiness and self.springiness > 0 then
 		local vnew = vector.new(vel)
 		
 		if not self.collided then						-- ugly workaround for inconsistent collisions
@@ -1269,7 +1267,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 		snodepos.y = snodepos.y+1
 		surfnode = mobkit.nodeatpos(snodepos)
 	end
-	if surface and not(self.can_swin) then -- standing in liquid
+	if surface then				-- standing in liquid
 		self.isinliquid = true
 		local submergence = min(surface-spos.y,self.height)
 		local balance = self.buoyancy*self.height
@@ -1277,7 +1275,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 		self.object:set_acceleration({x=-vel.x,y=buoyacc-vel.y*abs(vel.y)*0.7,z=-vel.z})
 	else
 		self.isinliquid = false
-		if not(self.can_fly) and not(self.can_swin) then
+		if not(self.can_fly) then
 			self.object:set_acceleration({x=0,y=mobkit.gravity,z=0})
 		end
 	end

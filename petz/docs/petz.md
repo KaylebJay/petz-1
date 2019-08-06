@@ -146,6 +146,25 @@ Clownfish & Tropical Fish
 - Preys: Lambs.
 - Wolves can be turned into puppies: Tame the wolf with a whip, then feed it with bones (until 5, configurable in petz.conf).
 
+#### Moth
+- It spawns only at night in the coniferous forest.
+- It dies when daylight comes, unless it would be in a dark place for protection, i.e. a cave or a closed box. It needs some obscurity, not a totally dark place.
+- A moth can be captured with an empty glass bottle. Deco item. If you break the bottle, the moth liberates.
+
+#### Camel
+- It lives in deserts.
+- It eats dry shrub.
+- Predator: Lion
+- Milkable.
+- You can breed them. Baby camels. Genetics. Mutation: White Camel.
+- Mountable with a saddle; Get a ride in the desert!
+- You can put a Saddlebag on it (right click): You gain access to the Saddlebag Inventory (16 items máx.), in the form -> click on the icon of the Saddlebag.
+- Each camel has its own separated saddlebag inventory.
+- The inventory of the saddlebag is permanent. You got it even after server restarts.
+- If the camel died, the inventory of the saddlebag will drop.
+- If you captured a camel, the saddlebag with the inventory too.
+- You can put together the saddle and the saddlebag. But on right click you will mount it. To access to the inventory of the saddlebag use the shears to quit both items. Then put a saddlebag only.
+
 ### Things you can with Petz
 - Configure the models as "mesh" (by default) or "cubic" (nodebox, no animated, no too laggy) via the 'petz.conf'
 - Configure the mob API: Only "mobs_redo" by now via 'petz.conf'.
@@ -164,6 +183,9 @@ NodeboxEditor (.nbe) and Blender (.blend) models included.
 
 ### Depends
 default, mobs, stairs, dye, vessels, wool
+
+### Optional
+bonemeal
 
 ### Tamagochi Mode
 If this mode is activated (true by default) you have to take care of your pet. The pet will have two stats: Love and Hunger. If those stats go down to 0, your pet abandon you or will starve.
@@ -240,7 +262,6 @@ The beaver's home
 
 ### Pony Breeding
 ![Baby Pony](/images/baby_pony.png)![Pony Breeding](/images/pony_breeding.png)
-
 - Ponies can be male or female. Check its gender right clicking on them.
 - Each pony has its own velocity forward, velocity backward and acceleration. You can read its characteristics with the format "1/1/1" where the numbers represent these 3 characteristics.
 - Create a Glass Syringe.
@@ -263,23 +284,31 @@ The beaver's home
 - To get the ball, right click on it.
 
 ### Recipes
-
 - Blueberry Cheese Cake = Blueberries, wheat, cheese and egg.
 - Blueberry Ice Cream: Blueberries, wheat, milk, 2 eggs and 2 snows = 3 ice creams.
 - Blueberry Muffin: Blueberries, 2 wheat, milk, 2 eggs and paper = 8 muffins.
 
-### Lambs Breed
+### Lamb, Camel and Elephant Breed
+You can get baby lambs, camels and elefants.
+1) Those petz could be male/female. Right-click on them to check its gender.
+2) Get blueberries. (configurable in petz.conf)
+3) Use (right-click) blueberries with the petz to heat them.
+4) When a rut male petz found a oestrus female (close), she get pregnant.
+5) Affer one day a baby will born.
+6) Genetics: The baby will inherit the color from its parents. From dominant to recessive genes: white, gray, dark gray and brown in the case of lambs. This means: white color is the most common, parents both white could have a child of any color, if both brown all their descendants will be brown, etc.
+6) The little petz will grown in one day.
 
-You can get baby lambs.
+#### Mutation! Vanilla lamb | White Elephant!
+Also petz can suffer from a very rare mutation in its genes when spawn or breed, in a 1:200 ratio.
+- You can get a Vanilla Lamb and 'vanilla wool' new item.
+- You can get a white elephant.
 
-1) Lambs could be male/female. Right-click on them to check its gender.
-2) Get blueberries.
-3) Use (right-click) blueberries with the lambs to heat them.
-4) When a rut male lamb found a oestrus female (close), she get pregnant.
-5) Affer one day a baby lamb will born.
-6) Genetics: The baby will inherit the color from its parents. From dominant to recessive genes: white, gray, dark gray and brown. This means: white color is the most common, parents both white could have a child of any color, if both brown all their descendants will be brown, etc.
-6) The little lamb growns in one day.
+### Dreamcatcher
+Dreamcatcher amulet for your petz! Protect them!
+- Craftable with: wood, strings and ducky feathers.
+- To put it: Right click with it on a pet you own.
+- Now your pet will be protected against other players attacks. But you can still hurt it.
+- To remove the Dreamcatcher from your pet: Right click on your pet and click on the Dreamcatcher image. Another option is to kill your pet, it will drop the dreamcatcher.
 
-#### Mutation! Vanilla lamb!
-
-Also lambs can suffer from a very rare mutation in its genes when spawn or breed, in a 1:200. You can get 'Vanilla Wool'.
+### Bonemeal
+- Install the bonemeal mod and convert your petz bones into fertilizer to grown plants faster.

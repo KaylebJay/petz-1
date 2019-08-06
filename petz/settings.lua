@@ -171,6 +171,10 @@ petz.settings.clownfish_spawn_chance = tonumber(settings:get("clownfish_spawn_ch
 petz.settings.clownfish_spawn_nodes = settings:get("clownfish_spawn_nodes", "")
 petz.settings.clownfish_spawn_biome = settings:get("clownfish_spawn_biome", "default")
 petz.settings.clownfish_follow = settings:get("clownfish_follow", "")
+petz.settings.bat_spawn = settings:get_bool("bat_spawn", true)
+petz.settings.bat_spawn_chance = tonumber(settings:get("bat_spawn_chance"))
+petz.settings.bat_spawn_nodes = settings:get("bat_spawn_nodes", "")
+petz.settings.bat_spawn_biome = settings:get("bat_spawn_biome", "default")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

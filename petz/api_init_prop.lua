@@ -120,35 +120,27 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			else				
 				self.texture_no = 1 --white, from 8 to 15
 			end
-			self.food_count_wool = 0
-			mobkit.remember(self, "food_count_wool", self.food_count_wool)	
-			self.shaved = false
-			mobkit.remember(self, "shaved", self.shaved)	
+			self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)	
+			self.shaved = mobkit.remember(self, "shaved", false)	
 		elseif self.type == "elephant" then		
 			self.texture_no = math.random(1, #self.skin_colors-1) --set a random texture
 		elseif self.type == "puppy" then		
-			self.square_ball_attached = false
-			mobkit.remember(self, "square_ball_attached", self.square_ball_attached)			
+			self.square_ball_attached = mobkit.remember(self, "square_ball_attached", false)			
 		elseif self.type == "wolf" then		
-			self.wolf_to_puppy_count = petz.settings.wolf_to_puppy_count
-			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count)
+			self.wolf_to_puppy_count = mobkit.remember(self, "wolf_to_puppy_count", petz.settings.wolf_to_puppy_count)
 		elseif self.is_mountable == true then		
 			if baby_born == false then
-				self.max_speed_forward= math.random(2, 4) --set a random velocity for walk and run
-				mobkit.remember(self, "max_speed_forward", self.max_speed_forward)				
-				self.max_speed_reverse= math.random(2, 4)	
-				mobkit.remember(self, "max_speed_reverse", self.max_speed_reverse)				
-				self.accel= math.random(2, 4)	
-				mobkit.remember(self, "accel", self.accel)	
+				self.max_speed_forward= mobkit.remember(self, "max_speed_forward", math.random(2, 4)) --set a random velocity for walk and run
+				self.max_speed_reverse= 	mobkit.remember(self, "max_speed_reverse", math.random(2, 4))				
+				self.accel= mobkit.remember(self, "accel", math.random(2, 4))	
 			end							
     		self.texture_no = math.random(1, #self.skin_colors-1) --set a random texture
-			self.driver = nil
-			mobkit.remember(self, "driver", self.driver)			
+			self.driver = mobkit.remember(self, "driver", nil)			
 			--Saddlebag
+			self.saddle = mobkit.remember(self, "saddle", false)		
 			if self.has_saddlebag == true then			
 				self.saddlebag_ref = nil
-				self.saddlebag_inventory = {}
-				mobkit.remember(self, "saddlebag_inventory", self.saddlebag_inventory)
+				self.saddlebag_inventory = mobkit.remember(self, "saddlebag_inventory", {})
 			end
 		end
 		--Mobs that can have babies
@@ -157,14 +149,10 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				self.is_male = petz.set_random_gender() --set a random gender			
 			end
 			mobkit.remember(self, "is_male", self.is_male)
-			self.is_rut = false
-			mobkit.remember(self, "is_rut", self.is_rut)
-			self.is_pregnant = false
-			mobkit.remember(self, "is_pregnant", self.is_pregnant)
-			self.pregnant_count = petz.settings.pregnant_count
-			mobkit.remember(self, "pregnant_count", self.pregnant_count)			
-			self.is_baby = false
-			mobkit.remember(self, "is_baby", self.is_baby)			
+			self.is_rut = mobkit.remember(self, "is_rut", false)
+			self.is_pregnant = mobkit.remember(self, "is_pregnant", false)
+			self.pregnant_count = mobkit.remember(self, "pregnant_count", petz.settings.pregnant_count)			
+			self.is_baby = mobkit.remember(self, "is_baby", false)			
 			--Genetics
 			self.genes = {}
 			if not(self.type == "pony") then
@@ -202,34 +190,23 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		if not(self.texture_no) then --for piggy, moth... petz with only one texture
 			self.texture_no = 1
 		end
-		self.set_vars = true
-		mobkit.remember(self, "set_vars", self.set_vars)
-		self.tag = ""
-		mobkit.remember(self, "tag", self.tag)
-		self.show_tag = false
-		mobkit.remember(self, "show_tag", self.show_tag)
-		self.tamed = false
-		mobkit.remember(self, "tamed", self.tamed)
-		self.owner = ""
-		mobkit.remember(self, "owner", self.owner)				
-		self.food_count = 0
-		mobkit.remember(self, "food_count", self.food_count)							
-		self.was_killed_by_player = false
-		mobkit.remember(self, "was_killed_by_player", self.was_killed_by_player)	
-		self.dreamcatcher = false
-		mobkit.remember(self, "dreamcatcher", self.dreamcatcher)	
+		self.set_vars = mobkit.remember(self, "set_vars", true)
+		self.tag = mobkit.remember(self, "tag", "")
+		self.show_tag = mobkit.remember(self, "show_tag", false)
+		self.tamed = mobkit.remember(self, "tamed", false)
+		self.owner = mobkit.remember(self, "owner", "")				
+		self.food_count = mobkit.remember(self, "food_count", 0)							
+		self.was_killed_by_player = mobkit.remember(self, "was_killed_by_player", false)	
+		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", false)	
 		if self.init_timer== true then
 			petz.init_timer(self)
 		end
 		if self.has_affinity == true then
-			self.affinity = 100
-			mobkit.remember(self, "affinity", self.affinity)	
+			self.affinity = mobkit.remember(self, "affinity", 100)	
 		end
 		if self.is_wild == true then
-			self.lashed = false
-			mobkit.remember(self, "lashed", self.lashed)	
-			self.lashing_count = 0
-			mobkit.remember(self, "lashing_count", self.lashing_count)	
+			self.lashed = mobkit.remember(self, "lashed", false)	
+			self.lashing_count = mobkit.remember(self, "lashing_count", 0)	
 		end
 	elseif captured_mob == false then	
 		petz.load_vars(self) --Load memory variables	
@@ -239,66 +216,44 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	else 
 		--Mob Specific		
 		if self.type == "lamb" then --Lamb
-			self.food_count_wool = tonumber(static_data_table["fields"]["food_count_wool"])
-			mobkit.remember(self, "food_count_wool", self.food_count_wool) 
-			self.shaved = petz.to_boolean(static_data_table["fields"]["shaved"])				
-			mobkit.remember(self, "shaved", self.shaved) 		
+			self.food_count_wool = mobkit.remember(self, "food_count_wool", tonumber(static_data_table["fields"]["food_count_wool"])) 
+			self.shaved = mobkit.remember(self, "shaved", petz.to_boolean(static_data_table["fields"]["shaved"])) 		
 		elseif self.type == "wolf" then
-			self.wolf_to_puppy_count = tonumber(static_data_table["fields"]["wolf_to_puppy_count"])
-			mobkit.remember(self, "wolf_to_puppy_count", self.wolf_to_puppy_count) 
+			self.wolf_to_puppy_count = mobkit.remember(self, "wolf_to_puppy_count", tonumber(static_data_table["fields"]["wolf_to_puppy_count"])) 
 		elseif self.is_mountable == true then		
 			self.saddle = petz.to_boolean(static_data_table["fields"]["saddle"])	
 			self.saddlebag = petz.to_boolean(static_data_table["fields"]["saddlebag"])	
 			self.saddlebag_inventory = minetest.deserialize(static_data_table["fields"]["saddlebag_inventory"])
-			self.max_speed_forward =  tonumber(static_data_table["fields"]["max_speed_forward"]	)
-			mobkit.remember(self, "max_speed_forward", self.max_speed_forward) 
-			self.max_speed_reverse = tonumber(static_data_table["fields"]["max_speed_reverse"])
-			mobkit.remember(self, "max_speed_reverse", self.max_speed_reverse) 
-			self.accel = tonumber(static_data_table["fields"]["accel"])			
-			mobkit.remember(self, "accel", self.accel) 
+			self.max_speed_forward = mobkit.remember(self, "max_speed_forward", tonumber(static_data_table["fields"]["max_speed_forward"]	)) 
+			self.max_speed_reverse = mobkit.remember(self, "max_speed_reverse", tonumber(static_data_table["fields"]["max_speed_reverse"])) 
+			self.accel = mobkit.remember(self, "accel", tonumber(static_data_table["fields"]["accel"])) 
 			mobkit.remember(self, "saddle", false) --no shaddle
 			mobkit.remember(self, "driver", nil) --no driver
 		end
 		--Mobs that can have babies
 		if self.breed == true then
-			self.is_male = petz.to_boolean(static_data_table["fields"]["is_male"])			
-			mobkit.remember(self, "is_male", self.is_male) 
-			self.is_rut = petz.to_boolean(static_data_table["fields"]["is_rut"])
-			mobkit.remember(self, "is_rut", self.is_rut) 
-			self.is_pregnant = petz.to_boolean(static_data_table["fields"]["is_pregnant"])
-			mobkit.remember(self, "is_pregnant", self.is_pregnant) 
-			self.is_baby = petz.to_boolean(static_data_table["fields"]["is_baby"])
-			mobkit.remember(self, "is_baby", self.is_baby) 
-			self.pregnant_count = tonumber(static_data_table["fields"]["pregnant_count"])
-			mobkit.remember(self, "pregnant_count", self.pregnant_count) 	
-			self.genes = minetest.deserialize(static_data_table["fields"]["genes"])
-			mobkit.remember(self, "genes", self.genes) 	
+			self.is_male = mobkit.remember(self, "is_male", petz.to_boolean(static_data_table["fields"]["is_male"])	) 
+			self.is_rut = mobkit.remember(self, "is_rut", petz.to_boolean(static_data_table["fields"]["is_rut"])) 
+			self.is_pregnant = mobkit.remember(self, "is_pregnant", petz.to_boolean(static_data_table["fields"]["is_pregnant"])) 
+			self.is_baby = mobkit.remember(self, "is_baby", petz.to_boolean(static_data_table["fields"]["is_baby"])) 
+			self.pregnant_count = mobkit.remember(self, "pregnant_count", tonumber(static_data_table["fields"]["pregnant_count"])) 	
+			self.genes = mobkit.remember(self, "genes", minetest.deserialize(static_data_table["fields"]["genes"])) 	
 		end		
 		--ALL the mobs
 		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])
-		self.set_vars = true
-		mobkit.remember(self, "set_vars", self.set_vars) 		
-		self.tag = static_data_table["fields"]["tag"]	
-		mobkit.remember(self, "tag", self.tag) 
-		self.show_tag = petz.to_boolean(static_data_table["fields"]["show_tag"])
-		mobkit.remember(self, "dreamcatcher", self.dreamcatcher) 
-		self.dreamcatcher = petz.to_boolean(static_data_table["fields"]["dreamcatcher"])
-		mobkit.remember(self, "show_tag", self.show_tag) 
-		self.tamed = petz.to_boolean(static_data_table["fields"]["tamed"])		
-		mobkit.remember(self, "tamed", self.tamed)	
-		self.owner = static_data_table["fields"]["owner"]	
-		mobkit.remember(self, "owner", self.owner) 
-		self.food_count = tonumber(static_data_table["fields"]["food_count"])
-		mobkit.remember(self, "food_count", self.food_count) 
+		self.set_vars = mobkit.remember(self, "set_vars", true) 		
+		self.tag = mobkit.remember(self, "show_tag", mobkit.remember(self, "tag", static_data_table["fields"]["tag"]) ) 
+		self.show_tag = mobkit.remember(self, "show_tag", petz.to_boolean(static_data_table["fields"]["show_tag"])) 
+		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", petz.to_boolean(static_data_table["fields"]["dreamcatcher"])) 
+		self.tamed = mobkit.remember(self, "tamed", petz.to_boolean(static_data_table["fields"]["tamed"]))	
+		self.owner = mobkit.remember(self, "owner", static_data_table["fields"]["owner"]) 
+		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 
 		if self.has_affinity == true then
-			self.affinity = tonumber(static_data_table["fields"]["affinity"])
-			mobkit.remember(self, "affinity", self.affinity) 
+			self.affinity = mobkit.remember(self, "affinity", tonumber(static_data_table["fields"]["affinity"])) 
 		end
 		if self.is_wild == true then
-			self.lashed = false
-			mobkit.remember(self, "lashed", self.lashed)	
-			self.lashing_count = tonumber(static_data_table["fields"]["lashing_count"]	)
-			mobkit.remember(self, "lashing_count", self.lashing_count)	
+			self.lashed = mobkit.remember(self, "lashed", false)	
+			self.lashing_count = mobkit.remember(self, "lashing_count", tonumber(static_data_table["fields"]["lashing_count"]	))	
 		end
 	end		
 	--Custom textures

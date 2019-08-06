@@ -6,7 +6,7 @@ minetest.register_globalstep(function(dtime)
 	local radius =  abr * 16 --recommended		
 	local interval = petz.settings.spawn_interval	
 	
-	local spawn_pos, liquidflag = mobkit.get_spawn_pos_abr(dtime, interval, radius, 0.3, 0.2)	
+	local spawn_pos, liquidflag, cave = mobkit.get_spawn_pos_abr(dtime, interval, radius, 0.3, 0.2)	
 	
 	if spawn_pos then
 		local pos_below = {
@@ -15,15 +15,46 @@ minetest.register_globalstep(function(dtime)
 			z = spawn_pos.z,
 		}
 		local node = minetest.get_node(pos_below) --the node below the spawn pos
-		local candidates_list = {} --Create a sublist of the petz with the same node to spawn		
-		for i = 1, #petz.petz_list do		
+		local candidates_list = {} --Create a sublist of the petz with the same node to spawnand between max_height and min_height	
+		for i = 1, #petz.petz_list do
+			local mob_ent_name = "petz:"..petz.petz_list[i]
+			--minetest.chat_send_player("singleplayer", mob_ent_name)	
+			local ent = minetest.registered_entities[mob_ent_name]
+			if ent then --do several checks to know if the mob can be included in the list or not					
+				if ent.spawn_max_height then --check max_height						
+					if spawn_pos.y > ent.spawn_max_height then
+						break
+					end
+				end
+				if ent.spawn_min_height then --check min_height						
+					if spawn_pos.y < ent.spawn_min_height then
+						break
+					end
+				end		
+				if ent.min_daylight_level then --check min_light				
+					if minetest.get_node_light(spawn_pos, 0.5) < ent.spawn_min_light then				
+						break
+					end
+				end					
+				if ent.max_daylight_level then --check max_light
+					if minetest.get_node_light(spawn_pos, 0.5) > ent.spawn_max_light then				
+						break
+					end
+				end							
+				--Check if this mob spawns at night
+				if ent.spawn_at_night then			
+					if not(petz.is_night()) then --if not at night
+						break
+					end
+				end
+			end
 			local spawn_nodes_list = petz.settings[petz.petz_list[i].."_spawn_nodes"]
 			if spawn_nodes_list then
 				local spawn_nodes = spawn_nodes_list:split(", ")
 				for j = 1, #spawn_nodes do --loop  thru all spawn nodes
 					--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[j])	
-					--minetest.chat_send_player("singleplayer", "node name="..node.name)	
-					if spawn_nodes[j] == node.name then
+					--minetest.chat_send_player("singleplayer", "node name="..node.name)						
+					if spawn_nodes[j] == node.name then --if node name matches
 						table.insert(candidates_list, petz.petz_list[i])
 						break
 					end
@@ -38,14 +69,8 @@ minetest.register_globalstep(function(dtime)
 		end
 			
 		local random_mob = candidates_list[math.random(1, #candidates_list)] --Get a random mob from the list of candidates
-		random_mob_name = "petz:" .. random_mob
+		local random_mob_name = "petz:" .. random_mob
 		--minetest.chat_send_player("singleplayer", random_mob)
-		--Firstly check if this mob spawns at night
-		if minetest.registered_entities[random_mob_name] and minetest.registered_entities[random_mob_name].spawn_at_night then			
-			if not(petz.is_night()) then --if not at night
-				return
-			end
-		end
 		local spawn_chance = petz.settings[random_mob.."_spawn_chance"]
 		if spawn_chance < 0 then
 			spawn_chance = 0
@@ -61,6 +86,7 @@ minetest.register_globalstep(function(dtime)
 			--minetest.chat_send_player("singleplayer", "biome="..random_mob_biome)		
 			if random_mob_biome ~= "default" then --specific biome to spawn for this mob
 				local biome_name = minetest.get_biome_name(minetest.get_biome_data(spawn_pos).biome) --biome of the spawn pos
+				--minetest.chat_send_player("singleplayer", "biome="..biome_name)	
 				if biome_name ~= random_mob_biome then
 					return
 				end
@@ -78,7 +104,8 @@ minetest.register_globalstep(function(dtime)
 			if mob_count < petz.settings.max_mobs then --check for bigger mobs:
 				spawn_pos = petz.pos_to_spawn(random_mob_name, spawn_pos) --recalculate pos.y for bigger mobs
 				minetest.add_entity(spawn_pos, random_mob_name)	
-				--minetest.chat_send_player("singleplayer", "spawned!!!")					
+				--minetest.chat_send_player("singleplayer", "spawned!!!")		
+				--minetest.chat_send_player("singleplayer", "cave="..tostring(cave))				
 			end
 		end
 	end
