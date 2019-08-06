@@ -54,6 +54,8 @@ mobs:register_mob("petz:"..pet_name, {
 	mesh = mesh,
 	textures = textures,
 	collisionbox = collisionbox,
+	physical = true,
+	collide_with_objects = true,
 	makes_footstep_sound = false,
 	walk_velocity = 0.75,
     run_velocity = 1,    
