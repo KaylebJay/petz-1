@@ -343,7 +343,7 @@ end
 function mobkit.heal(luaent,dmg)
 	if not luaent then return false end
 	if type(luaent) == 'table' then
-		luaent.hp = min(self.max_hp,(luaent.hp or 0) + dmg)
+		luaent.hp = min(luaent.max_hp,(luaent.hp or 0) + dmg)
 	end
 end
 
