@@ -32,12 +32,12 @@ minetest.register_globalstep(function(dtime)
 					end
 				end		
 				if ent.min_daylight_level then --check min_light				
-					if minetest.get_node_light(spawn_pos, 0.5) < ent.spawn_min_light then				
+					if minetest.get_node_light(spawn_pos, 0.5) < ent.min_daylight_level then				
 						break
 					end
 				end					
 				if ent.max_daylight_level then --check max_light
-					if minetest.get_node_light(spawn_pos, 0.5) > ent.spawn_max_light then				
+					if minetest.get_node_light(spawn_pos, 0.5) > ent.max_daylight_level then				
 						break
 					end
 				end							
