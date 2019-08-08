@@ -132,6 +132,22 @@ function petz.herbivore_brain(self)
 			--end
 		--end
 		
+		if prty < 4 and self.tamed == true then --search for a petz:pet_bowl		
+			local view_range = self.view_range
+			local nearby_nodes = minetest.find_nodes_in_area(
+				{x = pos.x - view_range, y = pos.y - 1, z = pos.z - view_range},
+				{x = pos.x + view_range, y = pos.y + 1, z = pos.z + view_range},
+				{"petz:pet_bowl"})
+			if #nearby_nodes >= 1 then		
+				--minetest.chat_send_player("singleplayer", " go go")	
+				local tpos = 	nearby_nodes[1] --the first match
+				if vector.distance(pos, tpos) > 2 then
+					--minetest.chat_send_player("singleplayer", "yes")	
+					mobkit.hq_goto(self, 4, tpos)					
+				end				
+			end			
+		end
+		
 		--if prty < 5 and self.type == "puppy" and self.tamed == true and self.square_ball_attached == false then --search for a squareball				
 			--local object_list = minetest.get_objects_inside_radius(self.object:get_pos(), 10)
 			--for i = 1,#object_list do
