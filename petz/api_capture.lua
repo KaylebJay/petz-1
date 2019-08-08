@@ -110,5 +110,6 @@ petz.capture = function(self, clicker, put_in_inventory)
 		end
 	end
 	self.object:remove()
+	petz.remove_petz_list_by_owner(self)
 	return stack_meta
 end
