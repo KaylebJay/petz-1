@@ -179,3 +179,9 @@ Author: Alexander
 http://www.orangefreesounds.com/bat-sounds/
 License: The sound effect is permitted for commercial use
 under license “Attribution 3.0 Unported (CC BY 3.0)“
+--------------------------------------------
+filenames: petz_whistle.ogg
+Author: Alexander
+http://www.orangefreesounds.com/whistle-noise/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”

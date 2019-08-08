@@ -110,10 +110,7 @@ petz.timer = function(self)
             elseif (self.has_affinity == true) and (self.affinity == 0) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("has abandoned you!!!"))
                 petz.delete_nametag(self)
-                self.owner = "" --the pet abandon you
-                mobkit.remember(self, "owner", self.owner)
-                self.tamed = false
-                mobkit.remember(self, "tamed", self.tamed)
+				petz.remove_owner(self) --the pet abandon you               
                 petz.drop_dreamcatcher(self)
                 self.init_timer  = false -- no more timing				
             --Else reinit the timer, to check again in the future

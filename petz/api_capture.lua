@@ -4,16 +4,6 @@ local modpath, S = ...
 -- Register Egg
 --
 
-petz.set_owner = function(self, placer_name)
-	-- set owner if not a monster
-	if self.is_wild == false then					
-		self.owner = placer_name
-		mobkit.remember(self, "owner", self.owner)
-		self.tamed = true
-		mobkit.remember(self, "tamed", self.tamed)
-	end
-end
-
 function petz:register_egg(pet_name, desc, inv_img, no_creative)
 	local grp = {spawn_egg = 1}
 	minetest.register_craftitem(pet_name .. "_set", { -- register new spawn egg containing mob information

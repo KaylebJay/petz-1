@@ -42,8 +42,13 @@ petz.on_die = function(self)
 	petz.set_properties(self, {collisionbox=props.collisionbox})
 	petz.drop_items(self)
 	mobkit.clear_queue_high(self)
+	if petz.pet[self.owner] then
+		petz.pet[self.owner]= nil --remove owner entry for right_click formspec
+	end
+	if self.tamed == true then
+		petz.remove_petz_list_by_owner(self) --remove this petz from the list of the player pets
+	end
 	mobkit.hq_die(self)
-    petz.pet[self.owner]= nil 
 end
 
 petz.was_killed_by_player = function(self, puncher)	

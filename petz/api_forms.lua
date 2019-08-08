@@ -219,6 +219,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if fields.ipt_name then
 			pet.tag = minetest.formspec_escape(string.sub(fields.ipt_name, 1 , 12))
 			mobkit.remember(pet, "tag", pet.tag)
+			petz.insert_petz_list_by_owner(pet)
 		end
 		petz.update_nametag(pet)
 		return true

@@ -60,11 +60,8 @@ petz.on_rightclick = function(self, clicker)
 			minetest.chat_send_player(player_name, S("You are not the owner of the").." "..self.type..".")	
 			return
 		end
-		if self.owner== nil or self.owner== "" or (self.owner ~= player_name and petz.settings.rob_mobs == true) then				
-			self.tamed = true
-			mobkit.remember(self, "tamed", self.tamed )
-			self.owner = player_name
-			mobkit.remember(self, "owner", self.owner) 
+		if self.owner== nil or self.owner== "" or (self.owner ~= player_name and petz.settings.rob_mobs == true) then
+			petz.set_owner(self, 	player_name)
 		end			
 		petz.capture(self, clicker, true)
 		minetest.chat_send_player("singleplayer", S("Your").." "..self.type.." "..S("has been captured")..".")				            

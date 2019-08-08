@@ -83,6 +83,10 @@ petz.load_vars = function(self)
 	self.show_tag = mobkit.recall(self, "show_tag") or false
 	self.tamed = mobkit.recall(self, "tamed") or false
 	self.owner = mobkit.recall(self, "owner") or nil
+	--Insert in the table of petz by owner
+	if self.owner then
+		petz.insert_petz_list_by_owner(self)
+	end
 	self.affinity = mobkit.recall(self, "affinity") or 100
 	self.fed = mobkit.recall(self, "fed") or true
 	self.brushed = mobkit.recall(self, "brushed") or false
@@ -194,7 +198,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.tag = mobkit.remember(self, "tag", "")
 		self.show_tag = mobkit.remember(self, "show_tag", false)
 		self.tamed = mobkit.remember(self, "tamed", false)
-		self.owner = mobkit.remember(self, "owner", "")				
+		self.owner = mobkit.remember(self, "owner", nil)				
 		self.food_count = mobkit.remember(self, "food_count", 0)							
 		self.was_killed_by_player = mobkit.remember(self, "was_killed_by_player", false)	
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", false)	
