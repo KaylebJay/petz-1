@@ -246,7 +246,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		--ALL the mobs
 		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])
 		self.set_vars = mobkit.remember(self, "set_vars", true) 		
-		self.tag = mobkit.remember(self, "show_tag", mobkit.remember(self, "tag", static_data_table["fields"]["tag"]) ) 
+		self.tag = mobkit.remember(self, "tag", static_data_table["fields"]["tag"]) or ""
 		self.show_tag = mobkit.remember(self, "show_tag", petz.to_boolean(static_data_table["fields"]["show_tag"])) 
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", petz.to_boolean(static_data_table["fields"]["dreamcatcher"])) 
 		self.tamed = mobkit.remember(self, "tamed", petz.to_boolean(static_data_table["fields"]["tamed"]))	

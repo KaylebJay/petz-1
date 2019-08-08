@@ -80,7 +80,7 @@ petz.capture = function(self, clicker, put_in_inventory)
 	stack_meta:set_string("captured", "true") --mark as captured
 	stack_meta:set_string("texture_no", tostring(self.texture_no)) --Save the current texture_no
 	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
-	stack_meta:set_string("tag", self.tag) --Save the current tag
+	stack_meta:set_string("tag", self.tag) --Save the current tag	
 	stack_meta:set_string("show_tag", tostring(self.show_tag))
 	stack_meta:set_string("dreamcatcher", tostring(self.dreamcatcher))
 	if self.type == 'lamb' then
@@ -109,7 +109,7 @@ petz.capture = function(self, clicker, put_in_inventory)
 			minetest.add_item(clicker:get_pos(), new_stack)
 		end
 	end
-	self.object:remove()
 	petz.remove_petz_list_by_owner(self)
+	self.object:remove()
 	return stack_meta
 end
