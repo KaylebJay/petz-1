@@ -85,7 +85,7 @@ minetest.register_craftitem("petz:whip", {
     inventory_image = "petz_whip.png",
     wield_image = "petz_whip.png",
     after_use = function(itemstack, user, node, digparams)
-        petz.do_sound_effect("object", user, "petz_whip")
+        petz.do_sound_effect("player", user, "petz_whip")
     end,
 })
 

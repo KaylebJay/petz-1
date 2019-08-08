@@ -71,7 +71,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			}
 			pet.object:set_pos(pet_pos)
 			minetest.close_formspec(player_name, "petz:form_whistle")
-			petz.do_sound_effect("object", player, "petz_whistle")
+			petz.do_sound_effect("player", player, "petz_whistle")
 		end
 	end
 	return true
