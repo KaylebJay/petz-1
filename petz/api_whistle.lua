@@ -28,10 +28,10 @@ petz.create_form_list_by_owner = function(user_name, user_pos)
 	local item_list_table = petz.petz_list_by_owner[user_name]	
 	if item_list_table then
 		if #item_list_table <= 0 then
+			minetest.chat_send_player(user_name, "You have no pets with a name to call.")	
 			return ''
 		end
 		local item_list = ""
-		--minetest.chat_send_player("singleplayer", #item_list_table)	
 		for key, pet in ipairs(item_list_table) do
 			if pet and pet.object then
 				local pet_type =  pet.type:gsub("^%l", string.upper) 
