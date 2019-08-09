@@ -37,7 +37,7 @@ petz.create_form_list_by_owner = function(user_name, user_pos)
 				local pet_type =  pet.type:gsub("^%l", string.upper) 
 				local pet_pos =  pet.object:get_pos() 
 				local distance = vector.distance(user_pos, pet_pos) 
-				item_list = item_list .. pet.tag.." | " .. S(pet_type) .. " | ".. "Pos = ("..tostring(math.floor(pet_pos.x+0.5)) .. "/"
+				item_list = item_list .. minetest.colorize("#EE0", pet.tag).." | " .. S(pet_type) .. " | ".. "Pos = ("..tostring(math.floor(pet_pos.x+0.5)) .. "/"
 					.. tostring(math.floor(pet_pos.y+0.5)) .. "/".. tostring(math.floor(pet_pos.z+0.5))..") | Dist= "..tostring(petz.round(distance, 1))..","
 			end
 		end
