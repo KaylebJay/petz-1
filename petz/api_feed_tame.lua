@@ -33,8 +33,8 @@ petz.remove_petz_list_by_owner = function(self)
 	end
 end
 
-petz.set_owner = function(self, owner_name)
-	if self.is_wild == false then -- set owner if not a monster
+petz.set_owner = function(self, owner_name, force)
+	if self.is_wild == false or force == true then -- set owner if not a monster
 		self.tamed = mobkit.remember(self, "tamed", true)
 		self.owner = mobkit.remember(self, "owner", owner_name)
 		petz.insert_petz_list_by_owner(self)
@@ -80,7 +80,7 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 			self.food_count = mobkit.remember(self, "food_count", 0)   
 			if tame then
 				if self.tamed == false then
-					petz.set_owner(self, clicker:get_player_name())
+					petz.set_owner(self, clicker:get_player_name(), false)
 					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", self.type))
 					mobkit.clear_queue_high(self) -- clear behaviour (i.e. it was running away)	
 					if petz.settings.tamagochi_mode == true then
@@ -116,7 +116,7 @@ petz.tame_whip= function(self, hitter)
     			self.lashing_count = self.lashing_count + 1        
 				if self.lashing_count >= petz.settings.lashing_tame_count then
 					self.lashing_count = mobkit.remember(self, "lashing_count", 0)	 --reset to 0
-					petz.set_owner(self, hitter:get_player_name())					
+					petz.set_owner(self, hitter:get_player_name(), true)					
 					minetest.chat_send_player(self.owner, S("A").." "..self.type.." "..S("has been tamed."))	
 					mobkit.clear_queue_high(self) -- do not attack				
 				end			

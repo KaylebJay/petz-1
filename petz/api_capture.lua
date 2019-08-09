@@ -29,7 +29,7 @@ function petz:register_egg(pet_name, desc, inv_img, no_creative)
 				local sdata = minetest.serialize(meta_table)
 				local mob = minetest.add_entity(spawn_pos, pet_name, sdata)
 				local ent = mob:get_luaentity()
-				petz.set_owner(ent, placer:get_player_name()) --set owner
+				petz.set_owner(ent, placer:get_player_name(), false) --set owner
 				itemstack:take_item() -- since mob is unique we remove egg once spawned
 			end
 			return itemstack
