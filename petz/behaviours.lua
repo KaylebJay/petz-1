@@ -264,7 +264,7 @@ function petz.predator_brain(self)
 				if preys_list then
 					local preys = string.split(preys_list, ',')
 					for i = 1, #preys  do --loop  thru all preys
-						minetest.chat_send_player("singleplayer", "preys list="..preys[i])	
+						--minetest.chat_send_player("singleplayer", "preys list="..preys[i])	
 						--minetest.chat_send_player("singleplayer", "node name="..node.name)	
 						local prey = mobkit.get_closest_entity(self, preys[i])	-- look for prey						
 						if prey then									
