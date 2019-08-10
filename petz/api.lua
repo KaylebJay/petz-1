@@ -24,6 +24,7 @@ petz.settings.rotate = 0
 petz.settings.tamagochi_safe_nodes = {} --Table with safe nodes for tamagochi mode
 
 assert(loadfile(modpath .. "/api_helper_functions.lua"))(modpath, S)
+assert(loadfile(modpath .. "/api_orders.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api_init_prop.lua"))(modpath, S) --Load the init the properties for the entities
 assert(loadfile(modpath .. "/api_forms.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api_on_rightclick.lua"))(modpath, S)

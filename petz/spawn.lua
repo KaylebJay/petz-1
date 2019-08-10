@@ -50,7 +50,7 @@ minetest.register_globalstep(function(dtime)
 			end
 			local spawn_nodes_list = petz.settings[petz.petz_list[i].."_spawn_nodes"]
 			if spawn_nodes_list then
-				local spawn_nodes = spawn_nodes_list:split(", ")
+				local spawn_nodes = string.split(spawn_nodes_list, ',')
 				for j = 1, #spawn_nodes do --loop  thru all spawn nodes
 					--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[j])	
 					--minetest.chat_send_player("singleplayer", "node name="..node.name)						

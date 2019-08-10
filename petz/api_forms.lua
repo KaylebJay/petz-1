@@ -137,6 +137,9 @@ petz.create_form = function(player_name)
 			form_size.w= form_size.w + 1
 		end
     end
+    if pet.is_wild == true then
+		form_orders =	form_orders .. "button_exit[3,5;2,1;btn_guard;"..S("Guard").."]"
+    end
     final_form =
 		"size["..form_size.w..","..form_size.h..";]"..
 		tamagochi_form_stuff..        
@@ -158,16 +161,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				mobkit.hq_follow(pet, 15, player)
 			end			
 		elseif fields.btn_standhere then
-			mobkit.clear_queue_high(pet)
-			petz.stand(pet)
-			mobkit.lq_idle(pet, 2400)		
-			if pet.can_fly == true then						
-				if mobkit.node_name_in(pet, "below") == "air" then		
-					mobkit.animate(pet, "fly")
-				else					
-					mobkit.animate(pet, "stand")
-				end
-			end
+			petz.standhere(pet)
+		elseif fields.btn_guard then
+			petz.guard(pet)
 		elseif fields.btn_ownthing then
 			mobkit.clear_queue_low(pet)			
 			petz.ownthing(pet)
@@ -195,8 +191,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				pet.object:set_detach()
 			end, pet)
 		elseif fields.btn_show_tag then			
-			pet.show_tag = petz.to_boolean(fields.btn_show_tag)
-			mobkit.remember(pet, "show_tag", pet.show_tag)
+			pet.show_tag = mobkit.remember(pet, "show_tag", petz.to_boolean(fields.btn_show_tag))
 		elseif fields.btn_dreamcatcher then		
 			petz.drop_dreamcatcher(pet)
 		elseif fields.btn_saddlebag then	
@@ -276,16 +271,3 @@ petz.create_detached_saddlebag_inventory = function(name)
 end
 
 petz.create_detached_saddlebag_inventory("saddlebag_inventory")
-
-petz.ownthing = function(self)	
-	self.mov_status = "free"
-	mobkit.hq_roam(self, 0)
-	mobkit.clear_queue_high(self)
-end
-
-petz.stand = function(self)	
-	self.mov_status = "stand"	
-	self.object:set_velocity({ x = 0, y = 0, z = 0 })   
-	self.object:set_acceleration({ x = 0, y = 0, z = 0 }) 
-	mobkit.clear_queue_high(self)
-end

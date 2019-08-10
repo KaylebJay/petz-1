@@ -98,6 +98,7 @@ petz.load_vars = function(self)
 	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied") or false
 	self.child = mobkit.recall(self, "child") or false
 	self.dreamcatcher = mobkit.recall(self, "dreamcatcher") or false
+	self.mov_status = mobkit.recall(self, "mov_status") or ""
 end
 
 function petz.set_initial_properties(self, staticdata, dtime_s)	
@@ -202,6 +203,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.food_count = mobkit.remember(self, "food_count", 0)							
 		self.was_killed_by_player = mobkit.remember(self, "was_killed_by_player", false)	
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", false)	
+		self.mov_status = mobkit.remember(self, "mov_status", "")
 		if self.init_timer== true then
 			petz.init_timer(self)
 		end
@@ -249,6 +251,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.tag = mobkit.remember(self, "tag", static_data_table["fields"]["tag"]) or ""
 		self.show_tag = mobkit.remember(self, "show_tag", petz.to_boolean(static_data_table["fields"]["show_tag"])) 
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", petz.to_boolean(static_data_table["fields"]["dreamcatcher"])) 
+		self.mov_status = mobkit.remember(self, "mov_status", static_data_table["fields"]["mov_status"]) 
 		self.tamed = mobkit.remember(self, "tamed", petz.to_boolean(static_data_table["fields"]["tamed"]))	
 		self.owner = mobkit.remember(self, "owner", static_data_table["fields"]["owner"]) 
 		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 
@@ -315,5 +318,12 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	--ALL the mobs
 	if self.is_pet and self.tamed then
 		petz.update_nametag(self)
+	end
+	if self.mov_status and self.mov_status ~= "" then
+		if self.mov_status == "stand" then
+			petz.standhere(self)			
+		elseif self.mov_status == "guard" then
+			petz.guard(self)	
+		end
 	end
 end

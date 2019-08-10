@@ -33,13 +33,13 @@ function petz.herbivore_brain(self)
 		if prty < 18  then		
 			local predator_list = petz.settings[self.type.."_predators"]
 			if predator_list then
-				local predators = predator_list:split()
-				for i = 1, #predators  do --loop  thru all preys
+				local predators = string.split(predator_list, ',')
+				for i = 1, #predators do --loop  thru all preys
 					--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
 					--minetest.chat_send_player("singleplayer", "node name="..node.name)	
 					local predator = mobkit.get_closest_entity(self, predators[i])	-- look for predator						
 					if predator then									
-						if predator and vector.distance(pos, predator:get_pos()) < 8 then						
+						if predator and vector.distance(pos, predator:get_pos()) <= self.view_range then						
 							mobkit.hq_runfrom(self, 18, predator)
 							return
 						end
@@ -48,13 +48,12 @@ function petz.herbivore_brain(self)
 			end	
 		end
 		
-		--Follow Behaviour
-					
+		--Follow Behaviour					
 		if prty < 16 then
 			local player = mobkit.get_nearby_player(self)
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()					
-				if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) < 8 then 
+				if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) <= self.view_range then 
 					mobkit.hq_follow(self, 16, player)
 					return
 				end
@@ -74,22 +73,22 @@ function petz.herbivore_brain(self)
 				petz.ownthing(self)
 			end			
 		end
-		
-		--Runaway from Player
-		
+			
+		--Runaway from Player		
 		if prty < 14 then
-			local player = mobkit.get_nearby_player(self)
-			if player then
-				local wielded_item_name = player:get_wielded_item():get_name()	
-				if self.is_pet == false and self.tamed == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) < 8 then 
-					mobkit.hq_runfrom(self, 14, player)
-					return
+			if self.tamed == false then --if no tamed
+				local player = mobkit.get_nearby_player(self)
+				if player then
+					local wielded_item_name = player:get_wielded_item():get_name()	
+					if self.is_pet == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) <= self.view_range then 
+						mobkit.hq_runfrom(self, 14, player)
+						return
+					end
 				end
 			end
 		end
 		
-		--Replace nodes by others
-		
+		--Replace nodes by others		
 		if prty < 6 then			
 			petz.replace(self)
 			if self.lay_eggs then
@@ -132,17 +131,16 @@ function petz.herbivore_brain(self)
 			--end
 		--end
 		
-		if prty < 4 and self.tamed == true then --search for a petz:pet_bowl		
+		--search for a petz:pet_bowl		
+		if prty < 4 and self.tamed == true then
 			local view_range = self.view_range
 			local nearby_nodes = minetest.find_nodes_in_area(
 				{x = pos.x - view_range, y = pos.y - 1, z = pos.z - view_range},
 				{x = pos.x + view_range, y = pos.y + 1, z = pos.z + view_range},
 				{"petz:pet_bowl"})
 			if #nearby_nodes >= 1 then		
-				--minetest.chat_send_player("singleplayer", " go go")	
 				local tpos = 	nearby_nodes[1] --the first match
-				if vector.distance(pos, tpos) > 2 then
-					--minetest.chat_send_player("singleplayer", "yes")	
+				if vector.distance(pos, tpos) > 2 then					
 					mobkit.hq_goto(self, 4, tpos)					
 				end				
 			end			
@@ -231,25 +229,22 @@ function petz.predator_brain(self)
 			return
 		end		
 		
-		local pos = self.object:get_pos() 		
+		local pos = self.object:get_pos() --pos of the petz
+		--get the player close
+		local player = mobkit.get_nearby_player(self)
 			
 		--Follow Behaviour
-					
 		if prty < 16 then
-			if self.tamed == true then
-				local player = mobkit.get_nearby_player(self)
-				if player then
-					local wielded_item_name = player:get_wielded_item():get_name()					
-					if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) < 8 then 	
-						mobkit.hq_follow(self, 16, player)
-						return
-					end
-				end
+			if player and self.tamed == true then
+				local wielded_item_name = player:get_wielded_item():get_name()					
+				if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) <= self.view_range then 	
+					mobkit.hq_follow(self, 16, player)
+					return
+				end				
 			end
 		end
 		
 		if prty == 16 then
-			local player = mobkit.get_nearby_player(self)
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()
 				if wielded_item_name ~= self.follow then 
@@ -262,17 +257,18 @@ function petz.predator_brain(self)
 			end			
 		end
 		
-		-- hunt
-		if prty < 12 then							-- if not busy with anything important
+		-- hunt a prey
+		if prty < 12 then -- if not busy with anything important
 			if self.tamed == false then
 				local preys_list = petz.settings[self.type.."_preys"]
 				if preys_list then
-					local preys = preys_list:split(", ")
+					local preys = string.split(preys_list, ',')
 					for i = 1, #preys  do --loop  thru all preys
-						--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
+						minetest.chat_send_player("singleplayer", "preys list="..preys[i])	
 						--minetest.chat_send_player("singleplayer", "node name="..node.name)	
 						local prey = mobkit.get_closest_entity(self, preys[i])	-- look for prey						
 						if prey then									
+							minetest.chat_send_player("singleplayer", "got it")	
 							mobkit.hq_hunt(self, 12, prey) -- and chase it
 							return
 						end					
@@ -282,20 +278,22 @@ function petz.predator_brain(self)
 		end
 						
 		if prty < 10 then
-			if self.tamed == false then
-				local player = mobkit.get_nearby_player(self)					
-				if player and vector.distance(pos, player:get_pos()) < 10 then	-- if player close
-					if self.attack_player == true then --attack player				
-						mobkit.hq_warn(self, 10, player) -- try to repel them
-					else
-						mobkit.hq_runfrom(self, 10, player)  -- run away from player
-					end	
+			if player then
+				if (self.tamed == false) or (self.tamed == true and self.mov_status == "guard" and player:get_player_name() ~= self.owner) then
+					if vector.distance(pos, player:get_pos()) <= self.view_range then	-- if player close
+						if self.attack_player == true then --attack player										
+							mobkit.hq_warn(self, 10, player) -- try to repel them
+							return
+						else
+							mobkit.hq_runfrom(self, 10, player)  -- run away from player
+							return
+						end	
+					end
 				end
 			end
 		end
 
-		--Replace nodes by others
-		
+		--Replace nodes by others		
 		if prty < 6 then			
 			petz.replace(self)
 			if self.lay_eggs then
@@ -342,7 +340,7 @@ function petz.aquatic_brain(self)
 		if prty < 18  then		
 			local predator_list = petz.settings[self.type.."_predators"]
 			if predator_list then
-				local predators = predator_list:split()
+				local predators =  string.split(predator_list, ',')
 				for i = 1, #predators  do --loop  thru all preys
 					--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
 					--minetest.chat_send_player("singleplayer", "node name="..node.name)	
