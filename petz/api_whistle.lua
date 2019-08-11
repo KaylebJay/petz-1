@@ -33,22 +33,24 @@ petz.create_form_list_by_owner = function(user_name, user_pos)
 		end
 		local item_list = ""
 		for key, pet in ipairs(item_list_table) do
-			local pet_pos_x, pet_pos_y, pet_pos_z
-			local pet_type =  pet.type:gsub("^%l", string.upper) 
 			if mobkit.is_alive(pet) then -- check if alive
-				local pet_pos =  pet.object:get_pos() 			
-				distance = tostring(petz.round(vector.distance(user_pos, pet_pos) , 1))
-				pet_pos_x = tostring(math.floor(pet_pos.x+0.5))
-				pet_pos_y = tostring(math.floor(pet_pos.y+0.5))
-				pet_pos_z = tostring(math.floor(pet_pos.z+0.5))
-			else
-				pet_pos_x = "X"
-				pet_pos_y = "Y"
-				pet_pos_z = "Z"
-				distance = "Too far away"
+				local pet_type =  pet.type:gsub("^%l", string.upper) 
+				local pet_pos =  pet.object:get_pos() 
+				local pet_pos_x, pet_pos_y, pet_pos_z
+				if pet_pos then
+					distance = tostring(petz.round(vector.distance(user_pos, pet_pos) , 1))
+					pet_pos_x = tostring(math.floor(pet_pos.x+0.5))
+					pet_pos_y = tostring(math.floor(pet_pos.y+0.5))
+					pet_pos_z = tostring(math.floor(pet_pos.z+0.5))
+				else
+					pet_pos_x = "X"
+					pet_pos_y = "Y"
+					pet_pos_z = "Z"
+					distance = "too far away"
+				end
+				item_list = item_list .. minetest.colorize("#EE0", pet.tag).." | " .. S(pet_type) .. " | ".. "Pos = (".. pet_pos_x .. "/"
+					.. pet_pos_y .. "/".. pet_pos_z ..") | Dist= "..distance..","
 			end
-			item_list = item_list .. minetest.colorize("#EE0", pet.tag).." | " .. S(pet_type) .. " | ".. "Pos = (".. pet_pos_x .. "/"
-					.. pet_pos_y .. "/".. pet_pos_z ..") | Dist= "..distance..","			
 		end
 		local form_list_by_owner =
 			"size[6,8;]"..
