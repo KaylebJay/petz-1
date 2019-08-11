@@ -277,9 +277,9 @@ The beaver's home
 - The male sperm is unlimited but a female pony/camel only can give birth 5 babies máx. After those 5 babies, the mommy turn into infertile.
 
 #### The method of breeding
-- 1/2/3 means a velocity of 1 for forward, 2 for backward and 3 is the acceleration.
+- 1/2/3 means a velocity of 1 for forward, 2 for backward and 3 is the acceleration. So the first number of the triad is the most important.
 - Naturally spawned ponies/camels have speed statistics from 1/1/1 to 4/4/4. This means that spawned ponies/camels are slow animals (40% of the speed limit in the best case).
-- The hypothetical faster pony/camel would be a 10/10/10. You have to breed the natural ponies/camels to achieve faster ones.
+- The hypothetical faster pony would be a 10/10/10. You have to breed the natural ponies/camels to achieve faster ones.
 - Keep in mind that even fast parents can procreate a slow child. So you'll have to breed several times to get an optimal child.
 - The method is to breed parents with high speed statistics to get the best descendants, then select the fastest descendants to continue breeding them. This is a very slow process. Be patient.
 
