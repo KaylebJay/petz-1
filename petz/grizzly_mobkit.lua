@@ -54,6 +54,7 @@ minetest.register_entity("petz:"..pet_name,{
 			{range={x=47, y=59}, speed=5, loop=true},
 			{range={x=82, y=94}, speed=5, loop=true},		
 		},	
+		sit = {range={x=60, y=65}, speed=5, loop=false},
 	},
 	sounds = {
 		misc = "petz_grizzly_growl",

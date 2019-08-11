@@ -6,10 +6,8 @@ local modpath, S = ...
 
 function petz.herbivore_brain(self)
 	
-	-- Die Behaviour
-	
 	if self.hp <= 0 then
-		petz.on_die(self)
+		petz.on_die(self) -- Die Behaviour
 		return		
 	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up
 		if minetest.get_node_light(self.object:get_pos(), minetest.get_timeofday()) >= self.max_daylight_level then
@@ -27,7 +25,8 @@ function petz.herbivore_brain(self)
 			return
 		end
 		
-		local pos = self.object:get_pos() 		
+		local pos = self.object:get_pos()
+		local player = mobkit.get_nearby_player(self)
 			
 		--Runaway from predator
 		if prty < 18  then		
@@ -50,7 +49,6 @@ function petz.herbivore_brain(self)
 		
 		--Follow Behaviour					
 		if prty < 16 then
-			local player = mobkit.get_nearby_player(self)
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()					
 				if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) <= self.view_range then 
@@ -60,8 +58,7 @@ function petz.herbivore_brain(self)
 			end
 		end
 		
-		if prty == 16 then
-			local player = mobkit.get_nearby_player(self)
+		if prty == 16 then			
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()
 				if wielded_item_name ~= self.follow then 
@@ -77,7 +74,6 @@ function petz.herbivore_brain(self)
 		--Runaway from Player		
 		if prty < 14 then
 			if self.tamed == false then --if no tamed
-				local player = mobkit.get_nearby_player(self)
 				if player then
 					local wielded_item_name = player:get_wielded_item():get_name()	
 					if self.is_pet == false and self.follow ~= wielded_item_name and vector.distance(pos, player:get_pos()) <= self.view_range then 
@@ -213,9 +209,7 @@ end
 
 function petz.predator_brain(self)
 	
-	-- Die Behaviour
-	
-	if self.hp <= 0 then	
+	if self.hp <= 0 then -- Die Behaviour
 		petz.on_die(self)
 		return	
 	end	
@@ -229,9 +223,8 @@ function petz.predator_brain(self)
 			return
 		end		
 		
-		local pos = self.object:get_pos() --pos of the petz
-		--get the player close
-		local player = mobkit.get_nearby_player(self)
+		local pos = self.object:get_pos() --pos of the petz		
+		local player = mobkit.get_nearby_player(self) --get the player close
 			
 		--Follow Behaviour
 		if prty < 16 then
@@ -332,8 +325,7 @@ function petz.aquatic_brain(self)
 	
 	if mobkit.timer(self, 1) then 
 	
-		local prty = mobkit.get_queue_priority(self)		
-		
+		local prty = mobkit.get_queue_priority(self)				
 		local pos = self.object:get_pos() 		
 			
 		--Runaway from predator

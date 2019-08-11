@@ -12,17 +12,24 @@ petz.stand = function(self)
 end
 
 petz.standhere = function(self)	
-	self.mov_status = mobkit.remember(self, "mov_status", "stand")
 	mobkit.clear_queue_high(self)
-	petz.stand(self)
-	mobkit.lq_idle(self, 2400)		
+	mobkit.clear_queue_low(self)
 	if self.can_fly == true then						
 		if mobkit.node_name_in(self, "below") == "air" then		
 			mobkit.animate(self, "fly")
 		else					
 			mobkit.animate(self, "stand")
 		end
+	else
+		if self.animation["sit"] then
+			mobkit.animate(self, "sit")
+		else
+			mobkit.animate(self, "stand")
+		end
 	end
+	self.mov_status = mobkit.remember(self, "mov_status", "stand")
+	--mobkit.lq_idle(self, 2400)		
+	petz.stand(self)	
 end
 
 petz.guard = function(self)

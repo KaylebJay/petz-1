@@ -3,7 +3,7 @@ local S = ...
 local pet_name = "parrot"
 local scale_model = 0.7
 local mesh = 'petz_parrot.b3d'	
-local textures= {"petz_parrot.png", "petz_parrot2.png", "petz_parrot3.png"}
+local textures= {"petz_parrot.png", "petz_parrot2.png", "petz_parrot3.png", "petz_parrot4.png", "petz_parrot5.png"}
 local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, 0.35, 0.28}
 
 minetest.register_entity("petz:"..pet_name,{          
