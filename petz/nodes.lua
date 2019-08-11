@@ -89,7 +89,6 @@ minetest.register_node("petz:ducky_nest", {
     drawtype = "mesh",
     mesh = 'petz_ducky_nest.b3d',
     visual_size = {x = 1.3, y = 1.3},
-    tiles = {"petz_ducky_nest_egg.png"},
     collision_box = {
         type = "fixed",
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
@@ -101,7 +100,7 @@ minetest.register_node("petz:ducky_nest", {
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         if player then
             local itemstack_name = itemstack:get_name()
-            if itemstack_name == "petz:ducky_egg" or itemstack_name == "petz:chicken_egg" then --pput the egg
+            if itemstack_name == "petz:ducky_egg" or itemstack_name == "petz:chicken_egg" then --put the egg
 				local egg_type = "" 
 				if itemstack_name == "petz:ducky_egg" then
 					egg_type = "ducky"
@@ -138,7 +137,6 @@ minetest.register_node("petz:ducky_nest_egg", {
     drawtype = "mesh",
     mesh = 'petz_ducky_nest_egg.b3d',
     visual_size = {x = 1.3, y = 1.3},
-    tiles = {"petz_ducky_nest_egg.png"},
     collision_box = {
         type = "fixed",
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
@@ -236,3 +234,67 @@ minetest.register_node("petz:wool_vanilla", {
 	sounds = default.node_sound_defaults(),
 })
 minetest.register_alias("wool:vanilla", "petz:wool_vanilla")
+
+--Parrot Stand
+
+minetest.register_node("petz:bird_stand", {
+    description = S("Bird Stand"),
+    --wield_image = "petz_parrot_stand_inv.png",    
+    groups = {snappy=1, bendy=2, cracky=1},
+    sounds = default.node_sound_wood_defaults(),
+    paramtype = "light",
+    drawtype = "nodebox",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.0625, -0.5, -0.0625, 0, 0.4375, 0}, -- down
+			{-0.375, 0.4375, -0.0625, 0.3125, 0.5, -2.23517e-08}, -- top
+			{-0.125, -0.5, -0.125, 0.0625, -0.4375, 0.0625}, -- base
+		},
+	},
+	selection_box = {
+        type = "fixed",
+        fixed= {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25},
+    },
+    visual_size = {x = 1.0, y = 1.0},
+    tiles = {"default_wood.png"},
+    on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		local player_name = player:get_player_name()	
+		local pos_above = {
+			x = pos.x,
+			y = pos.y + 1,
+			z = pos.z,
+		}
+		local obj_list = minetest.get_objects_inside_radius(pos_above, 1) --check if already a parrot
+		for _, obj in ipairs(obj_list) do
+			local entity = obj:get_luaentity()
+			if entity and entity.name == "petz:parrot" then						
+				minetest.chat_send_player(player_name, S("There's already a parrot on top."))
+				return
+			end
+		end					
+		local pet_name_egg = "petz:parrot_set"		
+		if itemstack:get_name() == pet_name_egg then			
+			if not minetest.is_protected(pos, player_name) then
+				pos = {
+					x = pos.x,
+					y = pos.y + 1,
+					z = pos.z - 0.125,
+				}
+				ent = petz.create_pet(player, itemstack, "petz:parrot", pos)
+				petz.standhere(ent)
+			end
+			return itemstack
+		end
+    end,
+})
+
+minetest.register_craft({
+    type = "shaped",
+    output = 'petz:bird_stand',
+    recipe = {        
+        {'default:stick', 'group:feather', 'default:stick'},
+        {'', 'default:stick', ''},
+        {'', 'default:stick', ''},
+    }
+})

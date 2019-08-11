@@ -4,6 +4,17 @@ local modpath, S = ...
 -- Register Egg
 --
 
+petz.create_pet = function(placer, itemstack, pet_name, pos)
+	local meta = itemstack:get_meta()				
+	local meta_table = meta:to_table()
+	local sdata = minetest.serialize(meta_table)
+	local mob = minetest.add_entity(pos, pet_name, sdata)
+	local ent = mob:get_luaentity()
+	petz.set_owner(ent, placer:get_player_name(), false) --set owner
+	itemstack:take_item() -- since mob is unique we remove egg once spawned
+	return ent
+end
+
 function petz:register_egg(pet_name, desc, inv_img, no_creative)
 	local grp = {spawn_egg = 1}
 	minetest.register_craftitem(pet_name .. "_set", { -- register new spawn egg containing mob information
@@ -24,13 +35,7 @@ function petz:register_egg(pet_name, desc, inv_img, no_creative)
 					return
 				end
 				spawn_pos = petz.pos_to_spawn(pet_name, spawn_pos)
-				local meta = itemstack:get_meta()				
-				local meta_table = meta:to_table()
-				local sdata = minetest.serialize(meta_table)
-				local mob = minetest.add_entity(spawn_pos, pet_name, sdata)
-				local ent = mob:get_luaentity()
-				petz.set_owner(ent, placer:get_player_name(), false) --set owner
-				itemstack:take_item() -- since mob is unique we remove egg once spawned
+				local ent = petz.create_pet(placer, itemstack, pet_name, spawn_pos)
 			end
 			return itemstack
 		end,
