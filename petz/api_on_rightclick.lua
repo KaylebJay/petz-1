@@ -65,7 +65,7 @@ petz.on_rightclick = function(self, clicker)
 		end			
 		petz.capture(self, clicker, true)
 		minetest.chat_send_player("singleplayer", S("Your").." "..self.type.." "..S("has been captured")..".")				            
-	elseif self.breed and wielded_item_name == petz.settings[self.type.."_breed"] and not(self.is_baby) and self.type ~= "pony" then
+	elseif self.breed and wielded_item_name == petz.settings[self.type.."_breed"] and not(self.is_baby) then
 		petz.breed(self, clicker, wielded_item, wielded_item_name)
 	elseif (wielded_item_name == "petz:dreamcatcher") and (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then
 		petz.put_dreamcatcher(self, clicker, wielded_item, wielded_item_name)			
@@ -84,7 +84,7 @@ petz.on_rightclick = function(self, clicker)
 		else
 			minetest.chat_send_player(clicker:get_player_name(), S("This animal has already been milked."))
 		end
-	elseif self.type == "pony" and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm") then
+	elseif (self.is_mountable == true) and (wielded_item_name == "petz:glass_syringe" or wielded_item_name == "petz:glass_syringe_sperm") then
 		if not(self.is_baby) then
 			petz.pony_breed(self, clicker, wielded_item, wielded_item_name)	
 		end

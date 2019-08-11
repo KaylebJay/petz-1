@@ -12,7 +12,7 @@ The PetZ are here now for you!
 ### Mobs
 #### Kitty
 ![Kitty](/images/kitty.png)
-- 3 colors: brown, black and gray.
+- It avaliable in 6 colors.
 
 #### Puppy
 ![Puppy](/images/puppy.png)
@@ -91,13 +91,14 @@ In Tamagochi Mode:
 
 #### Parrot
 ![Parrot](/images/parrot.png)
-- Tree species.
+- Five species.
 - Tamable and you can give it orders.
 - It loves wheat seeds.
 - It lives naturally in the jungle.
 - You can order it to alight and to fly again.
 - It can drop Raw Parrot meat which it can be cooked.
 - You can put your parrot on your shoulder (2 minutes max.).
+- You can put your parrot on a Bird Stand.
 
 #### Chicken
 ![Chicken](/images/chicken.png)
@@ -309,6 +310,17 @@ Dreamcatcher amulet for your petz! Protect them!
 - To put it: Right click with it on a pet you own.
 - Now your pet will be protected against other players attacks. But you can still hurt it.
 - To remove the Dreamcatcher from your pet: Right click on your pet and click on the Dreamcatcher image. Another option is to kill your pet, it will drop the dreamcatcher.
+
+### Orders
+You can give orders to tamed petz.
+- Stand here: It stands fixed at the current pos.
+- Follow: It will follow you.
+- Guard: Wild animals (lion & grizzly) will attack any player close them, but not you.
+- Fly, Alight: For birds.
+
+### Bird Stand
+- Capture your parrot with the Bug Net.
+- Put it on the bird stand (right-click)
 
 ### Bonemeal
 - Install the bonemeal mod and convert your petz bones into fertilizer to grown plants faster.

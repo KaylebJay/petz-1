@@ -113,7 +113,7 @@ petz.init_mountable_pregnancy = function(self, max_speed_forward, max_speed_reve
 			elseif new_accel > 10 then
 				new_accel = 10
 			end
-			baby_entity.max_speed_forward = new_max_speed_forward 
+			baby_entity.max_speed_forward = new_max_speed_forward
 			mobkit.remember(baby_entity, "max_speed_forward", baby_entity.max_speed_forward)
 			baby_entity.max_speed_reverse = new_max_speed_reverse
 			mobkit.remember(baby_entity, "max_speed_reverse", baby_entity.max_speed_reverse)
