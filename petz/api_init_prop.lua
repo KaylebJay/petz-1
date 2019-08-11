@@ -136,7 +136,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		elseif self.is_mountable == true then		
 			if baby_born == false then
 				self.max_speed_forward= mobkit.remember(self, "max_speed_forward", math.random(2, 4)) --set a random velocity for walk and run
-				self.max_speed_reverse= 	mobkit.remember(self, "max_speed_reverse", math.random(2, 4))				
+				self.max_speed_reverse= 	mobkit.remember(self, "max_speed_reverse", math.random(1, 2))				
 				self.accel= mobkit.remember(self, "accel", math.random(2, 4))	
 			end							
     		self.texture_no = math.random(1, #self.skin_colors-1) --set a random texture

@@ -261,20 +261,27 @@ The beaver's home
 - Recover your fish with the Bug Net (right click) or breaking it.
 - You can connect several fish tank nodes to build bigger tanks and add more fishes (one by node).
 
-### Pony Breeding
+### Pony/camel Breeding
 ![Baby Pony](/images/baby_pony.png)![Pony Breeding](/images/pony_breeding.png)
-- Ponies can be male or female. Check its gender right clicking on them.
-- Each pony has its own velocity forward, velocity backward and acceleration. You can read its characteristics with the format "1/1/1" where the numbers represent these 3 characteristics.
+- Ponies/camels can be male or female. Check its gender right clicking on them.
+- Each animal has its own velocity forward, velocity backward and acceleration. You can read its characteristics with the format "1/1/1" where the numbers represent these 3 characteristics.
 - Create a Glass Syringe.
-- Use (right-click) the syringe on a male pony to get its sperm.
-- Use (right-click) the syringe with sperm on a female pony. The pony will be pregnant.
-- Right click on a pregnant female pony to check its pregnancy status.
-- After 2 days (configurable) a little pony will born with a mixture of gens, from its father and its mother.
-- Baby ponies cannot be ridered.
-- After 2 days (configurable) the little pony will get to adult.
-- You should select the best parent ponies to get better descendency (fastest ponies) when breeding.
-- You can breed any pony even if you do not own it. But the owner of the baby ponies will be the mother's owner.
-- The male sperm is unlimited but a female pony only can give birth 5 babies máx. After those 5 ponies, the mommy pony turn into infertile.
+- Use (right-click) the syringe on a male animal to get its sperm.
+- Use (right-click) the syringe with sperm on a female animal. The animal will be pregnant.
+- Right click on a pregnant female animal to check its pregnancy status.
+- After 2 days (configurable) a little baby will born with a mixture of gens, from its father and its mother.
+- Baby ponies/camels cannot be ridered.
+- After 2 days (configurable) the baby will get to adult.
+- You should select the best parent ponies to get better descendency (fastest ponies/camels) when breeding.
+- You can breed any animal even if you do not own it. But the owner of the babies will be the mother's owner.
+- The male sperm is unlimited but a female pony/camel only can give birth 5 babies máx. After those 5 babies, the mommy turn into infertile.
+
+#### The method of breeding
+- 1/2/3 means a velocity of 1 for forward, 2 for backward and 3 is the acceleration.
+- Naturally spawned ponies/camels have speed statistics from 1/1/1 to 4/4/4. This means that spawned ponies/camels are slow animals (40% of the speed limit in the best case).
+- The hypothetical faster pony/camel would be a 10/10/10. You have to breed the natural ponies/camels to achieve faster ones.
+- Keep in mind that even fast parents can procreate a slow child. So you'll have to breed several times to get an optimal child.
+- The method is to breed parents with high speed statistics to get the best descendants, then select the fastest descendants to continue breeding them. This is a very slow process. Be patient.
 
 ### Square Ball
 ![Square Ball](/images/squareball.png)
