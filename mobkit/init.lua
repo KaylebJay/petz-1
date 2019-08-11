@@ -385,7 +385,8 @@ end
 function mobkit.is_neighbor_node_reachable(self,neighbor)	-- todo: take either number or pos
 	local offset = neighbors[neighbor]
 	local pos=mobkit.get_stand_pos(self)
-	local tpos = mobkit.get_node_pos(mobkit.pos_shift(pos,offset))
+	local tpos = mobkit.get_node_pos(mobkit.pos_shift(pos,offset))	
+	if minetest.get_node(tpos).name:find("fence") then return end
 	local height, liquidflag = mobkit.get_terrain_height(tpos)
 
 	if height and abs(height-pos.y) <= self.jump_height then
