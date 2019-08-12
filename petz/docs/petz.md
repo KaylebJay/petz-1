@@ -283,7 +283,10 @@ The beaver's home
 - Keep in mind that even fast parents can procreate a slow child. So you'll have to breed several times to get an optimal child.
 - The method is to breed parents with high speed statistics to get the best descendants, then select the fastest descendants to continue breeding them. This is a very slow process. Be patient.
 
-### Square Ball
+### Square BallBarn
+Image
+
+Do create livestocks with the aid of fences.
 ![Square Ball](/images/squareball.png)
 
 - Make a Square Ball.
@@ -328,6 +331,9 @@ You can give orders to tamed petz.
 ### Bird Stand
 - Capture your parrot with the Bug Net.
 - Put it on the bird stand (right-click)
+
+### Barn
+Do create livestocks with the aid of fences.
 
 ### Bonemeal
 - Install the bonemeal mod and convert your petz bones into fertilizer to grown plants faster.
