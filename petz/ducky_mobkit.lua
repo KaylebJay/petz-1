@@ -20,6 +20,8 @@ minetest.register_entity("petz:"..pet_name,{
 	can_be_brushed = false,
 	capture_item = "net",
 	lay_eggs = true,
+	lay_eggs_in_nest = true,	
+	type_of_egg = "item",
 	follow = petz.settings.ducky_follow,
 	drops = {
 		{name = "petz:raw_ducky", chance = 3, min = 1, max = 1,},

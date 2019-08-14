@@ -168,12 +168,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			mobkit.clear_queue_low(pet)			
 			petz.ownthing(pet)
 		elseif fields.btn_alight then
-			mobkit.clear_queue_low(pet)
-			mobkit.clear_queue_high(pet)	
-			if not(mobkit.node_name_in(pet, "below") == "air") then		
-				mobkit.animate(pet, "fly")				
-			end					
-			mobkit.hq_alight(pet, 0)			
+			petz.alight(pet)
 		elseif fields.btn_fly then	
 			mobkit.clear_queue_low(pet)		
 			mobkit.clear_queue_high(pet)	

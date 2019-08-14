@@ -37,3 +37,12 @@ petz.guard = function(self)
 	mobkit.clear_queue_high(self)
 	petz.stand(self)	
 end
+
+petz.alight = function(self)
+	mobkit.clear_queue_low(self)
+	mobkit.clear_queue_high(self)	
+	if not(mobkit.node_name_in(self, "below") == "air") then		
+		mobkit.animate(self, "fly")				
+	end					
+	mobkit.hq_alight(self, 0)	
+end

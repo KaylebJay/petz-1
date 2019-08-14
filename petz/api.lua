@@ -10,7 +10,7 @@ petz = {}
 
 petz.petz_list = {"kitty", "puppy", "ducky", "lamb", "lion", "calf", "panda", --A table with all the petz names
 	"grizzly", "pony", "parrot", "chicken", "piggy", "wolf", "elephant",
-	"elephant_female", "pigeon", "moth", "camel", "clownfish", "bat"}
+	"elephant_female", "pigeon", "moth", "camel", "clownfish", "bat", "silkworn"}
 
 petz.petz_list_by_owner = {} --a list of tamed petz with owner
 
@@ -47,3 +47,4 @@ assert(loadfile(modpath .. "/api_dam_beaver.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api_sound.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api_particles.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api_whistle.lua"))(modpath, S)
+assert(loadfile(modpath .. "/api_silk.lua"))(modpath, S)

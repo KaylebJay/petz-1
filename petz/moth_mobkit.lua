@@ -12,6 +12,9 @@ minetest.register_entity("petz:"..pet_name,{
 	init_timer = false,	
 	is_pet = false,
 	can_fly = true,	
+	lay_eggs = true,
+	lay_eggs_in_nest = false,
+	type_of_egg = "node",
 	max_height = 3,
 	spawn_at_night = true,
 	die_at_daylight = true,
@@ -66,6 +69,7 @@ minetest.register_entity("petz:"..pet_name,{
 	on_activate = function(self, staticdata, dtime_s) --on_activate, required
 		mobkit.actfunc(self, staticdata, dtime_s)
 		petz.set_initial_properties(self, staticdata, dtime_s)
+		petz.init_lay_eggs(self)
 	end,
 	
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		

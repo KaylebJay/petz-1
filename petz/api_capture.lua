@@ -106,6 +106,9 @@ petz.capture = function(self, clicker, put_in_inventory)
 		stack_meta:set_string("pregnant_count", tostring(self.pregnant_count))
 		stack_meta:set_string("genes", minetest.serialize(self.genes))
 	end
+	if self.lay_eggs == true then
+		stack_meta:set_string("eggs_count", tostring(self.eggs_count))
+	end
 	if put_in_inventory == true then
 		local inv = clicker:get_inventory()	
 		if inv:room_for_item("main", new_stack) then

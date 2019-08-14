@@ -1,32 +1,32 @@
 --
---CHICKEN
+--SILKWORN
 --
 local S = ...
 
-local pet_name = "chicken"
-local scale_model = 1.4
-local mesh = 'petz_chicken.b3d'	
-local textures= {"petz_chicken.png", "petz_chicken2.png", "petz_chicken3.png"}	
-local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
+local pet_name = "silkworn"
+local scale_model = 0.5
+local mesh = 'petz_silkworn.b3d'	
+local textures= {"petz_silkworn.png"}	
+local collisionbox = {-0.125, -0.75*scale_model, -0.375, 0.0625, -0.25, 0.3125}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
-	type = "chicken",	
+	type = "silkworn",	
 	init_timer = false,	
-	is_pet = true,
+	is_pet = false,
 	has_affinity = false,
 	is_wild = false,
 	give_orders = false,
 	can_be_brushed = false,
 	capture_item = "net",
-	lay_eggs = true,
-	lay_eggs_in_nest = true,
-	type_of_egg = "item",
-	follow = petz.settings.chicken_follow,
+	follow = petz.settings.silkworn_follow,
 	drops = {
-		{name = "petz:raw_chicken", chance = 3, min = 1, max = 1,},
-		{name = "petz:bone", chance = 6, min = 1, max = 1,},
 	},
+	replace_rate = 10,
+	replace_offset = 0,
+    replace_what = {
+       	{"group:leaves", "air", -1},       
+    },
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -42,25 +42,22 @@ minetest.register_entity("petz:"..pet_name,{
 	-- api props
 	springiness= 0,
 	buoyancy = 0.5, -- portion of hitbox submerged
-	max_speed = 2,
-	jump_height = 1.5,
+	max_speed = 0.25,
+	jump_height = 1.0,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
 	max_hp = 8,
 	
 	attack={range=0.5, damage_groups={fleshy=3}},		
 	animation = {
-		walk={range={x=1, y=12}, speed=20, loop=true},	
-		run={range={x=13, y=25}, speed=20, loop=true},	
+		walk={range={x=0, y=12}, speed=10, loop=true},	
+		run={range={x=0, y=12}, speed=10, loop=true},	
 		stand={
-			{range={x=26, y=46}, speed=5, loop=true},
-			{range={x=47, y=59}, speed=5, loop=true},		
-			{range={x=60, y=70}, speed=5, loop=true},
-			{range={x=71, y=91}, speed=5, loop=true},
+			{range={x=12, y=24}, speed=5, loop=true},
+			{range={x=24, y=31}, speed=5, loop=true},		
 		},	
 	},
 	sounds = {
-		misc = "petz_chicken_cluck",
 	},
 	
 	brainfunc = petz.herbivore_brain,
@@ -68,6 +65,7 @@ minetest.register_entity("petz:"..pet_name,{
 	on_activate = function(self, staticdata, dtime_s) --on_activate, required
 		mobkit.actfunc(self, staticdata, dtime_s)
 		petz.set_initial_properties(self, staticdata, dtime_s)
+		petz.init_convert_to_chrysalis(self)
 	end,
 	
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		
@@ -79,4 +77,4 @@ minetest.register_entity("petz:"..pet_name,{
 	end,    
 })
 
-petz:register_egg("petz:chicken", S("Chicken"), "petz_spawnegg_chicken.png", 0)
+petz:register_egg("petz:silkworn", S("Silkworn"), "petz_spawnegg_silkworn.png", 0)

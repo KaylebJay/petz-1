@@ -69,6 +69,9 @@ petz.load_vars = function(self)
 	if self.milkable == true then
 		self.milked = mobkit.recall(self, "milked") or false
 	end
+	if self.lay_eggs == true then
+		self.eggs_count = mobkit.recall(self, "eggs_count") or 0
+	end
 	--Mobs that can have babies
 	if self.breed == true then		
 		self.is_male = mobkit.recall(self, "is_male") or false
@@ -190,7 +193,10 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				end
 			end
 			mobkit.remember(self, "genes", self.genes)
-		end		
+		end	
+		if self.lay_eggs == true then
+			self.eggs_count = mobkit.remember(self, "eggs_count", 0)
+		end	
 		--ALL the mobs
 		if not(self.texture_no) then --for piggy, moth... petz with only one texture
 			self.texture_no = 1
@@ -244,6 +250,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.is_baby = mobkit.remember(self, "is_baby", petz.to_boolean(static_data_table["fields"]["is_baby"])) 
 			self.pregnant_count = mobkit.remember(self, "pregnant_count", tonumber(static_data_table["fields"]["pregnant_count"])) 	
 			self.genes = mobkit.remember(self, "genes", minetest.deserialize(static_data_table["fields"]["genes"])) 	
+		end		
+		if self.lay_eggs == true then
+			self.eggs_count = tonumber(static_data_table["fields"]["eggs_count"])
 		end		
 		--ALL the mobs
 		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])

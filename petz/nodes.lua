@@ -154,7 +154,6 @@ minetest.register_node("petz:chicken_nest_egg", {
     description = S("Chicken Nest with Egg"),
     inventory_image = "petz_chicken_nest_egg_inv.png",
     wield_image = "petz_chicken_nest_egg_inv.png",
-    tiles = {"petz_chicken_nest_egg.png"},
     groups = {snappy=1, bendy=2, cracky=1},
     sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
@@ -238,8 +237,7 @@ minetest.register_alias("wool:vanilla", "petz:wool_vanilla")
 --Parrot Stand
 
 minetest.register_node("petz:bird_stand", {
-    description = S("Bird Stand"),
-    --wield_image = "petz_parrot_stand_inv.png",    
+    description = S("Bird Stand"),  
     groups = {snappy=1, bendy=2, cracky=1},
     sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
@@ -297,4 +295,99 @@ minetest.register_craft({
         {'', 'default:stick', ''},
         {'', 'default:stick', ''},
     }
+})
+
+--Coocon
+minetest.register_node("petz:cocoon", {
+    description = S("Silkworn Cocoon"),
+    inventory_image = "petz_cocoon_inv.png",    
+    groups = {snappy=1, bendy=2, cracky=1},
+    sounds = default.node_sound_wood_defaults(),
+    paramtype = "light",
+    drawtype = "mesh",
+	mesh = 'petz_cocoon.b3d',
+    visual_scale = {x = 0.5, y = 0.5},
+	tiles = {"petz_cocoon.png"},
+	collision_box = {
+		type = "fixed",
+		fixed = {-0.125, -0.5, -0.375, 0.0625, -0.25, 0.3125},
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.125, -0.5, -0.375, 0.0625, -0.25, 0.3125},
+	},
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+
+	end,
+})
+
+--Silkworn Egg
+minetest.register_node("petz:silkworn_eggs", {
+    description = S("Silkworn Eggs"),    
+    groups = {snappy=1, bendy=2, cracky=1, falling_node = 1},
+    sounds = default.node_sound_wood_defaults(),
+    paramtype = "light",
+    drawtype = "mesh",
+	mesh = 'petz_silkworn_eggs.b3d',
+    visual_scale = {x = 0.5, y = 0.5},
+	tiles = {"petz_silkworn_eggs.png"},
+	collision_box = {
+		type = "fixed",
+		fixed = {-0.25, -0.5, -0.062500, 0.1875, -0.4375, 0.1875},
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.25, -0.5, -0.062500, 0.1875, -0.4375, 0.1875},
+	},
+})
+
+-- Chance to hatch an egg into a silkworn
+minetest.register_abm({
+    nodenames = {"petz:silkworn_eggs"},
+    neighbors = {},
+    interval = 300.0, -- Run every 5 minuts
+    chance = 3, -- Select every 1 in 5 nodes
+    action = function(pos, node, active_object_count, active_object_count_wider)
+		if not minetest.registered_entities["petz:silkworn"] then
+			return
+		end
+		if pos then			
+			minetest.set_node(pos, {name= "air"})
+			minetest.add_entity(pos, "petz:silkworn")				
+			local pos2 = {
+				x = pos.x + 1,
+				y = pos.y,
+				z = pos.z + 1,
+			}
+			if minetest.get_node(pos2) and minetest.get_node(pos2).name == "air" then
+				minetest.add_entity(pos2, "petz:silkworn")			
+			end
+			local pos3 = {
+				x = pos.x - 1,
+				y = pos.y,
+				z = pos.z -1,
+			}
+			if minetest.get_node(pos3) and minetest.get_node(pos3).name == "air" then
+				minetest.add_entity(pos3, "petz:silkworn")			
+			end
+		end
+    end
+})
+
+-- Chance to convert a cocoon into a moth
+minetest.register_abm({
+    nodenames = {"petz:cocoon"},
+    neighbors = {},
+    interval = 600.0, -- Run every 10 minuts
+    chance = 3, -- Select every 1 in 5 nodes
+    action = function(pos, node, active_object_count, active_object_count_wider)
+		if not minetest.registered_entities["petz:moth"] then
+			return
+		end
+		if pos and petz.is_night() == true then --only spawn at night, to it does not die
+			local mob = minetest.add_entity(pos, "petz:moth")
+			local ent = mob:get_luaentity()
+			minetest.set_node(pos, {name= "air"})
+		end
+    end
 })
