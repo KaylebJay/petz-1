@@ -1,17 +1,17 @@
 --
---SILKWORN
+--SILKWORM
 --
 local S = ...
 
-local pet_name = "silkworn"
+local pet_name = "silkworm"
 local scale_model = 0.5
-local mesh = 'petz_silkworn.b3d'	
-local textures= {"petz_silkworn.png"}	
+local mesh = 'petz_silkworm.b3d'	
+local textures= {"petz_silkworm.png"}	
 local collisionbox = {-0.125, -0.75*scale_model, -0.375, 0.0625, -0.25, 0.3125}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
-	type = "silkworn",	
+	type = "silkworm",	
 	init_timer = false,	
 	is_pet = false,
 	has_affinity = false,
@@ -19,7 +19,7 @@ minetest.register_entity("petz:"..pet_name,{
 	give_orders = false,
 	can_be_brushed = false,
 	capture_item = "net",
-	follow = petz.settings.silkworn_follow,
+	follow = petz.settings.silkworm_follow,
 	drops = {
 	},
 	replace_rate = 10,
@@ -77,4 +77,4 @@ minetest.register_entity("petz:"..pet_name,{
 	end,    
 })
 
-petz:register_egg("petz:silkworn", S("Silkworn"), "petz_spawnegg_silkworn.png", 0)
+petz:register_egg("petz:silkworm", S("Silkworm"), "petz_spawnegg_silkworm.png", 0)

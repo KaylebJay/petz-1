@@ -299,7 +299,7 @@ minetest.register_craft({
 
 --Coocon
 minetest.register_node("petz:cocoon", {
-    description = S("Silkworn Cocoon"),
+    description = S("Silkworm Cocoon"),
     inventory_image = "petz_cocoon_inv.png",    
     groups = {snappy=1, bendy=2, cracky=1},
     sounds = default.node_sound_wood_defaults(),
@@ -321,16 +321,16 @@ minetest.register_node("petz:cocoon", {
 	end,
 })
 
---Silkworn Egg
-minetest.register_node("petz:silkworn_eggs", {
-    description = S("Silkworn Eggs"),    
+--Silkworm Egg
+minetest.register_node("petz:silkworm_eggs", {
+    description = S("Silkworm Eggs"),    
     groups = {snappy=1, bendy=2, cracky=1, falling_node = 1},
     sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
     drawtype = "mesh",
-	mesh = 'petz_silkworn_eggs.b3d',
+	mesh = 'petz_silkworm_eggs.b3d',
     visual_scale = {x = 0.5, y = 0.5},
-	tiles = {"petz_silkworn_eggs.png"},
+	tiles = {"petz_silkworm_eggs.png"},
 	collision_box = {
 		type = "fixed",
 		fixed = {-0.25, -0.5, -0.062500, 0.1875, -0.4375, 0.1875},
@@ -341,26 +341,26 @@ minetest.register_node("petz:silkworn_eggs", {
 	},
 })
 
--- Chance to hatch an egg into a silkworn
+-- Chance to hatch an egg into a silkworm
 minetest.register_abm({
-    nodenames = {"petz:silkworn_eggs"},
+    nodenames = {"petz:silkworm_eggs"},
     neighbors = {},
     interval = 300.0, -- Run every 5 minuts
     chance = 3, -- Select every 1 in 5 nodes
     action = function(pos, node, active_object_count, active_object_count_wider)
-		if not minetest.registered_entities["petz:silkworn"] then
+		if not minetest.registered_entities["petz:silkworm"] then
 			return
 		end
 		if pos then			
 			minetest.set_node(pos, {name= "air"})
-			minetest.add_entity(pos, "petz:silkworn")				
+			minetest.add_entity(pos, "petz:silkworm")				
 			local pos2 = {
 				x = pos.x + 1,
 				y = pos.y,
 				z = pos.z + 1,
 			}
 			if minetest.get_node(pos2) and minetest.get_node(pos2).name == "air" then
-				minetest.add_entity(pos2, "petz:silkworn")			
+				minetest.add_entity(pos2, "petz:silkworm")			
 			end
 			local pos3 = {
 				x = pos.x - 1,
@@ -368,7 +368,7 @@ minetest.register_abm({
 				z = pos.z -1,
 			}
 			if minetest.get_node(pos3) and minetest.get_node(pos3).name == "air" then
-				minetest.add_entity(pos3, "petz:silkworn")			
+				minetest.add_entity(pos3, "petz:silkworm")			
 			end
 		end
     end

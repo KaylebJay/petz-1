@@ -35,20 +35,20 @@ petz.init_lay_eggs = function(self)
 			local node_name = mobkit.node_name_in(self, "below")
 			--minetest.chat_send_player("singleplayer", "node name=".. node_name)	
 			local spawn_egg = false
-			--minetest.chat_send_player("singleplayer", string.sub(petz.settings.silkworn_lay_egg_on_node, 1, 5))	
-			if string.sub(petz.settings.silkworn_lay_egg_on_node, 1, 5) == "group" then				
-				--minetest.chat_send_player("singleplayer", string.sub(petz.settings.silkworn_lay_egg_on_node, 7))					
-				local node_group = minetest.get_item_group(node_name, string.sub(petz.settings.silkworn_lay_egg_on_node, 7)) 
+			--minetest.chat_send_player("singleplayer", string.sub(petz.settings.silkworm_lay_egg_on_node, 1, 5))	
+			if string.sub(petz.settings.silkworm_lay_egg_on_node, 1, 5) == "group" then				
+				--minetest.chat_send_player("singleplayer", string.sub(petz.settings.silkworm_lay_egg_on_node, 7))					
+				local node_group = minetest.get_item_group(node_name, string.sub(petz.settings.silkworm_lay_egg_on_node, 7)) 
 				if node_group > 0 then
 					spawn_egg = true
 				end
 			else								
-				if node_name == petz.settings.silkworn_lay_egg_on_node then
+				if node_name == petz.settings.silkworm_lay_egg_on_node then
 					spawn_egg = true
 				end											
 			end
 			if spawn_egg == true then
-				minetest.set_node(pos, {name= "petz:silkworn_egg"})
+				minetest.set_node(pos, {name= "petz:silkworm_egg"})
 				self.eggs_count = mobkit.remember(self, "eggs_count", (self.eggs_count+1)) --increase the count of eggs			
 			end
 			petz.init_lay_eggs(self) --reinit the timer

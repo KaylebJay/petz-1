@@ -175,11 +175,11 @@ petz.settings.bat_spawn = settings:get_bool("bat_spawn", true)
 petz.settings.bat_spawn_chance = tonumber(settings:get("bat_spawn_chance"))
 petz.settings.bat_spawn_nodes = settings:get("bat_spawn_nodes", "")
 petz.settings.bat_spawn_biome = settings:get("bat_spawn_biome", "default")
-petz.settings.silkworn_spawn = settings:get_bool("silkworn_spawn", true)
-petz.settings.silkworn_spawn_chance = tonumber(settings:get("silkworn_spawn_chance"))
-petz.settings.silkworn_spawn_nodes = settings:get("silkworn_spawn_nodes", "")
-petz.settings.silkworn_spawn_biome = settings:get("silkworn_spawn_biome", "default")
-petz.settings.silkworn_lay_egg_on_node = settings:get("silkworn_lay_egg_on_node", "")
+petz.settings.silkworm_spawn = settings:get_bool("silkworm_spawn", true)
+petz.settings.silkworm_spawn_chance = tonumber(settings:get("silkworm_spawn_chance"))
+petz.settings.silkworm_spawn_nodes = settings:get("silkworm_spawn_nodes", "")
+petz.settings.silkworm_spawn_biome = settings:get("silkworm_spawn_biome", "default")
+petz.settings.silkworm_lay_egg_on_node = settings:get("silkworm_lay_egg_on_node", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"
