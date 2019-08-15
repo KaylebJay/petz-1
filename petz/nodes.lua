@@ -391,3 +391,60 @@ minetest.register_abm({
 		end
     end
 })
+
+--Spinning Wheel
+minetest.register_node("petz:spinning_wheel", {
+    description = S("Spinning Wheel"),    
+    groups = {snappy=1, bendy=2, cracky=1},
+    sounds = default.node_sound_wood_defaults(),
+    paramtype = "light",
+    drawtype = "mesh",
+	mesh = 'petz_spinning_wheel.b3d',
+	tiles = {"petz_spinning_wheel_loaded.png"},
+	collision_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.25, 0.5, 0.3125, 0.1875},
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.25, 0.5, 0.3125, 0.1875},
+	},
+	after_place_node = function(pos, placer, itemstack, pointed_thing)
+		local meta = minetest.get_meta(pos)
+		meta:set_int("silk_count", 1)
+		meta:set_string("infotext", S("Silk Count").." = "..meta:get_int("silk_count"))
+	end,
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		local player_name = player:get_player_name()
+		local meta = minetest.get_meta(pos)
+		local silk_count = meta:get_int("silk_count") 
+		if itemstack:get_name() == "petz:cocoon" then			
+			if silk_count == 3 then
+				minetest.chat_send_player(player_name, S("First, extract the silk bobbin from the spinning wheel."))
+			elseif silk_count == 2 then
+				silk_count = silk_count + 1
+				meta:set_int("silk_count", silk_count) 
+				meta:set_string("infotext", S("Silk Count").." = "..tostring(silk_count))
+				itemstack:take_item()
+				minetest.chat_send_player(player_name, S("A silk bobbin has been created!"))
+			else
+				silk_count = silk_count + 1
+				meta:set_int("silk_count", silk_count)
+				meta:set_string("infotext", S("Silk Count").." = "..tostring(silk_count))
+				itemstack:take_item()
+				minetest.chat_send_player(player_name, S("There are still").." ".. tostring(3-silk_count).." "..S("more to create the bobbin."))
+			end
+		elseif silk_count == 3 then --get the bobbin	
+			local inv = player:get_inventory()
+			if inv:room_for_item("main", "petz:silk_bobbin") then --firstly check for room in the inventory
+				inv:add_item("main", "petz:silk_bobbin")
+				meta:set_int("silk_count", 0) --reset the silk count
+				meta:set_string("infotext", S("Silk Count").." = 0")
+				minetest.chat_send_player(player_name, S("You got the bobbin!"))
+			else
+				minetest.chat_send_player(player_name, S("No room in your inventory for the silk bobbin."))
+			end
+		end
+		return itemstack
+	end,	
+})

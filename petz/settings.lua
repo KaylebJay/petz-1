@@ -2,6 +2,7 @@ local modpath, S = ...
 
 local settings = Settings(modpath .. "/petz.conf")
 
+petz.settings.petz_list = settings:get("petz_list", "")
 petz.settings.type_model = settings:get("type_model", "mesh")
 petz.settings.tamagochi_mode = settings:get_bool("tamagochi_mode", true)
 petz.settings.tamagochi_check_time = tonumber(settings:get("tamagochi_check_time"))
