@@ -64,7 +64,8 @@ petz.on_rightclick = function(self, clicker)
 			petz.set_owner(self, 	player_name, false)
 		end			
 		petz.capture(self, clicker, true)
-		minetest.chat_send_player("singleplayer", S("Your").." "..self.type.." "..S("has been captured")..".")				            
+		local pet_name = self.type:gsub("^%l", string.upper)
+		minetest.chat_send_player("singleplayer", S("Your").." "..S(pet_name).." "..S("has been captured")..".")				            
 	elseif self.breed and wielded_item_name == petz.settings[self.type.."_breed"] and not(self.is_baby) then
 		petz.breed(self, clicker, wielded_item, wielded_item_name)
 	elseif (wielded_item_name == "petz:dreamcatcher") and (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then

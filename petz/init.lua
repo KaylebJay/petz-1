@@ -23,7 +23,7 @@ petz.settings = {}
 petz.settings.mesh = nil
 petz.settings.visual_size = {}
 petz.settings.rotate = 0
-petz.settings.tamagochi_safe_nodes = {} --Table with safe nodes for tamagochi mode
+
 assert(loadfile(modpath .. "/settings.lua"))(modpath, S) --Load the settings
 
 petz.petz_list = string.split(petz.settings.petz_list, ',') --A list with all the petz names
