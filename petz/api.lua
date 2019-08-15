@@ -10,7 +10,7 @@ petz = {}
 
 petz.petz_list = {"kitty", "puppy", "ducky", "lamb", "lion", "calf", "panda", --A table with all the petz names
 	"grizzly", "pony", "parrot", "chicken", "piggy", "wolf", "elephant",
-	"elephant_female", "pigeon", "moth", "camel", "clownfish", "bat", "silkworm"}
+	"elephant_female", "pigeon", "moth", "camel", "clownfish", "bat"}
 
 petz.petz_list_by_owner = {} --a list of tamed petz with owner
 
