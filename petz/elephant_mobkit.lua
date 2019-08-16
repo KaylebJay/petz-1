@@ -40,7 +40,7 @@ for i=1, 2 do
 		--Petz specifics	
 		type = "elephant",	
 		is_male = is_male,
-		init_timer = true,	
+		init_tamagochi_timer = true,	
 		is_pet = true,
 		breed = true,
 		has_affinity = true,
@@ -118,7 +118,7 @@ for i=1, 2 do
 	
 		on_step = function(self, dtime)	
 			mobkit.stepfunc(self, dtime) -- required
-			petz.init_timer(self)
+			petz.init_tamagochi_timer(self)
 		end,
 	})
 	petz:register_egg("petz:"..pet_name, S(description), "petz_spawnegg_"..pet_name..".png", 0)

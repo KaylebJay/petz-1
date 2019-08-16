@@ -25,7 +25,7 @@ minetest.register_entity("petz:"..pet_name, {
 	is_mountable = true,
 	driver = nil,
 	has_saddlebag = true,
-	init_timer = true,	
+	init_tamagochi_timer = true,	
 	is_pet = true,
 	has_affinity = true,
 	milkable = true,
@@ -102,7 +102,7 @@ minetest.register_entity("petz:"..pet_name, {
 	end,
 	
 	on_step = function(self, dtime)	
-		petz.init_timer(self)
+		petz.init_tamagochi_timer(self)
 		if self.driver then
 			petz.drive(self, "walk", "stand", false, dtime) -- if driver present allow control of camel		
 		else

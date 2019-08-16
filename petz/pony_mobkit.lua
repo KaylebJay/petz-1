@@ -24,7 +24,7 @@ minetest.register_entity("petz:"..pet_name, {
 	type = pet_name,	
 	is_mountable = true,
 	driver = nil,
-	init_timer = true,	
+	init_tamagochi_timer = true,	
 	is_pet = true,
 	has_affinity = true,
 	breed = true,
@@ -101,7 +101,7 @@ minetest.register_entity("petz:"..pet_name, {
 	end,
 	
 	on_step = function(self, dtime)	
-		petz.init_timer(self)
+		petz.init_tamagochi_timer(self)
 		if self.driver then
 			petz.drive(self, "walk", "stand", false, dtime) -- if driver present allow control of horse		
 		else

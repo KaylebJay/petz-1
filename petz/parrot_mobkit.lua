@@ -9,7 +9,7 @@ local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, 0.35, 0.28}
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "parrot",	
-	init_timer = true,	
+	init_tamagochi_timer = true,	
 	is_pet = true,
 	can_fly = true,	
 	max_height = 5,
@@ -78,7 +78,7 @@ minetest.register_entity("petz:"..pet_name,{
 	
 	on_step = function(self, dtime)	
 		mobkit.stepfunc(self, dtime) -- required		
-		petz.init_timer(self)
+		petz.init_tamagochi_timer(self)
 	end,
     
 })

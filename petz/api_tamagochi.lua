@@ -24,8 +24,8 @@ end
 
 --The Tamagochi Timer
 
-petz.init_timer = function(self)	
-    if (petz.settings.tamagochi_mode == true) and (self.tamed == true) and (self.init_timer == true) then
+petz.init_tamagochi_timer = function(self)	
+    if (petz.settings.tamagochi_mode == true) and (self.tamed == true) and (self.init_tamagochi_timer == true) then
         petz.timer(self)
         return true
     else
@@ -56,14 +56,14 @@ petz.timer = function(self)
                 --minetest.chat_send_player(self.owner, petz.settings.tamagochi_safe_node)
                 for i = 1, #petz.settings.tamagochi_safe_nodes do --loop  thru all safe nodes
                     if node and (node.name == petz.settings.tamagochi_safe_nodes[i]) then
-						self.init_timer = true
-						mobkit.remember(self, "init_timer", self.init_timer)    
+						self.init_tamagochi_timer = true
+						mobkit.remember(self, "init_tamagochi_timer", self.init_tamagochi_timer)    
                         return
                     end    
                 end                
             else  --if the pos is nil, it means that the pet died before 'minetest.after_effect'
-                self.init_timer = false
-                mobkit.remember(self, "init_timer", self.init_timer)   --so no more timer
+                self.init_tamagochi_timer = false
+                mobkit.remember(self, "init_tamagochi_timer", self.init_tamagochi_timer)   --so no more timer
                 return
             end
             --Decrease affinitty always a bit amount because the pet lost some affinitty	
@@ -105,19 +105,19 @@ petz.timer = function(self)
             --If the pet starves to death            
             if self.hp <= 0 then
                 minetest.chat_send_player(self.owner, S("Your").. " "..self.type.." "..S("has starved to death!!!"))
-                self.init_timer  = false -- no more timing
+                self.init_tamagochi_timer  = false -- no more timing
             --I the pet get bored of you
             elseif (self.has_affinity == true) and (self.affinity == 0) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("has abandoned you!!!"))
                 petz.delete_nametag(self)
 				petz.remove_owner(self) --the pet abandon you               
                 petz.drop_dreamcatcher(self)
-                self.init_timer  = false -- no more timing				
+                self.init_tamagochi_timer  = false -- no more timing				
             --Else reinit the timer, to check again in the future
             else
-                self.init_timer  = true
+                self.init_tamagochi_timer  = true
             end
         end
     end, self)
-    self.init_timer = false --the timer is reinited in the minetest.after function
+    self.init_tamagochi_timer = false --the timer is reinited in the minetest.after function
 end

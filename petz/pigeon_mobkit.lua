@@ -13,7 +13,7 @@ local collisionbox = {-0.25, -0.75*scale_model, -0.25, 0.25, -0.25, 0.25}
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "pigeon",	
-	init_timer = false,	
+	init_tamagochi_timer = false,	
 	can_fly = true,	
 	is_pet = false,
 	max_height = 5,

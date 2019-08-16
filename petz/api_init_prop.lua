@@ -210,8 +210,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.was_killed_by_player = mobkit.remember(self, "was_killed_by_player", false)	
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", false)	
 		self.mov_status = mobkit.remember(self, "mov_status", "")
-		if self.init_timer== true then
-			petz.init_timer(self)
+		if self.init_tamagochi_timer== true then
+			petz.init_tamagochi_timer(self)
 		end
 		if self.has_affinity == true then
 			self.affinity = mobkit.remember(self, "affinity", 100)	

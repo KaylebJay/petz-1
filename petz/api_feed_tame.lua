@@ -84,7 +84,7 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", self.type))
 					mobkit.clear_queue_high(self) -- clear behaviour (i.e. it was running away)	
 					if petz.settings.tamagochi_mode == true then
-						self.init_timer = true
+						self.init_tamagochi_timer = true
 					end
 				end
 			end			

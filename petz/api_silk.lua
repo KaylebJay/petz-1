@@ -1,5 +1,161 @@
 local modpath, S = ...
 
+--Coocon
+minetest.register_node("petz:cocoon", {
+    description = S("Silkworm Cocoon"),
+    inventory_image = "petz_cocoon_inv.png",    
+    groups = {snappy=1, bendy=2, cracky=1},
+    sounds = default.node_sound_wood_defaults(),
+    paramtype = "light",
+    drawtype = "mesh",
+	mesh = 'petz_cocoon.b3d',
+    visual_scale = {x = 0.5, y = 0.5},
+	tiles = {"petz_cocoon.png"},
+	collision_box = {
+		type = "fixed",
+		fixed = {-0.125, -0.5, -0.375, 0.0625, -0.25, 0.3125},
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.125, -0.5, -0.375, 0.0625, -0.25, 0.3125},
+	},
+})
+
+--Silkworm Egg
+minetest.register_node("petz:silkworm_eggs", {
+    description = S("Silkworm Eggs"),    
+    inventory_image = "petz_silkworm_eggs_inv.png",
+    groups = {snappy=1, bendy=2, cracky=1, falling_node = 1},
+    sounds = default.node_sound_wood_defaults(),
+    paramtype = "light",
+    drawtype = "mesh",
+	mesh = 'petz_silkworm_eggs.b3d',
+    visual_scale = {x = 0.5, y = 0.5},
+	tiles = {"petz_silkworm_eggs.png"},
+	collision_box = {
+		type = "fixed",
+		fixed = {-0.25, -0.5, -0.062500, 0.1875, -0.4375, 0.1875},
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.25, -0.5, -0.062500, 0.1875, -0.4375, 0.1875},
+	},
+})
+
+-- Chance to hatch an egg into a silkworm
+minetest.register_abm({
+    nodenames = {"petz:silkworm_eggs"},
+    neighbors = {},
+    interval = 300.0, -- Run every 5 minuts
+    chance = 3, -- Select every 1 in 5 nodes
+    action = function(pos, node, active_object_count, active_object_count_wider)
+		if not minetest.registered_entities["petz:silkworm"] then
+			return
+		end
+		if node.name == 'ignore' then --make sure it's not acting on unloaded chunks
+			return
+		end
+		if pos then			
+			minetest.set_node(pos, {name= "air"})
+			minetest.add_entity(pos, "petz:silkworm")				
+			local pos2 = {
+				x = pos.x + 1,
+				y = pos.y,
+				z = pos.z + 1,
+			}
+			if minetest.get_node(pos2) and minetest.get_node(pos2).name == "air" then
+				minetest.add_entity(pos2, "petz:silkworm")			
+			end
+			local pos3 = {
+				x = pos.x - 1,
+				y = pos.y,
+				z = pos.z -1,
+			}
+			if minetest.get_node(pos3) and minetest.get_node(pos3).name == "air" then
+				minetest.add_entity(pos3, "petz:silkworm")			
+			end
+		end
+    end
+})
+
+-- Chance to convert a cocoon into a moth
+minetest.register_abm({
+    nodenames = {"petz:cocoon"},
+    neighbors = {},
+    interval = 600.0, -- Run every 10 minuts
+    chance = 3, -- Select every 1 in 5 nodes
+    action = function(pos, node, active_object_count, active_object_count_wider)
+		if not minetest.registered_entities["petz:moth"] then
+			return
+		end
+		if node.name == 'ignore' then --make sure it's not acting on unloaded chunks
+			return
+		end
+		if pos and petz.is_night() == true then --only spawn at night, to it does not die
+			local mob = minetest.add_entity(pos, "petz:moth")
+			local ent = mob:get_luaentity()
+			minetest.set_node(pos, {name= "air"})
+		end
+    end
+})
+
+--Spinning Wheel
+minetest.register_node("petz:spinning_wheel", {
+    description = S("Spinning Wheel"),    
+    groups = {snappy=1, bendy=2, cracky=1},
+    sounds = default.node_sound_wood_defaults(),
+    paramtype = "light",
+    drawtype = "mesh",
+	mesh = 'petz_spinning_wheel.b3d',
+	tiles = {"petz_spinning_wheel_loaded.png"},
+	collision_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.25, 0.5, 0.3125, 0.1875},
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.25, 0.5, 0.3125, 0.1875},
+	},
+	after_place_node = function(pos, placer, itemstack, pointed_thing)
+		local meta = minetest.get_meta(pos)
+		meta:set_int("silk_count", 1)
+		meta:set_string("infotext", S("Silk Count").." = "..meta:get_int("silk_count"))
+	end,
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		local player_name = player:get_player_name()
+		local meta = minetest.get_meta(pos)
+		local silk_count = meta:get_int("silk_count") 
+		if itemstack:get_name() == "petz:cocoon" then			
+			if silk_count == 3 then
+				minetest.chat_send_player(player_name, S("First, extract the silk bobbin from the spinning wheel."))
+			elseif silk_count == 2 then
+				silk_count = silk_count + 1
+				meta:set_int("silk_count", silk_count) 
+				meta:set_string("infotext", S("Silk Count").." = "..tostring(silk_count))
+				itemstack:take_item()
+				minetest.chat_send_player(player_name, S("A silk bobbin has been created!"))
+			else
+				silk_count = silk_count + 1
+				meta:set_int("silk_count", silk_count)
+				meta:set_string("infotext", S("Silk Count").." = "..tostring(silk_count))
+				itemstack:take_item()
+				minetest.chat_send_player(player_name, S("There are still").." ".. tostring(3-silk_count).." "..S("more to create the bobbin."))
+			end
+		elseif silk_count == 3 then --get the bobbin	
+			local inv = player:get_inventory()
+			if inv:room_for_item("main", "petz:silk_bobbin") then --firstly check for room in the inventory
+				inv:add_item("main", "petz:silk_bobbin")
+				meta:set_int("silk_count", 0) --reset the silk count
+				meta:set_string("infotext", S("Silk Count").." = 0")
+				minetest.chat_send_player(player_name, S("You got the bobbin!"))
+			else
+				minetest.chat_send_player(player_name, S("No room in your inventory for the silk bobbin."))
+			end
+		end
+		return itemstack
+	end,	
+})
+
 petz.init_convert_to_chrysalis = function(self)
 	minetest.after(math.random(1200, 1500), function(self) 
 		if not(mobkit.is_alive(self)) then 
@@ -27,17 +183,13 @@ petz.init_lay_eggs = function(self)
 			if not(mobkit.is_alive(self)) then 
 				return
 			end
-			local pos = self.object:get_pos()
-			--minetest.chat_send_player("singleplayer", "go")	
+			local pos = self.object:get_pos()			
 			if minetest.get_node(pos) and minetest.get_node(pos).name ~= "air" then
 				return
 			end
-			local node_name = mobkit.node_name_in(self, "below")
-			--minetest.chat_send_player("singleplayer", "node name=".. node_name)	
-			local spawn_egg = false
-			--minetest.chat_send_player("singleplayer", string.sub(petz.settings.silkworm_lay_egg_on_node, 1, 5))	
-			if string.sub(petz.settings.silkworm_lay_egg_on_node, 1, 5) == "group" then				
-				--minetest.chat_send_player("singleplayer", string.sub(petz.settings.silkworm_lay_egg_on_node, 7))					
+			local node_name = mobkit.node_name_in(self, "below")			
+			local spawn_egg = false			
+			if string.sub(petz.settings.silkworm_lay_egg_on_node, 1, 5) == "group" then							
 				local node_group = minetest.get_item_group(node_name, string.sub(petz.settings.silkworm_lay_egg_on_node, 7)) 
 				if node_group > 0 then
 					spawn_egg = true

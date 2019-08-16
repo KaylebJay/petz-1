@@ -6,13 +6,13 @@ local S = ...
 local pet_name = "silkworm"
 local scale_model = 0.5
 local mesh = 'petz_silkworm.b3d'	
-local textures= {"petz_silkworm.png"}	
+local textures= {"petz_silkworm.png", "petz_silkworm2.png", "petz_silkworm3.png"}	
 local collisionbox = {-0.125, -0.75*scale_model, -0.375, 0.0625, -0.25, 0.3125}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "silkworm",	
-	init_timer = false,	
+	init_tamagochi_timer = false,	
 	is_pet = false,
 	has_affinity = false,
 	is_wild = false,

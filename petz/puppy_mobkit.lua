@@ -46,7 +46,7 @@ end
 minetest.register_entity("petz:"..pet_name, {          
 	--Petz specifics	
 	type = "puppy",	
-	init_timer = true,	
+	init_tamagochi_timer = true,	
 	is_pet = true,
 	has_affinity = true,
 	is_wild = false,
@@ -107,7 +107,7 @@ minetest.register_entity("petz:"..pet_name, {
 	
 	on_step = function(self, dtime)	
 		mobkit.stepfunc(self, dtime) -- required
-		petz.init_timer(self)
+		petz.init_tamagochi_timer(self)
 	end,
 })
 

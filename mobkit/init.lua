@@ -449,9 +449,9 @@ function mobkit.get_next_waypoint(self,tpos)
 	if height and not liquidflag 
 	and not (nogopos and mobkit.isnear2d(pos2,nogopos,0.1)) then
 
-		heightl = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,-1))
+		local heightl = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,-1))
 		if heightl and abs(heightl-height)<0.001 then
-			heightr = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,1))
+			local heightr = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,1))
 			if heightr and abs(heightr-height)<0.001 then
 				dir.y = 0
 				local dirn = vector.normalize(dir)
@@ -465,6 +465,7 @@ function mobkit.get_next_waypoint(self,tpos)
 	else
 
 		for i=1,3 do
+			local liq = false
 			-- scan left
 			height, pos2, liq = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,-i*self.path_dir))
 			if height and not liq 
