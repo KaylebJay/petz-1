@@ -156,6 +156,16 @@ minetest.register_node("petz:spinning_wheel", {
 	end,	
 })
 
+minetest.register_craft({
+    type = "shaped",
+    output = "petz:spinning_wheel",
+    recipe = {
+        {'', 'group:wood', ''},
+        {'group:wood', 'petz:silk_bobbin', 'group:wood'},
+        {'', 'group:wood', ''},
+    }
+})
+
 petz.init_convert_to_chrysalis = function(self)
 	minetest.after(math.random(1200, 1500), function(self) 
 		if not(mobkit.is_alive(self)) then 
@@ -208,3 +218,20 @@ petz.init_lay_eggs = function(self)
 		end, self)
     end, self)
 end
+
+--Silk
+
+minetest.register_craftitem("petz:silk_bobbin", {
+    description = S("Silk Bobbin"),
+    inventory_image = "petz_silk_bobbin.png",
+})
+
+minetest.register_craft({
+    type = "shaped",
+    output = 'petz:silk_bobbin',
+    recipe = {        
+        {'petz:cocoon', 'default:stick', 'petz:cocoon'},
+        {'petz:cocoon', 'default:stick', 'petz:cocoon'},
+        {'petz:cocoon', 'default:stick', 'petz:cocoon'},
+    }
+})

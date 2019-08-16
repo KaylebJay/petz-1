@@ -413,20 +413,3 @@ if minetest.get_modpath("bonemeal") ~= nil then
 		recipe = {"petz:bone"},
 	})
 end
-
---Silk
-
-minetest.register_craftitem("petz:silk_bobbin", {
-    description = S("Silk Bobbin"),
-    inventory_image = "petz_silk_bobbin.png",
-})
-
-minetest.register_craft({
-    type = "shaped",
-    output = 'petz:silk_bobbin',
-    recipe = {        
-        {'petz:cocoon', 'default:stick', 'petz:cocoon'},
-        {'petz:cocoon', 'default:stick', 'petz:cocoon'},
-        {'petz:cocoon', 'default:stick', 'petz:cocoon'},
-    }
-})
