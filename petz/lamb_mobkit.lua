@@ -53,7 +53,6 @@ minetest.register_entity("petz:"..pet_name,{
 	visual_size = visual_size,
 	visual_size_baby = visual_size_baby,
 	static_save = true,
-	on_step = mobkit.stepfunc,	-- required
 	get_staticdata = mobkit.statfunc,
 	-- api props
 	springiness= 0,
@@ -97,6 +96,13 @@ minetest.register_entity("petz:"..pet_name,{
  	on_replace = function(self, pos, oldnode, newnode)
 		petz.lamb_wool_regrow(self)
     end,
+    
+    on_step = function(self, dtime)	
+		mobkit.stepfunc(self, dtime) -- required
+		if self.init_tamagochi_timer == true then
+			petz.init_tamagochi_timer(self)
+		end
+	end,
     
 })
 

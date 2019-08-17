@@ -48,7 +48,6 @@ minetest.register_entity("petz:"..pet_name,{
         {"default:dirt_with_grass", "default:dirt", -2}
     },
 	static_save = true,
-	on_step = mobkit.stepfunc,	-- required
 	get_staticdata = mobkit.statfunc,
 	-- api props
 	springiness= 0,
@@ -88,6 +87,13 @@ minetest.register_entity("petz:"..pet_name,{
 	on_rightclick = function(self, clicker)
 		petz.on_rightclick(self, clicker)
 	end,    
+	
+	on_step = function(self, dtime)	
+		mobkit.stepfunc(self, dtime) -- required
+		if self.init_tamagochi_timer == true then
+			petz.init_tamagochi_timer(self)
+		end
+	end,
 })
 
 petz:register_egg("petz:calf", S("Calf"), "petz_spawnegg_calf.png", 0)

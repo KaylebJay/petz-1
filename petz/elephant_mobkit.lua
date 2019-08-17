@@ -118,7 +118,9 @@ for i=1, 2 do
 	
 		on_step = function(self, dtime)	
 			mobkit.stepfunc(self, dtime) -- required
-			petz.init_tamagochi_timer(self)
+			if self.init_tamagochi_timer == true then
+				petz.init_tamagochi_timer(self)
+			end
 		end,
 	})
 	petz:register_egg("petz:"..pet_name, S(description), "petz_spawnegg_"..pet_name..".png", 0)
