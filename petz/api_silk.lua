@@ -213,8 +213,9 @@ petz.init_lay_eggs = function(self)
 			if spawn_egg == true then
 				minetest.set_node(pos, {name= "petz:silkworm_egg"})
 				self.eggs_count = mobkit.remember(self, "eggs_count", (self.eggs_count+1)) --increase the count of eggs			
+			else
+				petz.init_lay_eggs(self) --reinit the timer
 			end
-			petz.init_lay_eggs(self) --reinit the timer
 			petz.ownthing(self)
 		end, self)
     end, self)
