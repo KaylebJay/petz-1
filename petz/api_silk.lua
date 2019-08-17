@@ -123,18 +123,19 @@ minetest.register_node("petz:spinning_wheel", {
 	end,
 	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
 		local player_name = player:get_player_name()
+		--minetest.chat_send_player(player_name, "name="..itemstack:get_name())
 		local meta = minetest.get_meta(pos)
 		local silk_count = meta:get_int("silk_count") 
 		if itemstack:get_name() == "petz:cocoon" then			
-			if silk_count == 3 then
-				minetest.chat_send_player(player_name, S("First, extract the silk bobbin from the spinning wheel."))
+			if silk_count == 3 then				
+				minetest.chat_send_player(player_name, S("First, extract the silk bobbin from the spinning wheel."))				
 			elseif silk_count == 2 then
 				silk_count = silk_count + 1
 				meta:set_int("silk_count", silk_count) 
 				meta:set_string("infotext", S("Silk Count").." = "..tostring(silk_count))
 				itemstack:take_item()
-				minetest.chat_send_player(player_name, S("A silk bobbin has been created!"))
-				return itemstack
+				minetest.chat_send_player(player_name, S("A silk bobbin has been created!"))		
+				return itemstack			
 			else
 				silk_count = silk_count + 1
 				meta:set_int("silk_count", silk_count)
@@ -145,15 +146,21 @@ minetest.register_node("petz:spinning_wheel", {
 			end
 		elseif silk_count == 3 then --get the bobbin	
 			local inv = player:get_inventory()
-			if inv:room_for_item("main", "petz:silk_bobbin") then --firstly check for room in the inventory
-				inv:add_item("main", "petz:silk_bobbin")
+			if inv:room_for_item("main", "petz:silk_bobbin") then --firstly check for room in the inventory	
+				local itemstack_name = itemstack:get_name()
+				local stack = ItemStack("petz:silk_bobbin 1")
+				if itemstack_name == "petz:silk_bobbin" or itemstack_name == "" then
+					itemstack:add_item(stack)
+				else						
+					inv:add_item("main", stack)				
+				end				
 				meta:set_int("silk_count", 0) --reset the silk count
-				meta:set_string("infotext", S("Silk Count").." = 0")
+				meta:set_string("infotext", S("Silk Count").." = 0")				
 				minetest.chat_send_player(player_name, S("You got the bobbin!"))
 			else
 				minetest.chat_send_player(player_name, S("No room in your inventory for the silk bobbin."))
 			end
-		end
+		end	
 	end,	
 })
 
@@ -214,7 +221,7 @@ petz.init_lay_eggs = function(self)
 				minetest.set_node(pos, {name= "petz:silkworm_egg"})
 				self.eggs_count = mobkit.remember(self, "eggs_count", (self.eggs_count+1)) --increase the count of eggs			
 			else
-				petz.init_lay_eggs(self) --reinit the timer
+				petz.init_lay_eggs(self) --reinit the timer, to try to lay eggs later
 			end
 			petz.ownthing(self)
 		end, self)
