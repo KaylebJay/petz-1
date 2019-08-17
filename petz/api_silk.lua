@@ -134,12 +134,14 @@ minetest.register_node("petz:spinning_wheel", {
 				meta:set_string("infotext", S("Silk Count").." = "..tostring(silk_count))
 				itemstack:take_item()
 				minetest.chat_send_player(player_name, S("A silk bobbin has been created!"))
+				return itemstack
 			else
 				silk_count = silk_count + 1
 				meta:set_int("silk_count", silk_count)
 				meta:set_string("infotext", S("Silk Count").." = "..tostring(silk_count))
 				itemstack:take_item()
 				minetest.chat_send_player(player_name, S("There are still").." ".. tostring(3-silk_count).." "..S("more to create the bobbin."))
+				return itemstack
 			end
 		elseif silk_count == 3 then --get the bobbin	
 			local inv = player:get_inventory()
@@ -152,7 +154,6 @@ minetest.register_node("petz:spinning_wheel", {
 				minetest.chat_send_player(player_name, S("No room in your inventory for the silk bobbin."))
 			end
 		end
-		return itemstack
 	end,	
 })
 
