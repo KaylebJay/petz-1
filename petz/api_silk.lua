@@ -149,8 +149,9 @@ minetest.register_node("petz:spinning_wheel", {
 			if inv:room_for_item("main", "petz:silk_bobbin") then --firstly check for room in the inventory	
 				local itemstack_name = itemstack:get_name()
 				local stack = ItemStack("petz:silk_bobbin 1")
-				if itemstack_name == "petz:silk_bobbin" or itemstack_name == "" then
+				if (itemstack_name == "petz:silk_bobbin" or itemstack_name == "") and (itemstack:get_count() < itemstack:get_stack_max()) then					
 					itemstack:add_item(stack)
+					return itemstack
 				else						
 					inv:add_item("main", stack)				
 				end				
@@ -233,6 +234,7 @@ end
 minetest.register_craftitem("petz:silk_bobbin", {
     description = S("Silk Bobbin"),
     inventory_image = "petz_silk_bobbin.png",
+    stack_max = 25,
 })
 
 minetest.register_craft({
