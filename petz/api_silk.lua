@@ -234,7 +234,7 @@ end
 minetest.register_craftitem("petz:silk_bobbin", {
     description = S("Silk Bobbin"),
     inventory_image = "petz_silk_bobbin.png",
-    stack_max = 25,
+    stack_max = 10,
 })
 
 minetest.register_craft({
