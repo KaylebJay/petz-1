@@ -150,14 +150,14 @@ minetest.register_node("petz:spinning_wheel", {
 				local itemstack_name = itemstack:get_name()
 				local stack = ItemStack("petz:silk_bobbin 1")
 				if (itemstack_name == "petz:silk_bobbin" or itemstack_name == "") and (itemstack:get_count() < itemstack:get_stack_max()) then					
-					itemstack:add_item(stack)
-					return itemstack
+					itemstack:add_item(stack)					
 				else						
 					inv:add_item("main", stack)				
 				end				
 				meta:set_int("silk_count", 0) --reset the silk count
 				meta:set_string("infotext", S("Silk Count").." = 0")				
 				minetest.chat_send_player(player_name, S("You got the bobbin!"))
+				return itemstack
 			else
 				minetest.chat_send_player(player_name, S("No room in your inventory for the silk bobbin."))
 			end
