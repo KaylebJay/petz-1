@@ -44,9 +44,7 @@ petz.on_rightclick = function(self, clicker)
 	--If feeded
 	elseif petz.feed_tame(self, clicker, wielded_item, wielded_item_name, 5, true) then
 		if petz.settings.tamagochi_mode == true and self.fed == false then
-			petz.set_affinity(self, true, 5)                
-			self.fed = true
-			mobkit.remember(self, "fed", self.fed)            
+			petz.do_feed(self)       
 		end
 		petz.refill(self) --Refill wool, milk or nothing
 		if self.type == "wolf" and wielded_item_name == "petz:bone" then

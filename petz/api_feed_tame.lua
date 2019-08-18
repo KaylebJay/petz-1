@@ -54,6 +54,11 @@ petz.remove_owner = function(self)
 	end
 end
 
+petz.do_feed = function(self)
+	petz.set_affinity(self, true, 5)                
+	self.fed = mobkit.remember(self, "fed", true)
+end
+
 --
 --Feed/Tame Function
 --

@@ -70,6 +70,40 @@ function petz.herbivore_brain(self)
 				petz.ownthing(self)
 			end			
 		end
+		
+		if prty > 150 then --work in progress
+			local pos_front = mobkit.node_name_in(self, "front")
+			local node_front = minetest.get_node_or_nil(pos_front)
+			local pos_under = mobkit.node_name_in(self, "below")
+			local node_under = minetest.get_node_or_nil(pos_under)
+			local pos_top = mobkit.node_name_in(self, "top")
+			local node_top = minetest.get_node_or_nil(pos_top)		
+			if node_front and minetest.registered_nodes[node_front.name]
+				and node_top and minetest.registered_nodes[node_top.name]
+				and node_top.name == "air"
+				and (minetest.registered_nodes[node_front.name].groups.wood
+				or minetest.registered_nodes[node_front.name].groups.leaves
+				or minetest.registered_nodes[node_front.name].groups.tree) then				
+					if not(self.mov_status == "arboreal") then 
+						petz.set_behaviour(self, "arboreal", "air")		
+					end
+			else
+				if self.behaviour == "arboreal" then
+					if node_front and minetest.registered_nodes[node_front.name] 
+						and (not(minetest.registered_nodes[node_front.name].groups.wood)
+						or not(minetest.registered_nodes[node_front.name].groups.tree)
+						or not(minetest.registered_nodes[node_front.name].groups.leaves))
+						then
+							self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
+							petz.set_behaviour(self, "terrestrial", nil)					
+					elseif node_top and minetest.registered_nodes[node_top.name]				
+						and not(node_top.name == "air") then
+							self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
+							petz.set_behaviour(self, "terrestrial", nil)											
+					end
+				end			
+			end
+		end		
 			
 		--Runaway from Player		
 		if prty < 14 then
@@ -136,8 +170,13 @@ function petz.herbivore_brain(self)
 				{"petz:pet_bowl"})
 			if #nearby_nodes >= 1 then		
 				local tpos = 	nearby_nodes[1] --the first match
-				if vector.distance(pos, tpos) > 2 then					
-					mobkit.hq_goto(self, 4, tpos)					
+				local distance = vector.distance(pos, tpos)
+				if distance > 2 then					
+					mobkit.hq_goto(self, 4, tpos)		
+				elseif distance <=2 then
+					if (petz.settings.tamagochi_mode == true) and (self.fed == false) then
+						petz.do_feed(self)
+					end
 				end				
 			end			
 		end

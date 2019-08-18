@@ -182,6 +182,11 @@ petz.settings.silkworm_spawn_chance = tonumber(settings:get("silkworm_spawn_chan
 petz.settings.silkworm_spawn_nodes = settings:get("silkworm_spawn_nodes", "")
 petz.settings.silkworm_spawn_biome = settings:get("silkworm_spawn_biome", "default")
 petz.settings.silkworm_lay_egg_on_node = settings:get("silkworm_lay_egg_on_node", "")
+petz.settings.chimp_spawn = settings:get_bool("chimp_spawn", true)
+petz.settings.chimp_spawn_chance = tonumber(settings:get("chimp_spawn_chance"))
+petz.settings.chimp_spawn_nodes = settings:get("chimp_spawn_nodes", "")
+petz.settings.chimp_spawn_biome = settings:get("chimp_spawn_biome", "default")
+petz.settings.chimp_follow = settings:get("chimp_follow", "")
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"
