@@ -12,36 +12,20 @@ petz.set_random_gender = function()
 	end	
 end
 
-petz.get_second_gen = function(self)
-	return math.random(1, #self.skin_colors-1)
+petz.get_gen = function(self)
+	local textures_count
+	if self.mutation then
+		textures_count = #self.skin_colors -1
+	else
+		textures_count = #self.skin_colors
+	end
+	return math.random(1, textures_count)
 end
 
-petz.genetics_texture  = function(self)	
-	if self.type == "lamb" then
-		if self.genes["gen1"] == 1 or self.genes["gen2"] == 1 then 
-			return 1 --white
-		elseif self.genes["gen1"] == 2 or self.genes["gen2"] == 2 then
-			return 2 --light gray
-		elseif self.genes["gen1"] == 3 or self.genes["gen2"] == 3 then
-			return 3 --dark gray
-		elseif self.genes["gen1"] == 4 or self.genes["gen2"] == 4 then
-			return 4 --brown
-		else
-			return 5 --vanilla mutation
-		end
-	elseif self.type == "elephant" then 
-		if self.genes["gen1"] == 1 or self.genes["gen2"] == 1 then 
-			return 1 --default
-		else
-			return 2 --white mutation
-		end
-	elseif self.type == "camel" then
-		if self.genes["gen1"] == 1 or self.genes["gen2"] == 1 then 
-			return 1 --camel
-		elseif self.genes["gen1"] == 2 or self.genes["gen2"] == 2 then
-			return 2 --camel dark
-		else
-			return 3 --white mutation
+petz.genetics_texture  = function(self, textures_count)	
+	for i = 1, textures_count do
+		if self.genes["gen1"] == i or self.genes["gen2"] == i then 
+			return i
 		end
 	end
 end
@@ -165,13 +149,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.genes = {}
 			if not(self.type == "pony") then
 				local genes_mutation = false
-				if math.random(1, 200) == 1 then
+				if self.mutation and math.random(1, 200) == 1 then
 					genes_mutation = true
 				end
 				if genes_mutation == false then
 					if baby_born == false then
-						self.genes["gen1"] = self.texture_no
-						self.genes["gen2"] = petz.get_second_gen(self)
+						self.genes["gen1"] = petz.get_gen(self)
+						self.genes["gen2"] = petz.get_gen(self)
 					else
 						if math.random(1, 2) == 1 then
 							self.genes["gen1"] = static_data_table["gen1_father"]					
@@ -182,8 +166,14 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 							self.genes["gen2"] = static_data_table["gen1_mother"]					
 						else
 							self.genes["gen2"] = static_data_table["gen2_mother"]
-						end		
-						self.texture_no = petz.genetics_texture(self)		
+						end
+						local textures_count
+						if self.mutation then
+							textures_count = #self.skin_colors - 1
+						else
+							textures_count = #self.skin_colors
+						end
+						self.texture_no = petz.genetics_texture(self, textures_count)		
 					end				
 				else -- mutation
 					local mutation_gen = #self.skin_colors --the last skin is always the mutation

@@ -48,6 +48,7 @@ for i=1, 2 do
 		attack_player = true,
 		give_orders = true,
 		can_be_brushed = true,
+		mutation = true,
 		--breed = true,
 		capture_item = "lasso",
 		follow = petz.settings.elephant_follow,

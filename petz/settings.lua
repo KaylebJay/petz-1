@@ -187,6 +187,13 @@ petz.settings.chimp_spawn_chance = tonumber(settings:get("chimp_spawn_chance"))
 petz.settings.chimp_spawn_nodes = settings:get("chimp_spawn_nodes", "")
 petz.settings.chimp_spawn_biome = settings:get("chimp_spawn_biome", "default")
 petz.settings.chimp_follow = settings:get("chimp_follow", "")
+petz.settings.hamster_spawn = settings:get_bool("hamster_spawn", true)
+petz.settings.hamster_spawn_chance = tonumber(settings:get("hamster_spawn_chance"))
+petz.settings.hamster_spawn_nodes = settings:get("hamster_spawn_nodes", "")
+petz.settings.hamster_spawn_biome = settings:get("hamster_spawn_biome", "default")
+petz.settings.hamster_follow = settings:get("hamster_follow", "")
+petz.settings.hamster_breed = settings:get("hamster_breed", "")
+petz.settings.hamster_copulation_distance = tonumber(settings:get("hamster_copulation_distance"))
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"

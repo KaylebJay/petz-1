@@ -89,7 +89,6 @@ function mobkit.hq_wanderfly(self, prty)
 end
 
 function mobkit.dumbstepfly(self)
-	--mobkit.set_velocity(self, {x=1, y=0, z=1})
 	if mobkit.node_name_in(self, "front") ~= "air" then			
 		local yaw = self.object:get_yaw()
 		if yaw then
@@ -253,6 +252,27 @@ function mobkit.lq_alight(self)
 	end
 	mobkit.queue_low(self, func)
 end
+
+--
+-- ARBOREAL BRAIN
+--
+
+function mobkit.hq_climb(self, prty)
+	local func=function(self)	
+		if not(petz.check_if_climb) then
+			self.object:set_acceleration({x = 0, y = 0, z = 0 })   								
+			mobkit.clear_queue_low(self)
+			mobkit.clear_queue_high(self)			
+			return true
+		else
+			mobkit.animate(self, 'climb')
+			self.object:set_acceleration({x = 0, y = 0.25, z = 0 })			
+		end					
+	end
+	mobkit.queue_high(self,func,prty)
+end
+
+
 
 --
 -- AQUATIC BRAIN

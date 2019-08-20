@@ -185,3 +185,8 @@ Author: Alexander
 http://www.orangefreesounds.com/whistle-noise/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filenames: petz_hamster_squeak.ogg & petz_hamster_moaning.ogg
+Author: Daniel Simon 
+http://soundbible.com/2144-Guinea-Pig.html
+License: Attribution 3.0 

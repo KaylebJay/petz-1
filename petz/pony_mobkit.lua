@@ -32,6 +32,7 @@ minetest.register_entity("petz:"..pet_name, {
 	give_orders = true,
 	can_be_brushed = true,
 	capture_item = "lasso",
+	mutation = true,
 	--Pony specific
 	terrain_type = 3,
 	scale_model = scale_model,

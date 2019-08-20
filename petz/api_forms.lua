@@ -80,7 +80,7 @@ petz.create_form = function(player_name)
 		local pregnant_text_y
 		local infertile_text_x
 		local infertile_text_y
-		if pet.is_mountable == true or pet.type == "elephant" then
+		if pet.is_mountable == true or pet.give_orders == true then
 			pregnant_icon_x = 3
 			pregnant_icon_y = 5
 			pregnant_text_x = 4

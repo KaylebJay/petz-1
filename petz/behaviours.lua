@@ -70,41 +70,7 @@ function petz.herbivore_brain(self)
 				petz.ownthing(self)
 			end			
 		end
-		
-		if prty > 150 then --work in progress
-			local pos_front = mobkit.node_name_in(self, "front")
-			local node_front = minetest.get_node_or_nil(pos_front)
-			local pos_under = mobkit.node_name_in(self, "below")
-			local node_under = minetest.get_node_or_nil(pos_under)
-			local pos_top = mobkit.node_name_in(self, "top")
-			local node_top = minetest.get_node_or_nil(pos_top)		
-			if node_front and minetest.registered_nodes[node_front.name]
-				and node_top and minetest.registered_nodes[node_top.name]
-				and node_top.name == "air"
-				and (minetest.registered_nodes[node_front.name].groups.wood
-				or minetest.registered_nodes[node_front.name].groups.leaves
-				or minetest.registered_nodes[node_front.name].groups.tree) then				
-					if not(self.mov_status == "arboreal") then 
-						petz.set_behaviour(self, "arboreal", "air")		
-					end
-			else
-				if self.behaviour == "arboreal" then
-					if node_front and minetest.registered_nodes[node_front.name] 
-						and (not(minetest.registered_nodes[node_front.name].groups.wood)
-						or not(minetest.registered_nodes[node_front.name].groups.tree)
-						or not(minetest.registered_nodes[node_front.name].groups.leaves))
-						then
-							self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
-							petz.set_behaviour(self, "terrestrial", nil)					
-					elseif node_top and minetest.registered_nodes[node_top.name]				
-						and not(node_top.name == "air") then
-							self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
-							petz.set_behaviour(self, "terrestrial", nil)											
-					end
-				end			
-			end
-		end		
-			
+					
 		--Runaway from Player		
 		if prty < 14 then
 			if self.tamed == false then --if no tamed
@@ -208,8 +174,16 @@ function petz.herbivore_brain(self)
 		-- Default Random Sound		
 		petz.random_mob_sound(self)
 		
+		if prty < 3 then
+			--if self.is_arboreal == true then			
+				--if petz.check_if_climb(self) then
+					--mobkit.hq_climb(self, 3)
+				--end
+			--end
+		end
+		
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) and not(self.mov_status == "stand") then			
+		if mobkit.is_queue_empty_high(self) and not(self.mov_status == "stand") then		
 			if not(self.can_fly) then
 				mobkit.hq_roam(self, 0)
 			else
@@ -217,6 +191,23 @@ function petz.herbivore_brain(self)
 			end
 		end
 		
+	end
+end
+
+petz.check_if_climb = function(self)
+	local node_front_name = mobkit.node_name_in(self, "front")	
+	minetest.chat_send_player("singleplayer", node_front_name)		
+	local node_top_name= mobkit.node_name_in(self, "top")	
+	minetest.chat_send_player("singleplayer", node_top_name)		
+	if node_front_name and minetest.registered_nodes[node_front_name]
+		and node_top_name and minetest.registered_nodes[node_top_name]
+		and node_top_name == "air"
+		and (minetest.registered_nodes[node_front_name].groups.wood
+		or minetest.registered_nodes[node_front_name].groups.leaves
+		or minetest.registered_nodes[node_front_name].groups.tree) then		
+			return true
+	else
+		return false
 	end
 end
 
@@ -497,44 +488,6 @@ petz.pos_front = function(self, pos)
 		z = pos.z + dir_z
 	}
 	return pos_front
-end
-
-petz.arboreal_behaviour = function(self)
-		local pos = self.object:get_pos() -- check the mob pos to togle between arboreal-terrestrial
-		---
-		---Change behaviour status
-		---
-		local pos_front = petz.pos_front(self, pos)
-		local node_front = minetest.get_node_or_nil(pos_front)
-		local pos_under = {x = pos.x, y = pos.y - 1.0, z = pos.z, }
-		local node_under = minetest.get_node_or_nil(pos_under)
-		local pos_top = {x = pos.x, y = pos.y + 0.5, z = pos.z,}
-		local node_top = minetest.get_node_or_nil(pos_top)		
-		if node_front and minetest.registered_nodes[node_front.name]
-			and node_top and minetest.registered_nodes[node_top.name]
-			and node_top.name == "air"
-			and (minetest.registered_nodes[node_front.name].groups.wood
-			or minetest.registered_nodes[node_front.name].groups.leaves
-			or minetest.registered_nodes[node_front.name].groups.tree) then				
-				if not(self.behaviour == "arboreal") then 
-					petz.set_behaviour(self, "arboreal", "air")		
-				end
-		else
-			if self.behaviour == "arboreal" then
-				if node_front and minetest.registered_nodes[node_front.name] 
-					and (not(minetest.registered_nodes[node_front.name].groups.wood)
-					or not(minetest.registered_nodes[node_front.name].groups.tree)
-					or not(minetest.registered_nodes[node_front.name].groups.leaves))
-					then
-						self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
-						petz.set_behaviour(self, "terrestrial", nil)					
-				elseif node_top and minetest.registered_nodes[node_top.name]				
-					and not(node_top.name == "air") then
-							self.object:set_acceleration({x = 0, y = 0, z = 0 })   					
-							petz.set_behaviour(self, "terrestrial", nil)											
-				end
-			end			
-		end
 end
 
 ---
