@@ -177,9 +177,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 					end				
 				else -- mutation
 					local mutation_gen = #self.skin_colors --the last skin is always the mutation
-					self.genes["gen1"] = mutation_gen --white
-					self.genes["gen2"] = mutation_gen --white
-					self.texture_no = mutation_gen -- white
+					self.genes["gen1"] = mutation_gen 
+					self.genes["gen2"] = mutation_gen 
+					self.texture_no = mutation_gen
 				end
 			end
 			mobkit.remember(self, "genes", self.genes)
