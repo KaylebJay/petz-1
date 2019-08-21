@@ -42,16 +42,14 @@ petz.set_owner = function(self, owner_name, force)
 end
 
 petz.remove_owner = function(self)
-	if self.is_wild == false then -- set owner if not a monster
-		if self.tag ~= "" then --remove from the list of petz by owner
-			local pets = set_list(petz.petz_list_by_owner)
-			if pets[self] then
-				petz.petz_list_by_owner[self] = nil
-			end
+	if self.tag ~= "" then --remove from the list of petz by owner
+		local pets = set_list(petz.petz_list_by_owner)
+		if pets[self] then
+			petz.petz_list_by_owner[self] = nil
 		end
-		self.tamed = mobkit.remember(self, "tamed", false)
-		self.owner = mobkit.remember(self, "owner", nil)
 	end
+	self.tamed = mobkit.remember(self, "tamed", false)
+	self.owner = mobkit.remember(self, "owner", nil)
 end
 
 petz.do_feed = function(self)
