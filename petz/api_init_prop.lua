@@ -56,6 +56,11 @@ petz.load_vars = function(self)
 	if self.lay_eggs == true then
 		self.eggs_count = mobkit.recall(self, "eggs_count") or 0
 	end
+	if self.sleep_at_night or self.sleep_at_day then
+		self.sleep_start_time = mobkit.recall(self, "sleep_start_time") or 19500
+		self.sleep_end_time = mobkit.recall(self, "sleep_end_time") or 23999
+		minetest.chat_send_player("singleplayer", "sleep_start_time="..tostring(self.sleep_start_time).."/sleep_end_time="..tostring(self.sleep_end_time))	
+	end
 	--Mobs that can have babies
 	if self.breed == true then		
 		self.is_male = mobkit.recall(self, "is_male") or false
@@ -85,7 +90,7 @@ petz.load_vars = function(self)
 	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied") or false
 	self.child = mobkit.recall(self, "child") or false
 	self.dreamcatcher = mobkit.recall(self, "dreamcatcher") or false
-	self.mov_status = mobkit.recall(self, "mov_status") or ""
+	self.status = mobkit.recall(self, "status") or ""
 end
 
 function petz.set_initial_properties(self, staticdata, dtime_s)	
@@ -134,6 +139,15 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				self.saddlebag_ref = nil
 				self.saddlebag_inventory = mobkit.remember(self, "saddlebag_inventory", {})
 			end
+		end
+		if self.sleep_at_night or self.sleep_at_day then
+			local sleep_time = (self.sleep_ratio or 1) * 4499
+			local sleep_max_end_time = 23999 - sleep_time
+			local sleep_start_time = math.random(19500, sleep_max_end_time)
+			self.sleep_start_time = mobkit.remember(self, "sleep_start_time", sleep_start_time)	
+			local sleep_end_time = sleep_start_time + sleep_time					
+			self.sleep_end_time = mobkit.remember(self, "sleep_end_time", sleep_end_time)	
+			minetest.chat_send_player("singleplayer", "sleep_time="..tostring(sleep_time).."/sleep_start_time="..tostring(sleep_start_time).."/sleep_end_time="..tostring(sleep_end_time))	
 		end
 		--Mobs that can have babies
 		if self.breed == true then
@@ -199,7 +213,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.food_count = mobkit.remember(self, "food_count", 0)							
 		self.was_killed_by_player = mobkit.remember(self, "was_killed_by_player", false)	
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", false)	
-		self.mov_status = mobkit.remember(self, "mov_status", "")
+		self.status = mobkit.remember(self, "status", "")
 		if self.init_tamagochi_timer== true then
 			petz.init_tamagochi_timer(self)
 		end
@@ -250,7 +264,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.tag = mobkit.remember(self, "tag", static_data_table["fields"]["tag"]) or ""
 		self.show_tag = mobkit.remember(self, "show_tag", petz.to_boolean(static_data_table["fields"]["show_tag"])) 
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", petz.to_boolean(static_data_table["fields"]["dreamcatcher"])) 
-		self.mov_status = mobkit.remember(self, "mov_status", static_data_table["fields"]["mov_status"]) 
+		self.status = mobkit.remember(self, "status", static_data_table["fields"]["status"]) 
 		self.tamed = mobkit.remember(self, "tamed", petz.to_boolean(static_data_table["fields"]["tamed"]))	
 		self.owner = mobkit.remember(self, "owner", static_data_table["fields"]["owner"]) 
 		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 
@@ -318,11 +332,15 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	if self.is_pet and self.tamed then
 		petz.update_nametag(self)
 	end
-	if self.mov_status and self.mov_status ~= "" then
-		if self.mov_status == "stand" then
+	if self.status and self.status ~= "" then
+		if self.status == "stand" then
 			petz.standhere(self)			
-		elseif self.mov_status == "guard" then
+		elseif self.status == "guard" then
 			petz.guard(self)	
+		elseif self.status == "sleep" then
+			petz.sleep(self, 2)	
+		else
+			self.status = ""
 		end
 	end
 end

@@ -237,7 +237,7 @@ function mobkit.hq_alight(self, prty)
 			--minetest.chat_send_player("singleplayer", "on ground")				
 			mobkit.animate(self, "stand")
 			mobkit.lq_idle(self, 2400)	
-			self.mov_status = "stand"		
+			self.status = "stand"		
 			return true
 		end
 	end

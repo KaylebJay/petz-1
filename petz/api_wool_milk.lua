@@ -20,13 +20,11 @@ petz.lamb_wool_regrow = function(self)
 	if self.shaved == false then --only count if the lamb is shaved
 		return
 	end	
-	self.food_count_wool = self.food_count_wool + 1
-	mobkit.remember(self, "food_count_wool", self.food_count_wool)
+	local food_count_wool = self.food_count_wool + 1
+	mobkit.remember(self, "food_count_wool", food_count_wool)
 	if self.food_count_wool >= 5 then -- if lamb replaces 5x grass then it regrows wool
-		self.food_count_wool = 0
-		mobkit.remember(self, "food_count_wool", self.food_count_wool)
-		self.shaved = false
-		mobkit.remember(self, "shaved", self.shaved)				
+		self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)
+		self.shaved = mobkit.remember(self, "shaved", false)				
 		local lamb_texture = "petz_lamb_"..self.skin_colors[self.texture_no]..".png"
 		petz.set_properties(self, {textures = {lamb_texture}})
 	end
@@ -48,10 +46,8 @@ petz.lamb_wool_shave = function(self, clicker)
 		petz.set_properties(self, {tiles = petz.lamb.tiles_shaved})		
 	end 
 	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)	
-	self.shaved = true
-	mobkit.remember(self, "shaved", self.shaved)        
-	self.food_count_wool = 0 --reset the food count
-	mobkit.remember(self, "food_count_wool", self.food_count_wool)	
+	self.shaved = mobkit.remember(self, "shaved", true)        
+	self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)	
 	petz.afraid(self, clicker:get_pos())
 end
 
@@ -63,10 +59,8 @@ petz.milk_refill = function(self)
 	self.food_count = self.food_count + 1
 	mobkit.remember(self, "food_count", self.food_count)      
 	if self.food_count >= 5 then -- if calf replaces 5x grass then it refill milk
-		self.food_count = 0
-		mobkit.remember(self, "food_count", self.food_count) 
-		self.milked = false
-		mobkit.remember(self, "milked", self.milked) 
+		self.food_count = mobkit.remember(self, "food_count", self.food_count) 
+		self.milked = mobkit.remember(self, "milked", false) 
 	end
 end
 
@@ -81,6 +75,5 @@ petz.milk_milk = function(self, clicker)
 	else					
 		minetest.add_item(self:get_pos(), "petz:bucket_milk")
 	end
-	self.milked = true
-	mobkit.remember(self, "milked", self.milked)     
+	self.milked = mobkit.remember(self, "milked", true)     
 end

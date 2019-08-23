@@ -1,7 +1,7 @@
 local modpath, S = ...
 
 petz.ownthing = function(self)	
-	self.mov_status = mobkit.remember(self, "mov_status", "free")
+	self.status = mobkit.remember(self, "status", "")
 	mobkit.hq_roam(self, 0)
 	mobkit.clear_queue_high(self)
 end
@@ -27,13 +27,13 @@ petz.standhere = function(self)
 			mobkit.animate(self, "stand")
 		end
 	end
-	self.mov_status = mobkit.remember(self, "mov_status", "stand")
+	self.status = mobkit.remember(self, "status", "stand")
 	--mobkit.lq_idle(self, 2400)		
 	petz.stand(self)	
 end
 
 petz.guard = function(self)
-	self.mov_status = mobkit.remember(self, "mov_status", "guard")
+	self.status = mobkit.remember(self, "status", "guard")
 	mobkit.clear_queue_high(self)
 	petz.stand(self)	
 end

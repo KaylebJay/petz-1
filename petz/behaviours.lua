@@ -52,6 +52,7 @@ function petz.herbivore_brain(self)
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()					
 				if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) <= self.view_range then 
+					self.status = mobkit.remember(self, "status", "follow")
 					mobkit.hq_follow(self, 16, player)
 					return
 				end
@@ -62,6 +63,7 @@ function petz.herbivore_brain(self)
 			if player then
 				local wielded_item_name = player:get_wielded_item():get_name()
 				if wielded_item_name ~= self.follow then 
+					self.status = mobkit.remember(self, "status", "")
 					mobkit.hq_roam(self, 0)
 					mobkit.clear_queue_high(self)
 					return
@@ -83,6 +85,7 @@ function petz.herbivore_brain(self)
 				end
 			end
 		end
+		
 		
 		--Replace nodes by others		
 		if prty < 6 then			
@@ -182,8 +185,12 @@ function petz.herbivore_brain(self)
 			--end
 		end
 		
+		if prty < 2 then	--Sleep Behaviour
+			petz.sleep(self, 2)
+		end
+		
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) and not(self.mov_status == "stand") then		
+		if mobkit.is_queue_empty_high(self) and self.status == "" then		
 			if not(self.can_fly) then
 				mobkit.hq_roam(self, 0)
 			else
@@ -302,7 +309,7 @@ function petz.predator_brain(self)
 						
 		if prty < 10 then
 			if player then
-				if (self.tamed == false) or (self.tamed == true and self.mov_status == "guard" and player:get_player_name() ~= self.owner) then
+				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
 					if vector.distance(pos, player:get_pos()) <= self.view_range then	-- if player close
 						if self.attack_player == true then --attack player										
 							mobkit.hq_warn(self, 10, player) -- try to repel them
@@ -421,7 +428,7 @@ function petz.aquatic_brain(self)
 		petz.random_mob_sound(self)
 		
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) and not(self.mov_status == "stand") then			
+		if mobkit.is_queue_empty_high(self) and not(self.status == "stand") then			
 			mobkit.hq_wanderswin(self, 0)
 		end
 		

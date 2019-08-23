@@ -27,6 +27,7 @@ assert(loadfile(modpath .. "/api_sound.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api_particles.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api_whistle.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api_silk.lua"))(modpath, S)
+assert(loadfile(modpath .. "/api_sleep.lua"))(modpath, S)
 if minetest.get_modpath("3d_armor") ~= nil then --Armors (optional)
 	assert(loadfile(modpath .. "/armors.lua"))(modpath, S)
 end

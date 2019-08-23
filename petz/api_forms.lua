@@ -159,6 +159,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			if not(pet.can_fly) then
 				mobkit.clear_queue_low(pet)
 				mobkit.hq_follow(pet, 15, player)
+				pet.status = mobkit.remember(pet, "status", "follow")
 			end			
 		elseif fields.btn_standhere then
 			petz.standhere(pet)
@@ -172,7 +173,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		elseif fields.btn_fly then	
 			mobkit.clear_queue_low(pet)		
 			mobkit.clear_queue_high(pet)	
-			pet.mov_status = "free"
+			pet.status = ""
 			mobkit.hq_fly(pet, 0)		
 			minetest.after(2.5, function(pet) 
 				mobkit.clear_queue_low(pet)

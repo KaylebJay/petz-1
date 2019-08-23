@@ -21,24 +21,26 @@ petz.pony_breed = function(self, clicker, wielded_item, wielded_item_name)
 	if wielded_item_name == "petz:glass_syringe" and self.is_male== true then		
 		local new_wielded_item = ItemStack("petz:glass_syringe_sperm")
 		local meta = new_wielded_item:get_meta()
+		meta:set_string("petz_type", self.type)
 		meta:set_int("max_speed_forward", self.max_speed_forward)
 		meta:set_int("max_speed_reverse", self.max_speed_reverse)
 		meta:set_int("accel", self.accel)
 		clicker:set_wielded_item(new_wielded_item)
 	elseif wielded_item_name == "petz:glass_syringe_sperm" and self.is_male== false then	 
-		if self.is_pregnant == false and self.pregnant_count > 0 then
+		local meta = wielded_item:get_meta()
+		local petz_type = meta:get_string("petz_type")
+		if self.is_pregnant == false and self.pregnant_count > 0 and self.type == petz_type then
 			self.is_pregnant = true
 			mobkit.remember(self, "is_pregnant", self.is_pregnant)
-			self.pregnant_count = self.pregnant_count - 1
-			mobkit.remember(self, "pregnant_count", self.pregnant_count)	
-			local meta = wielded_item:get_meta()
+			local pregnant_count = self.pregnant_count - 1
+			mobkit.remember(self, "pregnant_count", pregnant_count)	
 			local max_speed_forward = meta:get_int("max_speed_forward")
 			local max_speed_reverse = meta:get_int("max_speed_reverse")
 			local accel = meta:get_int("accel")		
 			petz.init_mountable_pregnancy(self, max_speed_forward, max_speed_reverse, accel)
 			petz.do_particles_effect(self.object, self.object:get_pos(), "pregnant".."_"..self.type)
+			clicker:set_wielded_item("petz:glass_syringe")	
 		end
-		clicker:set_wielded_item("petz:glass_syringe")	
 	end
 end
 

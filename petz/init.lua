@@ -39,6 +39,9 @@ assert(loadfile(modpath .. "/nodes.lua"))(modpath, S) --Load the nodes
 assert(loadfile(modpath .. "/items.lua"))(modpath, S) --Load the items
 assert(loadfile(modpath .. "/food.lua"))(modpath, S) --Load the food items
 assert(loadfile(modpath .. "/spawn.lua"))(modpath, S) --Load the spawn engine
+if minetest.get_modpath("awards") ~= nil then	
+	assert(loadfile(modpath .. "/awards.lua"))(modpath, S) --Load the awards
+end
 
 petz.file_exists = function(name)
    local f = io.open(name,"r")
