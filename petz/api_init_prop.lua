@@ -59,7 +59,7 @@ petz.load_vars = function(self)
 	if self.sleep_at_night or self.sleep_at_day then
 		self.sleep_start_time = mobkit.recall(self, "sleep_start_time") or 19500
 		self.sleep_end_time = mobkit.recall(self, "sleep_end_time") or 23999
-		minetest.chat_send_player("singleplayer", "sleep_start_time="..tostring(self.sleep_start_time).."/sleep_end_time="..tostring(self.sleep_end_time))	
+		--minetest.chat_send_player("singleplayer", "sleep_start_time="..tostring(self.sleep_start_time).."/sleep_end_time="..tostring(self.sleep_end_time))	
 	end
 	--Mobs that can have babies
 	if self.breed == true then		
