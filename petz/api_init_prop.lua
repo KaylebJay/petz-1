@@ -246,6 +246,10 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "saddle", false) --no shaddle
 			mobkit.remember(self, "driver", nil) --no driver
 		end
+		if self.sleep_at_night or self.sleep_at_day then
+			self.sleep_start_time = mobkit.remember(self, "sleep_start_time", tonumber(static_data_table["fields"]["sleep_start_time"])) 
+			self.sleep_end_time = mobkit.remember(self, "sleep_end_time", tonumber(static_data_table["fields"]["sleep_end_time"])) 			
+		end
 		--Mobs that can have babies
 		if self.breed == true then
 			self.is_male = mobkit.remember(self, "is_male", petz.to_boolean(static_data_table["fields"]["is_male"])	) 

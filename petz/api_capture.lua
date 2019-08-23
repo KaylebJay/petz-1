@@ -98,6 +98,10 @@ petz.capture = function(self, clicker, put_in_inventory)
 		stack_meta:set_string("max_speed_reverse", tostring(self.max_speed_reverse))
 		stack_meta:set_string("accel", tostring(self.accel))
 	end
+	if self.sleep_at_night or self.sleep_at_day then
+		stack_meta:set_string("sleep_start_time", tostring(self.sleep_start_time))
+		stack_meta:set_string("sleep_end_time", tostring(self.sleep_end_time))		
+	end
 	if self.breed == true then
 		stack_meta:set_string("is_male", tostring(self.is_male))
 		stack_meta:set_string("is_rut", tostring(self.is_rut))
