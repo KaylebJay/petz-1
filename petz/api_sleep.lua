@@ -7,7 +7,7 @@ petz.sleep = function(self, prty)
 		local timeofday = minetest.get_timeofday() * 24000
 		--minetest.chat_send_player("singleplayer", tostring(timeofday))	
 		--minetest.chat_send_player("singleplayer", "time of day="..tostring(timeofday).."/sleep_start_time="..tostring(self.sleep_start_time).."/sleep_end_time="..tostring(self.sleep_end_time))	
-		if (timeofday > self.sleep_start_time) and (timeofday < self.sleep_end_time) then	
+		if (self.status ~= "sleep") and (timeofday > self.sleep_start_time) and (timeofday < self.sleep_end_time) then	
 			--minetest.chat_send_player("singleplayer", "prueba")	
 			self.status = mobkit.remember(self, "status", "sleep")	
 			mobkit.animate(self, 'sleep')
