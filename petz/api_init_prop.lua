@@ -236,14 +236,14 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.shaved = mobkit.remember(self, "shaved", petz.to_boolean(static_data_table["fields"]["shaved"])) 		
 		elseif self.type == "wolf" then
 			self.wolf_to_puppy_count = mobkit.remember(self, "wolf_to_puppy_count", tonumber(static_data_table["fields"]["wolf_to_puppy_count"])) 
-		elseif self.is_mountable == true then		
+		end
+		if self.is_mountable == true then		
 			self.saddle = petz.to_boolean(static_data_table["fields"]["saddle"])	
-			self.saddlebag = petz.to_boolean(static_data_table["fields"]["saddlebag"])	
+			self.saddlebag = petz.to_boolean(static_data_table["fields"]["saddlebag"])
 			self.saddlebag_inventory = minetest.deserialize(static_data_table["fields"]["saddlebag_inventory"])
 			self.max_speed_forward = mobkit.remember(self, "max_speed_forward", tonumber(static_data_table["fields"]["max_speed_forward"]	)) 
 			self.max_speed_reverse = mobkit.remember(self, "max_speed_reverse", tonumber(static_data_table["fields"]["max_speed_reverse"])) 
-			self.accel = mobkit.remember(self, "accel", tonumber(static_data_table["fields"]["accel"])) 
-			mobkit.remember(self, "saddle", false) --no shaddle
+			self.accel = mobkit.remember(self, "accel", tonumber(static_data_table["fields"]["accel"])) 			
 			mobkit.remember(self, "driver", nil) --no driver
 		end
 		if self.sleep_at_night or self.sleep_at_day then
@@ -262,13 +262,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		if self.lay_eggs == true then
 			self.eggs_count = tonumber(static_data_table["fields"]["eggs_count"])
 		end		
-		--ALL the mobs
+		--ALL the mobs		
 		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])
 		self.set_vars = mobkit.remember(self, "set_vars", true) 		
 		self.tag = mobkit.remember(self, "tag", static_data_table["fields"]["tag"]) or ""
 		self.show_tag = mobkit.remember(self, "show_tag", petz.to_boolean(static_data_table["fields"]["show_tag"])) 
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", petz.to_boolean(static_data_table["fields"]["dreamcatcher"])) 
-		self.status = mobkit.remember(self, "status", static_data_table["fields"]["status"]) 
+		self.status = mobkit.remember(self, "status", static_data_table["fields"]["status"]) or ""
 		self.tamed = mobkit.remember(self, "tamed", petz.to_boolean(static_data_table["fields"]["tamed"]))	
 		self.owner = mobkit.remember(self, "owner", static_data_table["fields"]["owner"]) 
 		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 

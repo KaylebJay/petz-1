@@ -73,46 +73,28 @@ petz.capture = function(self, clicker, put_in_inventory)
 	local new_stack = ItemStack(self.name .. "_set") 	-- add special mob egg with all mob information
 	local stack_meta = new_stack:get_meta()	
 	--local sett ="---TABLE---: "
+	--local sett = ""
+	--local i = 0
 	for key, value in pairs(self) do
-		local t = type(value)
-		if  t ~= "function" and t ~= "nil" and t ~= "userdata" then
-			stack_meta:set_string(key, self[key])	
-			--sett= sett .. ", ".. tostring(key).." : ".. tostring(self[key])
+		local what_type = type(value)
+		if  what_type ~= "function" and what_type ~= "nil" and what_type ~= "userdata" then
+			if what_type == "boolean" or what_type == "number" then
+				value = tostring(value)
+			elseif what_type == "table" then
+				if key == "saddlebag_inventory" or key == "genes" then --only this tables to save serialized
+					value = minetest.serialize(value)
+					--minetest.chat_send_player("singleplayer", value)	
+				end				
+			end
+			stack_meta:set_string(key, value)	
+			--i = i + 1
+			--local sett= sett .. ", ".. tostring(key).." : ".. tostring(self[key])
 			--minetest.chat_send_player("singleplayer", sett)				
 		end
-	end	
-	--Save some extra values-->
-	stack_meta:set_string("captured", "true") --mark as captured
-	stack_meta:set_string("texture_no", tostring(self.texture_no)) --Save the current texture_no
-	stack_meta:set_string("tamed", tostring(self.tamed))	 --Save if tamed	
-	stack_meta:set_string("tag", self.tag) --Save the current tag	
-	stack_meta:set_string("show_tag", tostring(self.show_tag))
-	stack_meta:set_string("dreamcatcher", tostring(self.dreamcatcher))
-	if self.type == 'lamb' then
-		stack_meta:set_string("shaved", tostring(self.shaved))	 --Save if shaved
-	elseif self.is_mountable == true then
-		stack_meta:set_string("saddle", tostring(self.saddle))
-		stack_meta:set_string("saddlebag", tostring(self.saddlebag))
-		stack_meta:set_string("saddlebag_inventory", minetest.serialize(self.saddlebag_inventory))
-		stack_meta:set_string("max_speed_forward", tostring(self.max_speed_forward))
-		stack_meta:set_string("max_speed_reverse", tostring(self.max_speed_reverse))
-		stack_meta:set_string("accel", tostring(self.accel))
-	end
-	if self.sleep_at_night or self.sleep_at_day then
-		stack_meta:set_string("sleep_start_time", tostring(self.sleep_start_time))
-		stack_meta:set_string("sleep_end_time", tostring(self.sleep_end_time))		
-	end
-	if self.breed == true then
-		stack_meta:set_string("is_male", tostring(self.is_male))
-		stack_meta:set_string("is_rut", tostring(self.is_rut))
-		stack_meta:set_string("is_baby", tostring(self.is_baby))
-		stack_meta:set_string("is_pregnant", tostring(self.is_pregnant))
-		stack_meta:set_string("pregnant_count", tostring(self.pregnant_count))
-		stack_meta:set_string("genes", minetest.serialize(self.genes))
-	end
-	if self.lay_eggs == true then
-		stack_meta:set_string("eggs_count", tostring(self.eggs_count))
-	end
+	end		
+	--minetest.chat_send_player("singleplayer", "status="..tostring(self.status))	
+	stack_meta:set_string("captured", "true") --IMPORTANT! mark as captured
+	--minetest.chat_send_player("singleplayer", tostring(i))	
 	if put_in_inventory == true then
 		local inv = clicker:get_inventory()	
 		if inv:room_for_item("main", new_stack) then
