@@ -147,7 +147,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.sleep_start_time = mobkit.remember(self, "sleep_start_time", sleep_start_time)	
 			local sleep_end_time = sleep_start_time + sleep_time					
 			self.sleep_end_time = mobkit.remember(self, "sleep_end_time", sleep_end_time)	
-			minetest.chat_send_player("singleplayer", "sleep_time="..tostring(sleep_time).."/sleep_start_time="..tostring(sleep_start_time).."/sleep_end_time="..tostring(sleep_end_time))	
+			--minetest.chat_send_player("singleplayer", "sleep_time="..tostring(sleep_time).."/sleep_start_time="..tostring(sleep_start_time).."/sleep_end_time="..tostring(sleep_end_time))	
 		end
 		--Mobs that can have babies
 		if self.breed == true then
