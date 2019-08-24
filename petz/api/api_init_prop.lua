@@ -342,7 +342,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		elseif self.status == "guard" then
 			petz.guard(self)	
 		elseif self.status == "sleep" then
-			petz.sleep(self, 2)	
+			self.status = "" --reset
 		else
 			self.status = ""
 		end

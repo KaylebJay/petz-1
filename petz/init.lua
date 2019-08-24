@@ -30,17 +30,20 @@ petz.petz_list = string.split(petz.settings.petz_list, ',') --A list with all th
 
 petz.petz_list_by_owner = {} --a list of tamed petz with owner
 
-assert(loadfile(modpath .. "/api.lua"))(modpath, modname, S)
-assert(loadfile(modpath .. "/mount.lua"))(modpath, S) --Load the mount engine
-assert(loadfile(modpath .. "/mobkit.lua"))(modpath, S)
-assert(loadfile(modpath .. "/mobkit_plus.lua"))(modpath, S)
-assert(loadfile(modpath .. "/behaviours.lua"))(modpath, S)
-assert(loadfile(modpath .. "/nodes.lua"))(modpath, S) --Load the nodes
-assert(loadfile(modpath .. "/items.lua"))(modpath, S) --Load the items
-assert(loadfile(modpath .. "/food.lua"))(modpath, S) --Load the food items
-assert(loadfile(modpath .. "/spawn.lua"))(modpath, S) --Load the spawn engine
+assert(loadfile(modpath .. "/api/api.lua"))(modpath, modname, S)
+assert(loadfile(modpath .. "/misc/mount.lua"))(modpath, S) --Load the mount engine
+assert(loadfile(modpath .. "/misc/mobkit.lua"))(modpath, S)
+assert(loadfile(modpath .. "/misc/mobkit_plus.lua"))(modpath, S)
+assert(loadfile(modpath .. "/misc/behaviours.lua"))(modpath, S)
+assert(loadfile(modpath .. "/misc/nodes.lua"))(modpath, S) --Load the nodes
+assert(loadfile(modpath .. "/misc/items.lua"))(modpath, S) --Load the items
+assert(loadfile(modpath .. "/misc/food.lua"))(modpath, S) --Load the food items
+assert(loadfile(modpath .. "/misc/spawn.lua"))(modpath, S) --Load the spawn engine
+if minetest.get_modpath("3d_armor") ~= nil then --Armors (optional)
+	assert(loadfile(modpath .. "/misc/armors.lua"))(modpath, S)
+end
 if minetest.get_modpath("awards") ~= nil then	
-	assert(loadfile(modpath .. "/awards.lua"))(modpath, S) --Load the awards
+	assert(loadfile(modpath .. "/misc/awards.lua"))(modpath, S) --Load the awards
 end
 
 petz.file_exists = function(name)
@@ -55,7 +58,7 @@ end
 
 for i = 1, #petz.petz_list do --load all the petz.lua files
 	if petz.settings[petz.petz_list[i].."_spawn"] then
-		local file_name = modpath .. "/"..petz.petz_list[i].."_"..petz.settings.type_api..".lua"
+		local file_name = modpath .. "/petz/"..petz.petz_list[i].."_"..petz.settings.type_api..".lua"
 		if petz.file_exists(file_name) then
 			assert(loadfile(file_name))(S) 
 		end
