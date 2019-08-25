@@ -62,6 +62,8 @@ minetest.register_craftitem("petz:kennel", {
         local pt_under = pointed_thing.under
         if not(minetest.is_protected(pt_above, user)) then
 			minetest.place_schematic(pt_above, modpath..'/schematics/kennel.mts', 0, nil, true)        
+			itemstack:take_item()
+			return itemstack
 		end
     end,
 })
