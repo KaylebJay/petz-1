@@ -106,7 +106,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars		
 		--Mob Specific
 		--Lamb
-		if self.type == "lamb" and petz.settings.type_model == "mesh" then --set a random color 
+		if self.type == "lamb" then --set a random color 
 			local random_number = math.random(1, 15)
 			if random_number == 1 then
 				self.texture_no = 4 --brown
@@ -119,6 +119,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			end
 			self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)	
 			self.shaved = mobkit.remember(self, "shaved", false)	
+		elseif self.type == "panda" then
+			local random_number = math.random(1, 6)
+			if random_number < 6 then
+				self.texture_no = 1 --black
+			else
+				self.texture_no = 2 --brown
+			end
 		elseif self.type == "elephant" then		
 			self.texture_no = math.random(1, #self.skin_colors-1) --set a random texture
 		elseif self.type == "puppy" then		
