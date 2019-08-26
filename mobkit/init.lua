@@ -1265,6 +1265,13 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	local surface = nil
 	local snodepos = mobkit.get_node_pos(spos)
 	local surfnode = mobkit.nodeatpos(spos)
+	if surfnode and surfnode.walkable and surfnode.drawtype == "normal" then 	-- if standing inside solid block then jump to escape --added by petz
+		self.object:set_velocity({ --added by petz
+			x = 0, --added by petz
+			y = self.jump_height, --added by petz
+			z = 0 --added by petz
+		}) --added by petz
+	end --added by petz
 	while surfnode and surfnode.drawtype == 'liquid' do
 		surface = snodepos.y+0.5
 		if surface > spos.y+self.height then break end
