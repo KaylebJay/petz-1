@@ -9,7 +9,7 @@ local scale_baby = 0.5
 local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model}
 local visual_size_baby = {x=petz.settings.visual_size.x*scale_model*scale_baby, y=petz.settings.visual_size.y*scale_model*scale_baby}
 local mesh = 'petz_panda.b3d'	
-local skin_colors = {"black", "brown"}
+local skin_colors = {"black", "brown", "pink"}
 local textures = {}
 for n = 1, #skin_colors do
 	textures[n] = "petz_"..pet_name.."_"..skin_colors[n]..".png"
@@ -24,6 +24,7 @@ minetest.register_entity("petz:"..pet_name,{
 	is_pet = true,
 	has_affinity = true,
 	breed = true,
+	mutation = true,
 	is_wild = false,
 	give_orders = true,
 	can_be_brushed = true,
