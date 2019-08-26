@@ -251,7 +251,9 @@ function petz.predator_brain(self)
 	if self.hp <= 0 then -- Die Behaviour
 		petz.on_die(self)
 		return	
-	end	
+	end
+	
+	petz.env_damage(self) --enviromental damage: lava, fire...
 	
 	if mobkit.timer(self, 1) then 
 	
