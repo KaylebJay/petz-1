@@ -149,7 +149,7 @@ function mobkit.get_node_height(pos)
 	if node == nil then return nil end
 	
 	if node.walkable then
-		if node.drawtype == 'nodebox' then
+		if node.drawtype == 'nodebox' then		
 			if node.node_box == nil then return nil end
 			if node.node_box.type == 'fixed' then
 				if type(node.node_box.fixed[1]) == 'number' then
@@ -387,6 +387,9 @@ function mobkit.is_neighbor_node_reachable(self,neighbor)	-- todo: take either n
 	local offset = neighbors[neighbor]
 	local pos=mobkit.get_stand_pos(self)
 	local tpos = mobkit.get_node_pos(mobkit.pos_shift(pos,offset))
+	local node_name = minetest.get_node(tpos).name
+	if node_name:find("fence") then return
+		elseif node_name:find("gate") and node_name:find("closed") then return end
 	local height, liquidflag = mobkit.get_terrain_height(tpos)
 
 	if height and abs(height-pos.y) <= self.jump_height then

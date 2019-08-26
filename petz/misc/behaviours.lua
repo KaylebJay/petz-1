@@ -14,7 +14,9 @@ function petz.herbivore_brain(self)
 			petz.on_die(self)
 			return
 		end
-	end		
+	end	
+	
+	petz.env_damage(self) --enviromental damage: lava, fire...
 	
 	if mobkit.timer(self, 1) then 
 	
