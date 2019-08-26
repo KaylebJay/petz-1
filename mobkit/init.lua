@@ -150,6 +150,7 @@ function mobkit.get_node_height(pos)
 	
 	if node.walkable then
 		if node.drawtype == 'nodebox' then
+			if node.node_box == nil then return nil end
 			if node.node_box.type == 'fixed' then
 				if type(node.node_box.fixed[1]) == 'number' then
 					return npos.y + node.node_box.fixed[5] ,0, false
@@ -385,10 +386,7 @@ end
 function mobkit.is_neighbor_node_reachable(self,neighbor)	-- todo: take either number or pos
 	local offset = neighbors[neighbor]
 	local pos=mobkit.get_stand_pos(self)
-	local tpos = mobkit.get_node_pos(mobkit.pos_shift(pos,offset))	
-	local node_name = minetest.get_node(tpos).name
-	if node_name:find("fence") then return
-	elseif node_name:find("gate") and node_name:find("closed")	 then return end
+	local tpos = mobkit.get_node_pos(mobkit.pos_shift(pos,offset))
 	local height, liquidflag = mobkit.get_terrain_height(tpos)
 
 	if height and abs(height-pos.y) <= self.jump_height then
@@ -449,9 +447,9 @@ function mobkit.get_next_waypoint(self,tpos)
 	if height and not liquidflag 
 	and not (nogopos and mobkit.isnear2d(pos2,nogopos,0.1)) then
 
-		local heightl = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,-1))
+		heightl = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,-1))
 		if heightl and abs(heightl-height)<0.001 then
-			local heightr = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,1))
+			heightr = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,1))
 			if heightr and abs(heightr-height)<0.001 then
 				dir.y = 0
 				local dirn = vector.normalize(dir)
@@ -465,7 +463,6 @@ function mobkit.get_next_waypoint(self,tpos)
 	else
 
 		for i=1,3 do
-			local liq = false
 			-- scan left
 			height, pos2, liq = mobkit.is_neighbor_node_reachable(self,mobkit.neighbor_shift(neighbor,-i*self.path_dir))
 			if height and not liq 

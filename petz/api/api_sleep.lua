@@ -17,7 +17,7 @@ petz.sleep = function(self, prty)
 end
 
 function mobkit.hq_sleep(self, prty)
-	local timer = 2
+	local timer = 2 --check each 2 seconds
 	local func=function(self)	
 		timer = timer - self.dtime
 		local timeofday = minetest.get_timeofday() * 24000
