@@ -14,11 +14,11 @@ function petz.herbivore_brain(self)
 			petz.on_die(self)
 			return
 		end
-	end	
-	
-	petz.env_damage(self) --enviromental damage: lava, fire...
+	end			
 	
 	if mobkit.timer(self, 1) then 
+	
+		petz.env_damage(self) --enviromental damage: lava, fire...
 	
 		local prty = mobkit.get_queue_priority(self)		
 		
@@ -253,9 +253,9 @@ function petz.predator_brain(self)
 		return	
 	end
 	
-	petz.env_damage(self) --enviromental damage: lava, fire...
-	
 	if mobkit.timer(self, 1) then 
+	
+		petz.env_damage(self) --enviromental damage: lava, fire...
 	
 		local prty = mobkit.get_queue_priority(self)		
 		

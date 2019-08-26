@@ -12,8 +12,9 @@ petz.settings.tamagochi_check_if_player_online = settings:get_bool("tamagochi_ch
 local tamagochi_safe_nodes = settings:get("tamagochi_safe_nodes", "")
 petz.settings.tamagochi_safe_nodes = {} --Table with safe nodes for tamagochi mode
 petz.settings.tamagochi_safe_nodes = string.split(tamagochi_safe_nodes, ',')
---Air Damage
+--Enviromental Damage
 petz.settings.air_damage = tonumber(settings:get("air_damage"))
+petz.settings.igniter_damage = tonumber(settings:get("igniter_damage")) --lava & fire
 --API Type
 petz.settings.type_api = settings:get("type_api", "mobs_redo")
 --Capture Mobs

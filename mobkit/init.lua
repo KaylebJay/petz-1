@@ -150,7 +150,7 @@ function mobkit.get_node_height(pos)
 	
 	if node.walkable then
 		if node.drawtype == 'nodebox' then		
-			if node.node_box == nil then return nil end
+			if node.node_box == nil then return nil end  --added by petz
 			if node.node_box.type == 'fixed' then
 				if type(node.node_box.fixed[1]) == 'number' then
 					return npos.y + node.node_box.fixed[5] ,0, false
@@ -387,9 +387,9 @@ function mobkit.is_neighbor_node_reachable(self,neighbor)	-- todo: take either n
 	local offset = neighbors[neighbor]
 	local pos=mobkit.get_stand_pos(self)
 	local tpos = mobkit.get_node_pos(mobkit.pos_shift(pos,offset))
-	local node_name = minetest.get_node(tpos).name
-	if node_name:find("fence") then return
-		elseif node_name:find("gate") and node_name:find("closed") then return end
+	local node_name = minetest.get_node(tpos).name --added by petz
+	if node_name:find("fence") then return  --added by petz
+		elseif node_name:find("gate") and node_name:find("closed") then return end  --added by petz
 	local height, liquidflag = mobkit.get_terrain_height(tpos)
 
 	if height and abs(height-pos.y) <= self.jump_height then
@@ -1227,7 +1227,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	end
 	
 	-- dumb friction
-	if self.isonground and not(self.can_fly) then
+	if self.isonground and not(self.can_fly) then  --added by petz
 		self.object:set_velocity({x= vel.x> 0.2 and vel.x*mobkit.friction or 0,
 								y=vel.y,
 								z=vel.z > 0.2 and vel.z*mobkit.friction or 0})
@@ -1279,9 +1279,9 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 		self.object:set_acceleration({x=-vel.x,y=buoyacc-vel.y*abs(vel.y)*0.7,z=-vel.z})
 	else
 		self.isinliquid = false
-		if not(self.can_fly) then
+		if not(self.can_fly) then  --added by petz
 			self.object:set_acceleration({x=0,y=mobkit.gravity,z=0})
-		end
+		end  --added by petz
 	end
 	
 	
