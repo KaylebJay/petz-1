@@ -1270,10 +1270,10 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	local stand_node_pos = mobkit.get_node_pos(stand_pos)
 	local stand_node = mobkit.nodeatpos(stand_node_pos)
 	if stand_node and stand_node.walkable and stand_node.drawtype == "normal" then 	-- if standing inside solid block then jump to escape --added by petz
-		self.object:set_velocity({ --added by petz
-			x = 0, --added by petz
-			y = self.jump_height, --added by petz
-			z = 0 --added by petz
+		self.object:set_pos({ --added by petz
+			x = stand_pos.x, --added by petz
+			y = stand_pos.y + self.jump_height, --added by petz
+			z = stand_pos.z --added by petz
 		}) --added by petz
 	end --added by petz
 	while surfnode and surfnode.drawtype == 'liquid' do
