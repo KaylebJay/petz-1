@@ -1265,17 +1265,19 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	local surface = nil
 	local snodepos = mobkit.get_node_pos(spos)
 	local surfnode = mobkit.nodeatpos(spos)
-	local stand_pos = spos --added by petz
-	stand_pos.y = spos.y + 0.5 --added by petz
-	local stand_node_pos = mobkit.get_node_pos(stand_pos) --added by petz
-	local stand_node = mobkit.nodeatpos(stand_node_pos) --added by petz
-	if stand_node and stand_node.walkable and stand_node.drawtype == "normal" then 	-- if standing inside solid block then jump to escape --added by petz
-		self.object:set_pos({ --added by petz
-			x = stand_pos.x, --added by petz
-			y = stand_pos.y + self.jump_height, --added by petz
-			z = stand_pos.z --added by petz
-		}) --added by petz
-	end --added by petz
+	if mobkit.is_alive(self) then
+		local stand_pos = spos --added by petz
+		stand_pos.y = spos.y + 0.5 --added by petz
+		local stand_node_pos = mobkit.get_node_pos(stand_pos) --added by petz
+		local stand_node = mobkit.nodeatpos(stand_node_pos) --added by petz
+		if stand_node and stand_node.walkable and stand_node.drawtype == "normal" then 	-- if standing inside solid block then jump to escape --added by petz
+			self.object:set_pos({ --added by petz
+				x = stand_pos.x, --added by petz
+				y = stand_pos.y + self.jump_height, --added by petz
+				z = stand_pos.z --added by petz
+			}) --added by petz
+		end --added by petz
+	end
 	while surfnode and surfnode.drawtype == 'liquid' do
 		surface = snodepos.y+0.5
 		if surface > spos.y+self.height then break end

@@ -37,7 +37,7 @@ minetest.register_entity("petz:"..pet_name,{
 	-- api props
 	springiness= 0,
 	buoyancy = 0.5, -- portion of hitbox submerged
-	max_speed = 1,
+	max_speed = 2.0,
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 32767, -- seconds
@@ -47,6 +47,7 @@ minetest.register_entity("petz:"..pet_name,{
 		swin={range={x=1, y=13}, speed=20, loop=true},			
 		stand={
 			{range={x=13, y=25}, speed=5, loop=true},				
+			{range={x=28, y=43}, speed=5, loop=true},	
 		},	
 	},
 
