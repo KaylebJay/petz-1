@@ -1,27 +1,27 @@
 --
---CLOWNFISH
+--DOLPHIN
 --
 local S = ...
 
-local pet_name = "clownfish"
-local scale_model = 1.0
-local mesh = 'petz_clownfish.b3d'	
-local textures= {"petz_clownfish.png"}	
+local pet_name = "dolphin"
+local scale_model = 1.35
+local mesh = 'petz_dolphin.b3d'	
+local textures= {"petz_dolphin_bottlenose.png"}	
 local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
-	type = "clownfish",	
+	type = "dolphin",	
 	can_swin = true,
-	groups = {fish= 1, fishtank = 1},
-	is_mammal = false,
+	groups = {fish= 1},
+	is_mammal = true,
 	init_tamagochi_timer = false,	
 	is_pet = false,
 	has_affinity = false,
 	is_wild = false,
 	give_orders = false,
 	can_be_brushed = false,
-	capture_item = "net",
+	capture_item = "lasso",
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -50,8 +50,13 @@ minetest.register_entity("petz:"..pet_name,{
 		},	
 	},
 
+	sounds = {
+		misc = "petz_dolphin_clicking",
+		moaning = "petz_dolphin_moaning",
+	},
+
 	drops = {
-		{name = "default:coral_orange", chance = 5, min = 1, max = 1,},
+		{name = "default:coral_cyan", chance = 5, min = 1, max = 1,},
 	},
 
 	brainfunc = petz.aquatic_brain,
@@ -70,21 +75,4 @@ minetest.register_entity("petz:"..pet_name,{
 	end,    
 })
 
-petz:register_egg("petz:clownfish", S("Clownfish"), "petz_spawnegg_clownfish.png", 0)
-
-minetest.register_entity("petz:clownfish_entity_sprite", {
-	visual = "sprite",
-	spritediv = {x = 1, y = 16},
-	initial_sprite_basepos = {x = 0, y = 0},
-	visual_size = {x=0.8, y=0.8},
-	collisionbox = {0},
-	physical = false,	
-	textures = {"petz_clownfish_spritesheet.png"},
-	groups = {fishtank = 1},
-	on_activate = function(self, staticdata)
-		local pos = self.object:getpos()
-		if minetest.get_node(pos).name ~= "petz:fishtank" then
-			self.object:remove()
-		end
-	end,
-})
+petz:register_egg("petz:dolphin", S("Dolphin"), "petz_spawnegg_dolphin.png", 0)

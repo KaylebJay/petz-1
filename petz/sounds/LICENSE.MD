@@ -190,3 +190,9 @@ filenames: petz_hamster_squeak.ogg & petz_hamster_moaning.ogg
 Author: Daniel Simon 
 http://soundbible.com/2144-Guinea-Pig.html
 License: Attribution 3.0 
+--------------------------------------------
+filenames: petz_dolphin_clicking.ogg & petz_dolphin_moaning.ogg
+Author: Alexander
+http://www.orangefreesounds.com/dolphin-sound/
+License: The sound effect is permitted for non-commercial use
+under license “Personal Use Only”
