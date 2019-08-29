@@ -7,7 +7,7 @@ minetest.register_craftitem("petz:ducky_egg", {
     inventory_image = "petz_ducky_egg.png",
     wield_image = "petz_ducky_egg.png",
     on_use = minetest.item_eat(2),
-    groups = {flammable = 2, food = 2},
+    groups = {flammable = 2, food = 2, food_egg = 1},
 })
 
 minetest.register_craftitem("petz:chicken_egg", {
@@ -15,27 +15,20 @@ minetest.register_craftitem("petz:chicken_egg", {
     inventory_image = "petz_chicken_egg.png",
     wield_image = "petz_chicken_egg.png",
     on_use = minetest.item_eat(2),
-    groups = {flammable = 2, food = 2},
+    groups = {flammable = 2, food = 2, food_egg = 1},
 })
 
 minetest.register_craftitem("petz:fried_egg", {
 	description = S("Fried Egg"),
 	inventory_image = "petz_fried_egg.png",	
 	on_use = minetest.item_eat(4),
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_egg_fried = 1},
 })
 
 minetest.register_craft({
 	type = "cooking",
 	output = "petz:fried_egg",
-	recipe = "petz:ducky_egg",
-	cooktime = 2,
-})
-
-minetest.register_craft({
-	type = "cooking",
-	output = "petz:fried_egg",
-	recipe = "petz:chicken_egg",
+	recipe = "group:food_egg",
 	cooktime = 2,
 })
 
@@ -49,7 +42,7 @@ minetest.register_craftitem("petz:fried_egg_bacon", {
 minetest.register_craft({
 	type = "shapeless",
 	output = "petz:fried_egg_bacon",
-    recipe = {"petz:fried_egg", "petz:roasted_porkchop"},
+    recipe = {"group:food_egg_fried", "petz:roasted_porkchop"},
 })
 
 --Frog Leg and Roasted Frog Leg
@@ -248,7 +241,7 @@ minetest.register_craftitem("petz:cheese", {
 	description = S("Cheese"),
 	inventory_image = "petz_cheese.png",	
 	on_use = minetest.item_eat(5),
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_cheese = 1},
 })
 
 minetest.register_craft({
@@ -256,7 +249,7 @@ minetest.register_craft({
 	output = "petz:cheese",
 	recipe = "petz:bucket_milk",
 	cooktime = 4,
-	replacements = {{ "petz:bucket_milk", "bucket:bucket_empty"}},
+	replacements = {{ "group:food_milk", "bucket:bucket_empty"}},
 })
 
 minetest.register_alias("petz:cheese", "mobs:cheese")
@@ -271,7 +264,7 @@ minetest.register_craftitem("petz:blueberry_cheese_cake", {
 minetest.register_craft({
 	type = "shapeless",
 	output = "petz:blueberry_cheese_cake",
-    recipe = {"default:blueberries", "farming:wheat", "petz:cheese", "petz:chicken_egg"},
+    recipe = {"default:blueberries", "farming:wheat", "group:food_cheese", "group:food_egg"},
 })
 
 minetest.register_craftitem("petz:blueberry_ice_cream", {
@@ -284,8 +277,8 @@ minetest.register_craftitem("petz:blueberry_ice_cream", {
 minetest.register_craft({
 	type = "shapeless",
 	output = "petz:blueberry_ice_cream 3",
-    recipe = {"default:blueberries", "petz:bucket_milk", "petz:chicken_egg", "default:snow", "petz:chicken_egg", "default:snow", "farming:wheat"},
-    replacements = {{"petz:bucket_milk", "bucket:bucket_empty"}},
+    recipe = {"group:food_blueberries", "group:food_milk", "group:food_egg", "default:snow", "group:food_egg", "default:snow", "farming:wheat"},
+    replacements = {{"group:food_milk", "bucket:bucket_empty"}},
 })
 
 minetest.register_craftitem("petz:blueberry_muffin", {
@@ -298,7 +291,7 @@ minetest.register_craftitem("petz:blueberry_muffin", {
 minetest.register_craft({
 	type = "shapeless",
 	output = "petz:blueberry_muffin 8",
-    recipe = {"default:blueberries", "farming:wheat", "farming:wheat", "petz:chicken_egg", "petz:chicken_egg", "default:paper", "petz:bucket_milk"},
-    replacements = {{"petz:bucket_milk", "bucket:bucket_empty"}},
+    recipe = {"group:food_blueberries", "farming:wheat", "farming:wheat", "group:food_egg", "group:food_egg", "default:paper", "group:food_milk"},
+    replacements = {{"group:food_milk", "bucket:bucket_empty"}},
 })
 

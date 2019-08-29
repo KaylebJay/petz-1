@@ -105,7 +105,7 @@ minetest.register_craftitem("petz:bucket_milk", {
     stack_max = 1,
     wield_image = {"petz_bucket_milk.png"},
     inventory_image = "petz_bucket_milk.png",
-    groups = {milk_bucket = 1, food = 3},
+    groups = {milk_bucket = 1, food = 3, food_milk = 1},
     on_use = function (itemstack, user, pointed_thing)
         return minetest.do_item_eat(3, "bucket:bucket_empty", itemstack, user, pointed_thing)
     end,	
