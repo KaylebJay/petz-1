@@ -26,6 +26,7 @@ petz.settings.max_mobs = tonumber(settings:get("max_mobs"))
 petz.settings.lay_egg_chance = tonumber(settings:get("lay_egg_chance"))
 --Misc Random Sound Chance
 petz.settings.misc_sound_chance = tonumber(settings:get("misc_sound_chance"))
+petz.settings.max_hear_distance = tonumber(settings:get("max_hear_distance"))
 --Breed Engine
 petz.settings.pregnant_count = tonumber(settings:get("pregnant_count"))
 petz.settings.pregnancy_time = tonumber(settings:get("pregnancy_time"))

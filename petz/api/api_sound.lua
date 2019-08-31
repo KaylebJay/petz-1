@@ -8,20 +8,13 @@ petz.random_mob_sound = function(self)
 	local random_number = math.random(1, petz.settings.misc_sound_chance)
 	if random_number == 1 then
 		if self.sounds and self.sounds['misc'] then 
-			petz.mob_sound(self, self.sounds['misc'], 1.0, 10)
+			petz.do_sound_effect("object", self.object, self.sounds['misc'])
 		end
 	end
 end
 
--- play sound
-petz.mob_sound = function(self, sound, _gain, _max_hear_distance)
-	if sound then
-		minetest.sound_play(sound, {object = self.object, gain = _gain, max_hear_distance = _max_hear_distance})
-	end
-end
-
 petz.do_sound_effect = function(dest, dest_name, soundfile)
-    minetest.sound_play(soundfile, {dest = dest_name, gain = 0.4, max_hear_distance = 5,})
+    minetest.sound_play(soundfile, {dest = dest_name, gain = 0.5, max_hear_distance = petz.settings.max_hear_distance,})
 end
 
 petz.set_properties = function(self, properties)

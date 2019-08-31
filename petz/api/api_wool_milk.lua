@@ -45,7 +45,7 @@ petz.lamb_wool_shave = function(self, clicker)
 	else
 		petz.set_properties(self, {tiles = petz.lamb.tiles_shaved})		
 	end 
-	petz.mob_sound(self, "petz_lamb_moaning.ogg", 1.0, 10)	
+	petz.do_sound_effect("object", self.object, "petz_lamb_moaning.ogg")
 	self.shaved = mobkit.remember(self, "shaved", true)        
 	self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)	
 	petz.afraid(self, clicker:get_pos())
