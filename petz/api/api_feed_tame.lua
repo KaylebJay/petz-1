@@ -1,4 +1,4 @@
-local modpath, S, creative_mode = ...
+fwhiplocal modpath, S, creative_mode = ...
 
 petz.insert_petz_list_by_owner = function(self)
 	if self.tag ~= "" then
@@ -128,6 +128,6 @@ petz.tame_whip= function(self, hitter)
 	        		petz.do_lashing(self)
     	    	end
     	    end
-    	    petz.do_sound_effect("object", user, "petz_whip")
+    	    petz.do_sound_effect("object", hitter, "petz_whip")
 		end
 end

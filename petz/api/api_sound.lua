@@ -21,7 +21,7 @@ petz.mob_sound = function(self, sound, _gain, _max_hear_distance)
 end
 
 petz.do_sound_effect = function(dest, dest_name, soundfile)
-    minetest.sound_play(soundfile, {dest = dest_name, gain = 0.4, max_hear_distance = 10,})
+    minetest.sound_play(soundfile, {dest = dest_name, gain = 0.4, max_hear_distance = 5,})
 end
 
 petz.set_properties = function(self, properties)

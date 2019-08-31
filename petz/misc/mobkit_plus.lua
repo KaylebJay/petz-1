@@ -134,7 +134,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				mobkit.set_velocity(self, self.object:getvelocity())
 			end			
 		end
-		if mobkit.check_height(self) == false then --check if max height, then stand or descend
+		if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz
 			random_num = math.random(1, 100)
 			if random_num < 70 then
 				status = "descend"
