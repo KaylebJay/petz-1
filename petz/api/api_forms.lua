@@ -296,7 +296,11 @@ petz.create_food_form = function(self)
 		local breed_item = minetest.registered_items[petz.settings[self.type.."_breed"]]	
 		local breed_item_desc
 		if not(breed_item) then
-			breed_item_desc = "unknown"
+			if self.is_mountable then
+				breed_item_desc = S(minetest.registered_items["petz:glass_syringe"].description)
+				else
+				breed_item_desc = "unknown"
+			end
 		else
 			breed_item_desc = breed_item.description
 		end
