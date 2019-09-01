@@ -271,15 +271,18 @@ end
 petz.create_detached_saddlebag_inventory("saddlebag_inventory")
 
 petz.create_food_form = function(self)
-	local follow_item = minetest.registered_craftitems[petz.settings[self.type.."_follow"]].description
+	local follow_item = minetest.registered_craftitems[petz.settings[self.type.."_follow"]]	
+	local follow_item_desc
 	if not(follow_item) then
-		follow_item = "unknown"
+		follow_item_desc = "unknown"
+	else
+		follow_item_desc = follow_item.description
 	end
 	local formspec = {
 		"size[3,3]",   
 		"image[0,0;1,1;petz_spawnegg_"..self.type..".png]",  
 		"label[1,0;"..S("Food").."]",        
-		"label[0,1;"..S("It likes")..": ".. follow_item .."]",        
+		"label[0,1;"..S("It likes")..": ".. follow_item_desc .."]",        
 		"button_exit[1,2;1,1;btn_exit;"..S("Close").."]"
 	}	
     return table.concat(formspec, "")
