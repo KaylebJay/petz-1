@@ -96,9 +96,10 @@ petz.create_form = function(player_name)
 			infertile_text_y = 3
 		end			
 		if pet.is_male == false and pet.is_pregnant == true then
+			local pregnant_remain_time = petz.round(petz.settings.pregnancy_time - pet.pregnant_time)
 			tamagochi_form_stuff = tamagochi_form_stuff..
 				"image["..pregnant_icon_x..","..pregnant_icon_y..";1,1;petz_"..pet.type.."_pregnant_icon.png]"..
-				"label["..pregnant_text_x..","..pregnant_text_y..";"..S("Pregnant").."]"
+				"label["..pregnant_text_x..","..pregnant_text_y..";"..S("Pregnant (")..tostring(pregnant_remain_time).."s)]"
 		elseif pet.is_male == false and pet.pregnant_count <= 0 then
 			tamagochi_form_stuff = tamagochi_form_stuff..				
 				"label["..infertile_text_x..","..infertile_text_y..";"..S("Infertile").."]"
