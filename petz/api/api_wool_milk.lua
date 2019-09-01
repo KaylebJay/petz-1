@@ -45,7 +45,6 @@ petz.lamb_wool_shave = function(self, clicker)
 	else
 		petz.set_properties(self, {tiles = petz.lamb.tiles_shaved})		
 	end 
-	petz.do_sound_effect("object", self.object, "petz_lamb_moaning.ogg")
 	self.shaved = mobkit.remember(self, "shaved", true)        
 	self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)	
 	petz.afraid(self, clicker:get_pos())
@@ -76,4 +75,19 @@ petz.milk_milk = function(self, clicker)
 		minetest.add_item(self:get_pos(), "petz:bucket_milk")
 	end
 	self.milked = mobkit.remember(self, "milked", true)     
+end
+
+---
+--Cut a feather
+---
+petz.cut_feather = function(self, clicker)
+	local inv = clicker:get_inventory()	
+	item_stack= "petz:ducky_feather"
+	if inv:room_for_item("main", item_stack) then
+		inv:add_item("main", item_stack)
+	else
+		minetest.add_item(self.object:get_pos(), item_stack)
+	end
+    petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
+	petz.afraid(self, clicker:get_pos())
 end

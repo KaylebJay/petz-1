@@ -95,6 +95,30 @@ petz.capture = function(self, clicker, put_in_inventory)
 	--minetest.chat_send_player("singleplayer", "status="..tostring(self.status))	
 	stack_meta:set_string("captured", "true") --IMPORTANT! mark as captured
 	--minetest.chat_send_player("singleplayer", tostring(i))	
+	--Info text stuff:
+	local info_text = ""
+	if not(petz.str_is_empty(self.tag)) then
+		info_text = info_text.."\n"..S("Name")..": "..self.tag
+	end
+	if self.breed then
+		local genre
+		if self.is_male == true then
+			genre = "Male"
+		else
+			genre = "Female"
+		end
+		info_text = info_text.."\n"..S("Gender")..": "..S(genre)
+	end
+	if self.skin_colors then
+		info_text = info_text.."\n"..S("Color")..": "..S(petz.first_to_upper(self.skin_colors[self.texture_no]))
+	end
+	if self.is_mountable then
+		info_text = info_text.."\n"..S("Speed Stats")..": " ..self.max_speed_forward.."/"..self.max_speed_reverse.."/"..self.accel
+	end
+	if self.is_pregnant then
+		info_text = info_text.."\n"..S("It is pregnant")
+	end
+	stack_meta:set_string("description", S(petz.first_to_upper(self.type)).." ("..S("Tamed")..")"..info_text)
 	if put_in_inventory == true then
 		local inv = clicker:get_inventory()	
 		if inv:room_for_item("main", new_stack) then

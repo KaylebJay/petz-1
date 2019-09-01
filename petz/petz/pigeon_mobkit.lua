@@ -18,6 +18,7 @@ minetest.register_entity("petz:"..pet_name,{
 	is_pet = false,
 	max_height = 5,
 	has_affinity = false,
+	feathered = true,
 	is_wild = false,
 	give_orders = false,
 	can_be_brushed = false,

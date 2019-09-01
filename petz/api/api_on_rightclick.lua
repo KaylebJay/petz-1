@@ -99,9 +99,14 @@ petz.on_rightclick = function(self, clicker)
 			minetest.add_item(clicker:get_pos(), new_stack)
 		end
 	elseif self.is_mountable == true then
-		show_form = petz.mount(self, clicker, wielded_item, wielded_item_name)
-        --Else open the Form
-	else
+		show_form = petz.mount(self, clicker, wielded_item, wielded_item_name)        
+	elseif self.feathered then
+		if (wielded_item_name == "mobs:shears" or wielded_item_name == "petz:shears") and clicker:get_inventory() then
+			petz.cut_feather(self, clicker) --cut a feather					
+		else
+			show_form = true
+		end
+	else --Else open the Form
 		show_form = true
 	end
 	if show_form == true then

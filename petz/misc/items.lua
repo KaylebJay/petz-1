@@ -134,7 +134,7 @@ minetest.register_craftitem("petz:beaver_fur", {
 })
 
 minetest.register_craftitem("petz:ducky_feather", {
-    description = S("Ducky Feather"),
+    description = S("Feather"),
     inventory_image = "petz_ducky_feather.png",
     wield_image = "petz_ducky_feather.png",
     groups = {feather = 1},

@@ -43,3 +43,11 @@ petz.pos_front_player = function(player)
 	}
 	return pos_front_player
 end
+
+petz.first_to_upper = function(str)
+    return (str:gsub("^%l", string.upper))
+end
+
+petz.str_is_empty = function(str)
+	return str == nil or str == ''
+end

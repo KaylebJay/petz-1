@@ -32,7 +32,7 @@ petz.create_form = function(player_name)
 		tamagochi_form_stuff = 
             pet_icon ..
             "label[1,2;".. form_title .."]"..
-            "image[".. hungrystuff_pos.x ..",".. hungrystuff_pos.y ..";1,1;petz_pet_bowl_inv.png]"..
+            "image_button[".. hungrystuff_pos.x ..",".. hungrystuff_pos.y ..";1,1;petz_pet_bowl_inv.png;btn_bowl;]"..
             affinity_stuff            
         local hungry_label = ""
         if pet.fed == false then
@@ -206,6 +206,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 							"list[detached:saddlebag_inventory;saddlebag;0,1;8,2;]"..
 							"list[current_player;main;0,4;8,4;]"		
 			minetest.show_formspec(player_name, "petz:saddlebag_inventory", formspec)		
+		elseif fields.btn_bowl then
+			minetest.show_formspec(player_name, "petz:food_form", petz.create_food_form(pet))		
 		end
 		if fields.ipt_name then
 			pet.tag = minetest.formspec_escape(string.sub(fields.ipt_name, 1 , 12))
@@ -267,3 +269,31 @@ petz.create_detached_saddlebag_inventory = function(name)
 end
 
 petz.create_detached_saddlebag_inventory("saddlebag_inventory")
+
+petz.create_food_form = function(self)
+	local follow_item = minetest.registered_craftitems[petz.settings[self.type.."_follow"]].description
+	if not(follow_item) then
+		follow_item = "unknown"
+	end
+	local formspec = {
+		"size[3,3]",   
+		"image[0,0;1,1;petz_spawnegg_"..self.type..".png]",  
+		"label[1,0;"..S("Food").."]",        
+		"label[0,1;"..S("It likes")..": ".. follow_item .."]",        
+		"button_exit[1,2;1,1;btn_exit;"..S("Close").."]"
+	}	
+    return table.concat(formspec, "")
+end
+
+--On receive fields
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname ~= "petz:food_form" then
+		return false
+	end	
+	local player_name = player:get_player_name()
+	local pet = petz.pet[player_name]
+	if pet and (mobkit.is_alive(pet)) then 
+		minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name))
+	end
+	return true
+end)
