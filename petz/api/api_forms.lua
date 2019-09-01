@@ -279,14 +279,30 @@ petz.create_food_form = function(self)
 	else
 		follow_item_desc = follow_item.description
 	end
-	local formspec = {
-		"size[3,3]",   
-		"image[0,0;1,1;petz_spawnegg_"..self.type..".png]",  
-		"label[1,0;"..S("Food").."]",        
-		"label[0,1;"..S("It likes")..": ".. follow_item_desc .."]",        
-		"button_exit[1,2;1,1;btn_exit;"..S("Close").."]"
-	}	
-    return table.concat(formspec, "")
+	local formspec = ""
+	local form_size = {w= 3, h= 3}
+	local button_exit = {x= 1, y= 2}
+	if self.breed == true then
+		form_size.h = form_size.h + 1
+		button_exit.y = button_exit.y + 1
+	end
+	formspec =
+		"size["..form_size.w..","..form_size.h.."]"..
+		"image[0,0;1,1;petz_spawnegg_"..self.type..".png]"..
+		"label[1,0;"..S("Food").."]"..
+		"label[0,1;"..S("It likes")..": ".. follow_item_desc .."]"..
+		"button_exit["..button_exit.x..","..button_exit.y..";1,1;btn_exit;"..S("Close").."]"	
+	if self.breed == true then
+		local breed_item = minetest.registered_items[petz.settings[self.type.."_breed"]]	
+		local breed_item_desc
+		if not(breed_item) then
+			breed_item_desc = "unknown"
+		else
+			breed_item_desc = breed_item.description
+		end
+		formspec = formspec .. "label[0,2;"..S("It breeds with")..": ".. breed_item_desc .."]"
+	end
+    return formspec
 end
 
 --On receive fields
