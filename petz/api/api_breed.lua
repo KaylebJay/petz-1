@@ -93,19 +93,19 @@ petz.pregnant_timer = function(self, dtime)
 		if self.is_mountable == true then		
 			--Set the genetics accordingly the father and the mother
 			local random_number = math.random(-1, 1)
-			local new_max_speed_forward = petz.round((self.father_veloc_stats["max_speed_forward"] + self.max_speed_forward)/2, 0) + random_number
+			local new_max_speed_forward = petz.round((self.father_veloc_stats["max_speed_forward"] or 1 + self.max_speed_forward)/2, 0) + random_number
 			if new_max_speed_forward <= 0 then
 				new_max_speed_forward = 0
 			elseif new_max_speed_forward > 10 then
 				new_max_speed_forward = 10
 			end
-			local new_max_speed_reverse = petz.round((self.father_veloc_stats["max_speed_reverse"]  + self.max_speed_reverse)/2, 0) + random_number
+			local new_max_speed_reverse = petz.round((self.father_veloc_stats["max_speed_reverse"] or 1 + self.max_speed_reverse)/2, 0) + random_number
 			if new_max_speed_reverse <= 0 then
 				new_max_speed_reverse = 0
 			elseif new_max_speed_reverse > 10 then
 				new_max_speed_reverse = 10
 			end
-			local new_accel  = petz.round((self.father_veloc_stats["accel"] + self.accel)/2, 0)	+ random_number
+			local new_accel  = petz.round((self.father_veloc_stats["accel"] or 1 + self.accel)/2, 0)	+ random_number
 			if new_accel <= 0 then
 				new_accel = 0
 			elseif new_accel > 10 then
