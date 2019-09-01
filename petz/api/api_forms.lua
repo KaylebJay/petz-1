@@ -271,7 +271,7 @@ end
 petz.create_detached_saddlebag_inventory("saddlebag_inventory")
 
 petz.create_food_form = function(self)
-	local follow_item = minetest.registered_craftitems[petz.settings[self.type.."_follow"]]	
+	local follow_item = minetest.registered_items[petz.settings[self.type.."_follow"]]	
 	local follow_item_desc
 	if not(follow_item) then
 		follow_item_desc = "unknown"
