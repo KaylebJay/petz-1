@@ -66,6 +66,9 @@ petz.load_vars = function(self)
 		self.is_male = mobkit.recall(self, "is_male") or false
 		self.is_rut = mobkit.recall(self, "is_rut") or false
 		self.is_pregnant = mobkit.recall(self, "is_pregnant") or false				
+		self.pregnant_time = mobkit.recall(self, "pregnant_time") or 0.0
+		self.father_genes = mobkit.recall(self, "father_genes") or {}
+		self.father_veloc_stats = mobkit.recall(self, "father_veloc_stats") or {}
 		self.pregnant_count = mobkit.recall(self, "pregnant_count") or petz.settings.pregnant_count 
 		self.is_baby = mobkit.recall(self, "is_baby") or false
 		self.genes = mobkit.recall(self, "genes") or {}
@@ -164,6 +167,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			mobkit.remember(self, "is_male", self.is_male)
 			self.is_rut = mobkit.remember(self, "is_rut", false)
 			self.is_pregnant = mobkit.remember(self, "is_pregnant", false)
+			self.pregnant_time = mobkit.remember(self, "pregnant_time", 0.0)
+			self.father_genes = mobkit.remember(self, "father_genes", {})
+			self.father_veloc_stats = mobkit.remember(self, "father_veloc_stats", {})			
 			self.pregnant_count = mobkit.remember(self, "pregnant_count", petz.settings.pregnant_count)			
 			self.is_baby = mobkit.remember(self, "is_baby", false)			
 			--Genetics
@@ -177,6 +183,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 					if baby_born == false then
 						self.genes["gen1"] = petz.get_gen(self)
 						self.genes["gen2"] = petz.get_gen(self)
+						--minetest.chat_send_player("singleplayer", tostring(self.genes["gen1"]))	
+						--minetest.chat_send_player("singleplayer", tostring(self.genes["gen2"]))	
 					else
 						if math.random(1, 2) == 1 then
 							self.genes["gen1"] = static_data_table["gen1_father"]					
@@ -187,15 +195,18 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 							self.genes["gen2"] = static_data_table["gen1_mother"]					
 						else
 							self.genes["gen2"] = static_data_table["gen2_mother"]
-						end
-						local textures_count
+						end	
+					end	
+					
+											local textures_count
 						if self.mutation then
 							textures_count = #self.skin_colors - 1
 						else
 							textures_count = #self.skin_colors
 						end
 						self.texture_no = petz.genetics_texture(self, textures_count)		
-					end				
+					
+								
 				else -- mutation
 					local mutation_gen = #self.skin_colors --the last skin is always the mutation
 					self.genes["gen1"] = mutation_gen 
@@ -262,6 +273,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.is_male = mobkit.remember(self, "is_male", petz.to_boolean(static_data_table["fields"]["is_male"])	) 
 			self.is_rut = mobkit.remember(self, "is_rut", petz.to_boolean(static_data_table["fields"]["is_rut"])) 
 			self.is_pregnant = mobkit.remember(self, "is_pregnant", petz.to_boolean(static_data_table["fields"]["is_pregnant"])) 
+			self.pregnant_time = mobkit.remember(self, "pregnant_time", tonumber(static_data_table["fields"]["pregnant_time"])) 
+			self.father_genes = mobkit.remember(self, "father_genes", minetest.deserialize(static_data_table["fields"]["father_genes"])) 
+			self.father_veloc_stats = mobkit.remember(self, "father_veloc_stats", minetest.deserialize(static_data_table["fields"]["father_veloc_stats"])) 			
 			self.is_baby = mobkit.remember(self, "is_baby", petz.to_boolean(static_data_table["fields"]["is_baby"])) 
 			self.pregnant_count = mobkit.remember(self, "pregnant_count", tonumber(static_data_table["fields"]["pregnant_count"])) 	
 			self.genes = mobkit.remember(self, "genes", minetest.deserialize(static_data_table["fields"]["genes"])) 	
@@ -290,17 +304,6 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	--Custom textures
 	if captured_mob == true or self.breed == true then
 		local texture		
-		---
-		---DELETE FROM THIS LINE...
-		---
-		if self.type == "lamb" or self.type == "pony" then
-			if self.texture_no == nil then
-				self.texture_no = math.random(1, #self.skin_colors)
-			end
-		end
-		----
-		----TO THIS LINE
-		----
 		--Mob Specific
 		--Lamb
 		if self.type == "lamb" then
@@ -325,13 +328,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		petz.set_properties(self, {textures = {texture}})	
 	end
 	if self.breed == true then
-		if self.is_pregnant == true then
-			if self.is_mountable == true then
-				petz.init_mountable_pregnancy(self, self.max_speed_forward, self.max_speed_reverse, self.accel)				
-			else
-				petz.init_pregnancy(self)
-			end
-		elseif (self.is_baby == true) or (baby_born == true) then
+		if (self.is_baby == true) or (baby_born == true) then
 			petz.set_properties(self, {
 				visual_size = self.visual_size_baby,
 				collisionbox = self.collisionbox_baby 

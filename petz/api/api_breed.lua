@@ -30,29 +30,32 @@ petz.pony_breed = function(self, clicker, wielded_item, wielded_item_name)
 		local meta = wielded_item:get_meta()
 		local petz_type = meta:get_string("petz_type")
 		if self.is_pregnant == false and self.pregnant_count > 0 and self.type == petz_type then
-			self.is_pregnant = true
-			mobkit.remember(self, "is_pregnant", self.is_pregnant)
+			self.is_pregnant = mobkit.remember(self, "is_pregnant", true)
 			local pregnant_count = self.pregnant_count - 1
 			mobkit.remember(self, "pregnant_count", pregnant_count)	
 			local max_speed_forward = meta:get_int("max_speed_forward")
 			local max_speed_reverse = meta:get_int("max_speed_reverse")
-			local accel = meta:get_int("accel")		
-			petz.init_mountable_pregnancy(self, max_speed_forward, max_speed_reverse, accel)
+			local accel = meta:get_int("accel")	
+			local father_veloc_stats = {}
+			father_veloc_stats["max_speed_forward"] = max_speed_forward
+			father_veloc_stats["max_speed_reverse"] = max_speed_reverse
+			father_veloc_stats["accel"] = accel			
+			self.father_veloc_stats = mobkit.remember(self, "father_veloc_stats", father_veloc_stats)
 			petz.do_particles_effect(self.object, self.object:get_pos(), "pregnant".."_"..self.type)
 			clicker:set_wielded_item("petz:glass_syringe")	
 		end
 	end
 end
 
-petz.childbirth = function(self, father)
+petz.childbirth = function(self)
 	local pos = self.object:get_pos()		
-	self.is_pregnant = false
-	mobkit.remember(self, "is_pregnant", self.is_pregnant)
+	self.is_pregnant = mobkit.remember(self, "is_pregnant", false)
+	self.pregnant_time = mobkit.remember(self, "pregnant_time", 0.0)
 	local baby_properties = {}
 	baby_properties["baby_born"] = true
-	if father and father.genes then
-		baby_properties["gen1_father"] = father.genes["gen1"]
-		baby_properties["gen2_father"] = father.genes["gen2"]
+	if self.father_genes then
+		baby_properties["gen1_father"] = self.father_genes["gen1"]
+		baby_properties["gen2_father"] = self.father_genes["gen2"]
 	else
 		baby_properties["gen1_father"] = math.random(1, #self.skin_colors-1)
 		baby_properties["gen2_father"] = math.random(1, #self.skin_colors-1)
@@ -83,33 +86,26 @@ petz.childbirth = function(self, father)
 	return baby_entity
 end
 
-petz.init_pregnancy = function(self, father)	
-    minetest.after(petz.settings.pregnancy_time, function(self, father)         
-        if not(self.object:get_pos() == nil) then
-			local baby_entity = petz.childbirth(self, father)
-		end
-    end, self, father)
-end
-
-petz.init_mountable_pregnancy = function(self, max_speed_forward, max_speed_reverse, accel)
-    minetest.after(petz.settings.pregnancy_time, function(self, max_speed_forward, max_speed_reverse, accel)         
-        if not(self.object:get_pos() == nil) then
-			local baby_entity = petz.childbirth(self)
+petz.pregnant_timer = function(self, dtime)
+	self.pregnant_time = mobkit.remember(self, "pregnant_time", self.pregnant_time + dtime) 
+	if self.pregnant_time >= petz.settings.pregnancy_time then
+		local baby_entity = petz.childbirth(self)
+		if self.is_mountable == true then		
 			--Set the genetics accordingly the father and the mother
 			local random_number = math.random(-1, 1)
-			local new_max_speed_forward = petz.round((max_speed_forward + self.max_speed_forward)/2, 0) + random_number
+			local new_max_speed_forward = petz.round((self.father_veloc_stats["max_speed_forward"] + self.max_speed_forward)/2, 0) + random_number
 			if new_max_speed_forward <= 0 then
 				new_max_speed_forward = 0
 			elseif new_max_speed_forward > 10 then
 				new_max_speed_forward = 10
 			end
-			local new_max_speed_reverse = petz.round((max_speed_reverse  + self.max_speed_reverse)/2, 0) + random_number
+			local new_max_speed_reverse = petz.round((self.father_veloc_stats["max_speed_reverse"]  + self.max_speed_reverse)/2, 0) + random_number
 			if new_max_speed_reverse <= 0 then
 				new_max_speed_reverse = 0
 			elseif new_max_speed_reverse > 10 then
 				new_max_speed_reverse = 10
 			end
-			local new_accel  = petz.round((accel + self.accel)/2, 0)	+ random_number
+			local new_accel  = petz.round((self.father_veloc_stats["accel"] + self.accel)/2, 0)	+ random_number
 			if new_accel <= 0 then
 				new_accel = 0
 			elseif new_accel > 10 then
@@ -120,9 +116,9 @@ petz.init_mountable_pregnancy = function(self, max_speed_forward, max_speed_reve
 			baby_entity.max_speed_reverse = new_max_speed_reverse
 			mobkit.remember(baby_entity, "max_speed_reverse", baby_entity.max_speed_reverse)
 			baby_entity.accel = new_accel
-			mobkit.remember(baby_entity, "accel", baby_entity.accel)	
+			mobkit.remember(baby_entity, "accel", baby_entity.accel)				
 		end
-    end, self, max_speed_forward, max_speed_reverse, accel)
+	end
 end
 
 petz.init_growth = function(self)

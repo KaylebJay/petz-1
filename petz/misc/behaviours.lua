@@ -117,8 +117,8 @@ function petz.herbivore_brain(self)
 							mobkit.remember(couple, "is_rut", couple.is_rut)				
 							couple.is_pregnant = true
 							mobkit.remember(couple, "is_pregnant", couple.is_pregnant)	
+							couple.father_genes = mobkit.remember(couple, "father_genes", self.genes)	
 							petz.do_particles_effect(couple.object, couple.object:get_pos(), "pregnant".."_"..couple.type)
-							petz.init_pregnancy(couple, self)	
 						end
 					end
 				end
