@@ -196,17 +196,14 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 						else
 							self.genes["gen2"] = static_data_table["gen2_mother"]
 						end	
-					end	
-					
-											local textures_count
+					end						
+						local textures_count
 						if self.mutation then
 							textures_count = #self.skin_colors - 1
 						else
 							textures_count = #self.skin_colors
 						end
-						self.texture_no = petz.genetics_texture(self, textures_count)		
-					
-								
+						self.texture_no = petz.genetics_texture(self, textures_count)															
 				else -- mutation
 					local mutation_gen = #self.skin_colors --the last skin is always the mutation
 					self.genes["gen1"] = mutation_gen 
@@ -251,13 +248,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		--Mob Specific		
 		if self.type == "lamb" then --Lamb
 			self.food_count_wool = mobkit.remember(self, "food_count_wool", tonumber(static_data_table["fields"]["food_count_wool"])) 
-			self.shaved = mobkit.remember(self, "shaved", petz.to_boolean(static_data_table["fields"]["shaved"])) 		
+			self.shaved = mobkit.remember(self, "shaved", minetest.is_yes(static_data_table["fields"]["shaved"])) 		
 		elseif self.type == "wolf" then
 			self.wolf_to_puppy_count = mobkit.remember(self, "wolf_to_puppy_count", tonumber(static_data_table["fields"]["wolf_to_puppy_count"])) 
 		end
 		if self.is_mountable == true then		
-			self.saddle = petz.to_boolean(static_data_table["fields"]["saddle"])	
-			self.saddlebag = petz.to_boolean(static_data_table["fields"]["saddlebag"])
+			self.saddle = minetest.is_yes(static_data_table["fields"]["saddle"])	
+			self.saddlebag = minetest.is_yes(static_data_table["fields"]["saddlebag"])
 			self.saddlebag_inventory = minetest.deserialize(static_data_table["fields"]["saddlebag_inventory"])
 			self.max_speed_forward = mobkit.remember(self, "max_speed_forward", tonumber(static_data_table["fields"]["max_speed_forward"]	)) 
 			self.max_speed_reverse = mobkit.remember(self, "max_speed_reverse", tonumber(static_data_table["fields"]["max_speed_reverse"])) 
@@ -270,13 +267,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 		--Mobs that can have babies
 		if self.breed == true then
-			self.is_male = mobkit.remember(self, "is_male", petz.to_boolean(static_data_table["fields"]["is_male"])	) 
-			self.is_rut = mobkit.remember(self, "is_rut", petz.to_boolean(static_data_table["fields"]["is_rut"])) 
-			self.is_pregnant = mobkit.remember(self, "is_pregnant", petz.to_boolean(static_data_table["fields"]["is_pregnant"])) 
+			self.is_male = mobkit.remember(self, "is_male", minetest.is_yes(static_data_table["fields"]["is_male"])	) 
+			self.is_rut = mobkit.remember(self, "is_rut", minetest.is_yes(static_data_table["fields"]["is_rut"])) 
+			self.is_pregnant = mobkit.remember(self, "is_pregnant", minetest.is_yes(static_data_table["fields"]["is_pregnant"])) 
 			self.pregnant_time = mobkit.remember(self, "pregnant_time", tonumber(static_data_table["fields"]["pregnant_time"])) 
 			self.father_genes = mobkit.remember(self, "father_genes", minetest.deserialize(static_data_table["fields"]["father_genes"])) 
 			self.father_veloc_stats = mobkit.remember(self, "father_veloc_stats", minetest.deserialize(static_data_table["fields"]["father_veloc_stats"])) 			
-			self.is_baby = mobkit.remember(self, "is_baby", petz.to_boolean(static_data_table["fields"]["is_baby"])) 
+			self.is_baby = mobkit.remember(self, "is_baby", minetest.is_yes(static_data_table["fields"]["is_baby"])) 
 			self.pregnant_count = mobkit.remember(self, "pregnant_count", tonumber(static_data_table["fields"]["pregnant_count"])) 	
 			self.genes = mobkit.remember(self, "genes", minetest.deserialize(static_data_table["fields"]["genes"])) 	
 		end		
@@ -287,10 +284,10 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])
 		self.set_vars = mobkit.remember(self, "set_vars", true) 		
 		self.tag = mobkit.remember(self, "tag", static_data_table["fields"]["tag"]) or ""
-		self.show_tag = mobkit.remember(self, "show_tag", petz.to_boolean(static_data_table["fields"]["show_tag"])) 
-		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", petz.to_boolean(static_data_table["fields"]["dreamcatcher"])) 
+		self.show_tag = mobkit.remember(self, "show_tag", minetest.is_yes(static_data_table["fields"]["show_tag"])) 
+		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", minetest.is_yes(static_data_table["fields"]["dreamcatcher"])) 
 		self.status = mobkit.remember(self, "status", static_data_table["fields"]["status"]) or ""
-		self.tamed = mobkit.remember(self, "tamed", petz.to_boolean(static_data_table["fields"]["tamed"]))	
+		self.tamed = mobkit.remember(self, "tamed", minetest.is_yes(static_data_table["fields"]["tamed"]))	
 		self.owner = mobkit.remember(self, "owner", static_data_table["fields"]["owner"]) 
 		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 
 		if self.has_affinity == true then

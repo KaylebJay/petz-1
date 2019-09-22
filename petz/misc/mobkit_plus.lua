@@ -130,8 +130,13 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				local rotation_integer = math.random(0, 5)
 				local rotation_decimals = math.random()				
 				local new_yaw = yaw + rotation_integer + rotation_decimals
-				self.object:set_yaw(new_yaw)		
-				mobkit.set_velocity(self, self.object:getvelocity())
+				self.object:set_yaw(new_yaw)
+				velocity = {
+					x = self.max_speed* speed_factor,
+					y = self.max_speed* speed_factor,
+					z = self.max_speed* speed_factor,
+				}		
+				mobkit.set_velocity(self, velocity)
 			end			
 		end
 		if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz

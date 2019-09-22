@@ -188,7 +188,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				pet.object:set_detach()
 			end, pet)
 		elseif fields.btn_show_tag then			
-			pet.show_tag = mobkit.remember(pet, "show_tag", petz.to_boolean(fields.btn_show_tag))
+			pet.show_tag = mobkit.remember(pet, "show_tag", minetest.is_yes(fields.btn_show_tag))
 		elseif fields.btn_dreamcatcher then		
 			petz.drop_dreamcatcher(pet)
 		elseif fields.btn_saddlebag then	

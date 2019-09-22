@@ -7,7 +7,7 @@ local pet_name = "dolphin"
 local scale_model = 1.35
 local mesh = 'petz_dolphin.b3d'	
 local textures= {"petz_dolphin_bottlenose.png"}	
-local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
+local collisionbox = {-0.25, -0.75*scale_model, -0.4375, 0.3125, -0.0625, 0.5}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
@@ -37,7 +37,7 @@ minetest.register_entity("petz:"..pet_name,{
 	-- api props
 	springiness= 0,
 	buoyancy = 0.5, -- portion of hitbox submerged
-	max_speed = 2.0,
+	max_speed = 1.5,
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 32767, -- seconds

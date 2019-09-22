@@ -3,15 +3,6 @@ local modpath, S = ...
 --
 --Helper Functions
 --
-
-function petz.to_boolean(val)
-	if val and (val == "true" or val == 1) then
-		return true
-	else
-		return false
-	end	
-end
-
 function petz.is_night()
 	local timeofday = minetest.get_timeofday() * 24000
 	if (timeofday < 4500) or (timeofday > 19500) then
