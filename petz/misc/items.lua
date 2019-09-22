@@ -24,7 +24,7 @@ minetest.register_node("petz:pet_bowl", {
     wield_image = "petz_pet_bowl_inv.png",
     tiles = {"petz_pet_bowl.png"},
     groups = {snappy=1, bendy=2, cracky=1},
-    sounds = default_stone_sounds,
+    sounds = default.node_sound_stone_defaults(),
     paramtype = "light",
     drawtype = "nodebox",
     node_box = {
@@ -111,7 +111,7 @@ minetest.register_craftitem("petz:bucket_milk", {
     end,	
 })
 
-minetest.register_alias("petz:bucket_milk", "mobs:bucket_milk")
+--minetest.register_alias("petz:bucket_milk", "mobs:bucket_milk")
 
 --Turtle Shell
 minetest.register_craftitem("petz:turtle_shell", {
