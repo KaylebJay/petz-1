@@ -483,7 +483,7 @@ function petz.aquatic_brain(self)
 		
 		--Roam default			
 		if mobkit.is_queue_empty_high(self) then
-			mobkit.hq_aqua_roam(self, 0, 0.5)
+			mobkit.hq_aqua_roam(self, 0, 2.5)
 		end		
 	end
 end
