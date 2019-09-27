@@ -54,7 +54,7 @@ function mobkit.neighbor_shift(neighbor,shift)	-- int shift: minus is left, plus
 	return (8+neighbor+shift-1)%8+1
 end
 
-function mobkit.pos_shift(pos,vec)
+function mobkit.pos_shift(pos,vec) -- vec components can be omitted e.g. vec={y=1}
 	vec.x=vec.x or 0
 	vec.y=vec.y or 0
 	vec.z=vec.z or 0
@@ -63,7 +63,18 @@ function mobkit.pos_shift(pos,vec)
 			z=pos.z+vec.z}
 end
 
+function mobkit.pos_translate2d(pos,yaw,dist) -- translate pos dist distance in yaw direction
+	return vector.add(pos,vector.multiply(minetest.yaw_to_dir(yaw),dist))
+end
+
+function mobkit.is_pos_in_box(pos,bpos,box)
+	return pos.x > bpos.x+box[1] and pos.x < bpos.x+box[4] and
+			pos.y > bpos.y+box[2] and pos.y < bpos.y+box[5] and
+			pos.z > bpos.z+box[3] and pos.z < bpos.z+box[6]
+end
+
 -- call this instead if you want feet position.
+--[[
 function mobkit.get_stand_pos(thing)	-- thing can be luaentity or objectref.
 	if type(thing) == 'table' then
 		return mobkit.pos_shift(thing.object:get_pos(),{y=thing.collisionbox[2]+0.01})
@@ -71,6 +82,21 @@ function mobkit.get_stand_pos(thing)	-- thing can be luaentity or objectref.
 		local colbox = thing:get_properties().collisionbox
 		return mobkit.pos_shift(thing:get_pos(),{y=colbox[2]+0.01})
 	end
+end	--]]
+
+function mobkit.get_stand_pos(thing)	-- thing can be luaentity or objectref.
+	local pos = {}
+	local colbox = {}
+	if type(thing) == 'table' then
+		pos = thing.object:get_pos()
+		colbox = thing.collisionbox
+	elseif type(thing) == 'userdata' then
+		pos = thing:get_pos()
+		colbox = thing:get_properties().collisionbox
+	else 
+		return false
+	end
+	return mobkit.pos_shift(pos,{y=colbox[2]+0.01}), pos
 end
 
 function mobkit.nodeatpos(pos)
@@ -774,7 +800,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	end
 	
 	-- dumb friction
-	if self.isonground and not(self.can_fly) then
+	if self.isonground and not(self.can_fly) then  --added by petz
 		self.object:set_velocity({x= vel.x> 0.2 and vel.x*mobkit.friction or 0,
 								y=vel.y,
 								z=vel.z > 0.2 and vel.z*mobkit.friction or 0})
@@ -812,7 +838,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	local surface = nil
 	local snodepos = mobkit.get_node_pos(spos)
 	local surfnode = mobkit.nodeatpos(spos)
-	if mobkit.is_alive(self) and not(self.is_baby) then
+	if mobkit.is_alive(self) and not(self.is_baby) then --added by petz
 		local stand_pos = spos --added by petz
 		stand_pos.y = spos.y + 0.5 --added by petz
 		local stand_node_pos = mobkit.get_node_pos(stand_pos) --added by petz
@@ -824,7 +850,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 				z = stand_pos.z --added by petz
 			}) --added by petz
 		end --added by petz
-	end
+	end --added by petz
 	while surfnode and surfnode.drawtype == 'liquid' do
 		surface = snodepos.y+0.5
 		if surface > spos.y+self.height then break end
@@ -832,7 +858,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 		surfnode = mobkit.nodeatpos(snodepos)
 	end
 	if surface then				-- standing in liquid
-		self.isinliquid = true		
+		self.isinliquid = true
 		local submergence = min(surface-spos.y,self.height)
 		local balance = self.buoyancy*self.height
 		local buoyacc = mobkit.gravity*((balance - submergence)^2/balance^2*sign(balance - submergence))
@@ -1358,10 +1384,6 @@ end
 local function aqua_radar_dumb(pos,yaw,range,reverse)
 	range = range or 4
 	
-	local function newpos(p,y,r)
-		return mobkit.pos_shift(p,vector.multiply(minetest.yaw_to_dir(y),r))
-	end
-	
 	local function okpos(p)
 		local node = mobkit.nodeatpos(p)
 		if node then 
@@ -1387,7 +1409,7 @@ local function aqua_radar_dumb(pos,yaw,range,reverse)
 		end
 	end
 	
-	local fpos = newpos(pos,yaw,range)
+	local fpos = mobkit.pos_translate2d(pos,yaw,range)
 	local ok,h = okpos(fpos)
 	if not ok then
 		local ffrom, fto, fstep
@@ -1397,9 +1419,9 @@ local function aqua_radar_dumb(pos,yaw,range,reverse)
 			ffrom, fto, fstep = 1,3,1
 		end
 		for i=ffrom, fto, fstep  do
-			local ok,h = okpos(newpos(pos,yaw+i,range))
+			local ok,h = okpos(mobkit.pos_translate2d(pos,yaw+i,range))
 			if ok then return yaw+i,h end
-			ok,h = okpos(newpos(pos,yaw-i,range))
+			ok,h = okpos(mobkit.pos_translate2d(pos,yaw-i,range))
 			if ok then return yaw-i,h end
 		end
 		return yaw+pi,h
@@ -1435,12 +1457,11 @@ function mobkit.hq_aqua_roam(self,prty,speed)
 		end
 		local pos = mobkit.get_stand_pos(self)
 		local yaw = self.object:get_yaw()
-		local pos2d = {x=pos.x,y=0,z=pos.z}
-		local scanpos = mobkit.get_node_pos(vector.add(pos,vector.multiply(minetest.yaw_to_dir(yaw),speed)))
+		local scanpos = mobkit.get_node_pos(mobkit.pos_translate2d(pos,yaw,speed))
 		if not vector.equals(prvscanpos,scanpos) then
 			prvscanpos=scanpos
 			local nyaw,height = aqua_radar_dumb(pos,yaw,speed,true)
-			if height and height > pos.y+self.collisionbox[2] then
+			if height and height > pos.y then
 				local vel = self.object:get_velocity()
 				vel.y = vel.y+1
 				self.object:set_velocity(vel)
@@ -1461,7 +1482,7 @@ function mobkit.hq_aqua_roam(self,prty,speed)
 		
 		mobkit.turn2yaw(self,tyaw,3)
 		local yaw = self.object:get_yaw()
-		mobkit.go_forward_horizontal(self,yaw,4)
+		mobkit.go_forward_horizontal(self,yaw,speed)
 	end
 	mobkit.queue_high(self,func,prty)
 end
@@ -1480,6 +1501,7 @@ function mobkit.hq_aqua_attack(self,prty,tgtobj,speed)
 	local tyaw = 0
 	local prvscanpos = {x=0,y=0,z=0}
 	local init = true
+	local tgtbox = tgtobj:get_properties().collisionbox
 	local func = function(self)
 		if not mobkit.is_alive(tgtobj) then return true end
 		if init then
@@ -1489,12 +1511,11 @@ function mobkit.hq_aqua_attack(self,prty,tgtobj,speed)
 		end
 		local pos = mobkit.get_stand_pos(self)
 		local yaw = self.object:get_yaw()
-		local pos2d = {x=pos.x,y=0,z=pos.z}
-		local scanpos = mobkit.get_node_pos(vector.add(pos,vector.multiply(minetest.yaw_to_dir(yaw),speed)))
+		local scanpos = mobkit.get_node_pos(mobkit.pos_translate2d(pos,yaw,speed))
 		if not vector.equals(prvscanpos,scanpos) then
 			prvscanpos=scanpos
-			local nyaw,height = aqua_radar_dumb(pos,yaw,speed)
-			if height and height > pos.y+self.collisionbox[2] then
+			local nyaw,height = aqua_radar_dumb(pos,yaw,speed*0.5)
+			if height and height > pos.y then
 				local vel = self.object:get_velocity()
 				vel.y = vel.y+1
 				self.object:set_velocity(vel)
@@ -1516,7 +1537,7 @@ function mobkit.hq_aqua_attack(self,prty,tgtobj,speed)
 			if tpos.y>pos.y+0.5 then self.object:set_velocity({x=vel.x,y=vel.y+0.5,z=vel.z})
 			elseif tpos.y<pos.y-0.5 then self.object:set_velocity({x=vel.x,y=vel.y-0.5,z=vel.z}) end
 		end
-		if mobkit.isnear3d(mobkit.pos_shift(pos,vector.multiply(minetest.yaw_to_dir(yaw),0.7)),tpos,0.35) then	--bite
+		if mobkit.is_pos_in_box(mobkit.pos_translate2d(pos,yaw,self.attack.range),tpos,tgtbox) then	--bite
 			tgtobj:punch(self.object,1,self.attack)
 			mobkit.hq_aqua_turn(self,prty,yaw-pi,speed)
 			return true
