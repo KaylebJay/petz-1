@@ -69,8 +69,8 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 		if self.hp <= 0 and self.driver then --important for mountable petz!
 			petz.force_detach(self.driver)
 		end
-		if self.tamed == false and self.attack_player == false then --if you hit it, will attack player
-			self.attack_player = true	
+		if self.tamed == false and self.attack_player == true then --if you hit it, will attack player
+			self.warn_attack = true	
 			mobkit.clear_queue_high(self)
 		end
 	end

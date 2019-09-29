@@ -15,6 +15,7 @@ minetest.register_entity("petz:"..pet_name,{
 	can_swin = true,
 	groups = {fish= 1},
 	is_mammal = true,
+	attack_player = true,
 	init_tamagochi_timer = false,	
 	is_pet = false,
 	has_affinity = false,

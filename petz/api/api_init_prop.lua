@@ -94,6 +94,7 @@ petz.load_vars = function(self)
 	self.child = mobkit.recall(self, "child") or false
 	self.dreamcatcher = mobkit.recall(self, "dreamcatcher") or false
 	self.status = mobkit.recall(self, "status") or ""
+	self.warn_attack = false --reset the warn attack
 end
 
 function petz.set_initial_properties(self, staticdata, dtime_s)	
@@ -229,6 +230,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.was_killed_by_player = mobkit.remember(self, "was_killed_by_player", false)	
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", false)	
 		self.status = mobkit.remember(self, "status", "")
+		self.warn_attack = mobkit.remember(self, "warn_attack", false)
 		if self.init_tamagochi_timer== true then
 			petz.init_tamagochi_timer(self)
 		end

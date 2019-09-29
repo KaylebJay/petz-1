@@ -73,10 +73,13 @@ function petz.herbivore_brain(self)
 	
 	if self.hp <= 0 then
 		die = true
-	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up
-		if pos and self.max_daylight_level then
-			if minetest.get_node_light(pos, minetest.get_timeofday()) >= self.max_daylight_level then
-				die = true
+	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up		
+		if pos then
+			local node_light = minetest.get_node_light(pos, minetest.get_timeofday())
+			if node_light and self.max_daylight_level then
+				if node_light >= self.max_daylight_level then
+					die = true
+				end
 			end
 		end
 	end			
@@ -344,7 +347,7 @@ function petz.predator_brain(self)
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
 					if vector.distance(pos, player:get_pos()) <= self.view_range then	-- if player close
-						if self.attack_player == true then --attack player										
+						if self.warn_attack == true then --attack player										
 							mobkit.hq_warn(self, 10, player) -- try to repel them
 							return
 						else
@@ -469,7 +472,7 @@ function petz.aquatic_brain(self)
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
 					if vector.distance(pos, player:get_pos()) <= self.view_range then	-- if player close
-						if self.attack_player == true then --attack player										
+						if self.warn_attack == true then --attack player										
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
 							mobkit.hq_aqua_attack(self, 20, puncher, 6)				-- get revenge
 						end
