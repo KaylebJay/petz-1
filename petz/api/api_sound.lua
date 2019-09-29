@@ -13,8 +13,8 @@ petz.random_mob_sound = function(self)
 	end
 end
 
-petz.do_sound_effect = function(dest, dest_name, soundfile)
-    minetest.sound_play(soundfile, {dest = dest_name, gain = 0.5, max_hear_distance = petz.settings.max_hear_distance,})
+petz.do_sound_effect = function(dest, dest_object, soundfile)
+    minetest.sound_play(soundfile, {object = dest_object, gain = 0.5, max_hear_distance = petz.settings.max_hear_distance,})
 end
 
 petz.set_properties = function(self, properties)
