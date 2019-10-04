@@ -297,9 +297,10 @@ minetest.register_tool("petz:lasso", {
 minetest.register_craft({
 	output = "petz:lasso",
 	recipe = {
+		{"farming:string", "farming:string", "farming:string"},
 		{"farming:string", "", "farming:string"},
-		{"", "default:diamond", ""},
-		{"farming:string", "", "farming:string"},		}
+		{"", "farming:string", ""},
+	}
 })
 
 -- Saddle

@@ -196,3 +196,9 @@ Author: Alexander
 http://www.orangefreesounds.com/dolphin-sound/
 License: The sound effect is permitted for non-commercial use
 under license “Personal Use Only”
+--------------------------------------------
+filenames: petz_splash.ogg
+Author: Alexander
+http://www.orangefreesounds.com/water-sound-splash/
+License: The sound effect is permitted for commercial use
+under license Creative Commons Attribution 4.0 International License

@@ -43,6 +43,7 @@ minetest.register_entity("petz:"..pet_name,{
 	view_range = 10,
 	lung_capacity = 32767, -- seconds
 	max_hp = 4,
+	max_height = -2,
 		    
 	animation = {
 		swin={range={x=1, y=13}, speed=20, loop=true},			

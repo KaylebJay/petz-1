@@ -277,127 +277,58 @@ function mobkit.hq_climb(self, prty)
 	mobkit.queue_high(self,func,prty)
 end
 
-
-
---
--- AQUATIC BRAIN
---
-
-function mobkit.hq_wanderswin(self, prty)
-	local func=function(self)
-		if mobkit.is_queue_empty_low(self) then									
-			mobkit.dumbstepswin(self)
-		end
-	end
-	mobkit.queue_high(self,func,prty)
-end
-
-function mobkit.dumbstepswin(self)
-	--mobkit.set_velocity(self, {x=1, y=0, z=1})	
-	if minetest.get_item_group(mobkit.node_name_in(self, "front"), "water") < 1 then			
-		local yaw = self.object:get_yaw()
-		if yaw then
-			local rotation_integer = math.random(0, 5)
-			local rotation_decimals = math.random()				
-			local new_yaw = yaw + rotation_integer + rotation_decimals
-			self.object:set_yaw(new_yaw)		
-			mobkit.set_velocity(self, self.object:getvelocity())
-		end
-	end
-	mobkit.lq_dumbswin(self, 1.0)	
-end
-
-function mobkit.lq_dumbswin(self, speed_factor)
-	local timer = 3
-	local status = "descend"
-	speed_factor = speed_factor or 1
+---
+---Aquatic Brain
+---
+function mobkit.hq_aqua_jump(self, prty, speed_factor)
 	local func = function(self)
-		timer = timer - self.dtime
-		local vel = self.object:getvelocity()
-		local velocity = {}
-		local mob = self.object
-		local pos = mob:getpos()			
-		local random_num
-		mobkit.animate(self, 'swin')
-		random_num = math.random(1, 300)
-		if random_num <= 1 then	
-			local yaw = self.object:get_yaw()
-			if yaw then
-				local rotation_integer = math.random(0, 5)
-				local rotation_decimals = math.random()				
-				local new_yaw = yaw + rotation_integer + rotation_decimals
-				self.object:set_yaw(new_yaw)		
-				mobkit.set_velocity(self, self.object:getvelocity())
-			end			
-		end
-		if mobkit.check_is_on_surface(self) == true then --check if mob close to surface
-			random_num = math.random(1, 100)
-			if random_num < 50 then
-				status = "descend"
-			else
-				status = "stand"
-			end
-		else --check if water below, if no ascend
-			local node_name = mobkit.node_name_in(self, "below")
-			if minetest.get_item_group(node_name, "water") < 1  then
-				status = "ascend"
-			end
-		end		
-		--local node_name_in_front = mobkit.node_name_in(self, "front")
-		if status == "stand" and timer < 0 then -- stand
-			velocity = {
-				x= vel.x*self.max_speed* speed_factor *2,
-				y= 0,
-				z= vel.z*self.max_speed* speed_factor *2,
-			}
-			mobkit.set_velocity(self, velocity)
-			minetest.chat_send_player("singleplayer", "stand")
-			random_num = math.random(1, 100)
-			if random_num < 20 then
-				status = "descend"				
-			elseif random_num < 40 and mobkit.check_is_on_surface(self) == false then		
-				status = "ascend"							
-			end		
+		--minetest.chat_send_player("singleplayer", "test")		
+		local velocity = {
+			x = self.max_speed* speed_factor,
+			y = self.max_speed* speed_factor,
+			z = self.max_speed* speed_factor,
+		}		
+		mobkit.set_velocity(self, velocity)
+		self.object:set_acceleration({x=0, y=2.0, z=0})
+		self.status = "jump"
+		petz.do_sound_effect("object", self.object, "petz_splash")
+		minetest.after(0.5, function(self, velocity)
+				if mobkit.is_alive(self.object) then
+					self.object:set_acceleration({
+						x = velocity.x * 2,
+						y = mobkit.gravity,
+						z = velocity.z * 2						
+					})
+					self.status = ""
+					mobkit.clear_queue_high(self)
+					--minetest.chat_send_player("singleplayer", "stop")
+				end
+			end, self, velocity)
+		return true
+	end
+	mobkit.queue_high(self, func, prty)
+end
+
+
+---
+---Bee Brain
+---
+
+function mobkit.hq_gotopollen(self, prty, tpos)
+	local func = function(self)
+		mobkit.lq_search_flower(self, tpos)
+	end
+	mobkit.queue_high(self, func, prty)
+end
+
+function mobkit.lq_search_flower(self, tpos)
+	local func = function(self)				
+		local pos = self.object:get_pos() --pos of the petz	
+		local dir = vector.direction(pos, tpos)
+		mobkit.set_velocity(self, dir)
+		if vector.distance(pos, tpos) <=1 then		
+			self.pollen = true
 			return true
-		elseif status == "ascend"  and timer < 0 then -- ascend
-			local y			
-			y = self.max_speed * speed_factor
-			velocity = {
-				x = self.max_speed* speed_factor,
-				y = y,
-				z = self.max_speed* speed_factor,
-			}
-			mobkit.set_velocity(self, velocity)
-			minetest.chat_send_player("singleplayer", "ascend")	
-			random_num = math.random(1, 100)
-			if random_num < 20 then
-				status = "stand"
-			elseif random_num < 40 then		
-				status = "descend"											
-			end
-			return true
-		elseif timer < 0 then --descend
-			local y
-			y = - self.max_speed * speed_factor * 2
-			status = "descend"
-			velocity ={
-				x = self.max_speed* speed_factor,				
-				y = y,
-				z = self.max_speed* speed_factor,
-			}
-			--minetest.chat_send_player("singleplayer", tostring(velocity.x))
-			mobkit.set_velocity(self, velocity)
-			minetest.chat_send_player("singleplayer", "descend")
-			random_num = math.random(1, 100)
-			if random_num < 20 then
-				status = "stand"
-			elseif random_num < 70 then		
-				status = "ascend"											
-			end
-			return true
-		end
-		if timer < 0 then
-			timer = 3
 		end
 	end
 	mobkit.queue_low(self, func)

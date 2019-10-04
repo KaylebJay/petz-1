@@ -402,14 +402,15 @@ function petz.bee_brain(self)
 		local player = mobkit.get_nearby_player(self)
 			
 		--search for flowers
-		if prty < 6 and self.pollen == false then
+		if prty < 6 and not(self.pollen) then
 			local view_range = self.view_range
 			local nearby_flowers = minetest.find_nodes_in_area(
 				{x = pos.x - view_range, y = pos.y - 1, z = pos.z - view_range},
 				{x = pos.x + view_range, y = pos.y + 1, z = pos.z + view_range},
 				{"group:flower"})
-			if #nearby_flowers >= 1 then		
-				
+			if #nearby_flowers >= 1 then	
+				local tpos = 	nearby_flowers[1] --the first match	
+				mobkit.hq_gotopollen(self, 6, tpos)		
 			end			
 		end	
 							
@@ -474,9 +475,20 @@ function petz.aquatic_brain(self)
 					if vector.distance(pos, player:get_pos()) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
-							mobkit.hq_aqua_attack(self, 20, puncher, 6)				-- get revenge
+							mobkit.hq_aqua_attack(self, 10, puncher, 6)				-- get revenge
 						end
 					end
+				end
+			end
+		end
+		
+		if prty < 8 then		
+			if not(self.status== "jump") and (pos.y < 2 and pos.y > 0) then
+				local random_number = math.random(1, 50)
+				if random_number == 1 then
+					--minetest.chat_send_player("singleplayer", "jump")
+					mobkit.clear_queue_high(self)	
+					mobkit.hq_aqua_jump(self, 8, 2.5)
 				end
 			end
 		end
@@ -485,7 +497,7 @@ function petz.aquatic_brain(self)
 		petz.random_mob_sound(self)
 		
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) then
+		if mobkit.is_queue_empty_high(self) and not(self.status== "jump") then
 			mobkit.hq_aqua_roam(self, 0, 2.5)
 		end		
 	end
