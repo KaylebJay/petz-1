@@ -12,7 +12,8 @@ local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "clownfish",	
-	can_swin = true,
+	swin = true,
+	can_jump = false,
 	groups = {fish= 1, fishtank = 1},
 	is_mammal = false,
 	init_tamagochi_timer = false,	
@@ -36,12 +37,13 @@ minetest.register_entity("petz:"..pet_name,{
 	get_staticdata = mobkit.statfunc,
 	-- api props
 	springiness= 0,
-	buoyancy = 0.5, -- portion of hitbox submerged
+	buoyancy = 1.1, -- portion of hitbox submerged
 	max_speed = 0.5,
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 32767, -- seconds
 	max_hp = 4,
+	max_height = -2,
 		    
 	animation = {
 		swin={range={x=1, y=13}, speed=20, loop=true},			

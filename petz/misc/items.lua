@@ -186,14 +186,10 @@ minetest.register_node("petz:fishtank", {
 		type = "fixed",
 		fixed = { -0.25, -0.5, -0.25, 0.25, 0.4, 0.25 },
 	},
-	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)		
-		local itemstack_meta = itemstack:get_meta()
-		local itemstack_name
-		itemstack_name= itemstack_meta:get_string("petz_type") --Captured mobs have a entity name ended in '_set', so cannot use itemstack:get_name()
-		if itemstack_name == "" then
-			itemstack_name = itemstack:get_name()
-		else
-			itemstack_name= "petz:"..itemstack_name
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)				
+		itemstack_name= itemstack:get_name()
+		if itemstack:get_name():sub(1, 5) == "petz:" then
+			itemstack_name= itemstack:get_name():sub(1, -5) --remove the "_set" part		
 		end
         local itemstack_group = minetest.get_item_group(itemstack_name, "spawn_egg")
         --minetest.chat_send_player("singleplayer", itemstack_name)        
@@ -204,17 +200,18 @@ minetest.register_node("petz:fishtank", {
 				meta:set_string("has_fish", "true")				
 				meta:set_string("fish_type", itemstack_name)	
 				local fish_entity = minetest.add_entity({x=pos.x, y=pos.y, z=pos.z}, itemstack_name.."_entity_sprite")
+				local itemstack_meta = itemstack:get_meta()
 				fish_entity:set_properties({textures=itemstack_meta:get_string("textures").."^[transformFX"}) 		
 				fish_entity:set_sprite({x=0, y=0}, 16, 1.0, false)		
 				itemstack:take_item()			
 				clicker:set_wielded_item(itemstack)
 				return itemstack
 			end
-		elseif ((itemstack_name == "mobs:net") or (itemstack_name == "fireflies:bug_net")) and (has_fish == "true") then
-			local inv = clicker:get_inventory()
+		elseif ((itemstack_name == "mobs:net") or (itemstack_name == "fireflies:bug_net")) and (has_fish == "true") then			
+			local inv = clicker:get_inventory()						   
 			local fish_type = meta:get_string("fish_type")
 			if fish_type and inv:room_for_item("main", ItemStack(fish_type)) then
-				inv:add_item("main", fish_type)
+				inv:add_item("main", fish_type.."_set")
 				remove_fish(pos)
 				meta:set_string("has_fish", "false")
 				meta:set_string("fish_texture", nil)

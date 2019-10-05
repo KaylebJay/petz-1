@@ -483,7 +483,7 @@ function petz.aquatic_brain(self)
 		end
 		
 		if prty < 8 then		
-			if not(self.status== "jump") and (pos.y < 2 and pos.y > 0) and (mobkit.is_in_deep(self)) then
+			if (self.can_jump) and not(self.status== "jump") and (pos.y < 2 and pos.y > 0) and (mobkit.is_in_deep(self)) then
 				local random_number = math.random(1, 25)
 				if random_number == 1 then
 					--minetest.chat_send_player("singleplayer", "jump")
