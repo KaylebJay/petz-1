@@ -20,36 +20,39 @@ minetest.register_globalstep(function(dtime)
 			local mob_ent_name = "petz:"..petz.petz_list[i]
 			--minetest.chat_send_player("singleplayer", mob_ent_name)	
 			local ent = minetest.registered_entities[mob_ent_name]
+			-- Note: using a function that just returns false on the first condition that is not met
+			-- might be easier to read than this current implementation
+			can_spawn = true
 			if ent then --do several checks to know if the mob can be included in the list or not					
-				if ent.spawn_max_height then --check max_height						
+				if can_spawn and ent.spawn_max_height then --check max_height
 					if spawn_pos.y > ent.spawn_max_height then
-						break
+						can_spawn = false
 					end
 				end
-				if ent.spawn_min_height then --check min_height						
+				if can_spawn and ent.spawn_min_height then --check min_height
 					if spawn_pos.y < ent.spawn_min_height then
-						break
+						can_spawn = false
 					end
 				end		
-				if ent.min_daylight_level then --check min_light					
+				if can_spawn and ent.min_daylight_level then --check min_light
 					if minetest.get_node_light(spawn_pos, 0.5) < ent.min_daylight_level then				
-						break
+						can_spawn = false
 					end
 				end					
-				if ent.max_daylight_level then --check max_light
-					if minetest.get_node_light(spawn_pos, 0.5) > ent.max_daylight_level then				
-						break
+				if can_spawn and ent.max_daylight_level then --check max_light
+					if minetest.get_node_light(spawn_pos, 0.5) > ent.max_daylight_level then
+						can_spawn = false
 					end
 				end							
 				--Check if this mob spawns at night
-				if ent.spawn_at_night then			
+				if can_spawn and ent.spawn_at_night then
 					if not(petz.is_night()) then --if not at night
-						break
+						can_spawn = false
 					end
 				end
 			end
 			local spawn_nodes_list = petz.settings[petz.petz_list[i].."_spawn_nodes"]
-			if spawn_nodes_list then
+			if can_spawn and spawn_nodes_list then
 				local spawn_nodes = string.split(spawn_nodes_list, ',')
 				for j = 1, #spawn_nodes do --loop  thru all spawn nodes
 					--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[j])	
