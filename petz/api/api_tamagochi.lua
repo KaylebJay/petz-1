@@ -71,9 +71,8 @@ petz.timer = function(self)
 				petz.set_affinity(self, false, 10)
 			end
             --Decrease health if pet has not fed
-            if self.fed == false then				
-				local damage_amount = - petz.settings.tamagochi_hunger_damage
-				mobkit.hurt(self, damage_amount)
+            if self.fed == false then								
+				mobkit.hurt(self, petz.settings.tamagochi_hunger_damage)
 				petz.update_nametag(self)
                 if (self.hp > 0)  and (self.has_affinity == true) then
 					petz.set_affinity(self, false, 33)

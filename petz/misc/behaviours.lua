@@ -451,6 +451,8 @@ end
 
 function petz.aquatic_brain(self)
 	
+	local pos = self.object:get_pos()
+	
 	-- Die Behaviour
 	
 	if self.hp <= 0 then
@@ -463,10 +465,13 @@ function petz.aquatic_brain(self)
 		end
 	end		
 	
+	if not(self.is_mammal) and not(self.isinliquid) then --if not mammal, air suffocation							
+		mobkit.hurt(self, petz.settings.air_damage)	
+	end
+	
 	if mobkit.timer(self, 1) then 
 	
 		local prty = mobkit.get_queue_priority(self)						
-		local pos = self.object:get_pos()
 		local player = mobkit.get_nearby_player(self)
 			
 		if prty < 10 then

@@ -857,7 +857,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 		snodepos.y = snodepos.y+1
 		surfnode = mobkit.nodeatpos(snodepos)
 	end
-	if surface then				-- standing in liquid  --added by petz
+	if surface then				-- standing in liquid
 		self.isinliquid = true
 		local submergence = min(surface-spos.y,self.height)
 		local balance = self.buoyancy*self.height
