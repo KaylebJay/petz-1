@@ -283,25 +283,20 @@ end
 function mobkit.hq_aqua_jump(self, prty, speed_factor)
 	local func = function(self)
 		--minetest.chat_send_player("singleplayer", "test")		
+		local vel_impulse = 5.0
 		local velocity = {
 			x = self.max_speed* speed_factor,
-			y = self.max_speed* speed_factor,
+			y = self.max_speed* speed_factor * vel_impulse,
 			z = self.max_speed* speed_factor,
 		}		
 		mobkit.set_velocity(self, velocity)
-		self.object:set_acceleration({x=0, y=2.0, z=0})
+		self.object:set_acceleration({x=1.0, y=vel_impulse, z=1.0})
 		self.status = "jump"
 		petz.do_sound_effect("object", self.object, "petz_splash")
 		minetest.after(0.5, function(self, velocity)
 				if mobkit.is_alive(self.object) then
-					self.object:set_acceleration({
-						x = velocity.x * 2,
-						y = mobkit.gravity,
-						z = velocity.z * 2						
-					})
 					self.status = ""
 					mobkit.clear_queue_high(self)
-					--minetest.chat_send_player("singleplayer", "stop")
 				end
 			end, self, velocity)
 		return true
