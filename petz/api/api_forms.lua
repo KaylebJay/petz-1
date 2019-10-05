@@ -100,7 +100,7 @@ petz.create_form = function(player_name)
 			tamagochi_form_stuff = tamagochi_form_stuff..
 				"image["..pregnant_icon_x..","..pregnant_icon_y..";1,1;petz_"..pet.type.."_pregnant_icon.png]"..
 				"label["..pregnant_text_x..","..pregnant_text_y..";"..S("Pregnant (")..tostring(pregnant_remain_time).."s)]"
-		elseif pet.is_male == false and pet.pregnant_count <= 0 then
+		elseif pet.is_male == false and pet.pregnant_count and pet.pregnant_count <= 0 then
 			tamagochi_form_stuff = tamagochi_form_stuff..				
 				"label["..infertile_text_x..","..infertile_text_y..";"..S("Infertile").."]"
 		end
