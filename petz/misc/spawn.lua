@@ -22,7 +22,7 @@ minetest.register_globalstep(function(dtime)
 			local ent = minetest.registered_entities[mob_ent_name]
 			-- Note: using a function that just returns false on the first condition that is not met
 			-- might be easier to read than this current implementation
-			can_spawn = true
+			local can_spawn = true
 			if ent then --do several checks to know if the mob can be included in the list or not					
 				if can_spawn and ent.spawn_max_height then --check max_height
 					if spawn_pos.y > ent.spawn_max_height then
