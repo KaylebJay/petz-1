@@ -68,9 +68,9 @@ petz.childbirth = function(self)
 		baby_properties["gen2_mother"] = math.random(1, #self.skin_colors-1)
 	end
 	local baby_type = "petz:"..self.type
-	if self.type == "elephant_female" then
+	if self.type == "elephant" then -- female elephants have "elephant" as type
 		if math.random(1, 2) == 1 then
-			baby_type = "petz:elephant" --could be a baby male elephant
+			baby_type = "petz:elephant_female" --could be a female baby elephant
 		end
 	end
 	local baby = minetest.add_entity(pos, baby_type, minetest.serialize(baby_properties))
