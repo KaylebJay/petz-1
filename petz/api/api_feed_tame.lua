@@ -43,8 +43,8 @@ end
 
 petz.remove_owner = function(self)
 	if self.tag ~= "" then --remove from the list of petz by owner
-		local pets = set_list(petz.petz_list_by_owner)
-		if pets[self] then
+		local pets = petz.petz_list_by_owner[self.owner]
+		if pets and pets[self] then
 			petz.petz_list_by_owner[self] = nil
 		end
 	end
