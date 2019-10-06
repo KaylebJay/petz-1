@@ -42,9 +42,9 @@ assert(loadfile(modpath .. "/misc/spawn.lua"))(modpath, S) --Load the spawn engi
 if minetest.get_modpath("3d_armor") ~= nil then --Armors (optional)
 	assert(loadfile(modpath .. "/misc/armors.lua"))(modpath, S)
 end
-if minetest.get_modpath("awards") ~= nil then	
-	assert(loadfile(modpath .. "/misc/awards.lua"))(modpath, S) --Load the awards
-end
+--if minetest.get_modpath("awards") ~= nil then	
+	--assert(loadfile(modpath .. "/misc/awards.lua"))(modpath, S) --Load the awards
+--end
 
 petz.file_exists = function(name)
    local f = io.open(name,"r")
