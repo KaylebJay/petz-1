@@ -263,28 +263,6 @@ petz.check_if_climb = function(self)
 	end
 end
 
-petz.set_behaviour= function(self, behaviour, fly_in)	
-	if behaviour == "aquatic" then
-		self.behaviour = "aquatic"
-        self.fly = true     
-        self.fly_in = fly_in
-        self.floats = 0
-        self.animation = self.animation_aquatic
-	elseif behaviour == "terrestrial" then
-		self.behaviour = "terrestrial"
-        self.fly = false -- make terrestrial
-        self.floats = 1
-        self.animation = self.animation_terrestrial  
-	elseif behaviour == "arboreal" then
-		self.behaviour = "arboreal"
-        self.fly = true     
-        self.fly_in = fly_in
-        self.floats = 0
-        self.animation = self.animation_arboreal
-        self.object:set_acceleration({x = 0, y = 0.5, z = 0 })
-	end
-end
-
 --
 --Predator Behaviour
 --
@@ -493,7 +471,60 @@ function petz.aquatic_brain(self)
 				if random_number == 1 then
 					--minetest.chat_send_player("singleplayer", "jump")
 					mobkit.clear_queue_high(self)	
-					mobkit.hq_aqua_jump(self, 8, 2.5)
+					mobkit.hq_aqua_jump(self, 8)
+				end
+			end
+		end
+			
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		--Roam default			
+		if mobkit.is_queue_empty_high(self) and not(self.status== "jump") then
+			mobkit.hq_aqua_roam(self, 0, self.max_speed)
+		end		
+	end
+end
+
+--
+--Semiaquatic beahaviour
+--for beaver and frog
+--
+
+function petz.semiaquatic_brain(self)
+	
+	local pos = self.object:get_pos()
+	
+	-- Die Behaviour
+	
+	if self.hp <= 0 then
+		petz.on_die(self)
+		return		
+	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up
+		if minetest.get_node_light(self.object:get_pos(), minetest.get_timeofday()) >= self.max_daylight_level then
+			petz.on_die(self)
+			return
+		end
+	end		
+	
+	if mobkit.timer(self, 1) then 
+	
+		local prty = mobkit.get_queue_priority(self)						
+		local player = mobkit.get_nearby_player(self)
+				
+		if prty < 10 then
+			if player then
+				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
+					if vector.distance(pos, player:get_pos()) <= self.view_range then	-- if player close
+						if self.warn_attack == true then --attack player										
+							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
+							if self.isinliquid then
+								mobkit.hq_aqua_attack(self, 10, puncher, 6)				-- get revenge
+							else
+								mobkit.hq_warn(self, 10, player)
+							end
+						end
+					end
 				end
 			end
 		end
@@ -501,57 +532,19 @@ function petz.aquatic_brain(self)
 		-- Default Random Sound		
 		petz.random_mob_sound(self)
 		
+		if self.petz_type == "beaver" then --beaver's dam
+			petz.create_dam(self, pos)
+		end
+		
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) and not(self.status== "jump") then
-			mobkit.hq_aqua_roam(self, 0, 2.5)
+		if mobkit.is_queue_empty_high(self) then
+			if self.isinliquid then
+				mobkit.hq_aqua_roam(self, 0, self.max_speed)
+			else
+				mobkit.hq_roam(self, 0)
+			end
 		end		
 	end
-end
-
-
-
---
---Semiaquatic beahaviour
---for beaver and frog
---
-
-petz.semiaquatic_behaviour = function(self)
-		local pos = self.object:get_pos() -- check the beaver pos to togle between aquatic-terrestrial
-		local node = minetest.get_node_or_nil(pos)
-		if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water then			
-			if not(self.behaviour == "aquatic") then 
-				petz.set_behaviour(self, "aquatic", node.name)		
-			end
-    		if self.petz_type == "beaver" then --beaver's dam
-				petz.create_dam(self, pos)
-			end
-		else
-			local pos_underwater = { --check if water below (when the mob is still terrestrial but float in the surface of the water)
-            	x = pos.x,
-            	y = pos.y - 3.5,
-            	z = pos.z,
-        	}        	        	
-        	node = minetest.get_node_or_nil(pos_underwater)        	
-        	if node and minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].groups.water
-        		and self.floats == false then
-        			local pos_below = {
-	            		x = pos.x,
-    	        		y = pos.y - 2.0,
-        	    		z = pos.z,
-	        		}
-        			self.object:move_to(pos_below, true) -- move the mob underwater        
-					if not(self.behaviour == "aquatic") then 
-						petz.set_behaviour(self, "aquatic", node.name)
-					end	
-					if self.petz_type == "beaver" then --beaver's dam
-						petz.create_dam(self, pos)
-					end
-        	else
-        	if not(self.behaviour == "terrestrial") then 
-				petz.set_behaviour(self, "terrestrial", nil)
-			end        		
-        	end
-		end 
 end
 
 ---

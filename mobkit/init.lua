@@ -1324,7 +1324,7 @@ function mobkit.hq_attack(self,prty,tgtobj)
 	mobkit.queue_high(self,func,prty)
 end
 
-function mobkit.hq_liquid_recovery(self,prty)	-- scan for nearest land
+function mobkit.hq_liquid_recovery(self, prty)	-- scan for nearest land
 	local radius = 1
 	local yaw = 0
 	local func = function(self)

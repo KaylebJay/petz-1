@@ -280,14 +280,14 @@ end
 ---
 ---Aquatic Brain
 ---
-function mobkit.hq_aqua_jump(self, prty, speed_factor)
+function mobkit.hq_aqua_jump(self, prty)
 	local func = function(self)
 		--minetest.chat_send_player("singleplayer", "test")		
-		local vel_impulse = 5.0
+		local vel_impulse = 4.0
 		local velocity = {
-			x = self.max_speed* speed_factor,
-			y = self.max_speed* speed_factor * vel_impulse,
-			z = self.max_speed* speed_factor,
+			x = self.max_speed * (vel_impulse/3),
+			y = self.max_speed * vel_impulse,
+			z = self.max_speed * (vel_impulse/3),
 		}		
 		mobkit.set_velocity(self, velocity)
 		self.object:set_acceleration({x=1.0, y=vel_impulse, z=1.0})
