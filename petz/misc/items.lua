@@ -253,7 +253,7 @@ minetest.register_craftitem("petz:glass_syringe", {
 })
 
 minetest.register_craftitem("petz:glass_syringe_sperm", {
-    description = S("Glass Syringe with sperm"),
+    description = S("Glass Syringe with seed"),
     inventory_image = "petz_glass_syringe_sperm.png",
     wield_image = "petz_glass_syringe_sperm.png"
 })
