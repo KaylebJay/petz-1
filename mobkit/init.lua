@@ -177,8 +177,7 @@ function mobkit.get_node_height(pos)
 	
 	if node.walkable then
 		if node.drawtype == 'nodebox' then
-			if node.node_box == nil then return nil end  --added by petz
-			if node.node_box.type == 'fixed' then
+			if node.node_box and node.node_box.type == 'fixed' then
 				if type(node.node_box.fixed[1]) == 'number' then
 					return npos.y + node.node_box.fixed[5] ,0, false
 				elseif type(node.node_box.fixed[1]) == 'table' then
@@ -186,7 +185,7 @@ function mobkit.get_node_height(pos)
 				else
 					return npos.y + 0.5,1, false			-- todo handle table of boxes
 				end		
-			elseif node.node_box.type == 'leveled' then
+			elseif node.node_box and node.node_box.type == 'leveled' then
 				return minetest.get_node_level(pos)/64-0.5+mobkit.get_node_pos(pos).y, 0, false
 			else
 				return npos.y + 0.5,1, false	-- the unforeseen
@@ -417,7 +416,7 @@ function mobkit.is_neighbor_node_reachable(self,neighbor)	-- todo: take either n
 	local tpos = mobkit.get_node_pos(mobkit.pos_shift(pos,offset))
 	local node_name = minetest.get_node(tpos).name --added by petz
 	if node_name:find("fence") then return  --added by petz
-		elseif node_name:find("gate") and node_name:find("closed") then return end  --added by petz	
+		elseif node_name:find("gate") and node_name:find("closed") then return end  --added by petz
 	local height, liquidflag = mobkit.get_terrain_height(tpos)
 
 	if height and abs(height-pos.y) <= self.jump_height then
@@ -844,7 +843,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	local surface = nil
 	local snodepos = mobkit.get_node_pos(spos)
 	local surfnode = mobkit.nodeatpos(spos)
-	if mobkit.is_alive(self) and not(self.is_baby) then --added by petz
+		if mobkit.is_alive(self) and not(self.is_baby) then --added by petz
 		local stand_pos = spos --added by petz
 		stand_pos.y = spos.y + 0.5 --added by petz
 		local stand_node_pos = mobkit.get_node_pos(stand_pos) --added by petz
@@ -1324,7 +1323,7 @@ function mobkit.hq_attack(self,prty,tgtobj)
 	mobkit.queue_high(self,func,prty)
 end
 
-function mobkit.hq_liquid_recovery(self, prty)	-- scan for nearest land
+function mobkit.hq_liquid_recovery(self,prty)	-- scan for nearest land
 	local radius = 1
 	local yaw = 0
 	local func = function(self)
@@ -1459,7 +1458,7 @@ function mobkit.hq_aqua_roam(self,prty,speed)
 	local center = self.object:get_pos()
 	local func = function(self)
 		if init then
-			mobkit.animate(self, 'swin') --changed by petz
+			mobkit.animate(self,'def')
 			init = false
 		end
 		local pos = mobkit.get_stand_pos(self)
