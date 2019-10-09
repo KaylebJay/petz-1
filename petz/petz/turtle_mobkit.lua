@@ -51,7 +51,7 @@ minetest.register_entity("petz:"..pet_name,{
 			{range={x=26, y=46}, speed=5, loop=true},
 			{range={x=47, y=59}, speed=5, loop=true},					
 		},			
-		swin = {range={x=101, y=113}, speed=5, loop=true},
+		def = {range={x=101, y=113}, speed=5, loop=true},
 	},
 	
 	brainfunc = petz.semiaquatic_brain,

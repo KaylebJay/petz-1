@@ -89,16 +89,6 @@ function mobkit.hq_wanderfly(self, prty)
 end
 
 function mobkit.dumbstepfly(self)
-	if mobkit.node_name_in(self, "front") ~= "air" then			
-		local yaw = self.object:get_yaw()
-		if yaw then
-			local rotation_integer = math.random(0, 5)
-			local rotation_decimals = math.random()				
-			local new_yaw = yaw + rotation_integer + rotation_decimals
-			self.object:set_yaw(new_yaw)		
-			mobkit.set_velocity(self, self.object:getvelocity())
-		end
-	end
 	mobkit.lq_dumbfly(self, 0.3)	
 end
 
@@ -124,19 +114,14 @@ function mobkit.lq_dumbfly(self, speed_factor)
 		local random_num
 		mobkit.animate(self, 'fly')
 		random_num = math.random(1, 300)
-		if random_num <= 1 then	
+		if random_num <= 1 or mobkit.node_name_in(self, "front") ~= "air" then	
 			local yaw = self.object:get_yaw()
 			if yaw then
 				local rotation_integer = math.random(0, 5)
 				local rotation_decimals = math.random()				
 				local new_yaw = yaw + rotation_integer + rotation_decimals
 				self.object:set_yaw(new_yaw)
-				velocity = {
-					x = self.max_speed* speed_factor,
-					y = self.max_speed* speed_factor,
-					z = self.max_speed* speed_factor,
-				}		
-				mobkit.set_velocity(self, velocity)
+				mobkit.set_velocity(self, self.object:getvelocity())
 			end			
 		end
 		if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz

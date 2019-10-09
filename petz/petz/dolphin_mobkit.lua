@@ -47,7 +47,7 @@ minetest.register_entity("petz:"..pet_name,{
 	max_height = -2,
 		    
 	animation = {
-		swin={range={x=1, y=13}, speed=20, loop=true},			
+		def={range={x=1, y=13}, speed=20, loop=true},			
 		stand={
 			{range={x=13, y=25}, speed=5, loop=true},				
 			{range={x=28, y=43}, speed=5, loop=true},	

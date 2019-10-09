@@ -50,7 +50,7 @@ minetest.register_entity("petz:"..pet_name,{
 		stand={
 			{range={x=0, y=12}, speed=5, loop=true},
 		},	
-		swin = {range={x=39, y=51}, speed=15, loop=true},
+		def = {range={x=39, y=51}, speed=15, loop=true},
 	},
 	sounds = {
 		misc = "petz_frog_croak",

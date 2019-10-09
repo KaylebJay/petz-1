@@ -37,7 +37,7 @@ minetest.register_entity("petz:"..pet_name,{
 	-- api props
 	springiness= 0,
 	buoyancy = 0.5, -- portion of hitbox submerged
-	max_speed = 2,
+	max_speed = 2.5,
 	jump_height = 2.0,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
@@ -53,8 +53,8 @@ minetest.register_entity("petz:"..pet_name,{
 			{range={x=60, y=70}, speed=5, loop=true},		
 			{range={x=71, y=91}, speed=5, loop=true},	
 		},	
-		fly={range={x=92, y=98}, speed=20, loop=true},	
-		stand_fly={range={x=92, y=98}, speed=20, loop=true},	
+		fly={range={x=92, y=98}, speed=25, loop=true},	
+		stand_fly={range={x=92, y=98}, speed=25, loop=true},	
 	},
 	sounds = {
 		misc = "petz_bat_sound",

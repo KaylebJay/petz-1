@@ -54,7 +54,7 @@ minetest.register_entity("petz:"..pet_name,{
 			{range={x=82, y=95}, speed=5, loop=true},
 		},	
 		sit = {range={x=60, y=81}, speed=5, loop=false},
-		swin = {range={x=96, y=116}, speed=25, loop=true},
+		def = {range={x=96, y=116}, speed=25, loop=true},
 	},
 	sounds = {
 		misc = "petz_beaver_sound",
