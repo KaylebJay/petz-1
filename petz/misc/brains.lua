@@ -106,86 +106,78 @@ function mobkit.lq_dumbfly(self, speed_factor)
 	local status = "ascend"
 	speed_factor = speed_factor or 1
 	local func = function(self)
-		timer = timer - self.dtime
-		local vel = self.object:getvelocity()
-		local velocity = {}
-		local mob = self.object
-		local pos = mob:getpos()			
-		local random_num
-		mobkit.animate(self, 'fly')
-		random_num = math.random(1, 300)
-		if random_num <= 1 or mobkit.node_name_in(self, "front") ~= "air" then	
-			local yaw = self.object:get_yaw()
-			if yaw then
-				local rotation_integer = math.random(0, 5)
-				local rotation_decimals = math.random()				
-				local new_yaw = yaw + rotation_integer + rotation_decimals
-				self.object:set_yaw(new_yaw)
-				mobkit.set_velocity(self, self.object:getvelocity())
-			end			
-		end
-		if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz
-			random_num = math.random(1, 100)
-			if random_num < 70 then
-				status = "descend"
-			else
-				status = "stand"
-			end
-		else --check if water below, if yes ascend
-			local node_name = mobkit.node_name_in(self, "below")
-			if minetest.get_item_group(node_name, "water") > 1  then
-				status = "ascend"
-			end
-		end		
-		--local node_name_in_front = mobkit.node_name_in(self, "front")
-		if status == "stand" and timer < 0 then -- stand
-			velocity = {
-				x= vel.x*self.max_speed* speed_factor *2,
-				y= 0,
-				z= vel.z*self.max_speed* speed_factor *2,
-			}
-			mobkit.set_velocity(self, velocity)
-			random_num = math.random(1, 100)
-			if random_num < 20 and mobkit.check_height(self) == false then
-				status = "descend"				
-			elseif random_num < 40 then		
-				status = "ascend"							
-			end		
-			--minetest.chat_send_player("singleplayer", "stand")
-			return true
-		elseif status == "descend"  and timer < 0 then -- descend
-			local y			
-			y = -self.max_speed * speed_factor
-			velocity = {
-				x = self.max_speed* speed_factor,
-				y = y,
-				z = self.max_speed* speed_factor,
-			}
-			mobkit.set_velocity(self, velocity)
-			random_num = math.random(1, 100)
-			if random_num < 20 then
-				status = "stand"
-			elseif random_num < 40 then		
-				status = "ascend"											
-			end
-			--minetest.chat_send_player("singleplayer", "descend")	
-			return true
-		elseif timer < 0 then --ascend					
-			local y
-			y = self.max_speed * speed_factor * 2
-			status = "ascend"
-			velocity ={
-				x = self.max_speed* speed_factor,				
-				y = y,
-				z = self.max_speed* speed_factor,
-			}
-			--minetest.chat_send_player("singleplayer", tostring(velocity.x))
-			mobkit.set_velocity(self, velocity)
-			--minetest.chat_send_player("singleplayer", "ascend")
-			return true
-		end
+		timer = timer - self.dtime		
 		if timer < 0 then
+			--minetest.chat_send_player("singleplayer", tostring(timer))		
+			local velocity = self.object:getvelocity()
+			local mob = self.object
+			local pos = mob:getpos()					
+			mobkit.animate(self, 'fly')
+			local random_num = math.random(1, 5)
+			if random_num <= 1 or mobkit.node_name_in(self, "front") ~= "air" then	
+				local yaw = self.object:get_yaw()
+				if yaw then
+					--minetest.chat_send_player("singleplayer", "test")	
+					local rotation_integer = math.random(0, 5)
+					local rotation_decimals = math.random()				
+					local new_yaw = yaw + rotation_integer + rotation_decimals
+					self.object:set_yaw(new_yaw)				
+				end			
+			end
+			if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz
+				random_num = math.random(1, 100)
+				if random_num < 70 then
+					status = "descend"
+				else
+					status = "stand"
+				end
+			else --check if water below, if yes ascend
+				local node_name = mobkit.node_name_in(self, "below")
+				if minetest.get_item_group(node_name, "water") > 1  then
+					status = "ascend"
+				end
+			end	
+			--minetest.chat_send_player("singleplayer", status)		
+			--local node_name_in_front = mobkit.node_name_in(self, "front")
+			if status == "stand" then -- stand
+				velocity = {
+					x= self.max_speed* speed_factor *2,
+					y= 0.0,
+					z= self.max_speed* speed_factor *2,
+				}
+				random_num = math.random(1, 100)
+				if random_num < 20 and mobkit.check_height(self) == false then
+					status = "descend"				
+				elseif random_num < 40 then		
+					status = "ascend"							
+				end		
+				--minetest.chat_send_player("singleplayer", "stand")			
+			elseif status == "descend" then -- descend				
+				velocity = {
+					x = self.max_speed* speed_factor,
+					y = -self.max_speed * speed_factor,
+					z = self.max_speed* speed_factor,
+				}
+				random_num = math.random(1, 100)
+				if random_num < 20 then
+					status = "stand"
+				elseif random_num < 40 then		
+					status = "ascend"											
+				end
+				--minetest.chat_send_player("singleplayer", "descend")	
+			elseif status == "ascend" then --ascend			
+				status = "ascend"
+				velocity ={
+					x = self.max_speed* speed_factor,				
+					y = self.max_speed * speed_factor * 2,
+					z = self.max_speed* speed_factor,
+				}
+				--minetest.chat_send_player("singleplayer", tostring(velocity.x))
+				--minetest.chat_send_player("singleplayer", "ascend")			
+			end		
 			timer = 3
+			mobkit.set_velocity(self, velocity)
+			return true
 		end
 	end
 	mobkit.queue_low(self,func)
@@ -209,6 +201,19 @@ function mobkit.lq_fly(self)
 		self.object:set_acceleration({ x = 0, y = 1, z = 0 })
 	end
 	mobkit.queue_low(self,func)
+end
+
+
+function mobkit.hq_liquid_recovery_flying(self, prty)	
+	local func=function(self)		
+		self.object:set_acceleration({ x = 0.0, y = 0.125, z = 0.0 })
+		self.object:set_velocity({ x = 1.0, y = 1.0, z = 1.0 })
+		if self.isinliquid == false then			
+			self.object:set_acceleration({ x = 0.0, y = 0.0, z = 0.0 })
+			return true
+		end
+	end
+	mobkit.queue_high(self, func, prty)
 end
 
 --

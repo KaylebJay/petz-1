@@ -95,9 +95,16 @@ function petz.herbivore_brain(self)
 	
 		local prty = mobkit.get_queue_priority(self)		
 		
-		if prty < 20 and self.isinliquid then
-			mobkit.hq_liquid_recovery(self, 20)
-			return
+		if prty < 20 then
+			if self.isinliquid then
+				if not(self.can_fly) then
+					mobkit.hq_liquid_recovery(self, 20)				
+					return
+				else
+					mobkit.hq_liquid_recovery_flying(self, 20)		
+					return
+				end
+			end
 		end
 		
 		local player = mobkit.get_nearby_player(self)
