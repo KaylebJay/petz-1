@@ -28,25 +28,13 @@ Add (or edit if existed) the following line to "Kitty Specific":
 
 kitty_preys = petz:mouse
 
-2. Edit the 'settings.lua' file.
-
-Add at the end:
-
-petz.settings.mouse_spawn = settings:get_bool("mouse_spawn", true)
-petz.settings.mouse_spawn_chance = tonumber(settings:get("mouse_spawn_chance"))
-petz.settings.mouse_spawn_nodes = settings:get("mouse_spawn_nodes", "")
-petz.settings.mouse_spawn_biome = settings:get("mouse_spawn_biome", "default")
-petz.settings.mouse_follow = settings:get("mouse_follow", "")
-petz.settings.mouse_preys = settings:get("mouse_preys", "")
-petz.settings.kitty_preys = settings:get("kitty_preys", "")
-
-3. Create a petz file where the petz will be defined.
+2. Create a petz file where the petz will be defined.
 
 But it is better to take an old already created one as template.
 The better for mouse is piggy: no tamagochi, no orders.
 Open 'piggy_mobkit.lua' and save as 'mouse_mobkit.lua'
 
-4. Edit the 'mouse_mobkit.lua'.
+3. Edit the 'mouse_mobkit.lua'.
 
 - Firstly you have to replace all the 'piggy' coincidences to 'mouse'
 With the aid of you text editor replace:
@@ -58,9 +46,9 @@ PIGGY -> MOUSE
 
 - scale_model, mesh, textures, collisionbox, etc.
 
-5. Save the 'mouse_mobkit.lua'
+4. Save the 'mouse_mobkit.lua'
 
-6. ¡DONE!
+5. ¡DONE!
 
 ###Extra
 

@@ -236,7 +236,7 @@ minetest.register_node("petz:wool_vanilla", {
 })
 minetest.register_alias("wool:vanilla", "petz:wool_vanilla")
 
---Parrot Stand
+--Bird Stand
 
 minetest.register_node("petz:bird_stand", {
     description = S("Bird Stand"),  
@@ -268,20 +268,28 @@ minetest.register_node("petz:bird_stand", {
 		local obj_list = minetest.get_objects_inside_radius(pos_above, 1) --check if already a parrot
 		for _, obj in ipairs(obj_list) do
 			local entity = obj:get_luaentity()
-			if entity and entity.name == "petz:parrot" then						
-				minetest.chat_send_player(player_name, S("There's already a parrot on top."))
+			if entity and (entity.name == "petz:parrot" or entity.name == "petz:toucan") then						
+				minetest.chat_send_player(player_name, S("There's already a bird on top."))
 				return
 			end
 		end					
-		local pet_name_egg = "petz:parrot_set"		
-		if itemstack:get_name() == pet_name_egg then			
+		local itemstack_name = itemstack:get_name()
+		if itemstack_name == "petz:parrot_set" or itemstack_name == "petz:toucan_set" then			
 			if not minetest.is_protected(pos, player_name) then
-				pos = {
-					x = pos.x,
-					y = pos.y + 1,
-					z = pos.z - 0.125,
-				}
-				ent = petz.create_pet(player, itemstack, "petz:parrot", pos)
+				if itemstack_name == "petz:parrot_set" then
+					pos = {
+						x = pos.x,
+						y = pos.y + 1,
+						z = pos.z - 0.125,
+					}
+				else --toucan
+					pos = {
+						x = pos.x - 0.0625,
+						y = pos.y + 1,
+						z = pos.z + 0.0625,
+					}		
+				end
+				ent = petz.create_pet(player, itemstack, itemstack_name:sub(1, -5) , pos)
 				petz.standhere(ent)
 			end
 			return itemstack

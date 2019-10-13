@@ -118,7 +118,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				local yaw = self.object:get_yaw()
 				if yaw then
 					--minetest.chat_send_player("singleplayer", "test")	
-					local rotation_integer = math.random(0, 5)
+					local rotation_integer = math.random(0, 4)
 					local rotation_decimals = math.random()				
 					local new_yaw = yaw + rotation_integer + rotation_decimals
 					self.object:set_yaw(new_yaw)				
