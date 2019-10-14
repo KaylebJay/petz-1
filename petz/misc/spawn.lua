@@ -17,13 +17,17 @@ minetest.register_globalstep(function(dtime)
 		local node = minetest.get_node(pos_below) --the node below the spawn pos
 		local candidates_list = {} --Create a sublist of the petz with the same node to spawnand between max_height and min_height	
 		for i = 1, #petz.petz_list do
-			local mob_ent_name = "petz:"..petz.petz_list[i]
+			local pet_name = petz.petz_list[i]
+			local mob_ent_name = "petz:"..pet_name
 			--minetest.chat_send_player("singleplayer", mob_ent_name)	
 			local ent = minetest.registered_entities[mob_ent_name]
 			-- Note: using a function that just returns false on the first condition that is not met
 			-- might be easier to read than this current implementation
 			local can_spawn = true
-			if ent then --do several checks to know if the mob can be included in the list or not					
+			if ent then --do several checks to know if the mob can be included in the list or not		
+				if can_spawn and petz.settings[pet_name.."_spawn"] == false then
+					can_spawn = false
+				end
 				if can_spawn and ent.spawn_max_height then --check max_height
 					if spawn_pos.y > ent.spawn_max_height then
 						can_spawn = false
