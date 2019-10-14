@@ -40,7 +40,7 @@ petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "
 --Mobs Specific
 for i = 1, #petz.petz_list do --load the settings
 	local petz_type = petz.petz_list[i]
-	petz.settings[petz_type.."_spawn"]  = settings:get_bool(petz_type.."_spawn", true)
+	petz.settings[petz_type.."_spawn"]  = settings:get_bool(petz_type.."_spawn", false)
 	petz.settings[petz_type.."_spawn_chance"]  = tonumber(settings:get(petz_type.."_spawn_chance")) or 0.0
 	petz.settings[petz_type.."_spawn_nodes"]  = settings:get(petz_type.."_spawn_nodes", "")	
 	petz.settings[petz_type.."_spawn_biome"]  = settings:get(petz_type.."_spawn_biome", "default")
