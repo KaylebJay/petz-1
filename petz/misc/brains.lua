@@ -310,7 +310,16 @@ function mobkit.lq_search_flower(self, tpos)
 	local func = function(self)				
 		local pos = self.object:get_pos() --pos of the petz	
 		local dir = vector.direction(pos, tpos)
-		mobkit.set_velocity(self, dir)
+		local velocity = {
+			x= self.max_speed* dir.x,
+			y= self.max_speed* dir.y,
+			z= self.max_speed* dir.z,
+		}
+		minetest.chat_send_player("singleplayer", tostring(pos.x)..", "..tostring(pos.y)..", "..tostring(pos.z))	
+		minetest.chat_send_player("singleplayer", tostring(tpos.x)..", "..tostring(tpos.y)..", "..tostring(tpos.z))	
+		local new_yaw = minetest.dir_to_yaw(dir)
+		self.object:set_yaw(new_yaw)	
+		mobkit.set_velocity(self, velocity)
 		if vector.distance(pos, tpos) <=1 then		
 			self.pollen = true
 			return true
