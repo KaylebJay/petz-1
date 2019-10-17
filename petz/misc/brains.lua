@@ -300,7 +300,10 @@ end
 ---
 
 function mobkit.hq_gotopollen(self, prty, tpos)
-	local func = function(self)
+	local func = function(self)	
+		if self.pollen == true then
+			return true
+		end
 		mobkit.lq_search_flower(self, tpos)
 	end
 	mobkit.queue_high(self, func, prty)
@@ -308,20 +311,11 @@ end
 
 function mobkit.lq_search_flower(self, tpos)
 	local func = function(self)				
-		local pos = self.object:get_pos() --pos of the petz	
-		local dir = vector.direction(pos, tpos)
-		local velocity = {
-			x= self.max_speed* dir.x,
-			y= self.max_speed* dir.y,
-			z= self.max_speed* dir.z,
-		}
-		minetest.chat_send_player("singleplayer", tostring(pos.x)..", "..tostring(pos.y)..", "..tostring(pos.z))	
-		minetest.chat_send_player("singleplayer", tostring(tpos.x)..", "..tostring(tpos.y)..", "..tostring(tpos.z))	
-		local new_yaw = minetest.dir_to_yaw(dir)
-		self.object:set_yaw(new_yaw)	
-		mobkit.set_velocity(self, velocity)
-		if vector.distance(pos, tpos) <=1 then		
+		if mobkit.drive_to_pos(self, tpos, 2.5, 6.0, 0.3) then
 			self.pollen = true
+			mobkit.set_velocity(self, {x= 0, y= 0, z= 0})	
+			petz.do_particles_effect(self.object, self.object:get_pos(), "pollen")		
+			--minetest.chat_send_player("singleplayer", "test")	
 			return true
 		end
 	end

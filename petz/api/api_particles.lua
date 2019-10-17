@@ -51,6 +51,11 @@ petz.do_particles_effect = function(obj, pos, particle_type)
         particles_amount = 15
         min_size = 1.0
 		max_size = 2.0 
+	elseif particle_type == "pollen" then
+        texture_name = "petz_pollen_particle.png"
+        particles_amount = 15
+        min_size = 1.0
+		max_size = 2.0 
     end
     minetest.add_particlespawner({
         --attached = obj,

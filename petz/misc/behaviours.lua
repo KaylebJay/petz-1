@@ -403,8 +403,8 @@ function petz.bee_brain(self)
 		if prty < 4 and self.pollen == true then
 			local view_range = self.view_range
 			local nearby_beehives = minetest.find_nodes_in_area(
-				{x = pos.x - view_range, y = pos.y - 1, z = pos.z - view_range},
-				{x = pos.x + view_range, y = pos.y + 1, z = pos.z + view_range},
+				{x = pos.x - view_range, y = pos.y - view_range, z = pos.z - view_range},
+				{x = pos.x + view_range, y = pos.y + view_range, z = pos.z + view_range},
 				{"petz:pet_behive"})
 			if #nearby_beehives >= 1 then		
 				local tpos = 	nearby_nodes[1] --the first match

@@ -765,6 +765,7 @@ function mobkit.actfunc(self, staticdata, dtime_s)
 	self.pos_history = {}
 	self.path_dir = 1
 	self.time_total = 0
+	self.water_drag = self.water_drag or 1
 
 	local sdata = minetest.deserialize(staticdata)
 	if sdata then 
@@ -792,7 +793,8 @@ function mobkit.actfunc(self, staticdata, dtime_s)
 	end
 
 --hp
-	self.hp = self.hp or (self.max_hp or 10)
+	self.max_hp = self.max_hp or 10
+	self.hp = self.hp or self.max_hp
 --armor
 	if type(self.armor_groups) ~= 'table' then
 		self.armor_groups={}
@@ -820,7 +822,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	end
 	
 	-- dumb friction
-	if self.isonground and not(self.can_fly) then  --added by petz
+	if self.isonground and not self.isinliquid and not(self.can_fly) then  --added by petz	
 		self.object:set_velocity({x= vel.x> 0.2 and vel.x*mobkit.friction or 0,
 								y=vel.y,
 								z=vel.z > 0.2 and vel.z*mobkit.friction or 0})
@@ -870,7 +872,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 				z = stand_pos.z --added by petz
 			}) --added by petz
 		end --added by petz
-	end --added by petz
+	end --added by petz	
 	while surfnode and surfnode.drawtype == 'liquid' do
 		surface = snodepos.y+0.5
 		if surface > spos.y+self.height then break end
@@ -882,7 +884,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 		local submergence = min(surface-spos.y,self.height)
 		local balance = self.buoyancy*self.height
 		local buoyacc = mobkit.gravity*((balance - submergence)^2/balance^2*sign(balance - submergence))
-		self.object:set_acceleration({x=-vel.x,y=buoyacc-vel.y*abs(vel.y)*0.7,z=-vel.z})
+		self.object:set_acceleration({x=-vel.x*self.water_drag,y=buoyacc-vel.y*abs(vel.y)*0.7,z=-vel.z*self.water_drag})
 	else
 		self.isinliquid = false
 		if not(self.can_fly) then  --added by petz
@@ -929,7 +931,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 		end
 
 		
-		self:sensefunc()
+		if self.view_range then self:sensefunc() end
 		self:brainfunc()
 		execute_queues(self)
 	end
@@ -1067,6 +1069,7 @@ end
 
 function mobkit.lq_jumpattack(self,height,target)
 	local phase=1		
+	local tgtbox = target:get_properties().collisionbox
 	local func=function(self)
 		if not mobkit.is_alive(target) then return true end
 		if self.isonground then
@@ -1087,15 +1090,14 @@ function mobkit.lq_jumpattack(self,height,target)
 			self.object:set_velocity(dir)
 			phase=3
 		elseif phase==3 then	-- in air
-			local twidth = target:get_properties().collisionbox[1]
+			local tgtpos = target:get_pos()
 			local pos = self.object:get_pos()
 			-- calculate attack spot
-			local dir = minetest.yaw_to_dir(self.object:get_yaw())
-			dir2 = vector.add(dir,self.attack.range+twidth)
-			local apos = vector.add(pos,dir2)
---			local tpos = mobkit.get_stand_pos(target) 						--test
---			tpos.y = tpos.y+height
-			if mobkit.isnear2d(apos,target:get_pos(),0.25) then	--bite
+			local yaw = self.object:get_yaw()
+			local dir = minetest.yaw_to_dir(yaw)
+			local apos = mobkit.pos_translate2d(pos,yaw,self.attack.range)
+
+			if mobkit.is_pos_in_box(apos,tgtpos,tgtbox) then	--bite
 				target:punch(self.object,1,self.attack)
 					-- bounce off
 				local vy = self.object:get_velocity().y
