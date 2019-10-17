@@ -102,7 +102,7 @@ end
 --than descend, cos this does the mobs stand on air, and climb mountains and trees.
 
 function mobkit.lq_dumbfly(self, speed_factor)
-	local timer = 3
+	local timer = petz.settings.fly_check_time
 	local status = "ascend"
 	speed_factor = speed_factor or 1
 	local func = function(self)
@@ -175,7 +175,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				--minetest.chat_send_player("singleplayer", tostring(velocity.x))
 				--minetest.chat_send_player("singleplayer", "ascend")			
 			end		
-			timer = 3
+			timer = petz.settings.fly_check_time
 			mobkit.set_velocity(self, velocity)
 			return true
 		end
@@ -304,19 +304,61 @@ function mobkit.hq_gotopollen(self, prty, tpos)
 		if self.pollen == true then
 			return true
 		end
+		if mobkit.node_name_in(self, "front") ~= "air" then	
+			if mobkit.node_name_in(self, "top") == "air" then
+				mobkit.set_velocity(self, {x= 0, y= 1.0, z= 0})	
+			else
+				return true
+			end
+		end
 		mobkit.lq_search_flower(self, tpos)
 	end
 	mobkit.queue_high(self, func, prty)
 end
 
 function mobkit.lq_search_flower(self, tpos)
-	local func = function(self)				
-		if mobkit.drive_to_pos(self, tpos, 2.5, 6.0, 0.3) then
+	local func = function(self)		
+		if mobkit.drive_to_pos(self, tpos, 2.5, 6.28, 0.3) then
 			self.pollen = true
-			mobkit.set_velocity(self, {x= 0, y= 0, z= 0})	
+			mobkit.set_velocity(self, {x= 0, y= -0.2, z= 0})
+			minetest.after(petz.settings.fly_check_time, function(self)
+				if mobkit.is_alive(self) then
+					mobkit.set_velocity(self, {x= 0, y= 0, z= 0})
+				end
+			end, self)	
 			petz.do_particles_effect(self.object, self.object:get_pos(), "pollen")		
 			--minetest.chat_send_player("singleplayer", "test")	
 			return true
+		end
+	end
+	mobkit.queue_low(self, func)
+end
+
+function mobkit.hq_gotobehive(self, prty)
+	local func = function(self)	
+		if self.pollen == false then
+			return true
+		end
+		if mobkit.node_name_in(self, "front") ~= "air" then	
+			if mobkit.node_name_in(self, "top") == "air" then
+				mobkit.set_velocity(self, {x= 0, y= 1.0, z= 0})	
+			else
+				return true
+			end
+		end
+		mobkit.lq_search_behive(self)
+	end
+	mobkit.queue_high(self, func, prty)
+end
+
+function mobkit.lq_search_behive(self)
+	local func = function(self)		
+		local tpos = self.behive
+		if mobkit.drive_to_pos(self, tpos, 2.5, 6.28, 0.3) then
+			self.object:remove()
+			local meta = minetest.get_meta(tpos)
+			local bee_count = meta:get_int("bee_count") or 0
+			meta:set_int("bee_count", bee_count + 1)
 		end
 	end
 	mobkit.queue_low(self, func)

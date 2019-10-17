@@ -865,12 +865,15 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 		stand_pos.y = spos.y + 0.5 --added by petz
 		local stand_node_pos = mobkit.get_node_pos(stand_pos) --added by petz
 		local stand_node = mobkit.nodeatpos(stand_node_pos) --added by petz
-		if stand_node and stand_node.walkable and stand_node.drawtype == "normal" then 	-- if standing inside solid block then jump to escape --added by petz
-			self.object:set_pos({ --added by petz
-				x = stand_pos.x, --added by petz
-				y = stand_pos.y + self.jump_height, --added by petz
-				z = stand_pos.z --added by petz
-			}) --added by petz
+		if stand_node and stand_node.walkable and stand_node.drawtype == "normal" then -- if standing inside solid block then jump to escape --added by petz
+			local new_y = stand_pos.y + self.jump_height --added by petz
+			if new_y <= 30927 then --added by petz
+				self.object:set_pos({ --added by petz
+					x = stand_pos.x, --added by petz
+					y = new_y, --added by petz
+					z = stand_pos.z --added by petz
+				}) --added by petz
+			end --added by petz
 		end --added by petz
 	end --added by petz	
 	while surfnode and surfnode.drawtype == 'liquid' do
@@ -888,7 +891,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	else
 		self.isinliquid = false
 		if not(self.can_fly) then  --added by petz
-			self.object:set_acceleration({x=0,y=mobkit.gravity,z=0})
+			self.object:set_acceleration({x=0,y=mobkit.gravity,z=0}) --added by petz
 		end  --added by petz
 	end
 	

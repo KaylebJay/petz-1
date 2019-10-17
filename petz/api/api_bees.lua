@@ -43,7 +43,7 @@ minetest.register_node("petz:beehive", {
 				if spawn_bee_pos then
 					local bee = minetest.add_entity(spawn_bee_pos, "petz:bee")	
 					local bee_entity = bee:get_luaentity()
-					bee_entity.behive = pos
+					bee_entity.behive = mobkit.remember(bee_entity, "behive", pos)
 					meta:set_int("bee_count", bee_count - 1)
 				end
 			end

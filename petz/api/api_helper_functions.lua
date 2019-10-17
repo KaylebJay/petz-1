@@ -42,3 +42,11 @@ end
 petz.str_is_empty = function(str)
 	return str == nil or str == ''
 end
+
+petz.is_pos_nan = function(pos)
+	if minetest.is_nan(pos.x) or minetest.is_nan(pos.y) or minetest.is_nan(pos.z) then
+		return true
+	else
+		return false
+	end
+end

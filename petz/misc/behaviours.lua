@@ -27,7 +27,7 @@ end
 
 function petz.bh_start_follow(self, pos, player, prty)
 	if player then
-		local wielded_item_name = player:get_wielded_item():get_name()					
+		local wielded_item_name = player:get_wielded_item():get_name()	
 		if wielded_item_name == self.follow and vector.distance(pos, player:get_pos()) <= self.view_range then 
 			self.status = mobkit.remember(self, "status", "follow")
 			mobkit.hq_follow(self, prty, player)
@@ -331,6 +331,9 @@ function petz.predator_brain(self)
 		if prty < 10 then
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
+					if petz.is_pos_nan(player:get_pos()) then
+						return
+					end
 					if vector.distance(pos, player:get_pos()) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.hq_warn(self, 10, player) -- try to repel them
@@ -399,24 +402,13 @@ function petz.bee_brain(self)
 			end			
 		end	
 							
-		--search for a petz:behive		
+		--search for the bee behive		
 		if prty < 4 and self.pollen == true then
-			local view_range = self.view_range
-			local nearby_beehives = minetest.find_nodes_in_area(
-				{x = pos.x - view_range, y = pos.y - view_range, z = pos.z - view_range},
-				{x = pos.x + view_range, y = pos.y + view_range, z = pos.z + view_range},
-				{"petz:pet_behive"})
-			if #nearby_beehives >= 1 then		
-				local tpos = 	nearby_nodes[1] --the first match
-				local distance = vector.distance(pos, tpos)
-				if distance > 2 then					
-					mobkit.hq_goto(self, 4, tpos)		
-				elseif distance <=2 then
-					if (petz.settings.tamagochi_mode == true) and (self.fed == false) then
-						petz.do_feed(self)
-					end
-				end				
-			end			
+			if self.behive and minetest.get_node_or_nil(self.behive)	then ---if behive defined and exits in the pos
+				if vector.distance(pos, self.behive) <= 12 then				
+					mobkit.hq_gotobehive(self, 4)	
+				end
+			end
 		end		
 		
 		-- Default Random Sound		
@@ -462,6 +454,9 @@ function petz.aquatic_brain(self)
 		if prty < 10 then
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
+					if petz.is_pos_nan(player:get_pos()) then
+						return
+					end
 					if vector.distance(pos, player:get_pos()) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
@@ -522,6 +517,9 @@ function petz.semiaquatic_brain(self)
 		if prty < 10 then
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
+					if petz.is_pos_nan(player:get_pos()) then
+						return
+					end
 					if vector.distance(pos, player:get_pos()) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing

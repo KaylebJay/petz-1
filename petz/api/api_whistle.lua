@@ -78,7 +78,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local pet_pos = {
 				x = pos_front_player.x,
 				y = pos_front_player.y + 1,
-				z =pos_front_player.z,
+				z = pos_front_player.z,
 			}
 			pet.object:set_pos(pet_pos)
 			minetest.close_formspec(player_name, "petz:form_whistle")
