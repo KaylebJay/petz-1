@@ -1,5 +1,18 @@
 local modpath, S = ...
 
+petz.set_infotext_behive = function(meta, honey_count, bee_count)
+	meta:set_string("infotext", S("Honey")..": "..tostring(honey_count) .." | "..S("Bees")..": "..tostring(bee_count))
+end
+
+petz.behive_exists = function(self)
+	if self.behive and minetest.get_node_or_nil(self.behive).name == "petz:beehive" then
+		return true
+	else
+		self.behive = nil
+		return false
+	end
+end
+
 petz.spawn_bee_pos = function(pos)	--Check a pos close to a behive to spawn a bee
 	local pos_1 = {
 		x = pos.x - 1,
@@ -44,7 +57,10 @@ minetest.register_node("petz:beehive", {
 					local bee = minetest.add_entity(spawn_bee_pos, "petz:bee")	
 					local bee_entity = bee:get_luaentity()
 					bee_entity.behive = mobkit.remember(bee_entity, "behive", pos)
-					meta:set_int("bee_count", bee_count - 1)
+					bee_count = bee_count - 1
+					meta:set_int("bee_count", bee_count)
+					local honey_count = meta:get_int("honey_count") or 0	
+					petz.set_infotext_behive(meta, honey_count, bee_count)
 				end
 			end
 		end

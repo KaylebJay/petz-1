@@ -390,7 +390,7 @@ function petz.bee_brain(self)
 		local player = mobkit.get_nearby_player(self)
 			
 		--search for flowers
-		if prty < 6 and not(self.pollen) then
+		if prty < 6 and not(self.pollen) and petz.behive_exists(self) then
 			local view_range = self.view_range
 			local nearby_flowers = minetest.find_nodes_in_area(
 				{x = pos.x - view_range, y = pos.y - 1, z = pos.z - view_range},
@@ -403,11 +403,9 @@ function petz.bee_brain(self)
 		end	
 							
 		--search for the bee behive		
-		if prty < 4 and self.pollen == true then
-			if self.behive and minetest.get_node_or_nil(self.behive)	then ---if behive defined and exits in the pos
-				if vector.distance(pos, self.behive) <= 12 then				
-					mobkit.hq_gotobehive(self, 4)	
-				end
+		if prty < 4 and self.pollen == true and petz.behive_exists(self) then
+			if vector.distance(pos, self.behive) <= 12 then				
+				mobkit.hq_gotobehive(self, 4)	
 			end
 		end		
 		

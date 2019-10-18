@@ -1,3 +1,5 @@
+local modpath, S = ...
+
 --
 -- FLY BRAIN
 --
@@ -355,10 +357,18 @@ function mobkit.lq_search_behive(self)
 	local func = function(self)		
 		local tpos = self.behive
 		if mobkit.drive_to_pos(self, tpos, 2.5, 6.28, 0.3) then
-			self.object:remove()
-			local meta = minetest.get_meta(tpos)
-			local bee_count = meta:get_int("bee_count") or 0
-			meta:set_int("bee_count", bee_count + 1)
+			if petz.behive_exists(self) then
+				self.object:remove()
+				local meta = minetest.get_meta(tpos)
+				local bee_count = meta:get_int("bee_count") or 0
+				bee_count = bee_count + 1
+				meta:set_int("bee_count", bee_count)
+				local honey_count = meta:get_int("honey_count") or 0
+				honey_count = honey_count + 1
+				meta:set_int("honey_count", honey_count)
+				petz.set_infotext_behive(meta, honey_count, bee_count)											
+			end
+			self.pollen = false			
 		end
 	end
 	mobkit.queue_low(self, func)
