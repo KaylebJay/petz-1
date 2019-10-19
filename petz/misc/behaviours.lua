@@ -38,6 +38,14 @@ function petz.bh_start_follow(self, pos, player, prty)
 	end
 end
 
+function petz.bh_env_damage(self, prty)
+	local stand_pos= mobkit.get_stand_pos(self)
+	if petz.env_damage(self, stand_pos)	== true then
+		local air_pos = minetest.find_node_near(stand_pos, self.view_range, "air", false)
+		mobkit.hq_goto(self, prty, air_pos)
+	end
+end
+
 function petz.bh_stop_follow(self, player)
 	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()
@@ -91,9 +99,13 @@ function petz.herbivore_brain(self)
 	
 	if mobkit.timer(self, 1) then 
 	
-		petz.env_damage(self) --enviromental damage: lava, fire...
+		--petz.env_damage(self) 
 	
-		local prty = mobkit.get_queue_priority(self)		
+		local prty = mobkit.get_queue_priority(self)	
+			
+		if prty < 30 then
+			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+		end
 		
 		if prty < 20 then
 			if self.isinliquid then
@@ -280,11 +292,9 @@ function petz.predator_brain(self)
 		petz.on_die(self)
 		return	
 	end
-	
+			
 	if mobkit.timer(self, 1) then 
-	
-		petz.env_damage(self) --enviromental damage: lava, fire...
-	
+		
 		local prty = mobkit.get_queue_priority(self)		
 		
 		if prty < 20 and self.isinliquid then
@@ -294,6 +304,10 @@ function petz.predator_brain(self)
 		
 		local pos = self.object:get_pos() --pos of the petz		
 		local player = mobkit.get_nearby_player(self) --get the player close
+		
+		if prty < 30 then
+			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+		end
 			
 		--Follow Behaviour					
 		if prty < 16 then
@@ -365,19 +379,25 @@ end
 
 function petz.bee_brain(self)
 	
-	if self.hp <= 0 then
+	if (self.hp <= 0) or (not(self.queen) and not(petz.behive_exists(self))) then		
 		petz.on_die(self) -- Die Behaviour
 		return		
-	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up
-		if minetest.get_node_light(self.object:get_pos(), minetest.get_timeofday()) >= self.max_daylight_level then
-			petz.on_die(self)
+	elseif (petz.is_night() and not(self.queen)) then --all the bees sleep in their beehive
+		if petz.behive_exists(self) then
+			local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
+			bee_count = bee_count + 1
+			meta:set_int("bee_count", bee_count)
+			if self.pollen == true and (honey_count < petz.settings.max_honey_behive) then
+				honey_count = honey_count + 1
+				meta:set_int("honey_count", honey_count)
+			end
+			petz.set_infotext_behive(meta, honey_count, bee_count)				
+			self.object:remove()
 			return
 		end
 	end			
 	
 	if mobkit.timer(self, 1) then 
-	
-		petz.env_damage(self) --enviromental damage: lava, fire...
 	
 		local prty = mobkit.get_queue_priority(self)		
 		
@@ -388,26 +408,46 @@ function petz.bee_brain(self)
 		
 		local pos = self.object:get_pos()
 		local player = mobkit.get_nearby_player(self)
+		local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
+			
+		if prty < 30 then
+			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+		end
 			
 		--search for flowers
-		if prty < 6 and not(self.pollen) and petz.behive_exists(self) then
+		if prty < 20 and not(self.queen) and not(self.pollen) and (honey_count < petz.settings.max_honey_behive) then
 			local view_range = self.view_range
 			local nearby_flowers = minetest.find_nodes_in_area(
-				{x = pos.x - view_range, y = pos.y - 1, z = pos.z - view_range},
-				{x = pos.x + view_range, y = pos.y + 1, z = pos.z + view_range},
+				{x = pos.x - view_range, y = pos.y - view_range, z = pos.z - view_range},
+				{x = pos.x + view_range, y = pos.y + view_range, z = pos.z + view_range},
 				{"group:flower"})
 			if #nearby_flowers >= 1 then	
 				local tpos = 	nearby_flowers[1] --the first match	
-				mobkit.hq_gotopollen(self, 6, tpos)		
+				mobkit.hq_gotopollen(self, 20, tpos)		
 			end			
 		end	
 							
-		--search for the bee behive		
-		if prty < 4 and self.pollen == true and petz.behive_exists(self) then
-			if vector.distance(pos, self.behive) <= 12 then				
-				mobkit.hq_gotobehive(self, 4)	
+		--search for the bee behive when pollen
+		if prty < 18 and not(self.queen) and self.pollen == true and (honey_count < petz.settings.max_honey_behive) then
+			if vector.distance(pos, self.behive) <= self.view_range then				
+				mobkit.hq_gotobehive(self, 18, pos)	
 			end
 		end		
+	
+		--stay close behive
+		if prty < 15 and not(self.queen) then		
+			if math.abs(pos.x - self.behive.x) > self.view_range and math.abs(pos.z - self.behive.z) > self.view_range then				
+				mobkit.hq_approach_behive(self, pos, 15)	
+			end
+		end
+		
+		if prty < 13 and self.queen == true then --if queen try to create a colony (beehive)
+			local node_name = mobkit.node_name_in(self, "front")	
+			if minetest.get_item_group(node_name, "wood") > 0 or minetest.get_item_group(node_name, "leaves") > 0 then
+				minetest.set_node(pos, {name= "petz:beehive"})				
+				self.object:remove()
+			end
+		end
 		
 		-- Default Random Sound		
 		petz.random_mob_sound(self)

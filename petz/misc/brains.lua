@@ -313,6 +313,7 @@ function mobkit.hq_gotopollen(self, prty, tpos)
 				return true
 			end
 		end
+		mobkit.animate(self, "fly")
 		mobkit.lq_search_flower(self, tpos)
 	end
 	mobkit.queue_high(self, func, prty)
@@ -320,27 +321,29 @@ end
 
 function mobkit.lq_search_flower(self, tpos)
 	local func = function(self)		
-		if mobkit.drive_to_pos(self, tpos, 2.5, 6.28, 0.3) then
-			self.pollen = true
-			mobkit.set_velocity(self, {x= 0, y= -0.2, z= 0})
-			minetest.after(petz.settings.fly_check_time, function(self)
-				if mobkit.is_alive(self) then
-					mobkit.set_velocity(self, {x= 0, y= 0, z= 0})
-				end
-			end, self)	
-			petz.do_particles_effect(self.object, self.object:get_pos(), "pollen")		
-			--minetest.chat_send_player("singleplayer", "test")	
-			return true
+		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 0.3) then
+			local pos = self.object:get_pos()			
+			local y_distance = tpos.y - pos.y
+			--minetest.chat_send_player("singleplayer", tostring(y_distance))	
+			if math.abs(y_distance) > 1 then
+				mobkit.set_velocity(self, {x= 0, y= y_distance, z= 0})	
+			else
+				self.pollen = true
+				petz.do_particles_effect(self.object, self.object:get_pos(), "pollen")		
+				--minetest.chat_send_player("singleplayer", "test")	
+				return true
+			end		
 		end
 	end
 	mobkit.queue_low(self, func)
 end
 
-function mobkit.hq_gotobehive(self, prty)
+function mobkit.hq_gotobehive(self, prty, pos)
 	local func = function(self)	
 		if self.pollen == false then
 			return true
 		end
+		mobkit.animate(self, "fly")
 		if mobkit.node_name_in(self, "front") ~= "air" then	
 			if mobkit.node_name_in(self, "top") == "air" then
 				mobkit.set_velocity(self, {x= 0, y= 1.0, z= 0})	
@@ -354,21 +357,54 @@ function mobkit.hq_gotobehive(self, prty)
 end
 
 function mobkit.lq_search_behive(self)
+	local func = function(self)			
+		local tpos = self.behive
+		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 0.3) then
+			local pos = self.object:get_pos()			
+			local y_distance = tpos.y - pos.y
+			if math.abs(y_distance) > 1 then
+				mobkit.set_velocity(self, {x= 0, y= y_distance, z= 0})	
+				return true
+			else
+				if petz.behive_exists(self) then
+					self.object:remove()
+					local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
+					bee_count = bee_count + 1
+					meta:set_int("bee_count", bee_count)
+					honey_count = honey_count + 1
+					meta:set_int("honey_count", honey_count)
+					petz.set_infotext_behive(meta, honey_count, bee_count)											
+					self.pollen = false	
+				end
+			end								
+		end
+	end
+	mobkit.queue_low(self, func)
+end
+
+function mobkit.hq_approach_behive(self, pos, prty)
+	local func = function(self)			
+		if math.abs(pos.x - self.behive.x) <= (self.view_range / 2) or math.abs(pos.z - self.behive.z) <= (self.view_range / 2) then
+			return true
+		end
+		if mobkit.node_name_in(self, "front") ~= "air" then	
+			if mobkit.node_name_in(self, "top") == "air" then
+				mobkit.set_velocity(self, {x= 0, y= 1.0, z= 0})	
+				return true
+			else
+				return true
+			end
+		end
+		mobkit.lq_approach_behive(self)
+	end
+	mobkit.queue_high(self, func, prty)
+end
+
+function mobkit.lq_approach_behive(self)
 	local func = function(self)		
 		local tpos = self.behive
-		if mobkit.drive_to_pos(self, tpos, 2.5, 6.28, 0.3) then
-			if petz.behive_exists(self) then
-				self.object:remove()
-				local meta = minetest.get_meta(tpos)
-				local bee_count = meta:get_int("bee_count") or 0
-				bee_count = bee_count + 1
-				meta:set_int("bee_count", bee_count)
-				local honey_count = meta:get_int("honey_count") or 0
-				honey_count = honey_count + 1
-				meta:set_int("honey_count", honey_count)
-				petz.set_infotext_behive(meta, honey_count, bee_count)											
-			end
-			self.pollen = false			
+		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, (self.view_range / 2) ) then
+			return true
 		end
 	end
 	mobkit.queue_low(self, func)

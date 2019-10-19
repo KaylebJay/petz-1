@@ -49,6 +49,8 @@ petz.load_vars = function(self)
 		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
 	elseif self.type == "wolf" then
 		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count") or petz.settings.wolf_to_puppy_count 
+	elseif self.type == "bee" then
+		self.behive = mobkit.recall(self, "behive") or nil
 	end
 	if self.milkable == true then
 		self.milked = mobkit.recall(self, "milked") or false

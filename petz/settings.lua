@@ -38,6 +38,11 @@ petz.settings.pregnancy_time = tonumber(settings:get("pregnancy_time"))
 petz.settings.growth_time = tonumber(settings:get("growth_time"))
 --Lashing
 petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "3"))
+--Bee Stuff
+petz.settings.max_honey_behive = tonumber(settings:get("max_honey_behive", "10"))
+petz.settings.max_bees_behive = tonumber(settings:get("max_bees_behive", "3"))
+petz.settings.behive_spawn_chance  = tonumber(settings:get("behive_spawn_chance")) or 0.0
+petz.settings.max_behives_in_area  = tonumber(settings:get("max_behives_in_area")) or 0.0
 
 --Mobs Specific
 for i = 1, #petz.petz_list do --load the settings

@@ -403,6 +403,31 @@ minetest.register_node("petz:bottle_moth", {
 	end,
 })
 
+--
+--Honey Stuff
+--
+
+minetest.register_craftitem("petz:honey_bottle", {
+	description = S("Honey Bottle"),
+	inventory_image = "petz_honey_bottle.png",
+	groups = {},
+	on_use = function (itemstack, user, pointed_thing)
+        return minetest.do_item_eat(7, "vessels:glass_bottle", itemstack, user, pointed_thing)
+    end,	
+})
+
+minetest.register_craftitem("petz:honeycomb", {
+	description = S("Honeycomb"),
+	inventory_image = "petz_honeycomb.png",
+	groups = {},
+})
+
+minetest.register_craftitem("petz:pollen", {
+	description = S("Pollen"),
+	inventory_image = "petz_pollen.png",
+	groups = {},
+})
+
 --Bonemeal support
 if minetest.get_modpath("bonemeal") ~= nil then	
 	minetest.register_craft({

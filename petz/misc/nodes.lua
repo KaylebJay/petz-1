@@ -307,4 +307,98 @@ minetest.register_craft({
     }
 })
 
+--Beehive
+minetest.register_node("petz:beehive", {
+	description = S("Beehive"),
+	tiles = {"petz_beehive.png"},
+	is_ground_content = false,
+	groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 3,
+		flammable = 3, wool = 1},
+	sounds = default.node_sound_defaults(),
+	on_construct = function(pos)
+		local meta = minetest.get_meta(pos)		
+		meta:set_int("honey_count", 3)		
+		local	drops = {
+			{name = "petz:honeycomb", chance = 1, min = 6, max= 6},		
+		}
+		meta:set_string("drops", minetest.serialize(drops))		
+		local timer = minetest.get_node_timer(pos)
+		timer:start(5.0) -- in seconds
+	end,
+	after_place_node = function(pos, placer, itemstack, pointed_thing)
+		local meta = minetest.get_meta(pos)
+		if placer:is_player() then
+			meta:set_int("bee_count", 1)	
+		else
+			meta:set_int("honey_count", petz.settings.max_bees_behive)	
+		end
+	end,
+	on_destruct = function(pos)
+		petz.node_drop_items(pos)
+	end,
+	on_timer = function(pos)
+		local meta, honey_count, bee_count = petz.get_behive_stats(pos)
+		if bee_count > 0 then --if bee inside
+			if math.random(1, 20) == 1 then --opportunitty to go out
+				local spawn_bee_pos = petz.spawn_bee_pos(pos)
+				if spawn_bee_pos then
+					local bee = minetest.add_entity(spawn_bee_pos, "petz:bee")	
+					local bee_entity = bee:get_luaentity()
+					bee_entity.behive = mobkit.remember(bee_entity, "behive", pos)
+					bee_count = bee_count - 1
+					meta:set_int("bee_count", bee_count)
+					petz.set_infotext_behive(meta, honey_count, bee_count)
+				end
+			end
+		end
+        return true
+    end,   
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		local wielded_item = player:get_wielded_item()
+		local wielded_item_name = wielded_item:get_name()
+		local meta, honey_count, bee_count = petz.get_behive_stats(pos)
+		local player_name = player:get_player_name()	
+		if wielded_item_name == "vessels:glass_bottle" then			
+			if honey_count > 0 then
+				local inv = player:get_inventory()
+				if inv:room_for_item("main", "petz:honey_bottle") then
+					local itemstack_name = itemstack:get_name()
+					local stack = ItemStack("petz:honey_bottle 1")
+					if (itemstack_name == "petz:honey_bottle" or itemstack_name == "") and (itemstack:get_count() < itemstack:get_stack_max()) then					
+						itemstack:add_item(stack)					
+					else						
+						inv:add_item("main", stack)				
+					end		
+					itemstack:take_item()
+					honey_count = honey_count - 1
+					meta:set_int("honey_count", honey_count)
+					petz.set_infotext_behive(meta, honey_count, bee_count)
+					return itemstack
+				else
+					minetest.chat_send_player(player_name, S("No room in your inventory for the honey bottle."))
+				end
+			else
+				minetest.chat_send_player(player_name, S("No honey in the behive."))
+			end
+		elseif wielded_item_name == "petz:bee_set" then
+			if bee_count < petz.settings.max_bees_behive then
+				bee_count = bee_count + 1
+				meta:set_int("bee_count", bee_count)
+				itemstack:take_item()	
+				return itemstack
+			else
+				minetest.chat_send_player(player_name, S("This behive already has").." "..tostring(petz.settings.max_bees_behive).." "..S("bees inside."))
+			end
+		end
+	end,
+})
 
+minetest.register_craft({
+	type = "shaped",
+	output = "petz:beehive",
+	recipe = {
+		{"petz:honeycomb", "petz:honeycomb", "petz:honeycomb"},
+		{"petz:honeycomb", "petz:bee_set", "petz:honeycomb"},
+		{"petz:honeycomb", "petz:honeycomb", "petz:honeycomb"},
+	}
+})

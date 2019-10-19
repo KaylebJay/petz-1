@@ -202,3 +202,9 @@ Author: Alexander
 http://www.orangefreesounds.com/water-sound-splash/
 License: The sound effect is permitted for commercial use
 under license Creative Commons Attribution 4.0 International License
+--------------------------------------------
+filenames: petz_bee_hum.ogg
+Author: Zapsplat
+https://www.zapsplat.com/music/close-humming-of-a-bee-fly-up-close-land/
+License: https://www.zapsplat.com/license-type/standard-license/
+--------------------------------------------

@@ -32,3 +32,29 @@ petz.drop_items = function(self)
 	end
 	self.drops = {}
 end
+
+petz.node_drop_items = function(pos)	
+	local meta = minetest.get_meta(pos)
+	local drops= minetest.deserialize(meta:get_string("drops"))
+	if not drops or #drops == 0 then 	-- check for nil or no drops
+		return
+	end
+	for n = 1, #drops do
+		if math.random(1, drops[n].chance) == 1 then
+			num = math.random(drops[n].min or 0, drops[n].max or 1)
+			item = drops[n].name
+			if drops[n].min ~= 0 then
+				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
+			end
+			if obj and obj:get_luaentity() then
+				obj:set_velocity({
+					x = math.random(-10, 10) / 9,
+					y = 6,
+					z = math.random(-10, 10) / 9,
+				})
+			elseif obj then
+				obj:remove() -- item does not exist
+			end
+		end
+	end
+end
