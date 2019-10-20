@@ -39,6 +39,7 @@ petz.settings.growth_time = tonumber(settings:get("growth_time"))
 --Lashing
 petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "3"))
 --Bee Stuff
+petz.settings.initial_honey_behive = tonumber(settings:get("initial_honey_behive", "3"))
 petz.settings.max_honey_behive = tonumber(settings:get("max_honey_behive", "10"))
 petz.settings.max_bees_behive = tonumber(settings:get("max_bees_behive", "3"))
 petz.settings.bee_outing_rate = tonumber(settings:get("bee_outing_rate", "20"))

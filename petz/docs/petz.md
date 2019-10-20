@@ -424,5 +424,7 @@ Instructions to use:
 - Trick: Put some flowers surrounding the behive to start the production of honey.
 - Trick: Point to a behive to known its statistics about the honey and bees (currently inside).
 
+Note: Take into account that if there are flowers close the behive a bee will go to them to collect pollen and inmediatelly will return back to the behive. If you want to see bees flying surrounding the behive, the behive should be full of honey so the bees can go for a walk far away. Also bees remain inside the behive at night.
+
 ### Bonemeal
 - Install the bonemeal mod and convert your petz bones into fertilizer to grown plants faster.

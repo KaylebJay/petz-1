@@ -316,22 +316,32 @@ minetest.register_node("petz:beehive", {
 		flammable = 3, wool = 1},
 	sounds = default.node_sound_defaults(),
 	on_construct = function(pos)
-		local meta = minetest.get_meta(pos)		
-		meta:set_int("honey_count", 3)		
+		local meta = minetest.get_meta(pos)				
 		local	drops = {
 			{name = "petz:honeycomb", chance = 1, min = 6, max= 6},		
 		}
 		meta:set_string("drops", minetest.serialize(drops))		
 		local timer = minetest.get_node_timer(pos)
 		timer:start(5.0) -- in seconds
+		local honey_count = petz.settings.initial_honey_behive
+		meta:set_int("honey_count", honey_count)
+		local bee_count = 3
+		meta:set_int("bee_count", bee_count)
+		petz.set_infotext_behive(meta, honey_count, bee_count)
 	end,
 	after_place_node = function(pos, placer, itemstack, pointed_thing)
 		local meta = minetest.get_meta(pos)
+		local honey_count = petz.settings.initial_honey_behive
+		meta:set_int("honey_count", honey_count)		
+		local bee_count
 		if placer:is_player() then
-			meta:set_int("bee_count", 1)	
+			bee_count = 1
+			meta:set_int("bee_count", bee_count)	
 		else
-			meta:set_int("honey_count", petz.settings.max_bees_behive)	
+			bee_count = petz.settings.max_bees_behive
+			meta:set_int("bee_count", bee_count)	
 		end
+		petz.set_infotext_behive(meta, honey_count, bee_count)
 	end,
 	on_destruct = function(pos)
 		petz.node_drop_items(pos)
