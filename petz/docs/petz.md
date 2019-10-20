@@ -208,7 +208,7 @@ Clownfish & Tropical Fish
 - All the bees need belong to a behive. If their behive is destroyed, all the bees will die. Only the Queen Bees do not need a behive to survive.
 - Worker Bees do not spawn naturally.
 - Queen Bees can spawn and create one colony (behive) in wood or leaves.
-- Bees can drop pollen.
+- Bees can drop pollen and/or a sting.
 
 ### Things you can with Petz
 - Configure the models as "mesh" (by default) or "cubic" (nodebox, no animated, no too laggy) via the 'petz.conf'
@@ -421,6 +421,7 @@ Instructions to use:
 - If you destroy a behive all their bees will die. Six honeycomb will be dropped.
 - You can create a behive with 6 honeycombes and one captured worker bee.
 - Player created behives only will have one bee when placed. But you can add more captured bees to a behive (right click) till the limit. Be care: If you put manually a new bee on a behive and the limit is reached, a bee that would be out when come back will die when entering the behive, in order the limit being respected.
+- If you put an igniter or a torch below a behive (til 4 nodes), the bees inside will go out.
 - Trick: Put some flowers surrounding the behive to start the production of honey.
 - Trick: Point to a behive to known its statistics about the honey and bees (currently inside).
 

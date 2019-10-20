@@ -410,7 +410,6 @@ minetest.register_node("petz:bottle_moth", {
 minetest.register_craftitem("petz:honey_bottle", {
 	description = S("Honey Bottle"),
 	inventory_image = "petz_honey_bottle.png",
-	groups = {},
 	on_use = function (itemstack, user, pointed_thing)
         return minetest.do_item_eat(7, "vessels:glass_bottle", itemstack, user, pointed_thing)
     end,	
@@ -419,19 +418,28 @@ minetest.register_craftitem("petz:honey_bottle", {
 minetest.register_craftitem("petz:honeycomb", {
 	description = S("Honeycomb"),
 	inventory_image = "petz_honeycomb.png",
-	groups = {},
 })
 
 minetest.register_craftitem("petz:pollen", {
 	description = S("Pollen"),
-	inventory_image = "petz_pollen.png",
-	groups = {},
+	inventory_image = "petz_pollen.png",	
 })
 
 minetest.register_craftitem("petz:bee_sting", {
 	description = S("Bee Sting"),
-	inventory_image = "petz_bee_sting.png",
-	groups = {},
+	inventory_image = "petz_bee_sting.png",	
+})
+
+minetest.register_craftitem("petz:beeswax", {
+	description = S("Beeswax"),
+	inventory_image = "petz_beeswax.png",	
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:beeswax 3",
+	recipe = "petz:honeycomb",
+	cooktime = 1,
 })
 
 --Bonemeal support
