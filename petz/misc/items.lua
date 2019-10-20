@@ -442,6 +442,45 @@ minetest.register_craft({
 	cooktime = 1,
 })
 
+-- Candle from Wax and String/Cotton
+minetest.register_node("petz:beeswax_candle", {
+	description = S("Beeswax Candle"),
+	drawtype = "plantlike",
+	inventory_image = "petz_beeswax_candle_static.png",
+	wield_image = "petz_beeswax_candle_static.png",
+	tiles = {
+		{
+			name = "petz_beeswax_candle.png",
+			animation={
+				type="vertical_frames",
+				aspect_w = 32,
+				aspect_h = 32,
+				length = 1.0
+			}
+		},
+	},
+	paramtype = "light",
+	light_source = 11,
+	sunlight_propagates = true,
+	walkable = false,
+	groups = {dig_immediate = 3, attached_node = 1},
+	sounds = default.node_sound_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = { -0.15, -0.5, -0.15, 0.15, 0, 0.15 }
+	},
+})
+
+minetest.register_craft({
+	output = "petz:beeswax_candle 2",
+	type = "shaped",
+		recipe = {
+		{"", "farming:string", ""},
+		{"", "petz:beeswax", ""},
+		{"", "petz:beeswax", ""},
+	}
+})
+
 --Bonemeal support
 if minetest.get_modpath("bonemeal") ~= nil then	
 	minetest.register_craft({
