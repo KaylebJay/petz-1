@@ -141,6 +141,7 @@ Clownfish & Tropical Fish
 - In tamagochi mode you have only to feed it, but no if it is in a fish tank.
 
 #### Wolf
+![Wolf](/images/wolf.png)
 - Wild animal.
 - Run away from players til players attack them, then agressive.
 - Tamable in the same way as lion.
@@ -148,11 +149,19 @@ Clownfish & Tropical Fish
 - Wolves can be turned into puppies: Tame the wolf with a whip, then feed it with bones (until 5, configurable in petz.conf).
 
 #### Moth
+![Moth](/images/chimp.png)
 - It spawns only at night in the coniferous forest.
 - It dies when daylight comes, unless it would be in a dark place for protection, i.e. a cave or a closed box. It needs some obscurity, not a totally dark place.
 - A moth can be captured with an empty glass bottle. Deco item. If you break the bottle, the moth liberates.
 
+#### Silkworm
+![Silkworm](/images/silkworm.png)
+- It spawn naturally on coniferous forests.
+- It eats all kind of leaves.
+- You can produce Silk (see below).
+
 #### Camel
+![Camel](/images/camel.png)
 - It lives in deserts.
 - It eats dry shrub.
 - Predator: Lion
@@ -165,6 +174,41 @@ Clownfish & Tropical Fish
 - If the camel died, the inventory of the saddlebag will drop.
 - If you captured a camel, the saddlebag with the inventory too.
 - You can put together the saddle and the saddlebag. But on right click you will mount it. To access to the inventory of the saddlebag use the shears to quit both items. Then put a saddlebag only.
+
+#### Bat
+![Bat](/images/bat.png)
+- Spawn in interiors (caves)
+- If spawned outside, only at night, and when sunrise dies.
+- It eats and follows fireflies.
+
+#### Hamster
+![Hamster](/images/hamster.png)
+- It lives in deserts.
+- 6 colors.
+- Breed them.
+- Mutation: Pink Hamster.
+
+#### Dolphin
+![Dolphin](/images/dolphin.png)
+- It lives in oceans.
+
+#### Toucan
+![Toucan](/images/toucan.png)
+-It lives in the jungle.
+-It eats apples.
+-Tamable. You can put it in a bird stand.
+
+#### Bee
+![Bee](/images/bee.png)
+- Flying insect.
+- It lives in behives and stays close to them.
+- It produces honey. It searches for flowers to get the pollen and then return to the behive.
+- Two types: Queen and workers (normal).
+- All the bees return to their behive at night and go out at the morning, except the Queen Bee that can fly 24 hours.
+- All the bees need belong to a behive. If their behive is destroyed, all the bees will die. Only the Queen Bees do not need a behive to survive.
+- Worker Bees do not spawn naturally.
+- Queen Bees can spawn and create one colony (behive) in wood or leaves.
+- Bees can drop pollen.
 
 ### Things you can with Petz
 - Configure the models as "mesh" (by default) or "cubic" (nodebox, no animated, no too laggy) via the 'petz.conf'
@@ -240,7 +284,6 @@ You can breed ducks or chickens via its eggs:
 - You can extract the egg from a nest (right-click on the nest).
 
 ### Capture Petz
-
 Use the followig items to capture a petz:
 - MobsRedo Net and Default Bug Net for Frog, Chicken, Kitty, Parrot, Pigeon, Ducky, Beaver, Clownfish, Monkey and Turtle.
 - MobsRedo Lasso for Calf, Lion, Puppy, Piggy, Lamb, Panda, Grizzly and Pony.
@@ -266,15 +309,15 @@ The beaver's home
 - Ponies/camels can be male or female. Check its gender right clicking on them.
 - Each animal has its own velocity forward, velocity backward and acceleration. You can read its characteristics with the format "1/1/1" where the numbers represent these 3 characteristics.
 - Create a Glass Syringe.
-- Use (right-click) the syringe on a male animal to get its sperm.
-- Use (right-click) the syringe with sperm on a female animal. The animal will be pregnant.
+- Use (right-click) the syringe on a male animal to get its germ.
+- Use (right-click) the syringe with germ on a female animal. The animal will be pregnant.
 - Right click on a pregnant female animal to check its pregnancy status.
 - After 2 days (configurable) a little baby will born with a mixture of gens, from its father and its mother.
 - Baby ponies/camels cannot be ridered.
 - After 2 days (configurable) the baby will get to adult.
 - You should select the best parent ponies to get better descendency (fastest ponies/camels) when breeding.
 - You can breed any animal even if you do not own it. But the owner of the babies will be the mother's owner.
-- The male sperm is unlimited but a female pony/camel only can give birth 5 babies máx. After those 5 babies, the mommy turn into infertile.
+- The male germ is unlimited but a female pony/camel only can give birth 5 babies máx. After those 5 babies, the mommy turn into infertile.
 
 #### The method of breeding
 - 1/2/3 means a velocity of 1 for forward, 2 for backward and 3 is the acceleration. So the first number of the triad is the most important.
@@ -283,24 +326,21 @@ The beaver's home
 - Keep in mind that even fast parents can procreate a slow child. So you'll have to breed several times to get an optimal child.
 - The method is to breed parents with high speed statistics to get the best descendants, then select the fastest descendants to continue breeding them. This is a very slow process. Be patient.
 
-### Square BallBarn
-Image
-
-Do create livestocks with the aid of fences.
+### Square Ball
 ![Square Ball](/images/squareball.png)
-
 - Make a Square Ball.
 - Throw it to your puppy. You have to hit the target.
 - Your puppy bring back the square ball to you.
 - To get the ball, right click on it.
 
 ### Recipes
+![Recipes](/images/recipes.png)
 - Blueberry Cheese Cake = Blueberries, wheat, cheese and egg.
 - Blueberry Ice Cream: Blueberries, wheat, milk, 2 eggs and 2 snows = 3 ice creams.
 - Blueberry Muffin: Blueberries, 2 wheat, milk, 2 eggs and paper = 8 muffins.
 
-### Lamb, Camel and Elephant Breed
-You can get baby lambs, camels and elefants.
+### Lamb, Hamster, Panda and Elephant Breed
+You can get baby lambs, hamsters and elefants.
 1) Those petz could be male/female. Right-click on them to check its gender.
 2) Get blueberries. (configurable in petz.conf)
 3) Use (right-click) blueberries with the petz to heat them.
@@ -310,16 +350,25 @@ You can get baby lambs, camels and elefants.
 6) The little petz will grown in one day.
 
 #### Mutation! Vanilla lamb | White Elephant!
+![Mutation](/images/mutation.png)
 Also petz can suffer from a very rare mutation in its genes when spawn or breed, in a 1:200 ratio.
 - You can get a Vanilla Lamb and 'vanilla wool' new item.
 - You can get a white elephant.
 
 ### Dreamcatcher
+![Dreamcatcher](/images/dreamcatcher.png)
 Dreamcatcher amulet for your petz! Protect them!
 - Craftable with: wood, strings and ducky feathers.
 - To put it: Right click with it on a pet you own.
 - Now your pet will be protected against other players attacks. But you can still hurt it.
 - To remove the Dreamcatcher from your pet: Right click on your pet and click on the Dreamcatcher image. Another option is to kill your pet, it will drop the dreamcatcher.
+
+### Whistle
+![Whistle](/images/whistle.png)
+Call your petz anywhere it is.
+- Put names to pets you want to call.
+- Use a Whistle: A list of pets with name and of your own will appear.
+- Click on the pet to call it.
 
 ### Orders
 You can give orders to tamed petz.
@@ -329,11 +378,51 @@ You can give orders to tamed petz.
 - Fly, Alight: For birds.
 
 ### Bird Stand
+![Birstand Item](/images/birdstand_item.png)
+![Birstand](/images/birdstand.png)
 - Capture your parrot with the Bug Net.
 - Put it on the bird stand (right-click)
 
 ### Barn
+![Barn](/images/barn.png)
 Do create livestocks with the aid of fences.
+
+### Silk Farm
+![Silk Stuff](/images/silk_stuff.png)
+- You can get cocoons. A cocoon is silk indeed.
+- Also you can capture or breed moths/silkworns to make a Silk Farm.
+- Create a closed facility. Create a bed of leaves. Put inside some moths and/or silkworms. The moths will lay eggs and silkworms will turn into cocoons (be care: they will eat the leaves too).
+
+#### Spinning Wheel
+![Spinning Wheel](/images/spiniing_wheel.png)
+- Create a Spinning Wheel to get Silk Bobbins. Its a one node size item, so put on a node-table.
+
+Instructions to craft a Spinnig Wheel:
+- A previous bobbin has to be created by hand (3 sticks and 6 silkworm coccons)
+- You have to note that making bobbins by hand is more expensive (the double) than in the spinning wheel.
+- The first time your place a Spinning Wheel, that bobbin is already incorporated, only you have to add two more.
+
+Instructions to use:
+- You need to put in the Spinning Wheel (right-click) 3 Silkworns Cocoons. Then a Silk Bobbin will be created. Right-click again to get the bobbin.
+
+#### Prince Armor
+![Prince Armor Stuff](/images/prince_armor_stuff.png)
+![Prince Armor](/images/prince_armor.png)
+- It requires the 3D Armor mod!
+- You can create a super expensive and exquisite Prince Armor thanks to silk.
+
+### Honey Farm
+![Honey Stuff](/images/honey_stuff.png)
+- The limit of honey by behive is 10 (max_honey_behive setting in petz.conf).
+- You can collect honey from a behive with an empty bottle (right click).
+- You can eat the honey. Honey is very powerful in order to recover your health.
+- Each behive contains three bees (max_bees_behive in petz.conf). A artificially created behive only one.
+- Bees go out the behive to get pollen, but only if the honey in their behive is below 10. Then they return to their behive to create honey.
+- If you destroy a behive all their bees will die. Six honeycomb will be dropped.
+- You can create a behive with 6 honeycombes and one captured worker bee.
+- Player created behives only will have one bee when placed. But you can add more captured bees to a behive (right click) till the limit. Be care: If you put manually a new bee on a behive and the limit is reached, a bee that would be out when come back will die when entering the behive, in order the limit being respected.
+- Trick: Put some flowers surrounding the behive to start the production of honey.
+- Trick: Point to a behive to known its statistics about the honey and bees (currently inside).
 
 ### Bonemeal
 - Install the bonemeal mod and convert your petz bones into fertilizer to grown plants faster.

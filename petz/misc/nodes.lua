@@ -339,7 +339,7 @@ minetest.register_node("petz:beehive", {
 	on_timer = function(pos)
 		local meta, honey_count, bee_count = petz.get_behive_stats(pos)
 		if bee_count > 0 then --if bee inside
-			if math.random(1, 20) == 1 then --opportunitty to go out
+			if math.random(1, petz.settings.bee_outing_rate) == 1 then --opportunitty to go out
 				local spawn_bee_pos = petz.spawn_bee_pos(pos)
 				if spawn_bee_pos then
 					local bee = minetest.add_entity(spawn_bee_pos, "petz:bee")	
