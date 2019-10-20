@@ -428,6 +428,12 @@ minetest.register_craftitem("petz:pollen", {
 	groups = {},
 })
 
+minetest.register_craftitem("petz:bee_sting", {
+	description = S("Bee Sting"),
+	inventory_image = "petz_bee_sting.png",
+	groups = {},
+})
+
 --Bonemeal support
 if minetest.get_modpath("bonemeal") ~= nil then	
 	minetest.register_craft({

@@ -42,7 +42,7 @@ petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "
 petz.settings.initial_honey_behive = tonumber(settings:get("initial_honey_behive", "3"))
 petz.settings.max_honey_behive = tonumber(settings:get("max_honey_behive", "10"))
 petz.settings.max_bees_behive = tonumber(settings:get("max_bees_behive", "3"))
-petz.settings.bee_outing_rate = tonumber(settings:get("bee_outing_rate", "20"))
+petz.settings.bee_outing_ratio = tonumber(settings:get("bee_outing_ratio", "20"))
 --petz.settings.behive_spawn_chance  = tonumber(settings:get("behive_spawn_chance")) or 0.0
 --petz.settings.max_behives_in_area  = tonumber(settings:get("max_behives_in_area")) or 0.0
 

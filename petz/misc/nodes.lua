@@ -322,7 +322,7 @@ minetest.register_node("petz:beehive", {
 		}
 		meta:set_string("drops", minetest.serialize(drops))		
 		local timer = minetest.get_node_timer(pos)
-		timer:start(5.0) -- in seconds
+		timer:start(2.0) -- in seconds
 		local honey_count = petz.settings.initial_honey_behive
 		meta:set_int("honey_count", honey_count)
 		local bee_count = petz.settings.max_bees_behive
@@ -349,7 +349,31 @@ minetest.register_node("petz:beehive", {
 	on_timer = function(pos)
 		local meta, honey_count, bee_count = petz.get_behive_stats(pos)
 		if bee_count > 0 then --if bee inside
-			if math.random(1, petz.settings.bee_outing_rate) == 1 then --opportunitty to go out
+			local tpos = {
+				x = pos. x,
+				y = pos.y - 4,
+				z = pos.z,
+			}	
+			local ray = minetest.raycast(pos, tpos, false, false) --check if fire/torch (igniter) below
+			local igniter_below = false			
+			for thing in ray do
+				if thing.type == "node" then
+					local node_name = minetest.get_node(thing.under).name
+					--minetest.chat_send_player("singleplayer", node_name)
+					if minetest.get_item_group(node_name, "igniter") >0 or minetest.get_item_group(node_name, "torch") > 0 then
+						igniter_below = true
+						--minetest.chat_send_player("singleplayer", S("igniter"))
+						break
+					end					
+				end
+			end
+			local bee_outing_ratio
+			if igniter_below == false then
+				bee_outing_ratio = petz.settings.bee_outing_ratio
+			else
+				bee_outing_ratio = 1
+			end
+			if math.random(1, bee_outing_ratio) == 1 then --opportunitty to go out
 				local spawn_bee_pos = petz.spawn_bee_pos(pos)
 				if spawn_bee_pos then
 					local bee = minetest.add_entity(spawn_bee_pos, "petz:bee")	

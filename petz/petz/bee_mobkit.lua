@@ -9,7 +9,7 @@ for i=1, 2 do
 	if i == 1 then
 		queen = false
 		pet_name = "bee"
-		description = "Bee"
+		description = "Worker Bee"
 		scale_model = 0.25		
 		textures= {"petz_bee.png"}
 	else
@@ -74,6 +74,7 @@ for i=1, 2 do
 		},
 		drops = {
 			{name = "petz:pollen", chance = 3, min = 1, max = 3,},		
+			{name = "petz:bee_sting", chance = 3, min = 1, max = 1,},	
 		},
 		sounds = {
 			misc = "petz_bee_hum",

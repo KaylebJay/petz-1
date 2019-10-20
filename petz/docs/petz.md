@@ -431,8 +431,8 @@ Note: Take into account that if there are flowers close the behive a bee will go
 max_honey_behive = 10 (by default)
 - Max bees in a behive.
 max_bees_behive = 3 (by default)
-- Outing rate: A "bee_outing_rate=1" means that a bee inmediatelly go out the behive for pollen
-bee_outing_rate = 20 (by default)
+- Outing rate: A "bee_outing_ratio=1" means that a bee inmediatelly go out the behive for pollen
+bee_outing_ratio = 20 (by default)
 Note: Take into account that if there are flowers close the behive a bee will go to them to collect pollen and inmediatelly will return back to the behive. If you want to see bees flying surrounding the behive, the behive should be full of honey so the bees can go for a walk far away. Also bees remain inside the behive at night.
 - Initial honey behive: It indicates the initial honey amount on a created behive.
 initial_honey_behive = 3 (by default)
