@@ -325,7 +325,7 @@ minetest.register_node("petz:beehive", {
 		timer:start(5.0) -- in seconds
 		local honey_count = petz.settings.initial_honey_behive
 		meta:set_int("honey_count", honey_count)
-		local bee_count = 3
+		local bee_count = petz.settings.max_bees_behive
 		meta:set_int("bee_count", bee_count)
 		petz.set_infotext_behive(meta, honey_count, bee_count)
 	end,
