@@ -419,9 +419,11 @@ Instructions to use:
 - Each behive contains three bees (max_bees_behive in petz.conf). A artificially created behive only one.
 - Bees go out the behive to get pollen, but only if the honey in their behive is below 10. Then they return to their behive to create honey.
 - If you destroy a behive all their bees will die. Six honeycomb will be dropped.
-- You can create a behive with 6 honeycombes and one captured worker bee.
+- You can create a behive with 6 honeycombs and one captured worker bee.
 - Player created behives only will have one bee when placed. But you can add more captured bees to a behive (right click) till the limit. Be care: If you put manually a new bee on a behive and the limit is reached, a bee that would be out when come back will die when entering the behive, in order the limit being respected.
 - If you put an igniter or a torch below a behive (til 4 nodes), the bees inside will go out.
+- You can get Beeswax cooking Honeycombs.
+- You can get Beeswax Candles crafting Beewax with a string.
 - Trick: Put some flowers surrounding the behive to start the production of honey.
 - Trick: Point to a behive to known its statistics about the honey and bees (currently inside).
 
