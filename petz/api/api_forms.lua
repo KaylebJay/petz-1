@@ -177,15 +177,19 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			pet.status = ""
 			mobkit.hq_fly(pet, 0)		
 			minetest.after(2.5, function(pet) 
-				mobkit.clear_queue_low(pet)
-				pet.object:set_acceleration({ x = 0, y = 0, z = 0 })    
-				pet.object:set_velocity({ x = 0, y = 0, z = 0 })    
+				if mobkit.is_alive(pet) then
+					mobkit.clear_queue_low(pet)
+					pet.object:set_acceleration({ x = 0, y = 0, z = 0 })    
+					pet.object:set_velocity({ x = 0, y = 0, z = 0 })    
+				end
 			end, pet)			
 		elseif fields.btn_perch_shoulder then
 			pet.object:set_attach(player, "Arm_Left", {x=0.5,y=-6.25,z=0}, {x=0,y=0,z=180}) 
 			mobkit.animate(pet, "stand")	
 			minetest.after(120.0, function(pet) 
-				pet.object:set_detach()
+				if mobkit.is_alive(pet) then
+					pet.object:set_detach()
+				end
 			end, pet)
 		elseif fields.btn_show_tag then			
 			pet.show_tag = mobkit.remember(pet, "show_tag", minetest.is_yes(fields.btn_show_tag))

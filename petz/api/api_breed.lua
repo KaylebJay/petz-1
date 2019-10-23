@@ -123,7 +123,7 @@ end
 
 petz.init_growth = function(self)
     minetest.after(petz.settings.growth_time, function(self)         
-        if not(self.object:get_pos() == nil) then
+		if mobkit.is_alive(self) then
 			self.is_baby = false
 			mobkit.remember(self, "is_baby", self.is_baby)
 			petz.set_properties(self, {

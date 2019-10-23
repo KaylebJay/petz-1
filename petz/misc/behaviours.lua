@@ -14,10 +14,8 @@ function petz.bh_runaway_from_predator(self, pos)
 			--minetest.chat_send_player("singleplayer", "node name="..node.name)	
 			local predator = mobkit.get_closest_entity(self, predators[i])	-- look for predator						
 			if predator then
-				local predator_pos = predator:get_pos()
-				if petz.is_pos_nan(predator_pos) then
-					return
-				end					
+				local predator_pos = predator:get_pos()	
+				if petz.is_pos_nan(predator_pos) == true then return end
 				if predator and vector.distance(pos, predator_pos) <= self.view_range then						
 					mobkit.hq_runfrom(self, 18, predator)
 					return true
@@ -33,9 +31,7 @@ function petz.bh_start_follow(self, pos, player, prty)
 	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()	
 		local player_pos = player:get_pos()
-		if petz.is_pos_nan(player_pos) then
-			return
-		end		
+		if petz.is_pos_nan(player_pos) == true then return end
 		if wielded_item_name == self.follow and vector.distance(pos, player_pos) <= self.view_range then 
 			self.status = mobkit.remember(self, "status", "follow")
 			mobkit.hq_follow(self, prty, player)
@@ -50,7 +46,9 @@ function petz.bh_env_damage(self, prty)
 	local stand_pos= mobkit.get_stand_pos(self)
 	if petz.env_damage(self, stand_pos)	== true then
 		local air_pos = minetest.find_node_near(stand_pos, self.view_range, "air", false)
-		mobkit.hq_goto(self, prty, air_pos)
+		if air_pos then
+			mobkit.hq_goto(self, prty, air_pos)
+		end
 	end
 end
 
@@ -84,9 +82,7 @@ end
 function petz.herbivore_brain(self)
 
 	local pos = self.object:get_pos()	
-	if petz.is_pos_nan(pos) then
-		return
-	end
+	if petz.is_pos_nan(pos) == true then return end
 
 	local die = false	
 	
@@ -157,9 +153,7 @@ function petz.herbivore_brain(self)
 			if self.tamed == false then --if no tamed
 				if player then
 					local player_pos = player:get_pos()
-					if petz.is_pos_nan(player_pos) then
-						return
-					end
+					if petz.is_pos_nan(player_pos) == true then return end
 					local wielded_item_name = player:get_wielded_item():get_name()	
 					if self.is_pet == false and self.follow ~= wielded_item_name and vector.distance(pos, player_pos) <= self.view_range then 
 						mobkit.hq_runfrom(self, 14, player)
@@ -318,9 +312,7 @@ function petz.predator_brain(self)
 		end		
 		
 		local pos = self.object:get_pos() --pos of the petz
-		if petz.is_pos_nan(pos) then
-			return
-		end
+		if petz.is_pos_nan(pos) == true then return end
 		
 		local player = mobkit.get_nearby_player(self) --get the player close
 		
@@ -365,9 +357,7 @@ function petz.predator_brain(self)
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
 					local player_pos = player:get_pos()
-					if petz.is_pos_nan(player_pos) then
-						return
-					end
+					if petz.is_pos_nan(player_pos) == true then return end
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.hq_warn(self, 10, player) -- try to repel them
@@ -427,9 +417,8 @@ function petz.bee_brain(self)
 		end
 		
 		local pos = self.object:get_pos()
-		if petz.is_pos_nan(pos) then
-			return
-		end
+		if petz.is_pos_nan(pos) == true then return end
+		
 		local player = mobkit.get_nearby_player(self)
 		local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
 			
@@ -490,9 +479,7 @@ end
 function petz.aquatic_brain(self)
 	
 	local pos = self.object:get_pos()
-	if petz.is_pos_nan(pos) then
-		return
-	end
+	if petz.is_pos_nan(pos) == true then return end
 	
 	-- Die Behaviour
 	
@@ -518,10 +505,8 @@ function petz.aquatic_brain(self)
 		if prty < 10 then
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
-					local player_pos = player:get_pos()
-					if petz.is_pos_nan(player_pos) then
-						return
-					end
+					local player_pos = player:get_pos()		
+					if petz.is_pos_nan(player_pos) == true then return end			
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
@@ -561,9 +546,7 @@ end
 function petz.semiaquatic_brain(self)
 	
 	local pos = self.object:get_pos()
-	if petz.is_pos_nan(pos) then
-		return
-	end
+	if petz.is_pos_nan(pos) == true then return end
 	
 	-- Die Behaviour
 	
@@ -586,9 +569,7 @@ function petz.semiaquatic_brain(self)
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
 					local player_pos = player:get_pos()
-					if petz.is_pos_nan(player_pos) then
-						return
-					end
+					if petz.is_pos_nan(player_pos) == true then return end
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
@@ -642,10 +623,8 @@ end
 ---
 petz.aquatic_behaviour = function(self)
 	if self.is_mammal == false then --if not mammal, air suffocation
-		local pos = self.object:get_pos() 
-		if petz.is_pos_nan(pos) then
-			return
-		end
+		local pos = self.object:get_pos()
+		if petz.is_pos_nan(pos) == true then return end
 		local pos_under = {x = pos.x, y = pos.y - 0.75, z = pos.z, }
 		--Check if the aquatic animal is on water
 		local node_under = minetest.get_node_or_nil(pos_under)

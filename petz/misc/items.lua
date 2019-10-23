@@ -448,6 +448,7 @@ minetest.register_node("petz:beeswax_candle", {
 	drawtype = "plantlike",
 	inventory_image = "petz_beeswax_candle_static.png",
 	wield_image = "petz_beeswax_candle_static.png",
+	visual_scale = 0.5,
 	tiles = {
 		{
 			name = "petz_beeswax_candle.png",

@@ -860,7 +860,7 @@ function mobkit.stepfunc(self,dtime)	-- not intended to be modified
 	local surface = nil
 	local snodepos = mobkit.get_node_pos(spos)
 	local surfnode = mobkit.nodeatpos(spos)
-	if mobkit.is_alive(self) and not(self.is_baby) then --added by petz
+	if self.type and mobkit.is_alive(self) and not(self.is_baby) then -- self.type is for identify petz entities only --added by petz
 		local stand_pos = spos --added by petz
 		stand_pos.y = spos.y + 0.5 --added by petz
 		local stand_node_pos = mobkit.get_node_pos(stand_pos) --added by petz

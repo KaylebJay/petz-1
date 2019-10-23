@@ -170,9 +170,9 @@ function mobkit.lq_dumbfly(self, speed_factor)
 			elseif status == "ascend" then --ascend			
 				status = "ascend"
 				velocity ={
-					x = self.max_speed* speed_factor,				
+					x = self.max_speed * speed_factor,				
 					y = self.max_speed * speed_factor * 2,
-					z = self.max_speed* speed_factor,
+					z = self.max_speed * speed_factor,
 				}
 				--minetest.chat_send_player("singleplayer", tostring(velocity.x))
 				--minetest.chat_send_player("singleplayer", "ascend")			
@@ -286,11 +286,11 @@ function mobkit.hq_aqua_jump(self, prty)
 		self.status = "jump"
 		petz.do_sound_effect("object", self.object, "petz_splash")
 		minetest.after(0.5, function(self, velocity)
-				if mobkit.is_alive(self.object) then
-					self.status = ""
-					mobkit.clear_queue_high(self)
-				end
-			end, self, velocity)
+			if mobkit.is_alive(self.object) then
+				self.status = ""
+				mobkit.clear_queue_high(self)
+			end
+		end, self, velocity)
 		return true
 	end
 	mobkit.queue_high(self, func, prty)
