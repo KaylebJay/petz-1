@@ -34,7 +34,7 @@ minetest.register_entity("petz:"..pet_name,{
 	textures = textures,
 	visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model},
 	static_save = true,
-	on_step = mobkit.stepfunc,	-- required
+	on_step = petz.stepfunc,	-- required
 	get_staticdata = mobkit.statfunc,
 	-- api props
 	springiness= 0,
