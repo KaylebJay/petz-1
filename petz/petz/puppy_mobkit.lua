@@ -111,7 +111,7 @@ minetest.register_entity("petz:"..pet_name, {
 	end, 
 	
 	on_step = function(self, dtime)	
-		petz.stepfunc(self, dtime) -- required
+		mobkit.stepfunc(self, dtime) -- required
 		petz.on_step(self, dtime)
 	end,
 })

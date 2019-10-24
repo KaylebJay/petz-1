@@ -104,11 +104,17 @@ function petz.herbivore_brain(self)
 		return
 	end
 	
-	if mobkit.timer(self, 1) then 
+	if self.can_fly then
+		self.object:set_acceleration({x=0, y=0, z=0})		
+	end
+	
+	mobkit.check_ground_suffocation(self)
+	
+	if mobkit.timer(self, 1) then 	
 	
 		--petz.env_damage(self) 
 	
-		local prty = mobkit.get_queue_priority(self)	
+		local prty = mobkit.get_queue_priority(self)			
 			
 		if prty < 30 then
 			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
@@ -301,6 +307,8 @@ function petz.predator_brain(self)
 		petz.on_die(self)
 		return	
 	end
+	
+	mobkit.check_ground_suffocation(self)
 			
 	if mobkit.timer(self, 1) then 
 		
@@ -405,7 +413,9 @@ function petz.bee_brain(self)
 			self.object:remove()
 			return
 		end
-	end			
+	end
+	
+	mobkit.check_ground_suffocation(self)		
 	
 	if mobkit.timer(self, 1) then 
 	
@@ -497,6 +507,8 @@ function petz.aquatic_brain(self)
 		mobkit.hurt(self, petz.settings.air_damage)	
 	end
 	
+	mobkit.check_ground_suffocation(self)
+	
 	if mobkit.timer(self, 1) then 
 	
 		local prty = mobkit.get_queue_priority(self)						
@@ -558,7 +570,9 @@ function petz.semiaquatic_brain(self)
 			petz.on_die(self)
 			return
 		end
-	end		
+	end
+	
+	mobkit.check_ground_suffocation(self)
 	
 	if mobkit.timer(self, 1) then 
 	

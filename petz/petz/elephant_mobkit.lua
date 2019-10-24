@@ -118,7 +118,7 @@ for i=1, 2 do
 		end,
 	
 		on_step = function(self, dtime)	
-			petz.stepfunc(self, dtime) -- required
+			mobkit.stepfunc(self, dtime) -- required
 			petz.on_step(self, dtime)
 		end,
 	})

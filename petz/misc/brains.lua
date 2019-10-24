@@ -30,6 +30,27 @@ function mobkit.check_is_on_surface(self)
 	end
 end
 
+function mobkit.check_ground_suffocation(self)
+	local spos = mobkit.get_stand_pos(self)
+	spos.y = spos.y+0.01
+	if self.type and mobkit.is_alive(self) and not(self.is_baby) then
+		local stand_pos = spos
+		stand_pos.y = spos.y + 0.5
+		local stand_node_pos = mobkit.get_node_pos(stand_pos)
+		local stand_node = mobkit.nodeatpos(stand_node_pos)
+		if stand_node and stand_node.walkable and stand_node.drawtype == "normal" then
+			local new_y = stand_pos.y + self.jump_height
+			if new_y <= 30927 then
+				self.object:set_pos({
+					x = stand_pos.x,
+					y = new_y,
+					z = stand_pos.z
+				})
+			end
+		end
+	end
+end
+
 function mobkit.set_velocity(self, velocity)
 	local yaw = self.object:get_yaw() or 0
 	self.object:set_velocity({
@@ -109,6 +130,11 @@ function mobkit.lq_dumbfly(self, speed_factor)
 	speed_factor = speed_factor or 1
 	local func = function(self)
 		timer = timer - self.dtime		
+		if self.fly_velocity then
+			mobkit.set_velocity(self, self.fly_velocity)
+		else
+			mobkit.set_velocity(self, {x = 0.0, y = 0.0, z = 0.0})
+		end			
 		if timer < 0 then
 			--minetest.chat_send_player("singleplayer", tostring(timer))		
 			local velocity = self.object:getvelocity()
@@ -179,6 +205,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 			end		
 			timer = petz.settings.fly_check_time
 			mobkit.set_velocity(self, velocity)
+			self.fly_velocity = velocity --save the velocity to set in each step, not only each x seconds
 			return true
 		end
 	end

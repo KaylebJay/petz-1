@@ -105,7 +105,7 @@ minetest.register_entity("petz:"..pet_name, {
 		if self.driver then
 			petz.drive(self, "walk", "stand", false, dtime) -- if driver present allow control of camel		
 		else
-			petz.stepfunc(self, dtime) -- required			
+			mobkit.stepfunc(self, dtime) -- required			
 		end	
 		petz.on_step(self, dtime)
 	end,
