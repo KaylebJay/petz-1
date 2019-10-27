@@ -83,4 +83,4 @@ minetest.register_entity("petz:"..pet_name,{
     
 })
 
-petz:register_egg("petz:beaver", S("Beaver"), "petz_spawnegg_beaver.png", 0)
+petz:register_egg("petz:beaver", S("Beaver"), "petz_spawnegg_beaver.png", true)

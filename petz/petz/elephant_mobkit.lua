@@ -122,5 +122,5 @@ for i=1, 2 do
 			petz.on_step(self, dtime)
 		end,
 	})
-	petz:register_egg("petz:"..pet_name, S(description), "petz_spawnegg_"..pet_name..".png", 0)
+	petz:register_egg("petz:"..pet_name, S(description), "petz_spawnegg_"..pet_name..".png", true)
 end

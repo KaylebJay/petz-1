@@ -6,18 +6,18 @@ function mobkit.lq_dumbfly(self, dest, speed_factor)
 	local func=function(self)
 		mobkit.animate(self, 'fly')
 		timer = timer - self.dtime
-		if timer < 0 then return true end
-		
+		if timer < 0 then
+			return true
+		end		
 		local pos = mobkit.get_stand_pos(self)
 		local y = self.object:get_velocity().y
-
 		if not(self.isonground) then
 			mobkit.animate(self, 'fly')
-			local dir = vector.normalize(vector.direction({x=pos.x,y=0,z=pos.z},
-														{x=dest.x,y=0,z=dest.z}))
-			dir = vector.multiply(dir,self.max_speed*speed_factor)
---			self.object:set_yaw(minetest.dir_to_yaw(dir))
-			mobkit.turn2yaw(self,minetest.dir_to_yaw(dir))
+			local dir = vector.normalize(vector.direction(
+				{x=pos.x, y=0, z=pos.z},
+				{x=dest.x, y=0, z=dest.z}))
+			dir = vector.multiply(dir, self.max_speed*speed_factor)
+			mobkit.turn2yaw(self, minetest.dir_to_yaw(dir))
 			dir.y = y
 			self.object:set_velocity(dir)
 		end

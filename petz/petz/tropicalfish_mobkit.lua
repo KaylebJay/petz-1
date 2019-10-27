@@ -71,7 +71,7 @@ minetest.register_entity("petz:"..pet_name,{
 	end,    
 })
 
-petz:register_egg("petz:tropicalfish", S("Tropicalfish"), "petz_spawnegg_tropicalfish.png", 0)
+petz:register_egg("petz:tropicalfish", S("Tropicalfish"), "petz_spawnegg_tropicalfish.png", true)
 
 minetest.register_entity("petz:tropicalfish_entity_sprite", {
 	visual = "sprite",

@@ -208,3 +208,26 @@ Author: Zapsplat
 https://www.zapsplat.com/music/close-humming-of-a-bee-fly-up-close-land/
 License: https://www.zapsplat.com/license-type/standard-license/
 --------------------------------------------
+filenames: petz_monster_sound.ogg
+Author: Alexander
+http://www.orangefreesounds.com/monster-sound/
+License: The sound effects. is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filenames: petz_monster_laugh.ogg
+Author: Alexander
+http://www.orangefreesounds.com/monster-laugh/
+The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filenames: petz_zombie_noise.ogg
+Author: Alexander
+http://www.orangefreesounds.com/zombie-noise/
+License: The sound effect is permitted for commercial use
+under license Creative Commons Attribution 4.0 International License
+--------------------------------------------
+filenames: petz_monster_die.ogg
+Author: Alexander
+http://www.orangefreesounds.com/monster-dying/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”

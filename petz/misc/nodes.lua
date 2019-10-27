@@ -436,3 +436,39 @@ minetest.register_craft({
 		{"petz:honeycomb", "petz:honeycomb", "petz:honeycomb"},
 	}
 })
+
+--Halloween Update
+
+minetest.register_node("petz:jack_o_lantern", {
+    description = S("Jack-o'-lantern"),
+    groups = { snappy=3, flammable=3, oddly_breakable_by_hand=2 },
+  	sounds = default.node_sound_wood_defaults({
+		dig = { name = "default_dig_oddly_breakable_by_hand" },
+		dug = { name = "default_dig_choppy" }
+	}),
+    paramtype = "light",
+    paramtype2 = "facedir",
+    light_source = 11,
+	sunlight_propagates = true,
+    tiles = {
+		"petz_jackolantern_top.png", "petz_jackolantern_bottom.png",
+		"petz_jackolantern_right.png", "petz_jackolantern_left.png",
+		"petz_jackolantern_back.png", "petz_jackolantern_front.png"
+    },
+})
+
+if minetest.get_modpath("farming") ~= nil and farming.mod == "redo" then
+	minetest.register_craft({
+		type = "shapeless",
+		output = "petz:jack_o_lantern",
+		recipe = {"farming:pumpkin", "petz:beeswax_candle"},
+	})
+end
+
+if minetest.get_modpath("crops") ~= nil then	
+	minetest.register_craft({
+		type = "shapeless",
+		output = "petz:jack_o_lantern",
+		recipe = {"crops:pumpkin", "petz:beeswax_candle"},
+	})
+end

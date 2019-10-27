@@ -15,7 +15,6 @@ function petz.bh_runaway_from_predator(self, pos)
 			local predator = mobkit.get_closest_entity(self, predators[i])	-- look for predator						
 			if predator then
 				local predator_pos = predator:get_pos()	
-				if petz.is_pos_nan(predator_pos) == true then return end
 				if predator and vector.distance(pos, predator_pos) <= self.view_range then						
 					mobkit.hq_runfrom(self, 18, predator)
 					return true
@@ -31,7 +30,6 @@ function petz.bh_start_follow(self, pos, player, prty)
 	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()	
 		local player_pos = player:get_pos()
-		if petz.is_pos_nan(player_pos) == true then return end
 		if wielded_item_name == self.follow and vector.distance(pos, player_pos) <= self.view_range then 
 			self.status = mobkit.remember(self, "status", "follow")
 			mobkit.hq_follow(self, prty, player)
@@ -81,8 +79,7 @@ end
 
 function petz.herbivore_brain(self)
 
-	local pos = self.object:get_pos()	
-	if petz.is_pos_nan(pos) == true then return end
+	local pos = self.object:get_pos()
 
 	local die = false	
 	
@@ -159,7 +156,6 @@ function petz.herbivore_brain(self)
 			if self.tamed == false then --if no tamed
 				if player then
 					local player_pos = player:get_pos()
-					if petz.is_pos_nan(player_pos) == true then return end
 					local wielded_item_name = player:get_wielded_item():get_name()	
 					if self.is_pet == false and self.follow ~= wielded_item_name and vector.distance(pos, player_pos) <= self.view_range then 
 						mobkit.hq_runfrom(self, 14, player)
@@ -314,13 +310,12 @@ function petz.predator_brain(self)
 		
 		local prty = mobkit.get_queue_priority(self)		
 		
-		if prty < 20 and self.isinliquid then
-			mobkit.hq_liquid_recovery(self, 20)
+		if prty < 40 and self.isinliquid then
+			mobkit.hq_liquid_recovery(self, 40)
 			return
 		end		
 		
 		local pos = self.object:get_pos() --pos of the petz
-		if petz.is_pos_nan(pos) == true then return end
 		
 		local player = mobkit.get_nearby_player(self) --get the player close
 		
@@ -365,10 +360,9 @@ function petz.predator_brain(self)
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
 					local player_pos = player:get_pos()
-					if petz.is_pos_nan(player_pos) == true then return end
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
-							mobkit.hq_warn(self, 10, player) -- try to repel them
+							mobkit.hq_hunt(self, 10, player) -- try to repel them
 							return
 						else
 							mobkit.hq_runfrom(self, 10, player)  -- run away from player
@@ -396,13 +390,20 @@ function petz.predator_brain(self)
 end
 
 function petz.bee_brain(self)
+
+	self.object:set_acceleration({x=0, y=0, z=0})
+
+	local behive_exists = petz.behive_exists(self)	
+	local meta, honey_count, bee_count
+	if behive_exists then
+		meta, honey_count, bee_count = petz.get_behive_stats(self.behive)		
+	end	
 	
 	if (self.hp <= 0) or (not(self.queen) and not(petz.behive_exists(self))) then		
 		petz.on_die(self) -- Die Behaviour
 		return		
 	elseif (petz.is_night() and not(self.queen)) then --all the bees sleep in their beehive
-		if petz.behive_exists(self) then
-			local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
+		if behive_exists then			
 			bee_count = bee_count + 1
 			meta:set_int("bee_count", bee_count)
 			if self.pollen == true and (honey_count < petz.settings.max_honey_behive) then
@@ -417,49 +418,54 @@ function petz.bee_brain(self)
 	
 	mobkit.check_ground_suffocation(self)		
 	
-	if mobkit.timer(self, 1) then 
+	if mobkit.timer(self, 1) then
 	
 		local prty = mobkit.get_queue_priority(self)		
 		
-		if prty < 20 and self.isinliquid then
-			mobkit.hq_liquid_recovery(self, 20)
+		if prty < 40 and self.isinliquid then
+			mobkit.hq_liquid_recovery(self, 40)
 			return
 		end
 		
 		local pos = self.object:get_pos()
-		if petz.is_pos_nan(pos) == true then return end
 		
 		local player = mobkit.get_nearby_player(self)
-		local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
 			
 		if prty < 30 then
 			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
 		end
 			
 		--search for flowers
-		if prty < 20 and not(self.queen) and not(self.pollen) and (honey_count < petz.settings.max_honey_behive) then
-			local view_range = self.view_range
-			local nearby_flowers = minetest.find_nodes_in_area(
-				{x = pos.x - view_range, y = pos.y - view_range, z = pos.z - view_range},
-				{x = pos.x + view_range, y = pos.y + view_range, z = pos.z + view_range},
-				{"group:flower"})
-			if #nearby_flowers >= 1 then	
-				local tpos = 	nearby_flowers[1] --the first match	
-				mobkit.hq_gotopollen(self, 20, tpos)		
-			end			
-		end	
+		if prty < 20 and behive_exists then			
+			if not(self.queen) and not(self.pollen) and (honey_count < petz.settings.max_honey_behive) then
+				local view_range = self.view_range
+				local nearby_flowers = minetest.find_nodes_in_area(
+					{x = pos.x - view_range, y = pos.y - view_range, z = pos.z - view_range},
+					{x = pos.x + view_range, y = pos.y + view_range, z = pos.z + view_range},
+					{"group:flower"})
+				if #nearby_flowers >= 1 then	
+					local tpos = 	nearby_flowers[1] --the first match							
+					mobkit.hq_gotopollen(self, 20, tpos)		
+				end			
+			end	
+		end
 							
 		--search for the bee behive when pollen
-		if prty < 18 and not(self.queen) and self.pollen == true and (honey_count < petz.settings.max_honey_behive) then
-			if vector.distance(pos, self.behive) <= self.view_range then				
-				mobkit.hq_gotobehive(self, 18, pos)	
+		if prty < 18 and behive_exists then	
+			if not(self.queen) and self.pollen == true and (honey_count < petz.settings.max_honey_behive) then	
+				if vector.distance(pos, self.behive) <= self.view_range then					
+					mobkit.hq_gotobehive(self, 18, pos)	
+				end
 			end
 		end		
 	
 		--stay close behive
-		if prty < 15 and not(self.queen) then		
-			if math.abs(pos.x - self.behive.x) > self.view_range and math.abs(pos.z - self.behive.z) > self.view_range then				
-				mobkit.hq_approach_behive(self, pos, 15)	
+		if prty < 15 and behive_exists then
+			if not(self.queen) then	
+			--minetest.chat_send_player("singleplayer", "testx")	
+				if math.abs(pos.x - self.behive.x) > self.view_range and math.abs(pos.z - self.behive.z) > self.view_range then				
+					mobkit.hq_approach_behive(self, pos, 15)	
+				end
 			end
 		end
 		
@@ -475,7 +481,7 @@ function petz.bee_brain(self)
 		petz.random_mob_sound(self)
 				
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) and self.status == "" then		
+		if mobkit.is_queue_empty_high(self) and self.status == "" then				
 			mobkit.hq_wanderfly(self, 0)
 		end
 		
@@ -489,7 +495,6 @@ end
 function petz.aquatic_brain(self)
 	
 	local pos = self.object:get_pos()
-	if petz.is_pos_nan(pos) == true then return end
 	
 	-- Die Behaviour
 	
@@ -517,8 +522,7 @@ function petz.aquatic_brain(self)
 		if prty < 10 then
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
-					local player_pos = player:get_pos()		
-					if petz.is_pos_nan(player_pos) == true then return end			
+					local player_pos = player:get_pos()	
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
@@ -558,7 +562,6 @@ end
 function petz.semiaquatic_brain(self)
 	
 	local pos = self.object:get_pos()
-	if petz.is_pos_nan(pos) == true then return end
 	
 	-- Die Behaviour
 	
@@ -583,14 +586,13 @@ function petz.semiaquatic_brain(self)
 			if player then
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
 					local player_pos = player:get_pos()
-					if petz.is_pos_nan(player_pos) == true then return end
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
 							if self.isinliquid then
 								mobkit.hq_aqua_attack(self, 10, puncher, 6)				-- get revenge
 							else
-								mobkit.hq_warn(self, 10, player)
+								mobkit.hq_hunt(self, 10, player)
 							end
 						end
 					end
@@ -638,7 +640,6 @@ end
 petz.aquatic_behaviour = function(self)
 	if self.is_mammal == false then --if not mammal, air suffocation
 		local pos = self.object:get_pos()
-		if petz.is_pos_nan(pos) == true then return end
 		local pos_under = {x = pos.x, y = pos.y - 0.75, z = pos.z, }
 		--Check if the aquatic animal is on water
 		local node_under = minetest.get_node_or_nil(pos_under)
@@ -647,5 +648,86 @@ petz.aquatic_behaviour = function(self)
 				local air_damage = - petz.settings.air_damage
 				petz.set_health(self, air_damage)
 		end	
+	end
+end
+
+--
+--Monster Behaviour
+--
+
+function petz.monster_brain(self)
+	
+	if self.hp <= 0 then -- Die Behaviour
+		petz.on_die(self)
+		return	
+	end
+	
+	mobkit.check_ground_suffocation(self)
+			
+	if mobkit.timer(self, 1) then 
+		
+		local prty = mobkit.get_queue_priority(self)		
+		
+		if prty < 40 and self.isinliquid then
+			mobkit.hq_liquid_recovery(self, 40)
+			return
+		end		
+		
+		local pos = self.object:get_pos() --pos of the petz
+		
+		local player = mobkit.get_nearby_player(self) --get the player close
+		
+		if prty < 30 then
+			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+		end
+					
+		-- hunt a prey
+		if prty < 12 then -- if not busy with anything important
+			if self.tamed == false then
+				local preys_list = petz.settings[self.type.."_preys"]
+				if preys_list then
+					local preys = string.split(preys_list, ',')
+					for i = 1, #preys  do --loop  thru all preys
+						--minetest.chat_send_player("singleplayer", "preys list="..preys[i])	
+						--minetest.chat_send_player("singleplayer", "node name="..node.name)	
+						local prey = mobkit.get_closest_entity(self, preys[i])	-- look for prey						
+						if prey then	
+							self.max_speed = 2.5								
+							--minetest.chat_send_player("singleplayer", "got it")	
+							mobkit.hq_hunt(self, 12, prey) -- and chase it
+							return
+						end					
+					end
+				end				
+			end
+		end
+						
+		if prty < 10 then
+			if player then
+				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
+					local player_pos = player:get_pos()
+					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close		
+						self.max_speed = 2.5
+						mobkit.hq_hunt(self, 10, player)						
+						return
+					end
+				end
+			end
+		end
+
+		--Replace nodes by others		
+		if prty < 6 then			
+			petz.bh_replace(self)
+		end
+		
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		--Roam default			
+		if mobkit.is_queue_empty_high(self) then
+			self.max_speed = 1.5
+			mobkit.hq_roam(self, 0)
+		end
+		
 	end
 end

@@ -12,18 +12,18 @@ petz.calculate_damage = function(tool_capabilities)
 end
 
 petz.kick_back= function(self, dir) 
-	local hvel = vector.multiply(vector.normalize({x=dir.x,y=0,z=dir.z}),4)
-	self.object:set_velocity({x=hvel.x,y=2,z=hvel.z})
+	local hvel = vector.multiply(vector.normalize({x=dir.x, y=0, z=dir.z}), 4)
+	self.object:set_velocity({x=hvel.x, y=2, z=hvel.z})
 end
 
 petz.lookat=function(self, pos2)
-	local pos1=self.object:get_pos()
-	local vec = {x=pos1.x-pos2.x, y=pos1.y-pos2.y, z=pos1.z-pos2.z}
-	local yaw = math.atan(vec.z/vec.x)-math.pi/2
+	local pos1 = self.object:get_pos()
+	local vec = {x = pos1.x - pos2.x, y = pos1.y - pos2.y, z = pos1.z - pos2.z}
+	local yaw = math.atan(vec.z / vec.x) - math.pi / 2
 	if pos1.x >= pos2.x then
-		yaw = yaw+math.pi
+		yaw = yaw + math.pi
 	end
-   self.object:set_yaw(yaw+math.pi)
+   self.object:set_yaw(yaw + math.pi)
 end
 
 petz.afraid= function(self, pos) 

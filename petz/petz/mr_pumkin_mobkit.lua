@@ -1,32 +1,31 @@
 --
---SILKWORM
+--MR_PUMPKIN
 --
 local S = ...
 
-local pet_name = "silkworm"
-local scale_model = 0.5
-local mesh = 'petz_silkworm.b3d'	
-local textures= {"petz_silkworm.png", "petz_silkworm2.png", "petz_silkworm3.png"}	
-local collisionbox = {-0.125, -0.75*scale_model, -0.375, 0.0625, -0.25, 0.3125}
-
+local pet_name = "mr_pumpkin"
+local scale_model = 1.0
+petz.mr_pumpkin = {}
+local mesh = 'character.b3d'	
+local textures = {"petz_mr_pumpkin.png"}	
+local collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3}
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
-	type = "silkworm",	
-	init_tamagochi_timer = false,	
+	type = "mr_pumpkin",	
+	init_tamagochi_timer = false,		
 	is_pet = false,
+	is_monster = true,
+	is_boss = true,
 	has_affinity = false,
-	is_wild = false,
+	is_wild = true,
+	attack_player = true,
 	give_orders = false,
 	can_be_brushed = false,
-	capture_item = "net",
-	follow = petz.settings.silkworm_follow,
+	capture_item = nil,
+	follow = petz.settings.mr_pumpkin_follow,	
 	drops = {
+		{name = "petz:jack_o_lantern", chance = 3, min = 1, max = 1,},
 	},
-	replace_rate = 10,
-	replace_offset = 0,
-    replace_what = {
-       	{"group:leaves", "air", -1},       
-    },
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -35,36 +34,40 @@ minetest.register_entity("petz:"..pet_name,{
 	visual = petz.settings.visual,
 	mesh = mesh,
 	textures = textures,
-	visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model},
+	visual_size = {x=1.0*scale_model, y=1.0*scale_model},
 	static_save = true,
 	get_staticdata = mobkit.statfunc,
 	-- api props
 	springiness= 0,
 	buoyancy = 0.5, -- portion of hitbox submerged
-	max_speed = 0.25,
-	jump_height = 1.0,
-	view_range = 10,
+	max_speed = 1.5,
+	jump_height = 1.5,
+	view_range = 20,
 	lung_capacity = 10, -- seconds
-	max_hp = 2,
+	max_hp = 40,  		
 	
-	attack={range=0.5, damage_groups={fleshy=3}},		
+	attack={range=0.5, damage_groups={fleshy=9}},	
 	animation = {
-		walk={range={x=0, y=12}, speed=10, loop=true},	
-		run={range={x=0, y=12}, speed=10, loop=true},	
+		walk={range={x=168, y=187}, speed=30, loop=true},	
 		stand={
-			{range={x=12, y=24}, speed=5, loop=true},
-			{range={x=24, y=31}, speed=5, loop=true},		
+			{range={x=0, y=79}, speed=5, loop=true},					
 		},	
-	},
+		sit = {range={x=81, y=160}, speed=5, loop=false},
+	},	
 	sounds = {
+		misc = "petz_monster_misc",
+		attack = "petz_zombie_noise",
+		laugh = "petz_monster_laugh",
+		die = "petz_monster_die",
 	},
 	
-	brainfunc = petz.herbivore_brain,
+	--punch_start = 83, stand4_end = 95,
+	
+	brainfunc = petz.monster_brain,
 	
 	on_activate = function(self, staticdata, dtime_s) --on_activate, required
 		mobkit.actfunc(self, staticdata, dtime_s)
 		petz.set_initial_properties(self, staticdata, dtime_s)
-		petz.init_convert_to_chrysalis(self)
 	end,
 	
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		
@@ -73,12 +76,13 @@ minetest.register_entity("petz:"..pet_name,{
 	
 	on_rightclick = function(self, clicker)
 		petz.on_rightclick(self, clicker)
-	end,    
+	end,
 	
 	on_step = function(self, dtime)	
 		mobkit.stepfunc(self, dtime) -- required
 		petz.on_step(self, dtime)
 	end,
+    
 })
 
-petz:register_egg("petz:silkworm", S("Silkworm"), "petz_spawnegg_silkworm.png", true)
+petz:register_egg("petz:mr_pumpkin", S("Mr Pumpkin"), "petz_spawnegg_mr_pumpkin.png", false)

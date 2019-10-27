@@ -129,12 +129,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 	local status = "ascend"
 	speed_factor = speed_factor or 1
 	local func = function(self)
-		timer = timer - self.dtime		
-		if self.fly_velocity then
-			mobkit.set_velocity(self, self.fly_velocity)
-		else
-			mobkit.set_velocity(self, {x = 0.0, y = 0.0, z = 0.0})
-		end			
+		timer = timer - self.dtime			
 		if timer < 0 then
 			--minetest.chat_send_player("singleplayer", tostring(timer))		
 			local velocity = self.object:getvelocity()
@@ -161,7 +156,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				end
 			else --check if water below, if yes ascend
 				local node_name = mobkit.node_name_in(self, "below")
-				if minetest.get_item_group(node_name, "water") > 1  then
+				if minetest.get_item_group(node_name, "water") >= 1  then
 					status = "ascend"
 				end
 			end	
@@ -207,6 +202,12 @@ function mobkit.lq_dumbfly(self, speed_factor)
 			mobkit.set_velocity(self, velocity)
 			self.fly_velocity = velocity --save the velocity to set in each step, not only each x seconds
 			return true
+		else
+			if self.fly_velocity then
+				mobkit.set_velocity(self, self.fly_velocity)
+			else
+				mobkit.set_velocity(self, {x = 0.0, y = 0.0, z = 0.0})
+			end		
 		end
 	end
 	mobkit.queue_low(self,func)
@@ -254,7 +255,7 @@ function mobkit.hq_alight(self, prty)
 		local node_name = mobkit.node_name_in(self, "below")
 		if node_name == "air" then
 			mobkit.lq_alight(self)
-		elseif minetest.get_item_group(node_name, "water") > 1  then
+		elseif minetest.get_item_group(node_name, "water") >= 1  then
 			mobkit.hq_wanderfly(self, 0)
 			return true
 		else
@@ -327,18 +328,12 @@ end
 ---
 ---Bee Brain
 ---
-
 function mobkit.hq_gotopollen(self, prty, tpos)
 	local func = function(self)	
 		if self.pollen == true then
+			--mobkit.clear_queue_low(self)
+			--mobkit.clear_queue_high(self)	
 			return true
-		end
-		if mobkit.node_name_in(self, "front") ~= "air" then	
-			if mobkit.node_name_in(self, "top") == "air" then
-				mobkit.set_velocity(self, {x= 0, y= 1.0, z= 0})	
-			else
-				return true
-			end
 		end
 		mobkit.animate(self, "fly")
 		mobkit.lq_search_flower(self, tpos)
@@ -347,19 +342,17 @@ function mobkit.hq_gotopollen(self, prty, tpos)
 end
 
 function mobkit.lq_search_flower(self, tpos)
-	local func = function(self)		
-		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 0.3) then
-			local pos = self.object:get_pos()			
-			local y_distance = tpos.y - pos.y
-			--minetest.chat_send_player("singleplayer", tostring(y_distance))	
-			if math.abs(y_distance) > 1 then
-				mobkit.set_velocity(self, {x= 0, y= y_distance, z= 0})	
-			else
-				self.pollen = true
-				petz.do_particles_effect(self.object, self.object:get_pos(), "pollen")		
-				--minetest.chat_send_player("singleplayer", "test")	
-				return true
-			end		
+	local func = function(self)	
+		local pos = self.object:get_pos()			
+		local y_distance = tpos.y - pos.y				
+		local abs_y_distance = math.abs(y_distance)		
+		if (abs_y_distance > 1) and (abs_y_distance < self.view_range) then
+			mobkit.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
+		end
+		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 0.5) then					
+			self.pollen = true
+			petz.do_particles_effect(self.object, self.object:get_pos(), "pollen")
+			return true
 		end
 	end
 	mobkit.queue_low(self, func)
@@ -367,32 +360,30 @@ end
 
 function mobkit.hq_gotobehive(self, prty, pos)
 	local func = function(self)	
-		if self.pollen == false then
+		if self.pollen == false or not(self.behive) then
 			return true
 		end
 		mobkit.animate(self, "fly")
-		if mobkit.node_name_in(self, "front") ~= "air" then	
-			if mobkit.node_name_in(self, "top") == "air" then
-				mobkit.set_velocity(self, {x= 0, y= 1.0, z= 0})	
-			else
-				return true
-			end
-		end
 		mobkit.lq_search_behive(self)
 	end
 	mobkit.queue_high(self, func, prty)
 end
 
 function mobkit.lq_search_behive(self)
-	local func = function(self)			
-		local tpos = self.behive
-		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 0.3) then
-			local pos = self.object:get_pos()			
-			local y_distance = tpos.y - pos.y
-			if math.abs(y_distance) > 1 then
-				mobkit.set_velocity(self, {x= 0, y= y_distance, z= 0})	
-				return true
-			else
+	local func = function(self)	
+		local tpos
+		if self.behive then
+			tpos = self.behive
+		else
+			return true
+		end
+		local pos = self.object:get_pos()			
+		local y_distance = tpos.y - pos.y
+		local abs_y_distance = math.abs(y_distance)	
+		if (abs_y_distance > 1) and (abs_y_distance < self.view_range) then
+			mobkit.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
+		end
+		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 1.01)  then
 				if petz.behive_exists(self) then
 					self.object:remove()
 					local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
@@ -403,8 +394,7 @@ function mobkit.lq_search_behive(self)
 					petz.set_infotext_behive(meta, honey_count, bee_count)											
 					self.pollen = false	
 				end
-			end								
-		end
+		end						
 	end
 	mobkit.queue_low(self, func)
 end
@@ -412,15 +402,9 @@ end
 function mobkit.hq_approach_behive(self, pos, prty)
 	local func = function(self)			
 		if math.abs(pos.x - self.behive.x) <= (self.view_range / 2) or math.abs(pos.z - self.behive.z) <= (self.view_range / 2) then
+			mobkit.clear_queue_low(self)
+			mobkit.clear_queue_high(self)	
 			return true
-		end
-		if mobkit.node_name_in(self, "front") ~= "air" then	
-			if mobkit.node_name_in(self, "top") == "air" then
-				mobkit.set_velocity(self, {x= 0, y= 1.0, z= 0})	
-				return true
-			else
-				return true
-			end
 		end
 		mobkit.lq_approach_behive(self)
 	end
@@ -429,8 +413,17 @@ end
 
 function mobkit.lq_approach_behive(self)
 	local func = function(self)		
-		local tpos = self.behive
-		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, (self.view_range / 2) ) then
+		local tpos
+		if self.behive then
+			tpos = self.behive
+		else
+			return true
+		end
+		local pos = self.object:get_pos()			
+		local y_distance = tpos.y - pos.y
+		local abs_y_distance = math.abs(y_distance)
+		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, (self.view_range / 4) ) then
+			mobkit.clear_queue_high(self)	
 			return true
 		end
 	end

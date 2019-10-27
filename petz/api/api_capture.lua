@@ -15,10 +15,14 @@ petz.create_pet = function(placer, itemstack, pet_name, pos)
 	return ent
 end
 
-function petz:register_egg(pet_name, desc, inv_img, no_creative)
+function petz:register_egg(pet_name, desc, inv_img, tamed)
 	local grp = {spawn_egg = 1}
+	local description = S("@1", desc)
+	if tamed then
+		description = description .." ("..S("Tamed")..")"
+	end
 	minetest.register_craftitem(pet_name .. "_set", { -- register new spawn egg containing mob information
-		description = S("@1 (", desc)..S("Tamed")..")",
+		description = description,
 		inventory_image = inv_img,
 		groups = {spawn_egg = 2},
 		stack_max = 1,
