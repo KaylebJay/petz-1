@@ -61,7 +61,7 @@ minetest.register_entity("petz:"..pet_name,{
 		moaning = "petz_beaver_moaning",
 	},
 	
-	brainfunc = petz.semiaquatic_brain,
+	logic = petz.semiaquatic_brain,
 	
 	on_activate = function(self, staticdata, dtime_s) --on_activate, required
 		mobkit.actfunc(self, staticdata, dtime_s)

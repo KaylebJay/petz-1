@@ -73,6 +73,36 @@ function petz.bh_replace(self)
 	end
 end
 
+function petz.get_player_back_pos(player, pos)	
+	local yaw = player:get_look_horizontal()
+	if yaw then
+		local dir_x = -math.sin(yaw)
+		local dir_z = math.cos(yaw)
+		local back_pos = {
+			x = pos.x - dir_x,
+			y = pos.y,
+			z = pos.z - dir_z,
+		}	
+		local node = minetest.get_node_or_nil(back_pos)
+		if node and minetest.registered_nodes[node.name] then
+			return node.name, back_pos
+		else
+			return nil, nil
+		end
+	else
+		return nil, nil
+	end
+end
+
+function petz.bh_teleport(self, pos, player, player_pos)
+	local node, back_pos = petz.get_player_back_pos(player, player_pos)
+	if node and node == "air" then
+		petz.do_particles_effect(self.object, self.object:get_pos(), "pumpkin")
+		self.object:set_pos(back_pos)
+		mobkit.make_sound(self, 'laugh')
+	end
+end
+
 --
 --Herbivore Behaviour
 --
@@ -82,6 +112,8 @@ function petz.herbivore_brain(self)
 	local pos = self.object:get_pos()
 
 	local die = false	
+	
+	mobkit.vitals(self)
 	
 	if self.hp <= 0 then
 		die = true
@@ -298,6 +330,8 @@ end
 --
 
 function petz.predator_brain(self)
+
+	mobkit.vitals(self)
 	
 	if self.hp <= 0 then -- Die Behaviour
 		petz.on_die(self)
@@ -390,6 +424,8 @@ function petz.predator_brain(self)
 end
 
 function petz.bee_brain(self)
+
+	mobkit.vitals(self)
 
 	self.object:set_acceleration({x=0, y=0, z=0})
 
@@ -496,6 +532,8 @@ function petz.aquatic_brain(self)
 	
 	local pos = self.object:get_pos()
 	
+	mobkit.vitals(self)
+	
 	-- Die Behaviour
 	
 	if self.hp <= 0 then
@@ -562,6 +600,8 @@ end
 function petz.semiaquatic_brain(self)
 	
 	local pos = self.object:get_pos()
+	
+	mobkit.vitals(self)
 	
 	-- Die Behaviour
 	
@@ -656,6 +696,8 @@ end
 --
 
 function petz.monster_brain(self)
+
+	mobkit.vitals(self)
 	
 	if self.hp <= 0 then -- Die Behaviour
 		petz.on_die(self)
@@ -700,15 +742,23 @@ function petz.monster_brain(self)
 					end
 				end				
 			end
-		end
+		end					
 						
 		if prty < 10 then
-			if player then
+			if player then			
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
 					local player_pos = player:get_pos()
-					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close		
+					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
+						if self.type == "mr_pumpkin" then --teleport to player's back
+							if (self.hp <= self.max_hp / 2) then
+								local random_num = math.random(1, 3)
+								if random_num == 1 then --not always teleport
+									petz.bh_teleport(self, pos, player, player_pos)
+								end
+							end
+						end
 						self.max_speed = 2.5
-						mobkit.hq_hunt(self, 10, player)						
+						mobkit.hq_hunt(self, 10, player)								
 						return
 					end
 				end

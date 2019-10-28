@@ -13,9 +13,9 @@ petz.do_particles_effect = function(obj, pos, particle_type)
     }        
     local maxpos
     maxpos = {
-        x = minpos.x+0.4,
-        y = minpos.y-0.5,
-        z = minpos.z+0.4
+        x = minpos.x + 0.4,
+        y = minpos.y - 0.5,
+        z = minpos.z + 0.4
     }    
     local texture_name
     local particles_amount
@@ -56,9 +56,14 @@ petz.do_particles_effect = function(obj, pos, particle_type)
         particles_amount = 15
         min_size = 0.5
 		max_size = 1.0 
+	elseif particle_type == "pumpkin" then
+        texture_name = "petz_pumpkin_particle.png"
+        particles_amount = 10
+        min_size = 2.0
+		max_size = 4.0 
     end
     minetest.add_particlespawner({
-        --attached = obj,
+        --attached = objw,
         amount = particles_amount,
         time = 1.5,
         minpos = minpos,

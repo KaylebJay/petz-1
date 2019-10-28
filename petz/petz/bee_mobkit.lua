@@ -80,7 +80,7 @@ for i=1, 2 do
 			misc = "petz_bee_hum",
 		},
 	
-		brainfunc = petz.bee_brain,
+		logic = petz.bee_brain,
 	
 		on_activate = function(self, staticdata, dtime_s) --on_activate, required
 			mobkit.actfunc(self, staticdata, dtime_s)

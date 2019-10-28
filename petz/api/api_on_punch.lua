@@ -60,7 +60,7 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 				return
 			end
 			petz.punch_tamagochi(self, puncher) --decrease affinity when in Tamagochi mode
-			mobkit.hurt(self,tool_capabilities.damage_groups.fleshy or 1)
+			mobkit.hurt(self, tool_capabilities.damage_groups.fleshy or 1)
 			petz.update_nametag(self)
 			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)							
 		end	

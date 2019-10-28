@@ -9,6 +9,13 @@ petz.mr_pumpkin = {}
 local mesh = 'character.b3d'	
 local textures = {"petz_mr_pumpkin.png"}	
 local collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3}
+local drops = {
+		{name = "petz:jack_o_lantern", chance = 3, min = 1, max = 1,},		
+}
+if minetest.get_modpath("3d_armor") ~= nil then 
+	table.insert(drops, {name = "petz:pumpkin_hood", chance = 4, min = 1, max = 1,})
+end
+
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "mr_pumpkin",	
@@ -23,9 +30,7 @@ minetest.register_entity("petz:"..pet_name,{
 	can_be_brushed = false,
 	capture_item = nil,
 	follow = petz.settings.mr_pumpkin_follow,	
-	drops = {
-		{name = "petz:jack_o_lantern", chance = 3, min = 1, max = 1,},
-	},
+	drops = drops,
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -63,7 +68,7 @@ minetest.register_entity("petz:"..pet_name,{
 	
 	--punch_start = 83, stand4_end = 95,
 	
-	brainfunc = petz.monster_brain,
+	logic = petz.monster_brain,
 	
 	on_activate = function(self, staticdata, dtime_s) --on_activate, required
 		mobkit.actfunc(self, staticdata, dtime_s)

@@ -11,7 +11,10 @@ petz.armor_destroy = function(name, player)
 	end
 end
 
---Define the Silk Clothes
+--
+--THE SILK CLOTHES
+--
+
 armor:register_armor("petz:prince_crown", {
 	description = S("Prince Crown"),
 	inventory_image = "petz_prince_crown_inv.png",
@@ -107,4 +110,21 @@ minetest.register_craft({
 		{"default:gold_ingot", "", "default:gold_ingot"},
 		{"petz:silk_bobbin", "dye:brown", "petz:silk_bobbin"},		
 	},
+})
+
+--
+--THE PUMPKIN HOOD
+--
+armor:register_armor("petz:pumpkin_hood", {
+	description = S("Pumpkin Hood"),
+	inventory_image = "petz_pumpkin_hood_inv.png",
+	texture = "petz_pumpkin_hood.png",
+	preview = "petz_pumpkin_hood_preview.png",
+	groups = {armor_head=1, armor_use=200, flammable=0},
+	armor_groups = {fleshy=10, radiation=10},
+	damage_groups = {cracky=3, snappy=3, choppy=3, crumbly=3, level=1},
+	reciprocate_damage = true,
+	on_destroy = function(player, index, stack)
+		petz.armor_destroy("brewing_break_armor_sound", player)
+	end,
 })

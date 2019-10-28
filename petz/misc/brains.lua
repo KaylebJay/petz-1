@@ -62,14 +62,14 @@ end
 
 function mobkit.node_name_in(self, where)
 	local pos = self.object:get_pos()
-	local yaw = self.object:get_yaw() 
+	local yaw = self.object:get_yaw() 	
 	if yaw then
 		local dir_x = -math.sin(yaw)
 		local dir_z = math.cos(yaw)
 		local pos2
 		if where == "front" then
 			pos2 = {
-				x = pos.x +dir_x,
+				x = pos.x + dir_x,
 				y = pos.y,
 				z = pos.z + dir_z,
 			}	
@@ -85,6 +85,12 @@ function mobkit.node_name_in(self, where)
 				y = pos.y - 0.75,
 				z = pos.z,
 			}
+		elseif where == "back" then	
+			pos2 = {
+				x = pos.x - dir_x,
+				y = pos.y,
+				z = pos.z - dir_z,
+			}	
 		end
 		local node = minetest.get_node_or_nil(pos2)
 		if node and minetest.registered_nodes[node.name] then
