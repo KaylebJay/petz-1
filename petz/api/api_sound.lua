@@ -14,8 +14,12 @@ petz.random_mob_sound = function(self)
 end
 
 petz.do_sound_effect = function(dest, dest_object, soundfile)
-	if dest == "object" or dest == "player" then
+	if dest == "object" then
 		minetest.sound_play(soundfile, {object = dest_object, gain = 0.5, max_hear_distance = petz.settings.max_hear_distance,})
+	 elseif dest == "player" then
+		minetest.sound_play(soundfile, {to_player = dest_object, gain = 0.5, max_hear_distance = petz.settings.max_hear_distance,})
+	 elseif dest == "pos" then
+		minetest.sound_play(soundfile, {pos = dest_object, gain = 0.5, max_hear_distance = petz.settings.max_hear_distance,})
 	end
 end
 

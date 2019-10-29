@@ -231,3 +231,15 @@ Author: Alexander
 http://www.orangefreesounds.com/monster-dying/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filenames: petz_firecracker.ogg
+Author: Alexander
+http://www.orangefreesounds.com/firecracker/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filenames: petz_fireball.ogg
+Author: Alexander
+http://www.orangefreesounds.com/fireball-sound-effect/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”

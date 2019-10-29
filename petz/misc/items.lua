@@ -490,3 +490,5 @@ if minetest.get_modpath("bonemeal") ~= nil then
 		recipe = {"petz:bone"},
 	})
 end
+
+

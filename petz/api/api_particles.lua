@@ -61,7 +61,13 @@ petz.do_particles_effect = function(obj, pos, particle_type)
         particles_amount = 10
         min_size = 2.0
 		max_size = 4.0 
+	elseif particle_type == "fire" then
+        texture_name = "petz_fire_particle.png"
+        particles_amount = 50
+        min_size = 2.0
+		max_size = 4.0 
     end
+    
     minetest.add_particlespawner({
         --attached = objw,
         amount = particles_amount,
