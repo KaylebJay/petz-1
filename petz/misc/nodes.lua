@@ -463,6 +463,11 @@ if minetest.get_modpath("farming") ~= nil and farming.mod == "redo" then
 		output = "petz:jack_o_lantern",
 		recipe = {"farming:pumpkin", "petz:beeswax_candle"},
 	})
+	minetest.register_craft({
+		type = "shapeless",
+		output = "petz:jack_o_lantern",
+		recipe = {"farming:pumpkin", "default:torch"},
+	})
 end
 
 if minetest.get_modpath("crops") ~= nil then	
@@ -470,5 +475,10 @@ if minetest.get_modpath("crops") ~= nil then
 		type = "shapeless",
 		output = "petz:jack_o_lantern",
 		recipe = {"crops:pumpkin", "petz:beeswax_candle"},
+	})
+	minetest.register_craft({
+		type = "shapeless",
+		output = "petz:jack_o_lantern",
+		recipe = {"crops:pumpkin", "default:torch"},
 	})
 end
