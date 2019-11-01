@@ -99,12 +99,14 @@ petz.pregnant_timer = function(self, dtime)
 			elseif new_max_speed_forward > 10 then
 				new_max_speed_forward = 10
 			end
+			random_number = math.random(-1, 1)
 			local new_max_speed_reverse = petz.round(((self.father_veloc_stats["max_speed_reverse"] or 1) + self.max_speed_reverse)/2, 0) + random_number
 			if new_max_speed_reverse <= 0 then
 				new_max_speed_reverse = 0
 			elseif new_max_speed_reverse > 10 then
 				new_max_speed_reverse = 10
 			end
+			random_number = math.random(-1, 1)
 			local new_accel  = petz.round(((self.father_veloc_stats["accel"] or 1) + self.accel)/2, 0) + random_number
 			if new_accel <= 0 then
 				new_accel = 0
