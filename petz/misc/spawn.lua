@@ -54,6 +54,12 @@ minetest.register_globalstep(function(dtime)
 						can_spawn = false
 					end
 				end
+				--Check if monsters are disabled
+				if can_spawn and ent.is_monster == true then
+					if petz.settings.disable_monsters == true then
+						can_spawn = false
+					end
+				end
 			end
 			local spawn_nodes_list = petz.settings[pet_name.."_spawn_nodes"]
 			if can_spawn and spawn_nodes_list then

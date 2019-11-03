@@ -1,4 +1,5 @@
 # textdomain: petz
+@1 at full health (@2)=@1 at full health (@2)
 Alight=Свет
 A silk bobbin has been created!=Шелковая катушка была создана!
 Bat=Летучая мышь
@@ -55,6 +56,7 @@ had already been spreaded with beaver oil.=уже были смазаны боб
 Hairbrush=Щётка для волос
 has abandoned you!!!=бросил тебя...!!!
 has been captured=был пойман
+has been tamed.=has been tamed.
 has starved to death!!!=Умер от голода!!!
 Honey=Мед
 Honeycomb=Соты

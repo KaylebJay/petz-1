@@ -5,7 +5,7 @@ local settings = Settings(modpath .. "/petz.conf")
 --A list with all the petz names
 petz.settings.petz_list = settings:get("petz_list", "")
 petz.petz_list = string.split(petz.settings.petz_list, ',')
-
+petz.settings.disable_monsters = settings:get_bool("disable_monsters", false)
 petz.settings.type_model = settings:get("type_model", "mesh")
 petz.settings.tamagochi_mode = settings:get_bool("tamagochi_mode", true)
 petz.settings.tamagochi_check_time = tonumber(settings:get("tamagochi_check_time"))

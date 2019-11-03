@@ -1,4 +1,5 @@
 # textdomain: petz
+@1 at full health (@2)=@1 tiene la salud llena (@2)
 Alight=Posarse
 A silk bobbin has been created!=¡Se ha creado una bobina de seda!
 Bat=Murciélago
@@ -55,6 +56,7 @@ had already been spreaded with beaver oil.=ya había sido untado con aceite de c
 Hairbrush=Cepillo para pelo
 has abandoned you!!!=te ha abandonado!!!
 has been captured=ha sido capturado
+has been tamed.=ha sido domesticado.
 has starved to death!!!=ha muerto de hambre!!!
 Honey=Miel
 Honeycomb=Panal
