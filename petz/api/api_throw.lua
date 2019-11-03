@@ -72,19 +72,25 @@ end
 
 function petz.spawn_throw_object(user, strength, entity)
 	local pos = user:get_pos()
-	pos.y = pos.y + 1.5 -- camera offset
-	local dir = user:get_look_dir()
-	local yaw = user:get_look_horizontal()
+	pos.y = pos.y + 1.5 -- camera offset	
+	--minetest.chat_send_player("singleplayer", tostring(pos))
 	local obj = minetest.add_entity(pos, entity)
 	if not obj then
 		return
 	end
+	local dir
+	local yaw
 	local user_name
-	if user:is_player() then
+	if user:is_player() then		
+		yaw = user:get_look_horizontal()
+		dir = user:get_look_dir()
 		user_name = user:get_player_name()
-	else
-		user_name = user.type
+	else		
+		yaw = user:get_yaw()
+		dir = minetest.yaw_to_dir(yaw)
+		user_name = user:get_luaentity().type
 	end
+	--minetest.chat_send_player("singleplayer", "test")
 	obj:get_luaentity().shooter_name = user_name
 	obj:set_yaw(yaw - 0.5 * math.pi)
 	obj:set_velocity(vector.multiply(dir, strength))

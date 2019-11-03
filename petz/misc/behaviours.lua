@@ -749,12 +749,18 @@ function petz.monster_brain(self)
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
 					local player_pos = player:get_pos()
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
-						if self.type == "mr_pumpkin" then --teleport to player's back
-							if (self.hp <= self.max_hp / 2) then
-								local random_num = math.random(1, 3)
-								if random_num == 1 then --not always teleport
+						if self.type == "mr_pumpkin" then --teleport to player's back							
+							local random_num = math.random(1, 3)
+							if random_num == 1 then								
+								if (self.hp <= self.max_hp / 2) then																	
 									petz.bh_teleport(self, pos, player, player_pos)
-								end
+									return
+								else
+									petz.do_sound_effect("object", self.object, "petz_fireball")
+									if not petz.spawn_throw_object(self.object, 20, "petz:ent_jack_o_lantern_grenade") then
+										return -- something failed
+									end	
+								end							
 							end
 						end
 						self.max_speed = 2.5
