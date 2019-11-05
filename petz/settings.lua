@@ -24,6 +24,7 @@ petz.settings.type_api = settings:get("type_api", "mobs_redo")
 petz.settings.rob_mobs = settings:get_bool("rob_mobs", false)
 --Spawn Engine
 petz.settings.spawn_interval = tonumber(settings:get("spawn_interval"))
+petz.settings.spawn_chance = tonumber(settings:get("spawn_chance"))
 petz.settings.max_mobs = tonumber(settings:get("max_mobs"))
 --Lay Eggs
 petz.settings.lay_egg_chance = tonumber(settings:get("lay_egg_chance"))
