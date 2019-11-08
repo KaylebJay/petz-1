@@ -615,12 +615,20 @@ function petz.semiaquatic_brain(self)
 		end
 	end
 	
-	mobkit.check_ground_suffocation(self)
+	--mobkit.check_ground_suffocation(self)
 	
 	if mobkit.timer(self, 1) then 
 	
 		local prty = mobkit.get_queue_priority(self)						
 		local player = mobkit.get_nearby_player(self)
+		
+		if prty < 100 then
+			if self.isinliquid then
+				mobkit.hq_liquid_recovery(self, prty)
+			else
+				
+			end		
+		end
 				
 		if prty < 10 then
 			if player then

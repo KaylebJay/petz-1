@@ -42,6 +42,9 @@ petz.create_form = function(player_name)
         end
         tamagochi_form_stuff = tamagochi_form_stuff .. "label[".. hungrystuff_pos.x +1 ..",".. hungrystuff_pos.y ..";"..S(hungry_label).."]"
     else
+		if pet.has_saddlebag == true and pet.saddlebag == true then
+			form_size.w= form_size.w + 1	
+		end
         tamagochi_form_stuff = pet_icon 
         if pet.has_affinity == true then
 			tamagochi_form_stuff = tamagochi_form_stuff .. "label[1,2;".. S("Orders") .."]"	
@@ -206,7 +209,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end
 			--Show the inventory:	
 			local formspec = "size[8,8;]"..
-							"image[3,0;1,1;petz_saddle.png]"..
+							"image[3,0;1,1;petz_saddlebag.png]"..
 							"label[4,0;"..S("Saddlebag").."]"..
 							"list[detached:saddlebag_inventory;saddlebag;0,1;8,2;]"..
 							"list[current_player;main;0,4;8,4;]"		
