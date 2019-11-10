@@ -6,6 +6,10 @@ local modpath, S = ...
 --to show the when on_rightclick form is shown
 petz.pet = {} -- A table of pet["owner_name"]= entity_ref
 
+minetest.register_on_leaveplayer(function(player)
+    petz.pet[player:get_player_name()] = nil
+end)
+
 --
 --on_rightclick event for all the Mobs
 --
