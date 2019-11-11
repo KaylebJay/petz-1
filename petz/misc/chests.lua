@@ -7,13 +7,13 @@ function petz.chest.get_chest_formspec(pos)
 	local spos = pos.x .. "," .. pos.y .. "," .. pos.z
 	local meta = minetest.get_meta(pos)
 	local christmas_msg = meta:get_string("christmas_msg")	
-	if not(christmas_msg) then
+	if not(christmas_msg) or christmas_msg == "" then
 		christmas_msg = S("Merry Christmas")
 	end
 	local formspec =
 		"size[8,7]" ..
-		"image[3,0;1,1;petz_christmas_chest_inv.png]"..
-		"label[4,0;"..christmas_msg.."]"..
+		"image[0,0;1,1;petz_christmas_chest_inv.png]"..
+		"label[1,0;"..christmas_msg.."]"..
 		"list[nodemeta:" .. spos .. ";main;2,1.3;4,1;]" ..
 		"list[current_player;main;0,2.85;8,1;]" ..
 		"list[current_player;main;0,4.08;8,3;8]" ..
@@ -84,7 +84,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	
 	if pos and fields.christmas_msg then
 		local meta = minetest.get_meta(pos)
-		meta:set_string("christmas_message", christmas_msg)
+		meta:set_string("christmas_msg", fields.christmas_msg)
 	end
 
 	return true
@@ -109,10 +109,11 @@ function petz.register_chest(name, d)
 		if placer:is_player() then
 			local player_name = placer:get_player_name()
 			local formspec = 
-				"size[6,3.476]"..
-				"real_coordinates[true]"..
-				"field[0.375,1.25;5.25,0.8;christmas_msg;"..S("Compose a message")..":;]"..
-				"button_exit[1.5,2.3;3,0.8;write;"..S("Write").."]"			
+				"size[6,4]"..
+				"image[1,0;1,1;petz_christmas_card.png]"..
+				"label[2,0;"..S("Christmas Card").."]"..
+				"field[1,2;5,1;christmas_msg;"..S("Compose a message")..":;]"..
+				"button_exit[2,3;2,1;write;"..S("Write").."]"			
 			petz.christmas_cards[player_name] = pos
 			minetest.show_formspec(placer:get_player_name(), "petz:present_msg", formspec)
 		end
@@ -206,4 +207,14 @@ petz.register_chest("christmas_present", {
 	sound_open = "default_chest_open",
 	sound_close = "default_chest_close",
 	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "petz:christmas_present",
+	recipe = {
+		{"default:paper", "default:paper", "default:paper"},
+		{"dye:red", "default:chest", "dye:yellow"},
+		{"default:paper", "default:paper", "default:paper"},
+	}
 })

@@ -623,11 +623,9 @@ function petz.semiaquatic_brain(self)
 		local player = mobkit.get_nearby_player(self)
 		
 		if prty < 100 then
-			if self.isinliquid then
-				mobkit.hq_liquid_recovery(self, prty)
-			else
-				
-			end		
+			--if self.isinliquid then				
+				--mobkit.hq_liquid_recovery(self, 100)				
+			--end
 		end
 				
 		if prty < 10 then
