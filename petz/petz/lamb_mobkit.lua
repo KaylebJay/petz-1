@@ -15,8 +15,8 @@ local textures = {}
 for n = 1, #skin_colors do
 	textures[n] = "petz_"..pet_name.."_"..skin_colors[n]..".png"
 end
-local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.35, 0.28}
-local collisionbox_baby = {-0.35*scale_baby, -0.75*scale_model*scale_baby, -0.28, 0.35, -0.35, 0.28}
+local collisionbox = {0.3125, -0.75*scale_model, 0.5, -0.15625, -0.3125, -0.3125}
+local collisionbox_baby = {0.3125*scale_baby, -0.75*scale_model*scale_baby, 0.5, -0.15625, -0.3125, -0.3125}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	

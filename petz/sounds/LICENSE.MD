@@ -243,3 +243,9 @@ Author: Alexander
 http://www.orangefreesounds.com/fireball-sound-effect/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filenames: petz_penguin_quak.ogg & petz_penguin_moaning.ogg
+Author: Alexander
+https://www.freesoundeffects.com/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”

@@ -4,21 +4,24 @@ local pet_name = "penguin"
 local scale_model = 0.7
 local mesh = 'petz_penguin.b3d'	
 local textures= {"petz_penguin.png"}
-local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, 0.35, 0.28}
+local collisionbox = {0.125, -0.75*scale_model, 0.125, -0.1875, 0.1875, -0.125}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "penguin",	
-	init_tamagochi_timer = true,	
-	is_pet = true,
-	can_fly = true,	
-	max_height = 5,
-	has_affinity = true,
+	init_tamagochi_timer = false,	
+	is_pet = true,	
+	can_fly = false,	
+	max_height = 2,
+	has_affinity = false,
 	is_wild = false,
 	feathered = true,
-	give_orders = true,
+	give_orders = false,
 	can_be_brushed = true,
 	capture_item = "net",
+	lay_eggs = true,
+	lay_eggs_in_nest = false,	
+	type_of_egg = "item",
 	follow = petz.settings.penguin_follow,
 	drops = {		
 	},
@@ -37,7 +40,7 @@ minetest.register_entity("petz:"..pet_name,{
 	-- api props
 	springiness= 0,
 	buoyancy = 0.5, -- portion of hitbox submerged
-	max_speed = 2.5,
+	max_speed = 1.0,
 	jump_height = 2.0,
 	view_range = 10,
 	max_hp = 8,
@@ -54,10 +57,10 @@ minetest.register_entity("petz:"..pet_name,{
 		},	
 		fly={range={x=92, y=98}, speed=25, loop=true},	
 		stand_fly={range={x=92, y=98}, speed=25, loop=true},
-		def = {range={x=99, y=111}, speed=5, loop=true},
+		def = {range={x=99, y=111}, speed=15, loop=true},
 	},
 	sounds = {
-		misc = "petz_penguin_chirp",
+		misc = "petz_penguin_quak",
 		moaning = "petz_penguin_moaning",
 	},
 	

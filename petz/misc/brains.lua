@@ -132,11 +132,14 @@ end
 
 function mobkit.lq_dumbfly(self, speed_factor)
 	local timer = petz.settings.fly_check_time
-	local status = "ascend"
+	local fly_status = ""
 	speed_factor = speed_factor or 1
 	local func = function(self)
 		timer = timer - self.dtime			
 		if timer < 0 then
+			if fly_status == "" then
+				fly_status = "ascend"
+			end
 			--minetest.chat_send_player("singleplayer", tostring(timer))		
 			local velocity = self.object:getvelocity()
 			local mob = self.object
@@ -156,19 +159,19 @@ function mobkit.lq_dumbfly(self, speed_factor)
 			if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz
 				random_num = math.random(1, 100)
 				if random_num < 70 then
-					status = "descend"
+					fly_status = "descend"
 				else
-					status = "stand"
+					fly_status = "stand"
 				end
 			else --check if water below, if yes ascend
 				local node_name = mobkit.node_name_in(self, "below")
 				if minetest.get_item_group(node_name, "water") >= 1  then
-					status = "ascend"
+					fly_status = "ascend"
 				end
 			end	
 			--minetest.chat_send_player("singleplayer", status)		
 			--local node_name_in_front = mobkit.node_name_in(self, "front")
-			if status == "stand" then -- stand
+			if fly_status == "stand" then -- stand
 				velocity = {
 					x= self.max_speed* speed_factor *2,
 					y= 0.0,
@@ -176,12 +179,12 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				}
 				random_num = math.random(1, 100)
 				if random_num < 20 and mobkit.check_height(self) == false then
-					status = "descend"				
+					fly_status = "descend"				
 				elseif random_num < 40 then		
-					status = "ascend"							
+					fly_status = "ascend"							
 				end		
 				--minetest.chat_send_player("singleplayer", "stand")			
-			elseif status == "descend" then -- descend				
+			elseif fly_status == "descend" then -- descend				
 				velocity = {
 					x = self.max_speed* speed_factor,
 					y = -self.max_speed * speed_factor,
@@ -189,13 +192,13 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				}
 				random_num = math.random(1, 100)
 				if random_num < 20 then
-					status = "stand"
+					fly_status = "stand"
 				elseif random_num < 40 then		
-					status = "ascend"											
+					fly_status = "ascend"											
 				end
 				--minetest.chat_send_player("singleplayer", "descend")	
-			elseif status == "ascend" then --ascend			
-				status = "ascend"
+			elseif fly_status == "ascend" then --ascend			
+				fly_status = "ascend"
 				velocity ={
 					x = self.max_speed * speed_factor,				
 					y = self.max_speed * speed_factor * 2,

@@ -189,7 +189,7 @@ function petz.herbivore_brain(self)
 				if player then
 					local player_pos = player:get_pos()
 					local wielded_item_name = player:get_wielded_item():get_name()	
-					if self.is_pet == false and self.follow ~= wielded_item_name and vector.distance(pos, player_pos) <= self.view_range then 
+					if self.is_pet == false and self.follow ~= wielded_item_name and vector.distance(pos, player_pos) <= self.view_range then 	
 						mobkit.hq_runfrom(self, 14, player)
 						return
 					end
@@ -644,6 +644,10 @@ function petz.semiaquatic_brain(self)
 					end
 				end
 			end
+		end
+		
+		if prty < 6 then			
+			petz.bh_replace(self)
 		end
 		
 		-- Default Random Sound		

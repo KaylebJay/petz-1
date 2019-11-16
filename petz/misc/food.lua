@@ -18,6 +18,14 @@ minetest.register_craftitem("petz:chicken_egg", {
     groups = {flammable = 2, food = 2, food_egg = 1},
 })
 
+minetest.register_craftitem("petz:penguin_egg", {
+    description = S("Penguin Egg"),
+    inventory_image = "petz_penguin_egg.png",
+    wield_image = "petz_penguin_egg.png",
+    on_use = minetest.item_eat(1),
+    groups = {flammable = 2, food = 2, food_egg = 1},
+})
+
 minetest.register_craftitem("petz:fried_egg", {
 	description = S("Fried Egg"),
 	inventory_image = "petz_fried_egg.png",	

@@ -5,7 +5,7 @@ petz.lay_egg = function(self)
 	local pos = self.object:get_pos()
 	if self.type_of_egg == "item" then
 		if math.random(1, petz.settings.lay_egg_chance) == 1 then
-			minetest.add_item(pos, "petz:"..self.type.."_egg") --chicken/duck egg!
+			minetest.add_item(pos, "petz:"..self.type.."_egg") --chicken/duck/penguin egg!
 		end	
 	end
 	if self.lay_eggs_in_nest	== true then
