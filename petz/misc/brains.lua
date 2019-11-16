@@ -181,7 +181,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				fly_status = "ascend"
 			end
 			--minetest.chat_send_player("singleplayer", tostring(timer))		
-			local velocity = self.object:getvelocity()
+			local velocity
 			local mob = self.object
 			local pos = mob:getpos()					
 			mobkit.animate(self, 'fly')
