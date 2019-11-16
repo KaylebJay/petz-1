@@ -114,7 +114,7 @@ function mobkit.hq_followfly(self, prty, player)
 		local tpos = player:get_pos()
 		if pos and tpos then
 			local distance = vector.distance(pos, tpos)
-			if distance > 2 then
+			if distance > 3 then
 				if mobkit.is_queue_empty_low(self) then			
 					mobkit.lq_followfly(self, pos, tpos)
 				end
