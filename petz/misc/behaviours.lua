@@ -172,8 +172,10 @@ function petz.herbivore_brain(self)
 		
 		--Follow Behaviour					
 		if prty < 16 then
-			if petz.bh_start_follow(self, pos, player, 16) == true then
-				return
+			if not(self.can_fly) then
+				if petz.bh_start_follow(self, pos, player, 16) == true then
+					return
+				end
 			end
 		end
 		
@@ -185,7 +187,7 @@ function petz.herbivore_brain(self)
 					
 		--Runaway from Player		
 		if prty < 14 then
-			if self.tamed == false then --if no tamed
+			if not(self.can_fly) and self.tamed == false then --if no tamed
 				if player then
 					local player_pos = player:get_pos()
 					local wielded_item_name = player:get_wielded_item():get_name()	
