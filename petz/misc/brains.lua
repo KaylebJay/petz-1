@@ -172,14 +172,11 @@ end
 
 function mobkit.lq_dumbfly(self, speed_factor)
 	local timer = petz.settings.fly_check_time
-	local fly_status = ""
+	local fly_status = "ascend"
 	speed_factor = speed_factor or 1
 	local func = function(self)
 		timer = timer - self.dtime			
-		if timer < 0 then
-			if fly_status == "" then
-				fly_status = "ascend"
-			end
+		if timer < 0 then			
 			--minetest.chat_send_player("singleplayer", tostring(timer))		
 			local velocity
 			local mob = self.object
