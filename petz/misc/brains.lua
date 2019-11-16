@@ -121,6 +121,8 @@ function mobkit.hq_followfly(self, prty, player)
 			else
 				return true
 			end
+		else
+			return true
 		end
 	end
 	mobkit.queue_high(self, func, prty)
