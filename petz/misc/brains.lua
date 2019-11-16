@@ -55,7 +55,7 @@ function mobkit.set_velocity(self, velocity)
 	local yaw = self.object:get_yaw() or 0
 	self.object:set_velocity({
 		x = (math.sin(yaw) * -velocity.x),
-		y = velocity.y,
+		y = velocity.y or 0,
 		z = (math.cos(yaw) * velocity.z),
 	})
 end
