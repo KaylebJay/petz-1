@@ -319,9 +319,9 @@ end
 
 petz.check_if_climb = function(self)
 	local node_front_name = mobkit.node_name_in(self, "front")	
-	minetest.chat_send_player("singleplayer", node_front_name)		
+	--minetest.chat_send_player("singleplayer", node_front_name)		
 	local node_top_name= mobkit.node_name_in(self, "top")	
-	minetest.chat_send_player("singleplayer", node_top_name)		
+	--minetest.chat_send_player("singleplayer", node_top_name)		
 	if node_front_name and minetest.registered_nodes[node_front_name]
 		and node_top_name and minetest.registered_nodes[node_top_name]
 		and node_top_name == "air"
