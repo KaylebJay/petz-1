@@ -105,6 +105,44 @@ function mobkit.node_name_in(self, where)
 end
 
 --
+-- Follow Fly Behaviour (2 functions)
+--
+
+function mobkit.hq_followfly(self, prty, player)
+	local func=function(self)
+		local pos = self.object:get_pos()
+		local tpos = player:get_pos()
+		if pos and tpos then
+			local distance = vector.distance(pos, tpos)
+			if distance > 2 then
+				if mobkit.is_queue_empty_low(self) then			
+					mobkit.lq_followfly(self, pos, tpos)
+				end
+			else
+				return true
+			end
+		end
+	end
+	mobkit.queue_high(self, func, prty)
+end
+
+function mobkit.lq_followfly(self, pos, tpos)
+	local func = function(self)
+		local dir = vector.direction(pos, tpos)
+		local velocity = {
+			x= self.max_speed* dir.x,
+			y= self.max_speed* dir.y,
+			z= self.max_speed* dir.z,
+		}
+		local new_yaw = minetest.dir_to_yaw(dir)
+		self.object:set_yaw(new_yaw)   
+		self.object:set_velocity(velocity)
+		return true
+	end
+	mobkit.queue_low(self,func)
+end
+
+--
 -- Wander Fly Behaviour (3 functions)
 --
 

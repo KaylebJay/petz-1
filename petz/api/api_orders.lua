@@ -2,7 +2,11 @@ local modpath, S = ...
 
 petz.ownthing = function(self)	
 	self.status = mobkit.remember(self, "status", "")
-	mobkit.hq_roam(self, 0)
+	if not(self.can_fly) then
+		mobkit.hq_roam(self, 0)
+	else
+		mobkit.hq_wanderfly(self, 0)
+	end
 	mobkit.clear_queue_high(self)
 end
 

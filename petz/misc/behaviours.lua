@@ -27,12 +27,16 @@ function petz.bh_runaway_from_predator(self, pos)
 end
 
 function petz.bh_start_follow(self, pos, player, prty)
-	if player then
+	if player then		
 		local wielded_item_name = player:get_wielded_item():get_name()	
 		local player_pos = player:get_pos()
-		if wielded_item_name == self.follow and vector.distance(pos, player_pos) <= self.view_range then 
+		if wielded_item_name == self.follow and vector.distance(pos, player_pos) <= self.view_range then 			
 			self.status = mobkit.remember(self, "status", "follow")
-			mobkit.hq_follow(self, prty, player)
+			if not(self.can_fly) then
+				mobkit.hq_follow(self, prty, player)
+			else
+				mobkit.hq_followfly(self, prty, player)
+			end
 			return true
 		else
 			return false
@@ -53,9 +57,14 @@ end
 function petz.bh_stop_follow(self, player)
 	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()
-		if wielded_item_name ~= self.follow then 
+		if wielded_item_name ~= self.follow then 			
 			self.status = mobkit.remember(self, "status", "")
-			mobkit.hq_roam(self, 0)
+			if not(self.can_fly) then
+				mobkit.hq_roam(self, 0)
+			else
+				mobkit.hq_wanderfly(self, 0)
+			end
+			mobkit.clear_queue_low(self)
 			mobkit.clear_queue_high(self)
 			return true
 		else
@@ -172,11 +181,9 @@ function petz.herbivore_brain(self)
 		
 		--Follow Behaviour					
 		if prty < 16 then
-			if not(self.can_fly) then
-				if petz.bh_start_follow(self, pos, player, 16) == true then
-					return
-				end
-			end
+			if petz.bh_start_follow(self, pos, player, 16) == true then
+				return
+			end			
 		end
 		
 		if prty == 16 then			
