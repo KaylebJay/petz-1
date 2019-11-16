@@ -237,7 +237,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 					fly_status = "ascend"											
 				end
 				--minetest.chat_send_player("singleplayer", "descend")	
-			elseif fly_status == "ascend" then --ascend			
+			else --ascend			
 				fly_status = "ascend"
 				velocity ={
 					x = self.max_speed * speed_factor,				
