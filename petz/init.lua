@@ -30,7 +30,6 @@ petz.petz_list_by_owner = {} --a list of tamed petz with owner
 
 assert(loadfile(modpath .. "/api/api.lua"))(modpath, modname, S)
 assert(loadfile(modpath .. "/misc/mount.lua"))(modpath, S) --Load the mount engine
-assert(loadfile(modpath .. "/misc/mobkit.lua"))(modpath, S)
 assert(loadfile(modpath .. "/misc/brains.lua"))(modpath, S)
 assert(loadfile(modpath .. "/misc/behaviours.lua"))(modpath, S)
 assert(loadfile(modpath .. "/misc/nodes.lua"))(modpath, S) --Load the nodes
