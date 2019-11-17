@@ -26,6 +26,7 @@ function petz.bh_runaway_from_predator(self, pos)
 	end	
 end
 
+--Follow behaviours
 function petz.bh_start_follow(self, pos, player, prty)
 	if player then		
 		local wielded_item_name = player:get_wielded_item():get_name()	
@@ -44,13 +45,11 @@ function petz.bh_start_follow(self, pos, player, prty)
 	end
 end
 
-function petz.bh_env_damage(self, prty)
-	local stand_pos= mobkit.get_stand_pos(self)
-	if petz.env_damage(self, stand_pos)	== true then
-		local air_pos = minetest.find_node_near(stand_pos, self.view_range, "air", false)
-		if air_pos then
-			mobkit.hq_goto(self, prty, air_pos)
-		end
+function petz.bh_check_pack(self)
+	if mobkit.get_closest_entity(self, "petz:"..self.type) then
+		return true
+	else
+		return false
 	end
 end
 
@@ -73,6 +72,16 @@ function petz.bh_stop_follow(self, player)
 	else
 		petz.ownthing(self)
 	end	
+end
+
+function petz.bh_env_damage(self, prty)
+	local stand_pos= mobkit.get_stand_pos(self)
+	if petz.env_damage(self, stand_pos)	== true then
+		local air_pos = minetest.find_node_near(stand_pos, self.view_range, "air", false)
+		if air_pos then
+			mobkit.hq_goto(self, prty, air_pos)
+		end
+	end
 end
 
 function petz.bh_replace(self)
@@ -401,10 +410,15 @@ function petz.predator_brain(self)
 						
 		if prty < 10 then
 			if player then
+				if not(self.attack_player) and not(self.warn_attack) then
+					if petz.bh_check_pack(self) then
+						self.warn_attack = true
+					end
+				end
 				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
 					local player_pos = player:get_pos()
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
-						if self.warn_attack == true then --attack player										
+						if self.attack_player == true or self.warn_attack == true then --attack player										
 							mobkit.hq_hunt(self, 10, player) -- try to repel them
 							return
 						else
