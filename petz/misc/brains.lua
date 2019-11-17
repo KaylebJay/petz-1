@@ -51,7 +51,7 @@ function mobkit.check_ground_suffocation(self)
 	end
 end
 
-function mobkit.set_velocity(self, velocity)
+function petz.set_velocity(self, velocity)
 	local yaw = self.object:get_yaw() or 0
 	self.object:set_velocity({
 		x = (math.sin(yaw) * -velocity.x),
@@ -245,14 +245,14 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				--minetest.chat_send_player("singleplayer", "ascend")			
 			end		
 			timer = petz.settings.fly_check_time
-			mobkit.set_velocity(self, velocity)
+			petz.set_velocity(self, velocity)
 			self.fly_velocity = velocity --save the velocity to set in each step, not only each x seconds
 			return true
 		else
 			if self.fly_velocity then
-				mobkit.set_velocity(self, self.fly_velocity)
+				petz.set_velocity(self, self.fly_velocity)
 			else
-				mobkit.set_velocity(self, {x = 0.0, y = 0.0, z = 0.0})
+				petz.set_velocity(self, {x = 0.0, y = 0.0, z = 0.0})
 			end		
 		end
 	end
@@ -355,7 +355,7 @@ function mobkit.hq_aqua_jump(self, prty)
 			y = self.max_speed * vel_impulse,
 			z = self.max_speed * (vel_impulse/3),
 		}		
-		mobkit.set_velocity(self, velocity)
+		petz.set_velocity(self, velocity)
 		self.object:set_acceleration({x=1.0, y=vel_impulse, z=1.0})
 		self.status = "jump"
 		petz.do_sound_effect("object", self.object, "petz_splash")
@@ -393,7 +393,7 @@ function mobkit.lq_search_flower(self, tpos)
 		local y_distance = tpos.y - pos.y				
 		local abs_y_distance = math.abs(y_distance)		
 		if (abs_y_distance > 1) and (abs_y_distance < self.view_range) then
-			mobkit.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
+			petz.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
 		end
 		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 0.5) then					
 			self.pollen = true
@@ -427,7 +427,7 @@ function mobkit.lq_search_behive(self)
 		local y_distance = tpos.y - pos.y
 		local abs_y_distance = math.abs(y_distance)	
 		if (abs_y_distance > 1) and (abs_y_distance < self.view_range) then
-			mobkit.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
+			petz.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
 		end
 		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 1.01)  then
 				if petz.behive_exists(self) then
