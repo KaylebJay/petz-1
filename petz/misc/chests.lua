@@ -203,6 +203,7 @@ petz.register_chest("christmas_present", {
 		"petz_christmas_chest_front.png",
 		"petz_christmas_chest_inside.png"
 	},
+	stack_max = 1,
 	sounds = default.node_sound_wood_defaults(),
 	sound_open = "default_chest_open",
 	sound_close = "default_chest_close",

@@ -39,7 +39,7 @@ petz.on_die = function(self)
 	--For all the mobs
     local props = self.object:get_properties()
     props.collisionbox[2] = props.collisionbox[1]
-	petz.set_properties(self, {collisionbox=props.collisionbox})
+    self.object:set_properties({collisionbox=props.collisionbox})	
 	petz.drop_items(self)
 	mobkit.clear_queue_high(self)
 	if petz.pet[self.owner] then

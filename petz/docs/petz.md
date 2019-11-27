@@ -2,24 +2,24 @@
 layout: default
 ---
 
-![Logo](/images/petz_logo.png)
+![Logo](images/petz_logo.png)
 
-![Items](/images/petz_items.png)
+![Items](images/petz_items.png)
 
 Are you tired of ugly mobs? Do you like the kawaii world and taste?
 The PetZ are here now for you!
 
 ### Mobs
 #### Kitty
-![Kitty](/images/kitty.png)
+![Kitty](images/kitty.png)
 - It avaliable in 6 colors.
 
 #### Puppy
-![Puppy](/images/puppy.png)
+![Puppy](images/puppy.png)
 - 3 colors.
 
 #### Duckies
-![Ducky](/images/ducky.png)
+![Ducky](images/ducky.png)
 - Three types: Yellow, Black and Mallard.
 - Peaceful and dumb animal.
 - They can put duck eggs from time to time.You can tame it but not give it any order.
@@ -29,7 +29,7 @@ The PetZ are here now for you!
 - Fried egg and bacon: A fried egg plus a porkchop.
 
 #### Beaver
-![Beaver](/images/beaver.png)
+![Beaver](images/beaver.png)
 Behaviour:
 - It lives near water (in rivers in the case of valleys mapgen).
 - It can be tamed.
@@ -39,7 +39,7 @@ Behaviour:
 - You can spread beaver oil on your pet skin. In tamagochi mode your pet will be happy, but the fact of not do it it is not mandatory for it to be sad.
 
 #### Lamb
-![Lamb](/images/lamb.png)
+![Lamb](images/lamb.png)
 In 3 colors: White (common), grey & dark gray (rare) and brown (very rare).
 - Lambs eat grass.
 - You can get Wool with the Shears (right click).
@@ -48,7 +48,7 @@ In 3 colors: White (common), grey & dark gray (rare) and brown (very rare).
 - Predators: Wolf & Lion.
 
 #### Lion
-![Lion](/images/lion.png)
+![Lion](images/lion.png)
 - It lives in the Savanna. Wild animal. Dangerous.
 - It likes raw meat.
 - Can be tamed and give it orders with meat or a Whip (3 lashings to tame)
@@ -58,7 +58,7 @@ In Tamagochi Mode:
 - Preys: Lambs, piggies and ponies.
 
 #### Calf
-![Calf](/images/calf.png)
+![Calf](images/calf.png)
 - Available in three skins.
 - It eats grass from time to time, like the lambs.
 - It drops Leather when killed.
@@ -69,20 +69,20 @@ In Tamagochi Mode:
 - Predators: Calf.
 
 #### Panda
-![Panda](/images/panda.png)
+![Panda](images/panda.png)
 - Panda is tamable and loves papyrus.
 
 #### Frog
-![Frog](/images/frog.png)
+![Frog](images/frog.png)
 - Frog is a semiaquatic animal. It loves fireflies to eat'em. It drops a leg that you can cook in order to get a Roasted Frog Leg (food).
 
 #### Grizzly
-![Grizzly](/images/grizzly.png)
+![Grizzly](images/grizzly.png)
 - Not a Teddy Bear, but a wild one. It lives in woods. It's tamable like the lion.
 - Preys: Lamb.
 
 #### Pony
-![Pony](/images/pony.png)
+![Pony](images/pony.png)
 - You can mount it with a Saddle and get a ride.
 - You can give it orders.
 - The Saddle can be cut with the Shears.
@@ -90,7 +90,7 @@ In Tamagochi Mode:
 - Predators: Lion.
 
 #### Parrot
-![Parrot](/images/parrot.png)
+![Parrot](images/parrot.png)
 - Five species.
 - Tamable and you can give it orders.
 - It loves wheat seeds.
@@ -101,7 +101,7 @@ In Tamagochi Mode:
 - You can put your parrot on a Bird Stand.
 
 #### Chicken
-![Chicken](/images/chicken.png)
+![Chicken](images/chicken.png)
 - Farm Animal.
 - It can lay Chicken Eggs like the duckies.
 - It drops Raw Chicken to cook it as food.
@@ -109,30 +109,30 @@ In Tamagochi Mode:
 - Put a lot of Roasted Chicken Legs into a bucket, to get a super-delicious bucket of Chicken Legs.
 
 #### Pigeon
-![Pigeon](/images/pigeon.png)
+![Pigeon](images/pigeon.png)
 - Flying bird.
 
 #### Chimp
-![Chimp](/images/chimp.png)
+![Chimp](images/chimp.png)
 - Agile monkey.
 - Arboreal mob: It can climb trees, wood and leaves.
 - It loves blueberries.
 
 #### Piggy
-![Piggy](/images/piggy.png)
+![Piggy](images/piggy.png)
 - It's a source of meat.
 - It drops Porkchop to being cooked.
 - Predators: Lion.
 
 #### Turtle
-![Turtle](/images/turtle.png)
+![Turtle](images/turtle.png)
 - Semiaquatic mob.
 - It eats kelps.
 - It has a chance of drop its shell.
 
 #### Fishes
-![Clownfish](/images/clownfish.png)
-![Tropical Fish](/images/tropicalfish.png)
+![Clownfish](images/clownfish.png)
+![Tropical Fish](images/tropicalfish.png)
 Clownfish & Tropical Fish
 - It lives close to a coral reef.
 - It loves orange coral (clownfish) or brown coral (tropical fish).
@@ -141,7 +141,7 @@ Clownfish & Tropical Fish
 - In tamagochi mode you have only to feed it, but no if it is in a fish tank.
 
 #### Wolf
-![Wolf](/images/wolf.png)
+![Wolf](images/wolf.png)
 - Wild animal.
 - Run away from players til players attack them, then agressive.
 - Tamable in the same way as lion.
@@ -149,19 +149,19 @@ Clownfish & Tropical Fish
 - Wolves can be turned into puppies: Tame the wolf with a whip, then feed it with bones (until 5, configurable in petz.conf).
 
 #### Moth
-![Moth](/images/chimp.png)
+![Moth](images/chimp.png)
 - It spawns only at night in the coniferous forest.
 - It dies when daylight comes, unless it would be in a dark place for protection, i.e. a cave or a closed box. It needs some obscurity, not a totally dark place.
 - A moth can be captured with an empty glass bottle. Deco item. If you break the bottle, the moth liberates.
 
 #### Silkworm
-![Silkworm](/images/silkworm.png)
+![Silkworm](images/silkworm.png)
 - It spawn naturally on coniferous forests.
 - It eats all kind of leaves.
 - You can produce Silk (see below).
 
 #### Camel
-![Camel](/images/camel.png)
+![Camel](images/camel.png)
 - It lives in deserts.
 - It eats dry shrub.
 - Predator: Lion
@@ -176,30 +176,30 @@ Clownfish & Tropical Fish
 - You can put together the saddle and the saddlebag. But on right click you will mount it. To access to the inventory of the saddlebag use the shears to quit both items. Then put a saddlebag only.
 
 #### Bat
-![Bat](/images/bat.png)
+![Bat](images/bat.png)
 - Spawn in interiors (caves)
 - If spawned outside, only at night, and when sunrise dies.
 - It eats and follows fireflies.
 
 #### Hamster
-![Hamster](/images/hamster.png)
+![Hamster](images/hamster.png)
 - It lives in deserts.
 - 6 colors.
 - Breed them.
 - Mutation: Pink Hamster.
 
 #### Dolphin
-![Dolphin](/images/dolphin.png)
+![Dolphin](images/dolphin.png)
 - It lives in oceans.
 
 #### Toucan
-![Toucan](/images/toucan.png)
+![Toucan](images/toucan.png)
 -It lives in the jungle.
 -It eats apples.
 -Tamable. You can put it in a bird stand.
 
 #### Bee
-![Bee](/images/bee.png)
+![Bee](images/bee.png)
 - Flying insect.
 - It lives in behives and stays close to them.
 - It produces honey. It searches for flowers to get the pollen and then return to the behive.
@@ -242,17 +242,17 @@ In multiplayer games (servers) the Tamagochi Mode is paused if the pet owner is 
 This does not apply if your pet is inside its kennel.
 
 #### Brush it!
-![Brush](/images/brush.png)
+![Brush](images/brush.png)
 You have to brush your pet once each 2 days at least, or it will be sad. Firstly create a hairbrush with two wood sticks and one string.
 This does not apply if your pet is inside its kennel.
 
 #### Lash it!
-![Lash](/images/lash.png)
+![Lash](images/lash.png)
 In the case of a lion or grizzly, you have to lash it with a whip once each 2 days at least in order to control it.
 Do not use the whip with another petz!
 
 #### Polish it!
-![Beaver Oil](/images/beaver_oil.png)
+![Beaver Oil](images/beaver_oil.png)
 You can spread beaver oil on your pet skin. In tamagochi mode your pet will be happy, but the fact of not do it it is not mandatory for it to be sad.
 
 Also keep in mind that:
@@ -268,16 +268,16 @@ Notes
 - The Tamagochi Mode is paused for pet owners in multiplayer games (servers) when they are offline.
 
 ### Pet Bowl
-![Pet Bowl](/images/pet_bowl.png)
+![Pet Bowl](images/pet_bowl.png)
 Make a house to your pet and put a Pet Bowl. The pet will stand near it.
 
 ### Kennel
-![Kennel](/images/kennel.png)
+![Kennel](images/kennel.png)
 A schematic. Simply make a hole and punch inside it. You can put your pet inside after capture it. For creative mode only.
 In there your dog will be well cared for and you won't have to worry about its health.
 
 ### Ducks/Chicken Farm
-![Ducks/Chicken Farm](/images/duck_chicken_farm.png)
+![Ducks/Chicken Farm](images/duck_chicken_farm.png)
 You can breed ducks or chickens via its eggs:
 - Create a empty nest and put an egg inside (right click), optionally you can create a nest with an already egg inside. Await for the egg to hatch into a new ducky or chicken.
 - Also if a ducky or chicken has an empty nest near, it can lay an egg on it.
@@ -295,17 +295,17 @@ Use the followig items to capture a petz:
 - You cannot capture the pets of other players by default. To allow to rob pets change the setting 'rob_mobs' in 'petz.conf" file.
 
 ### Beaver Dam
-![Beaver Dam](/images/beaver_dam.png)
+![Beaver Dam](images/beaver_dam.png)
 The beaver's home
 
 ### Fish Tank
-![Fish Tank](/images/fish_tank.png)
+![Fish Tank](images/fish_tank.png)
 - Put your fish inside (right-click)
 - Recover your fish with the Bug Net (right click) or breaking it.
 - You can connect several fish tank nodes to build bigger tanks and add more fishes (one by node).
 
 ### Pony/camel Breeding
-![Baby Pony](/images/baby_pony.png)![Pony Breeding](/images/pony_breeding.png)
+![Baby Pony](images/baby_pony.png)![Pony Breeding](images/pony_breeding.png)
 - Ponies/camels can be male or female. Check its gender right clicking on them.
 - Each animal has its own velocity forward, velocity backward and acceleration. You can read its characteristics with the format "1/1/1" where the numbers represent these 3 characteristics.
 - Create a Glass Syringe.
@@ -327,14 +327,14 @@ The beaver's home
 - The method is to breed parents with high speed statistics to get the best descendants, then select the fastest descendants to continue breeding them. This is a very slow process. Be patient.
 
 ### Square Ball
-![Square Ball](/images/squareball.png)
+![Square Ball](images/squareball.png)
 - Make a Square Ball.
 - Throw it to your puppy. You have to hit the target.
 - Your puppy bring back the square ball to you.
 - To get the ball, right click on it.
 
 ### Recipes
-![Recipes](/images/recipes.png)
+![Recipes](images/recipes.png)
 - Blueberry Cheese Cake = Blueberries, wheat, cheese and egg.
 - Blueberry Ice Cream: Blueberries, wheat, milk, 2 eggs and 2 snows = 3 ice creams.
 - Blueberry Muffin: Blueberries, 2 wheat, milk, 2 eggs and paper = 8 muffins.
@@ -350,13 +350,13 @@ You can get baby lambs, hamsters and elefants.
 6) The little petz will grown in one day.
 
 #### Mutation! Vanilla lamb | White Elephant!
-![Mutation](/images/mutation.png)
+![Mutation](images/mutation.png)
 Also petz can suffer from a very rare mutation in its genes when spawn or breed, in a 1:200 ratio.
 - You can get a Vanilla Lamb and 'vanilla wool' new item.
 - You can get a white elephant.
 
 ### Dreamcatcher
-![Dreamcatcher](/images/dreamcatcher.png)
+![Dreamcatcher](images/dreamcatcher.png)
 Dreamcatcher amulet for your petz! Protect them!
 - Craftable with: wood, strings and ducky feathers.
 - To put it: Right click with it on a pet you own.
@@ -364,7 +364,7 @@ Dreamcatcher amulet for your petz! Protect them!
 - To remove the Dreamcatcher from your pet: Right click on your pet and click on the Dreamcatcher image. Another option is to kill your pet, it will drop the dreamcatcher.
 
 ### Whistle
-![Whistle](/images/whistle.png)
+![Whistle](images/whistle.png)
 Call your petz anywhere it is.
 - Put names to pets you want to call.
 - Use a Whistle: A list of pets with name and of your own will appear.
@@ -378,23 +378,23 @@ You can give orders to tamed petz.
 - Fly, Alight: For birds.
 
 ### Bird Stand
-![Birstand Item](/images/birdstand_item.png)
-![Birstand](/images/birdstand.png)
+![Birstand Item](images/birdstand_item.png)
+![Birstand](images/birdstand.png)
 - Capture your parrot with the Bug Net.
 - Put it on the bird stand (right-click)
 
 ### Barn
-![Barn](/images/barn.png)
+![Barn](images/barn.png)
 Do create livestocks with the aid of fences.
 
 ### Silk Farm
-![Silk Stuff](/images/silk_stuff.png)
+![Silk Stuff](images/silk_stuff.png)
 - You can get cocoons. A cocoon is silk indeed.
 - Also you can capture or breed moths/silkworns to make a Silk Farm.
 - Create a closed facility. Create a bed of leaves. Put inside some moths and/or silkworms. The moths will lay eggs and silkworms will turn into cocoons (be care: they will eat the leaves too).
 
 #### Spinning Wheel
-![Spinning Wheel](/images/spiniing_wheel.png)
+![Spinning Wheel](images/spiniing_wheel.png)
 - Create a Spinning Wheel to get Silk Bobbins. Its a one node size item, so put on a node-table.
 
 Instructions to craft a Spinnig Wheel:
@@ -406,13 +406,13 @@ Instructions to use:
 - You need to put in the Spinning Wheel (right-click) 3 Silkworns Cocoons. Then a Silk Bobbin will be created. Right-click again to get the bobbin.
 
 #### Prince Armor
-![Prince Armor Stuff](/images/prince_armor_stuff.png)
-![Prince Armor](/images/prince_armor.png)
+![Prince Armor Stuff](images/prince_armor_stuff.png)
+![Prince Armor](images/prince_armor.png)
 - It requires the 3D Armor mod!
 - You can create a super expensive and exquisite Prince Armor thanks to silk.
 
 ### Honey Farm
-![Honey Stuff](/images/honey_stuff.png)
+![Honey Stuff](images/honey_stuff.png)
 - The limit of honey by behive is 10 (max_honey_behive setting in petz.conf).
 - You can collect honey from a behive with an empty bottle (right click).
 - You can eat the honey. Honey is very powerful in order to recover your health.

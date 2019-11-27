@@ -249,3 +249,13 @@ Author: Alexander
 https://www.freesoundeffects.com/
 License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filenames: petz_polar_bear_attack.ogg
+Author: Partners In Rhyme 
+https://www.freesoundeffects.com/free-track/ploar-89403/polar%20bear/
+License: Free
+--------------------------------------------
+filenames: petz_polar_bear_growl.ogg
+Author: Partners In Rhyme 
+https://www.freesoundeffects.com/free-track/polarbear-89404/polar%20bear/
+License: Free

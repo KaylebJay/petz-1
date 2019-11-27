@@ -1,28 +1,29 @@
 --
---FOXY
+--POLAR BEAR
 --
 local S = ...
 
-local pet_name = "foxy"
-local scale_model = 1.0
-petz.foxy = {}
-local mesh = 'petz_foxy.b3d'	
-local textures = {"petz_foxy.png"}	
-local collisionbox = {0.25, -0.75*scale_model, 0.5625, -0.25, -0.09375, -0.28125}
-
+local pet_name = "polar_bear"
+local scale_model = 1.5
+petz.polar_bear = {}
+local mesh = 'petz_polar_bear.b3d'	
+local textures= {"petz_polar_bear.png"}
+local collisionbox = {0.5625, -0.75*scale_model, 1.125, -0.5625, 0.28125, -1.0}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
-	type = "foxy",	
-	init_tamagochi_timer = true,	
-	is_pet = true,
-	has_affinity = true,
-	is_wild =false,
-	attack_player = false,
-	give_orders = true,
-	can_be_brushed = true,
+	type = "polar_bear",	
+	init_tamagochi_timer = false,	
+	is_pet = false,
+	has_affinity = false,
+	is_wild = true,
+	attack_player = true,
+	give_orders = false,
+	can_be_brushed = false,
 	capture_item = "lasso",
-	follow = petz.settings.foxy_follow,	
+	drops = {
+		{name = "petz:bone", chance = 5, min = 1, max = 1,},
+	},
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -38,10 +39,10 @@ minetest.register_entity("petz:"..pet_name,{
 	springiness= 0,
 	buoyancy = 0.5, -- portion of hitbox submerged
 	max_speed = 2.3,
-	jump_height = 2.0,
+	jump_height = 1.5,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
-	max_hp = 20,  		
+	max_hp = 30,  		
 	
 	attack={range=0.5, damage_groups={fleshy=7}},	
 	animation = {
@@ -52,13 +53,12 @@ minetest.register_entity("petz:"..pet_name,{
 			{range={x=47, y=59}, speed=5, loop=true},
 			{range={x=82, y=94}, speed=5, loop=true},		
 		},	
+		sit = {range={x=60, y=65}, speed=5, loop=false},
 	},
 	sounds = {
-		misc = "petz_foxy_bark",
-		moaning = "petz_foxy_moaning",
+		misc = "petz_polar_bear_growl",
+		attack = "petz_polar_bear_attack",
 	},
-	
-	--punch_start = 83, stand4_end = 95,
 	
 	logic = petz.predator_brain,
 	
@@ -68,7 +68,7 @@ minetest.register_entity("petz:"..pet_name,{
 	end,
 	
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		
-		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)					
+		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)		
 	end,
 	
 	on_rightclick = function(self, clicker)
@@ -79,7 +79,7 @@ minetest.register_entity("petz:"..pet_name,{
 		mobkit.stepfunc(self, dtime) -- required
 		petz.on_step(self, dtime)
 	end,
-
+    
 })
 
-petz:register_egg("petz:foxy", S("Foxy"), "petz_spawnegg_foxy.png", true)
+petz:register_egg("petz:polar_bear", S("Polar Bear"), "petz_spawnegg_polar_bear.png", true)
