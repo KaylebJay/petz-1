@@ -25,6 +25,7 @@ minetest.register_entity("petz:"..pet_name,{
 	has_affinity = true,
 	breed = true,
 	mutation = true,
+	mutation_count = 1,
 	is_wild = false,
 	give_orders = true,
 	can_be_brushed = true,

@@ -30,6 +30,7 @@ minetest.register_entity("petz:"..pet_name,{
 	can_be_brushed = true,
 	capture_item = "lasso",
 	mutation = true,
+	mutation_count = 1,
 	follow = petz.settings.lamb_follow,
 	drops = {
 		{name = "petz:mini_lamb_chop", chance = 1, min = 1, max = 1,},

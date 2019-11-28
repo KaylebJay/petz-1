@@ -14,8 +14,8 @@ end
 
 petz.get_gen = function(self)
 	local textures_count
-	if self.mutation then
-		textures_count = #self.skin_colors -1
+	if self.mutation and self.mutation_count and (self.mutation_count > 0) then
+		textures_count = #self.skin_colors - self.mutation_count
 	else
 		textures_count = #self.skin_colors
 	end
@@ -117,7 +117,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			if random_number == 1 then
 				self.texture_no = 4 --brown
 			elseif random_number >= 2 and random_number <= 4 then
-				self.texture_no = 3 --drak grey
+				self.texture_no = 3 --dark grey
 			elseif random_number >= 5 and random_number <= 7 then				
 				self.texture_no = 2 --grey
 			else				
@@ -133,7 +133,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				self.texture_no = 2 --brown
 			end
 		elseif self.type == "elephant" then		
-			self.texture_no = math.random(1, #self.skin_colors-1) --set a random texture
+			self.texture_no = math.random(1, #self.skin_colors - self.mutation_count) --set a random texture
 		elseif self.type == "puppy" then		
 			self.square_ball_attached = mobkit.remember(self, "square_ball_attached", false)			
 		elseif self.type == "wolf" then		
@@ -144,7 +144,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				self.max_speed_reverse= 	mobkit.remember(self, "max_speed_reverse", math.random(1, 2))				
 				self.accel= mobkit.remember(self, "accel", math.random(2, 4))	
 			end							
-    		self.texture_no = math.random(1, #self.skin_colors-1) --set a random texture
+    		self.texture_no = math.random(1, #self.skin_colors - self.mutation_count) --set a random texture
 			self.driver = mobkit.remember(self, "driver", nil)			
 			--Saddlebag
 			self.saddle = mobkit.remember(self, "saddle", false)		
@@ -179,7 +179,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.genes = {}
 			if not(self.type == "pony") then
 				local genes_mutation = false
-				if self.mutation and math.random(1, 200) == 1 then
+				if self.mutation and self.mutation_count and (self.mutation_count > 0) and math.random(1, 200) == 1 then
 					genes_mutation = true
 				end
 				if genes_mutation == false then
@@ -200,15 +200,15 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 							self.genes["gen2"] = static_data_table["gen2_mother"]
 						end	
 					end						
-						local textures_count
-						if self.mutation then
-							textures_count = #self.skin_colors - 1
-						else
-							textures_count = #self.skin_colors
-						end
-						self.texture_no = petz.genetics_texture(self, textures_count)															
+					local textures_count
+					if self.mutation and self.mutation_count and (self.mutation_count > 0) then
+						textures_count = #self.skin_colors - self.mutation_count
+					else
+						textures_count = #self.skin_colors
+					end
+					self.texture_no = petz.genetics_texture(self, textures_count)															
 				else -- mutation
-					local mutation_gen = #self.skin_colors --the last skin is always the mutation
+					local mutation_gen = math.random((#self.skin_colors-self.mutation_count+1), #self.skin_colors)--select the mutation in the last skins
 					self.genes["gen1"] = mutation_gen 
 					self.genes["gen2"] = mutation_gen 
 					self.texture_no = mutation_gen

@@ -31,6 +31,7 @@ minetest.register_entity("petz:"..pet_name, {
 	milkable = true,
 	breed = true,
 	mutation = true,
+	mutation_count = 1,
 	is_wild = false,
 	give_orders = true,
 	can_be_brushed = true,

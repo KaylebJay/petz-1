@@ -49,6 +49,7 @@ for i=1, 2 do
 		give_orders = true,
 		can_be_brushed = true,
 		mutation = true,
+		mutation_count = 1,
 		--breed = true,
 		capture_item = "lasso",
 		follow = petz.settings.elephant_follow,
