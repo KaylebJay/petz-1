@@ -303,3 +303,18 @@ minetest.register_craft({
     replacements = {{"group:food_milk", "bucket:bucket_empty"}},
 })
 
+--Christmas 2019 Update
+
+minetest.register_craftitem("petz:gingerbread_cookie", {
+	description = S("Gingerbread Cookie"),
+	inventory_image = "petz_gingerbread_cookie.png",	
+	on_use = minetest.item_eat(8),
+	groups = {flammable = 2, food = 2},
+})
+
+minetest.register_craftitem("petz:candy_cane", {
+	description = S("Candy Cane"),
+	inventory_image = "petz_candy_cane.png",	
+	on_use = minetest.item_eat(6),
+	groups = {flammable = 2, food = 2},
+})

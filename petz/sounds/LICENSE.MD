@@ -259,3 +259,15 @@ filenames: petz_polar_bear_growl.ogg
 Author: Partners In Rhyme 
 https://www.freesoundeffects.com/free-track/polarbear-89404/polar%20bear/
 License: Free
+--------------------------------------------
+filenames: petz_ho_ho_ho.ogg
+Author: Alexander
+http://www.orangefreesounds.com/ho-ho-ho-merry-christmas/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filenames: petz_merry_christmas.ogg
+Author: Alexander
+http://www.orangefreesounds.com/ho-ho-ho-merry-christmas/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”

@@ -4,6 +4,23 @@ local modpath, S = ...
 --'set_initial_properties' is call by 'on_activate' for each pet
 --
 
+petz.genetics_random_texture  = function(self)	
+	local skins_count = #self.skin_colors
+	
+	for row=1,skins_count do
+		for col=1, skins_count do
+			array[row][col] = i*j
+		end	
+	end
+
+	-- Accessing the array
+	for i=1,skins_count do
+		for j=1,skins_count do
+			print(array[i][j])
+		end
+	end
+end
+
 petz.set_random_gender = function()	
 	if math.random(1, 2) == 1 then	    
 		return true

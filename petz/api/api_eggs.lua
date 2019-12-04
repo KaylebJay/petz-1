@@ -2,6 +2,9 @@ local modpath, S = ...
 
 --Lay Egg
 petz.lay_egg = function(self)
+	if self.isinliquid then --do not put eggs when in liquid
+		return
+	end
 	local pos = self.object:get_pos()
 	if self.type_of_egg == "item" then
 		if math.random(1, petz.settings.lay_egg_chance) == 1 then
