@@ -284,7 +284,7 @@ function mobkit.hq_liquid_recovery_flying(self, prty)
 	local func=function(self)		
 		self.object:set_acceleration({ x = 0.0, y = 0.125, z = 0.0 })
 		self.object:set_velocity({ x = 1.0, y = 1.0, z = 1.0 })
-		if self.isinliquid == false then			
+		if not(self.isinliquid) then			
 			self.object:set_acceleration({ x = 0.0, y = 0.0, z = 0.0 })
 			return true
 		end
