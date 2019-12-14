@@ -1,7 +1,6 @@
 local modpath, S = ...
 
-
-petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)	
+petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)			
 	local pos_below = {
 		x = spawn_pos.x,
 		y = spawn_pos.y - 1.0,
@@ -51,6 +50,19 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)
 			if can_spawn and ent.is_monster == true then
 				if petz.settings.disable_monsters == true then
 					can_spawn = false
+				end
+			end
+			--Check if seasonal mobs
+			if can_spawn and petz.settings[pet_name.."_seasonal"] then
+				local now_month = petz.get_os_month()
+				if petz.settings[pet_name.."_seasonal"] == "halloween" then
+					if now_month ~= 10 then
+						can_spawn = false
+					end
+				elseif petz.settings[pet_name.."_seasonal"] == "christmas" then
+					if now_month ~= 12 then
+						can_spawn = false
+					end
 				end
 			end
 		end

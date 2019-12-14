@@ -3,6 +3,8 @@ local modpath, modname, S = ...
 local creative_mode = minetest.settings:get_bool("creative_mode")
 
 assert(loadfile(modpath .. "/api/api_helper_functions.lua"))(modpath, S)
+assert(loadfile(modpath .. "/api/api_datetime.lua"))(modpath, S)
+assert(loadfile(modpath .. "/api/api_spawn.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api/api_orders.lua"))(modpath, S)
 assert(loadfile(modpath .. "/api/api_init_prop.lua"))(modpath, S) --Load the init the properties for the entities
 assert(loadfile(modpath .. "/api/api_forms.lua"))(modpath, S)

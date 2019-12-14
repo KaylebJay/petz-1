@@ -36,7 +36,6 @@ assert(loadfile(modpath .. "/misc/nodes.lua"))(modpath, S) --Load the nodes
 assert(loadfile(modpath .. "/misc/items.lua"))(modpath, S) --Load the items
 assert(loadfile(modpath .. "/misc/chests.lua"))(modpath, S) --Load the chests
 assert(loadfile(modpath .. "/misc/food.lua"))(modpath, S) --Load the food items
-assert(loadfile(modpath .. "/misc/spawn.lua"))(modpath, S) --Load the spawn engine
 if minetest.get_modpath("3d_armor") ~= nil then --Armors (optional)
 	assert(loadfile(modpath .. "/misc/armors.lua"))(modpath, S)
 end
