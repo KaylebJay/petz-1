@@ -55,11 +55,12 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)
 			--Check if seasonal mobs
 			if can_spawn and petz.settings[pet_name.."_seasonal"] then
 				local now_month = petz.get_os_month()
-				if petz.settings[pet_name.."_seasonal"] == "halloween" then
+				local season = petz.settings[pet_name.."_seasonal"]
+				if season == "halloween" then
 					if now_month ~= 10 then
 						can_spawn = false
 					end
-				elseif petz.settings[pet_name.."_seasonal"] == "christmas" then
+				elseif season == "christmas" then
 					if now_month ~= 12 then
 						can_spawn = false
 					end
