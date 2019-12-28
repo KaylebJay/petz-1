@@ -4,21 +4,31 @@ local modpath, S = ...
 --'set_initial_properties' is call by 'on_activate' for each pet
 --
 
-petz.genetics_random_texture  = function(self)	
+petz.genetics_texture = function(self, textures_count)	
 	local skins_count = #self.skin_colors
 	
-	for row=1,skins_count do
-		for col=1, skins_count do
-			array[row][col] = i*j
+	local array = {}
+	for row=1, textures_count do
+		array[row] = {}
+		for col=1, textures_count do
+			array[row][col] = math.min(row, col)
 		end	
 	end
+				
+	return array[math.random(1, textures_count)][math.random(1, textures_count)]
 
-	-- Accessing the array
-	for i=1,skins_count do
-		for j=1,skins_count do
-			print(array[i][j])
-		end
-	end
+	-- Accessing the array to calculate the rates
+	--local rates = {}
+	--for row=1, textures_count do
+		--for col=1, textures_count do
+			--rates[array[row][col]] = (rates[array[row][col]] or 0) + 1
+		--end
+	--end
+	
+	--for row=1, textures_count do
+		--minetest.chat_send_player("singleplayer", tostring(rates[row]))			
+	--end
+	
 end
 
 petz.set_random_gender = function()	
@@ -37,14 +47,6 @@ petz.get_gen = function(self)
 		textures_count = #self.skin_colors
 	end
 	return math.random(1, textures_count)
-end
-
-petz.genetics_texture  = function(self, textures_count)	
-	for i = 1, textures_count do
-		if self.genes["gen1"] == i or self.genes["gen2"] == i then 
-			return i
-		end
-	end
 end
 
 petz.load_vars = function(self)
@@ -223,7 +225,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 					else
 						textures_count = #self.skin_colors
 					end
-					self.texture_no = petz.genetics_texture(self, textures_count)															
+					self.texture_no = petz.genetics_texture(self, textures_count)													
 				else -- mutation
 					local mutation_gen = math.random((#self.skin_colors-self.mutation+1), #self.skin_colors)--select the mutation in the last skins
 					self.genes["gen1"] = mutation_gen 
