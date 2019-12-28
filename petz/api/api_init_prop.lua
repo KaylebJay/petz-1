@@ -136,19 +136,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	elseif static_data_table and static_data_table["baby_born"] and static_data_table["baby_born"] == true then
 		baby_born = true	
 	end
-	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars	
-		--Get a texture
-		local textures_count
-		if self.mutation and (self.mutation > 0) then
-			textures_count = #self.skin_colors - self.mutation
-		else
-			textures_count = #self.skin_colors
-		end
-		if textures_count > 1 then
-			self.texture_no = petz.genetics_random_texture(self, textures_count)
-		else
-			self.texture_no = 1
-		end				
+	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars		
 		--Mob Specific
 		--Lamb
 		if self.type == "lamb" then --set a random color 
@@ -239,6 +227,20 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.eggs_count = mobkit.remember(self, "eggs_count", 0)
 		end	
 		--ALL the mobs
+		--Get a texture
+		if not(self.texture_no) then
+			local textures_count
+			if self.mutation and (self.mutation > 0) then
+				textures_count = #self.skin_colors - self.mutation
+			else
+				textures_count = #self.skin_colors
+			end
+			if textures_count > 1 then
+				self.texture_no = petz.genetics_random_texture(self, textures_count)
+			else
+				self.texture_no = 1
+			end
+		end
 		self.set_vars = mobkit.remember(self, "set_vars", true)
 		self.tag = mobkit.remember(self, "tag", "")
 		self.show_tag = mobkit.remember(self, "show_tag", false)
