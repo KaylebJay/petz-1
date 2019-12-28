@@ -4,7 +4,7 @@ local modpath, S = ...
 --'set_initial_properties' is call by 'on_activate' for each pet
 --
 
-petz.genetics_texture = function(self, textures_count)	
+petz.genetics_random_texture = function(self, textures_count)	
 	local skins_count = #self.skin_colors
 	
 	local array = {}
@@ -47,6 +47,14 @@ petz.get_gen = function(self)
 		textures_count = #self.skin_colors
 	end
 	return math.random(1, textures_count)
+end
+
+petz.genetics_texture  = function(self, textures_count)	
+	for i = 1, textures_count do
+		if self.genes["gen1"] == i or self.genes["gen2"] == i then 
+			return i
+		end
+	end
 end
 
 petz.load_vars = function(self)
@@ -128,31 +136,24 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	elseif static_data_table and static_data_table["baby_born"] and static_data_table["baby_born"] == true then
 		baby_born = true	
 	end
-	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars		
+	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars	
+		--Get a texture
+		local textures_count
+		if self.mutation and (self.mutation > 0) then
+			textures_count = #self.skin_colors - self.mutation
+		else
+			textures_count = #self.skin_colors
+		end
+		if textures_count > 1 then
+			self.texture_no = petz.genetics_random_texture(self, textures_count)
+		else
+			self.texture_no = 1
+		end				
 		--Mob Specific
 		--Lamb
 		if self.type == "lamb" then --set a random color 
-			local random_number = math.random(1, 15)
-			if random_number == 1 then
-				self.texture_no = 4 --brown
-			elseif random_number >= 2 and random_number <= 4 then
-				self.texture_no = 3 --dark grey
-			elseif random_number >= 5 and random_number <= 7 then				
-				self.texture_no = 2 --grey
-			else				
-				self.texture_no = 1 --white, from 8 to 15
-			end
 			self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)	
 			self.shaved = mobkit.remember(self, "shaved", false)	
-		elseif self.type == "panda" then
-			local random_number = math.random(1, 6)
-			if random_number < 6 then
-				self.texture_no = 1 --black
-			else
-				self.texture_no = 2 --brown
-			end
-		elseif self.type == "elephant" then		
-			self.texture_no = math.random(1, #self.skin_colors - self.mutation) --set a random texture
 		elseif self.type == "puppy" then		
 			self.square_ball_attached = mobkit.remember(self, "square_ball_attached", false)			
 		elseif self.type == "wolf" then		
@@ -162,8 +163,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				self.max_speed_forward= mobkit.remember(self, "max_speed_forward", math.random(2, 4)) --set a random velocity for walk and run
 				self.max_speed_reverse= 	mobkit.remember(self, "max_speed_reverse", math.random(1, 2))				
 				self.accel= mobkit.remember(self, "accel", math.random(2, 4))	
-			end							
-    		self.texture_no = math.random(1, #self.skin_colors - self.mutation) --set a random texture
+			end
 			self.driver = mobkit.remember(self, "driver", nil)			
 			--Saddlebag
 			self.saddle = mobkit.remember(self, "saddle", false)		
@@ -225,7 +225,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 					else
 						textures_count = #self.skin_colors
 					end
-					self.texture_no = petz.genetics_texture(self, textures_count)													
+					self.texture_no = petz.genetics_texture(self, textures_count)															
 				else -- mutation
 					local mutation_gen = math.random((#self.skin_colors-self.mutation+1), #self.skin_colors)--select the mutation in the last skins
 					self.genes["gen1"] = mutation_gen 
@@ -239,9 +239,6 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.eggs_count = mobkit.remember(self, "eggs_count", 0)
 		end	
 		--ALL the mobs
-		if not(self.texture_no) then --for piggy, moth... petz with only one texture
-			self.texture_no = 1
-		end
 		self.set_vars = mobkit.remember(self, "set_vars", true)
 		self.tag = mobkit.remember(self, "tag", "")
 		self.show_tag = mobkit.remember(self, "show_tag", false)
