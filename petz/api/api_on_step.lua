@@ -6,5 +6,7 @@ petz.on_step = function(self, dtime)
 	end
 	if self.is_pregnant == true then
 		petz.pregnant_timer(self, dtime)
+	elseif self.is_baby == true then
+		petz.growth_timer(self, dtime)
 	end
 end

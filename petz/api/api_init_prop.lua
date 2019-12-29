@@ -100,6 +100,7 @@ petz.load_vars = function(self)
 		self.father_veloc_stats = mobkit.recall(self, "father_veloc_stats") or {}
 		self.pregnant_count = mobkit.recall(self, "pregnant_count") or petz.settings.pregnant_count 
 		self.is_baby = mobkit.recall(self, "is_baby") or false
+		self.growth_time = mobkit.recall(self, "growth_time") or 0.0		
 		self.genes = mobkit.recall(self, "genes") or {}
 	end
 	--All the mobs	
@@ -136,6 +137,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	elseif static_data_table and static_data_table["baby_born"] and static_data_table["baby_born"] == true then
 		baby_born = true	
 	end
+	--
+	--1. NEW MOBS
+	--
 	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars		
 		--Mob Specific
 		--Lamb
@@ -181,46 +185,45 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.father_genes = mobkit.remember(self, "father_genes", {})
 			self.father_veloc_stats = mobkit.remember(self, "father_veloc_stats", {})			
 			self.pregnant_count = mobkit.remember(self, "pregnant_count", petz.settings.pregnant_count)			
-			self.is_baby = mobkit.remember(self, "is_baby", false)			
+			self.is_baby = mobkit.remember(self, "is_baby", false)
+			self.growth_time = mobkit.remember(self, "growth_time", 0.0)
 			--Genetics
 			self.genes = {}
-			if not(self.type == "pony") then
-				local genes_mutation = false
-				if self.mutation and (self.mutation > 0) and math.random(1, 200) == 1 then
-					genes_mutation = true
-				end
-				if genes_mutation == false then
-					if baby_born == false then
-						self.genes["gen1"] = petz.get_gen(self)
-						self.genes["gen2"] = petz.get_gen(self)
-						--minetest.chat_send_player("singleplayer", tostring(self.genes["gen1"]))	
-						--minetest.chat_send_player("singleplayer", tostring(self.genes["gen2"]))	
-					else
-						if math.random(1, 2) == 1 then
-							self.genes["gen1"] = static_data_table["gen1_father"]					
-						else
-							self.genes["gen1"] = static_data_table["gen2_father"]
-						end
-						if math.random(1, 2) == 1 then
-							self.genes["gen2"] = static_data_table["gen1_mother"]					
-						else
-							self.genes["gen2"] = static_data_table["gen2_mother"]
-						end	
-					end						
-					local textures_count
-					if self.mutation and (self.mutation > 0) then
-						textures_count = #self.skin_colors - self.mutation
-					else
-						textures_count = #self.skin_colors
-					end
-					self.texture_no = petz.genetics_texture(self, textures_count)															
-				else -- mutation
-					local mutation_gen = math.random((#self.skin_colors-self.mutation+1), #self.skin_colors)--select the mutation in the last skins
-					self.genes["gen1"] = mutation_gen 
-					self.genes["gen2"] = mutation_gen 
-					self.texture_no = mutation_gen
-				end
+			local genes_mutation = false
+			if self.mutation and (self.mutation > 0) and math.random(1, 200) == 1 then
+				genes_mutation = true
 			end
+			if genes_mutation == false then
+				if baby_born == false then
+					self.genes["gen1"] = petz.get_gen(self)
+					self.genes["gen2"] = petz.get_gen(self)
+					--minetest.chat_send_player("singleplayer", tostring(self.genes["gen1"]))	
+					--minetest.chat_send_player("singleplayer", tostring(self.genes["gen2"]))	
+				else
+					if math.random(1, 2) == 1 then
+						self.genes["gen1"] = static_data_table["gen1_father"]					
+					else
+						self.genes["gen1"] = static_data_table["gen2_father"]
+					end
+					if math.random(1, 2) == 1 then
+						self.genes["gen2"] = static_data_table["gen1_mother"]					
+					else
+						self.genes["gen2"] = static_data_table["gen2_mother"]
+					end	
+				end						
+				local textures_count
+				if self.mutation and (self.mutation > 0) then
+					textures_count = #self.skin_colors - self.mutation
+				else
+					textures_count = #self.skin_colors
+				end
+				self.texture_no = petz.genetics_texture(self, textures_count)															
+			else -- mutation
+				local mutation_gen = math.random((#self.skin_colors-self.mutation+1), #self.skin_colors) --select the mutation in the last skins
+				self.genes["gen1"] = mutation_gen 
+				self.genes["gen2"] = mutation_gen 
+				self.texture_no = mutation_gen
+			end			
 			mobkit.remember(self, "genes", self.genes)
 		end	
 		if self.lay_eggs == true then
@@ -229,8 +232,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		--ALL the mobs
 		--Get a texture
 		if not(self.texture_no) then
-			local textures_count
 			if self.skin_colors then
+				local textures_count
 				if self.mutation and (self.mutation > 0) then
 					textures_count = #self.skin_colors - self.mutation
 				else
@@ -261,10 +264,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.lashed = mobkit.remember(self, "lashed", false)	
 			self.lashing_count = mobkit.remember(self, "lashing_count", 0)	
 		end
+	--
+	--2. ALREADY EXISTING MOBS
+	--
 	elseif captured_mob == false then	
 		petz.load_vars(self) --Load memory variables	
 	--
-	--CAPTURED MOBS
+	--3. CAPTURED MOBS
 	--
 	else 
 		--Mob Specific		
@@ -296,6 +302,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.father_genes = mobkit.remember(self, "father_genes", minetest.deserialize(static_data_table["fields"]["father_genes"])) 
 			self.father_veloc_stats = mobkit.remember(self, "father_veloc_stats", minetest.deserialize(static_data_table["fields"]["father_veloc_stats"])) 			
 			self.is_baby = mobkit.remember(self, "is_baby", minetest.is_yes(static_data_table["fields"]["is_baby"])) 
+			self.growth_time = mobkit.remember(self, "growth_time", tonumber(static_data_table["fields"]["growth_time"]))
 			self.pregnant_count = mobkit.remember(self, "pregnant_count", tonumber(static_data_table["fields"]["pregnant_count"])) 	
 			self.genes = mobkit.remember(self, "genes", minetest.deserialize(static_data_table["fields"]["genes"])) 	
 		end		
@@ -347,12 +354,14 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		petz.set_properties(self, {textures = {texture}})	
 	end
 	if self.breed == true then
-		if (self.is_baby == true) or (baby_born == true) then
+		if baby_born == true then
+			self.is_baby = mobkit.remember(self, "is_baby", true)	
+		end
+		if self.is_baby == true then
 			petz.set_properties(self, {
 				visual_size = self.visual_size_baby,
 				collisionbox = self.collisionbox_baby 
-			})
-			petz.init_growth(self)
+			})			
 		end
 	end
 	--ALL the mobs

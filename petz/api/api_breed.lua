@@ -123,17 +123,15 @@ petz.pregnant_timer = function(self, dtime)
 	end
 end
 
-petz.init_growth = function(self)
-    minetest.after(petz.settings.growth_time, function(self)         
-		if mobkit.is_alive(self) then
-			self.is_baby = false
-			mobkit.remember(self, "is_baby", self.is_baby)
-			petz.set_properties(self, {
-				jump = false,
-				is_baby = false,
-				visual_size = self.visual_size,
-				collisionbox = self.collisionbox 
-			})		
-		end
-    end, self)
+petz.growth_timer = function(self, dtime)
+	self.growth_time = mobkit.remember(self, "growth_time", self.growth_time + dtime) 
+	if self.growth_time >= petz.settings.growth_time then
+		self.is_baby = mobkit.remember(self, "is_baby", false)
+		petz.set_properties(self, {
+			jump = false,
+			is_baby = false,
+			visual_size = self.visual_size,
+			collisionbox = self.collisionbox 
+		})		
+	end
 end

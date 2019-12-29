@@ -107,6 +107,11 @@ petz.create_form = function(player_name)
 			tamagochi_form_stuff = tamagochi_form_stuff..				
 				"label["..infertile_text_x..","..infertile_text_y..";"..S("Infertile").."]"
 		end
+		if pet.is_baby == true then
+			local growth_remain_time = petz.round(petz.settings.growth_time - pet.growth_time)
+			tamagochi_form_stuff = tamagochi_form_stuff..
+				"label["..pregnant_text_x..","..pregnant_text_y..";"..S("To adult (")..tostring(growth_remain_time).."s)]"
+		end
 	end
     if pet.type == "parrot" then
 		form_size.h = form_size.h + 1
