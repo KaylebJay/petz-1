@@ -74,6 +74,38 @@ function petz.bh_stop_follow(self, player)
 	end	
 end
 
+function petz.bh_attack_player(self, pos, prty, player)
+	if not(self.attack_player) and not(self.warn_attack) then
+		if petz.bh_check_pack(self) then
+			self.warn_attack = true
+		end
+	end
+	if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
+		local player_pos = player:get_pos()
+		if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
+			if self.attack_player == true or self.warn_attack == true then --attack player	
+				if self.swin then
+					mobkit.hq_aqua_attack(self, prty, player, 6)
+				else
+					mobkit.hq_hunt(self, prty, player) -- try to repel them
+				end
+				return true
+			else
+				if not(self.swin) then
+					mobkit.hq_runfrom(self, prty, player)  -- run away from player
+					return true
+				else
+					return false
+				end
+			end	
+		else
+			return false
+		end
+	else
+		return false
+	end
+end
+
 function petz.bh_env_damage(self, prty)
 	local stand_pos= mobkit.get_stand_pos(self)
 	if petz.env_damage(self, stand_pos)	== true then
@@ -410,22 +442,8 @@ function petz.predator_brain(self)
 						
 		if prty < 10 then
 			if player then
-				if not(self.attack_player) and not(self.warn_attack) then
-					if petz.bh_check_pack(self) then
-						self.warn_attack = true
-					end
-				end
-				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
-					local player_pos = player:get_pos()
-					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
-						if self.attack_player == true or self.warn_attack == true then --attack player										
-							mobkit.hq_hunt(self, 10, player) -- try to repel them
-							return
-						else
-							mobkit.hq_runfrom(self, 10, player)  -- run away from player
-							return
-						end	
-					end
+				if petz.bh_attack_player(self, pos, 10, player) == true then
+					return
 				end
 			end
 		end
@@ -581,16 +599,10 @@ function petz.aquatic_brain(self)
 		local player = mobkit.get_nearby_player(self)
 			
 		if prty < 10 then
-			if player then
-				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
-					local player_pos = player:get_pos()	
-					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
-						if self.warn_attack == true then --attack player										
-							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
-							mobkit.hq_aqua_attack(self, 10, puncher, 6)				-- get revenge
-						end
-					end
-				end
+			if player and (self.attack_player == true) then
+				if petz.bh_attack_player(self, pos, 10, player) == true then
+					return
+				end		
 			end
 		end
 		

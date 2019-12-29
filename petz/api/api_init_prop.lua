@@ -230,12 +230,12 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		--Get a texture
 		if not(self.texture_no) then
 			local textures_count
-			if self.mutation and (self.mutation > 0) then
-				textures_count = #self.skin_colors - self.mutation
-			else
-				textures_count = #self.skin_colors
-			end
-			if textures_count > 1 then
+			if self.skin_colors then
+				if self.mutation and (self.mutation > 0) then
+					textures_count = #self.skin_colors - self.mutation
+				else
+					textures_count = #self.skin_colors
+				end
 				self.texture_no = petz.genetics_random_texture(self, textures_count)
 			else
 				self.texture_no = 1
