@@ -27,6 +27,7 @@ for i=1, 2 do
 		queen = queen,
 		init_tamagochi_timer = false,	
 		is_pet = false,
+		description = description,
 		can_fly = true,	
 		lay_eggs = true,
 		lay_eggs_in_nest = false,

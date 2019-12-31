@@ -122,7 +122,13 @@ petz.capture = function(self, clicker, put_in_inventory)
 	if self.is_pregnant then
 		info_text = info_text.."\n"..S("It is pregnant")
 	end
-	stack_meta:set_string("description", S(petz.first_to_upper(self.type)).." ("..S("Tamed")..")"..info_text)
+	local description
+	if self.description then
+		description = self.description
+	else
+		description = self.type
+	end
+	stack_meta:set_string("description", S(petz.first_to_upper(description)).." ("..S("Tamed")..")"..info_text)
 	if put_in_inventory == true then
 		local inv = clicker:get_inventory()	
 		if inv:room_for_item("main", new_stack) then
