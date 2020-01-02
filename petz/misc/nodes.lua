@@ -265,17 +265,37 @@ minetest.register_node("petz:bird_stand", {
 			y = pos.y + 1,
 			z = pos.z,
 		}
+		local bird_in_stand
 		local obj_list = minetest.get_objects_inside_radius(pos_above, 1) --check if already a parrot
 		for _, obj in ipairs(obj_list) do
-			local entity = obj:get_luaentity()
-			if entity and (entity.name == "petz:parrot" or entity.name == "petz:toucan") then						
-				minetest.chat_send_player(player_name, S("There's already a bird on top."))
-				return
+			local ent = obj:get_luaentity()
+			if ent and (ent.name == "petz:parrot" or ent.name == "petz:toucan") then			
+				bird_in_stand = true	
+				local rotation = obj:get_rotation()
+				local bird_pos = obj:get_pos()
+				local z_offset
+				if ent.name == "petz:parrot" then
+					z_offset = 0.125
+				else
+					z_offset  = -0.125
+				end
+				if rotation.y == 0 then
+					obj:set_rotation({x=0, y=math.pi, z=0})
+					obj:set_pos({x= bird_pos.x, y=bird_pos.y, z=bird_pos.z+z_offset })
+				else
+					obj:set_rotation({x=0, y=0, z=0})
+					obj:set_pos({x= bird_pos.x, y=bird_pos.y, z=bird_pos.z-z_offset })
+				end				
 			end
 		end					
 		local itemstack_name = itemstack:get_name()
-		if itemstack_name == "petz:parrot_set" or itemstack_name == "petz:toucan_set" then			
+		if itemstack_name == "petz:parrot_set" or itemstack_name == "petz:toucan_set" then		
+			if bird_in_stand == true then
+				minetest.chat_send_player(player_name, S("There's already a bird on top."))	
+				return
+			end
 			if not minetest.is_protected(pos, player_name) then
+				local player_pos = player:get_pos()
 				if itemstack_name == "petz:parrot_set" then
 					pos = {
 						x = pos.x,
