@@ -477,6 +477,10 @@ function petz.bee_brain(self)
 	end	
 	
 	if (self.hp <= 0) or (not(self.queen) and not(petz.behive_exists(self))) then		
+		if behive_exists then --decrease the total bee count			
+			petz.decrease_total_bee_count(self.behive)
+			petz.set_infotext_behive(meta, honey_count, bee_count)
+		end
 		petz.on_die(self) -- Die Behaviour
 		return		
 	elseif (petz.is_night() and not(self.queen)) then --all the bees sleep in their beehive

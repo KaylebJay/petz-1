@@ -137,6 +137,11 @@ petz.capture = function(self, clicker, put_in_inventory)
 			minetest.add_item(clicker:get_pos(), new_stack)
 		end
 	end
+	if self.type == "bee" and self.behive then
+		petz.decrease_total_bee_count(self.behive)		
+		local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)	
+		petz.set_infotext_behive(meta, honey_count, bee_count)			
+	end
 	petz.remove_petz_list_by_owner(self)
 	self.object:remove()
 	return stack_meta

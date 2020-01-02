@@ -58,3 +58,20 @@ petz.node_drop_items = function(pos)
 		end
 	end
 end
+
+petz.player_drop_item = function(player, item, num)	
+	if not(item) or not(num) then
+		return
+	end		
+	local pos = player:get_pos()
+	local obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
+	if obj and obj:get_luaentity() then
+		obj:set_velocity({
+			x = math.random(-10, 10) / 9,
+			y = 6,
+			z = math.random(-10, 10) / 9,
+		})
+	elseif obj then
+		obj:remove() -- item does not exist
+	end
+end

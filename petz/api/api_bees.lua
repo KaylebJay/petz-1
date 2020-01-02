@@ -1,7 +1,15 @@
 local modpath, S = ...
 
 petz.set_infotext_behive = function(meta, honey_count, bee_count)
-	meta:set_string("infotext", S("Honey")..": "..tostring(honey_count) .." | "..S("Bees")..": "..tostring(bee_count))
+	local total_bees = meta:get_int("total_bees") or petz.settings.max_bees_behive	
+	meta:set_string("infotext", S("Honey")..": "..tostring(honey_count) .." | "..S("Bees Inside")..": "..tostring(bee_count).." | "..S("Total Bees")..": "..tostring(total_bees))
+end
+
+petz.decrease_total_bee_count = function(pos)
+	local meta = minetest.get_meta(pos)
+	local total_bees = meta:get_int("total_bees") or petz.settings.max_bees_behive
+	total_bees = total_bees - 1
+	meta:set_int("total_bees", total_bees) 
 end
 
 petz.behive_exists = function(self)	

@@ -326,6 +326,7 @@ minetest.register_node("petz:beehive", {
 		local honey_count = petz.settings.initial_honey_behive
 		meta:set_int("honey_count", honey_count)
 		local bee_count = petz.settings.max_bees_behive
+		meta:set_int("total_bees", bee_count)
 		meta:set_int("bee_count", bee_count)
 		petz.set_infotext_behive(meta, honey_count, bee_count)
 	end,
@@ -336,11 +337,11 @@ minetest.register_node("petz:beehive", {
 		local bee_count
 		if placer:is_player() then
 			bee_count = 1
-			meta:set_int("bee_count", bee_count)	
 		else
-			bee_count = petz.settings.max_bees_behive
-			meta:set_int("bee_count", bee_count)	
+			bee_count = petz.settings.max_bees_behive			
 		end
+		meta:set_int("bee_count", bee_count)	
+		meta:set_int("total_bees", bee_count)
 		petz.set_infotext_behive(meta, honey_count, bee_count)
 	end,
 	on_destruct = function(pos)
@@ -415,9 +416,13 @@ minetest.register_node("petz:beehive", {
 				minetest.chat_send_player(player_name, S("No honey in the behive."))
 			end
 		elseif wielded_item_name == "petz:bee_set" then
-			if bee_count < petz.settings.max_bees_behive then
+			local total_bees = meta:get_int("total_bees") or petz.settings.max_bees_behive
+			if total_bees < petz.settings.max_bees_behive then
 				bee_count = bee_count + 1
+				total_bees = total_bees + 1
 				meta:set_int("bee_count", bee_count)
+				meta:set_int("total_bees", total_bees)
+				petz.set_infotext_behive(meta, honey_count, bee_count)
 				itemstack:take_item()	
 				return itemstack
 			else
