@@ -118,8 +118,6 @@ function mobkit.hq_followfly(self, prty, player)
 				if mobkit.is_queue_empty_low(self) then			
 					mobkit.lq_followfly(self, pos, tpos)
 				end
-			else
-				return true
 			end
 		else
 			return true

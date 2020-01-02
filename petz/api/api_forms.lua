@@ -165,11 +165,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     local pet = petz.pet[player_name] 
 	if pet and pet.object then	
 		if fields.btn_followme then
-			if not(pet.can_fly) then
-				mobkit.clear_queue_low(pet)
-				mobkit.hq_follow(pet, 15, player)
-				pet.status = mobkit.remember(pet, "status", "follow")
-			end			
+			petz.follow(pet, player)
 		elseif fields.btn_standhere then
 			petz.standhere(pet)
 		elseif fields.btn_guard then

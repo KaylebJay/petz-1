@@ -267,6 +267,16 @@ minetest.register_node("petz:bird_stand", {
 		}
 		local bird_in_stand
 		local obj_list = minetest.get_objects_inside_radius(pos_above, 1) --check if already a parrot
+		local pos_parrot = {
+			x = pos.x,
+			y = pos.y + 1,
+			z = pos.z - 0.125,
+		} 
+		local pos_toucan = {
+			x = pos.x - 0.0625,
+			y = pos.y + 1,
+						z = pos.z + 0.0625,
+		}		
 		for _, obj in ipairs(obj_list) do
 			local ent = obj:get_luaentity()
 			if ent and (ent.name == "petz:parrot" or ent.name == "petz:toucan") then			
@@ -284,7 +294,11 @@ minetest.register_node("petz:bird_stand", {
 					obj:set_pos({x= bird_pos.x, y=bird_pos.y, z=bird_pos.z+z_offset })
 				else
 					obj:set_rotation({x=0, y=0, z=0})
-					obj:set_pos({x= bird_pos.x, y=bird_pos.y, z=bird_pos.z-z_offset })
+					if ent.name == "petz:parrot" then
+						obj:set_pos(pos_parrot)
+					else
+						obj:set_pos(pos_toucan)
+					end					
 				end				
 			end
 		end					
@@ -297,17 +311,9 @@ minetest.register_node("petz:bird_stand", {
 			if not minetest.is_protected(pos, player_name) then
 				local player_pos = player:get_pos()
 				if itemstack_name == "petz:parrot_set" then
-					pos = {
-						x = pos.x,
-						y = pos.y + 1,
-						z = pos.z - 0.125,
-					}
+					pos = pos_parrot
 				else --toucan
-					pos = {
-						x = pos.x - 0.0625,
-						y = pos.y + 1,
-						z = pos.z + 0.0625,
-					}		
+					pos = pos_toucan
 				end
 				ent = petz.create_pet(player, itemstack, itemstack_name:sub(1, -5) , pos)
 				petz.standhere(ent)

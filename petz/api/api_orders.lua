@@ -42,6 +42,18 @@ petz.guard = function(self)
 	petz.stand(self)	
 end
 
+petz.follow = function(self, player)
+	mobkit.clear_queue_low(self)
+	mobkit.clear_queue_high(self)
+	self.status = mobkit.remember(self, "status", "follow")
+	if not(self.can_fly) then
+		mobkit.hq_follow(self, 100, player)
+	else
+		mobkit.animate(self, "fly")
+		mobkit.hq_followfly(self, 100, player)		
+	end
+end
+
 petz.alight = function(self)
 	mobkit.clear_queue_low(self)
 	mobkit.clear_queue_high(self)	
