@@ -108,19 +108,26 @@ end
 -- Follow Fly Behaviour (2 functions)
 --
 
-function mobkit.hq_followfly(self, prty, player)
+function mobkit.hq_followliquidair(self, prty, player)
 	local func=function(self)
-		local max_dist = 15
+		if self.can_swin and not(self.isinliquid) then
+			--check if water below, dolphins
+			local node_name = mobkit.node_name_in(self, "below")
+			if minetest.get_item_group(node_name, "water") == 0  then
+				petz.ownthing(self)
+				return true	
+			end
+		end
 		local pos = self.object:get_pos()
 		local tpos = player:get_pos()
 		if pos and tpos then
 			local distance = vector.distance(pos, tpos)
-			if distance > 3 and distance < max_dist then
+			if distance < self.view_range then
 				if mobkit.is_queue_empty_low(self) then			
-					mobkit.lq_followfly(self, pos, tpos)
+					mobkit.lq_followliquidair(self, pos, tpos)
 				end
-			elseif distance >= max_dist then				
-				self.status = mobkit.remember(self, "status", "")
+			elseif distance >= self.view_range then				
+				petz.ownthing(self)
 				return true
 			end
 		else
@@ -130,7 +137,7 @@ function mobkit.hq_followfly(self, prty, player)
 	mobkit.queue_high(self, func, prty)
 end
 
-function mobkit.lq_followfly(self, pos, tpos)
+function mobkit.lq_followliquidair(self, pos, tpos)
 	local func = function(self)
 		local dir = vector.direction(pos, tpos)
 		local velocity = {

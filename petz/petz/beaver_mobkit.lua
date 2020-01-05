@@ -14,6 +14,7 @@ minetest.register_entity("petz:"..pet_name,{
 	--Petz specifics	
 	type = "beaver",	
 	is_pet = false,
+	can_swin = true,
 	has_affinity = false,
 	is_wild = false,
 	attack_player = false,

@@ -12,19 +12,20 @@ local collisionbox = {-0.25, -0.75*scale_model, -0.4375, 0.3125, -0.0625, 0.5}
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
 	type = "dolphin",	
-	swin = true,
+	can_swin = true,
 	can_jump = true,
 	groups = {fish= 1},
 	is_mammal = true,
-	attack_player = true,
-	attack = {range = 0.8, damage_groups={fleshy=3}},
+	--attack_player = true,
+	--attack = {range = 0.8, damage_groups={fleshy=3}},
 	init_tamagochi_timer = false,	
-	is_pet = false,
-	has_affinity = false,
-	is_wild = true,
-	give_orders = false,
+	is_pet = true,
+	has_affinity = true,
+	is_wild = false,
+	give_orders = true,
 	can_be_brushed = false,
 	capture_item = "lasso",
+	follow = petz.settings.dolphin_follow,
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!
@@ -42,7 +43,7 @@ minetest.register_entity("petz:"..pet_name,{
 	buoyancy = 0.5, -- portion of hitbox submerged
 	max_speed = 2.5,
 	jump_height = 2.0,
-	view_range = 10,
+	view_range = 12,
 	lung_capacity = 32767, -- seconds
 	max_hp = 12,
 	max_height = -2,

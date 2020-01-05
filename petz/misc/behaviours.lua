@@ -28,15 +28,15 @@ end
 
 --Follow behaviours
 function petz.bh_start_follow(self, pos, player, prty)
-	if player then		
+	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()	
 		local player_pos = player:get_pos()
 		if wielded_item_name == self.follow and vector.distance(pos, player_pos) <= self.view_range then 			
-			self.status = mobkit.remember(self, "status", "follow")
-			if not(self.can_fly) then
-				mobkit.hq_follow(self, prty, player)
+			self.status = mobkit.remember(self, "status", "follow")			
+			if (self.can_fly) or (self.can_swin and self.isinliquid) then								
+				mobkit.hq_followliquidair(self, prty, player)
 			else
-				mobkit.hq_followfly(self, prty, player)
+				mobkit.hq_follow(self, prty, player)				
 			end
 			return true
 		else
@@ -57,14 +57,7 @@ function petz.bh_stop_follow(self, player)
 	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()
 		if wielded_item_name ~= self.follow then 			
-			self.status = mobkit.remember(self, "status", "")
-			if not(self.can_fly) then
-				mobkit.hq_roam(self, 0)
-			else
-				mobkit.hq_wanderfly(self, 0)
-			end
-			mobkit.clear_queue_low(self)
-			mobkit.clear_queue_high(self)
+			petz.ownthing(self)
 			return true
 		else
 			return false
@@ -84,14 +77,14 @@ function petz.bh_attack_player(self, pos, prty, player)
 		local player_pos = player:get_pos()
 		if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 			if self.attack_player == true or self.warn_attack == true then --attack player	
-				if self.swin then
+				if self.can_swin then
 					mobkit.hq_aqua_attack(self, prty, player, 6)
 				else
 					mobkit.hq_hunt(self, prty, player) -- try to repel them
 				end
 				return true
 			else
-				if not(self.swin) then
+				if not(self.can_swin) then
 					mobkit.hq_runfrom(self, prty, player)  -- run away from player
 					return true
 				else
@@ -601,6 +594,19 @@ function petz.aquatic_brain(self)
 	
 		local prty = mobkit.get_queue_priority(self)						
 		local player = mobkit.get_nearby_player(self)
+		
+		--Follow Behaviour					
+		if prty < 16 then
+			if petz.bh_start_follow(self, pos, player, 16) == true then
+				return
+			end			
+		end
+		
+		if prty == 16 then			
+			if petz.bh_stop_follow(self, player) == true then
+				return
+			end
+		end			
 			
 		if prty < 10 then
 			if player and (self.attack_player == true) then
@@ -625,7 +631,7 @@ function petz.aquatic_brain(self)
 		petz.random_mob_sound(self)
 		
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) and not(self.status== "jump") then
+		if mobkit.is_queue_empty_high(self)  and self.status == "" and not(self.status== "jump") then
 			mobkit.hq_aqua_roam(self, 0, self.max_speed)
 		end		
 	end
@@ -666,6 +672,19 @@ function petz.semiaquatic_brain(self)
 				--mobkit.hq_liquid_recovery(self, 100)				
 			--end
 		end
+		
+		--Follow Behaviour					
+		if prty < 16 then
+			if petz.bh_start_follow(self, pos, player, 16) == true then
+				return
+			end			
+		end
+		
+		if prty == 16 then			
+			if petz.bh_stop_follow(self, player) == true then
+				return
+			end
+		end
 				
 		if prty < 10 then
 			if player then
@@ -697,7 +716,7 @@ function petz.semiaquatic_brain(self)
 		end
 		
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) then
+		if mobkit.is_queue_empty_high(self) and self.status == "" then
 			if self.isinliquid then
 				mobkit.hq_aqua_roam(self, 0, self.max_speed)
 			else

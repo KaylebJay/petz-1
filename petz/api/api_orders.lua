@@ -2,11 +2,14 @@ local modpath, S = ...
 
 petz.ownthing = function(self)	
 	self.status = mobkit.remember(self, "status", "")
-	if not(self.can_fly) then
-		mobkit.hq_roam(self, 0)
-	else
+	if self.can_fly then
 		mobkit.hq_wanderfly(self, 0)
+	elseif self.can_swin and self.isinliquid then	
+		mobkit.hq_aqua_roam(self, 0, self.max_speed)
+	else
+		mobkit.hq_roam(self, 0)
 	end
+	mobkit.clear_queue_low(self)
 	mobkit.clear_queue_high(self)
 end
 
@@ -24,6 +27,8 @@ petz.standhere = function(self)
 		else					
 			mobkit.animate(self, "stand")
 		end
+	elseif self.can_swin and self.isinliquid then
+		mobkit.animate(self, "def")
 	else
 		if self.animation["sit"] then
 			mobkit.animate(self, "sit")
@@ -46,11 +51,14 @@ petz.follow = function(self, player)
 	mobkit.clear_queue_low(self)
 	mobkit.clear_queue_high(self)
 	self.status = mobkit.remember(self, "status", "follow")
-	if not(self.can_fly) then
-		mobkit.hq_follow(self, 100, player)
-	else
+	if self.can_fly then
 		mobkit.animate(self, "fly")
-		mobkit.hq_followfly(self, 100, player)		
+		mobkit.hq_followliquidair(self, 100, player)
+	elseif self.can_swin and self.isinliquid then			
+		mobkit.animate(self, "def")
+		mobkit.hq_followliquidair(self, 100, player)
+	else
+		mobkit.hq_follow(self, 100, player)
 	end
 end
 
