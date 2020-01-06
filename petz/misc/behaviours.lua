@@ -717,12 +717,14 @@ function petz.semiaquatic_brain(self)
 			petz.create_dam(self, pos)
 		end
 		
-		--Roam default			
+		--Roam default
 		if mobkit.is_queue_empty_high(self) and self.status == "" then
 			if self.isinliquid then
+				--minetest.chat_send_player("singleplayer", "liquid")	
 				mobkit.hq_aqua_roam(self, 0, self.max_speed)
 			else
 				mobkit.hq_roam(self, 0)
+				--minetest.chat_send_player("singleplayer", "ground")	
 			end
 		end		
 	end

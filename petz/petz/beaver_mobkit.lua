@@ -8,7 +8,7 @@ local scale_model = 1.2
 petz.beaver = {}
 local mesh = 'petz_beaver.b3d'	
 local textures= {"petz_beaver.png"}
-local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
+local collisionbox = {0.35, -0.75*scale_model, 0.28, -0.35, 0.125, -0.28}
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
@@ -53,7 +53,7 @@ minetest.register_entity("petz:"..pet_name,{
 			{range={x=26, y=46}, speed=5, loop=true},
 			{range={x=46, y=60}, speed=5, loop=true},		
 			{range={x=82, y=95}, speed=5, loop=true},
-		},	
+		},		
 		sit = {range={x=60, y=81}, speed=5, loop=false},
 		def = {range={x=96, y=116}, speed=25, loop=true},
 	},
