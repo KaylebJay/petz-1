@@ -4,7 +4,7 @@
 local S = ...
 
 local pet_name = "lamb"
-local scale_model = 2.55
+local scale_model = 2.5
 local scale_baby = 0.5
 local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model}
 local visual_size_baby = {x=petz.settings.visual_size.x*scale_model*scale_baby, y=petz.settings.visual_size.y*scale_model*scale_baby}
