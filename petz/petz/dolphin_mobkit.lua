@@ -4,10 +4,12 @@
 local S = ...
 
 local pet_name = "dolphin"
-local scale_model = 1.35
+local scale_model = 2.0
 local mesh = 'petz_dolphin.b3d'	
 local textures= {"petz_dolphin_bottlenose.png"}	
-local collisionbox = {-0.25, -0.75*scale_model, -0.4375, 0.3125, -0.0625, 0.5}
+local p1 = {x= -0.25, y = -0.5, z = -0.3125}
+local p2 = {x= 0.1875, y = -0.125, z = 0.3125}
+local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, scale_baby)
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
@@ -36,7 +38,6 @@ minetest.register_entity("petz:"..pet_name,{
 	textures = textures,
 	visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model},
 	static_save = true,
-	on_step = mobkit.stepfunc,	-- required
 	get_staticdata = mobkit.statfunc,
 	-- api props
 	springiness= 0,
@@ -74,6 +75,11 @@ minetest.register_entity("petz:"..pet_name,{
 	
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		
 		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
+	end,
+	
+	on_step = function(self, dtime)	
+		mobkit.stepfunc(self, dtime) -- required
+		petz.on_step(self, dtime)
 	end,
 	
 	on_rightclick = function(self, clicker)

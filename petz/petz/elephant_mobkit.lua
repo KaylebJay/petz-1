@@ -20,22 +20,23 @@ for i=1, 2 do
 		description = "Elephant"
 		is_male = true
 		mesh = "petz_elephant.b3d"
-		scale_model = 3.0
+		scale_model = 4.5
 		skin_colors = {"gray", "white"}
 	else --if female
 		pet_name= "elephant_female"
 		description = "Elephant (Female)"
 		mesh = "petz_elephant_female.b3d"
 		is_male = false
-		scale_model = 2.5
+		scale_model = 3.75
 		skin_colors = {"brown", "white"}
 	end
 	for n = 1, #skin_colors do
 		textures[n] = "petz_"..pet_name.."_"..skin_colors[n]..".png"
 	end
-	collisionbox = {-0.187500*scale_model, -0.75*scale_model, -0.187500*scale_model, 0.125*scale_model, -0.0625*scale_model, 0.3125*scale_model}
+	local p1 = {x= -0.125, y = -0.5, z = -0.3125}
+	local p2 = {x= 0.1875, y = -0.0625, z = 0.25}
+	local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, scale_baby)	
 	local visual_size_baby = {x=petz.settings.visual_size.x*scale_model*scale_baby, y=petz.settings.visual_size.y*scale_model*scale_baby}
-	local collisionbox_baby = {-0.35*scale_baby, -0.75*scale_model*scale_baby, -0.28, 0.35, -0.35, 0.28}
 	minetest.register_entity("petz:"..pet_name,{          
 		--Petz specifics	
 		type = "elephant",	

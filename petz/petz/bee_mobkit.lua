@@ -10,17 +10,20 @@ for i=1, 2 do
 		queen = false
 		pet_name = "bee"
 		description = "Worker Bee"
-		scale_model = 0.25		
+		scale_model = 0.375		
 		textures= {"petz_bee.png"}
 	else
 		queen = true
 		pet_name = "queen_bee"
 		description = "Queen Bee"
-		scale_model = 0.33
+		scale_model = 0.5
 		textures= {"petz_queen_bee.png"}		
 	end
 	local mesh = 'petz_bee.b3d'		
-	local collisionbox = {-0.25, -0.75*scale_model, -0.125, 0.25, -0.0625, 0.125}
+	local p1 = {x= -0.1875, y = -0.5, z = -0.3125}
+	local p2 = {x= 0.25, y = 0.0625, z = 0.3125}
+	local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, scale_baby)
+		
 	minetest.register_entity("petz:"..pet_name,{    
 		--Petz specifics	
 		type = "bee",	

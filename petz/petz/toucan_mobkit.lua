@@ -1,10 +1,12 @@
 local S = ...
 
 local pet_name = "toucan"
-local scale_model = 0.7
+local scale_model = 1.05
 local mesh = 'petz_toucan.b3d'	
 local textures= {"petz_toucan.png", "petz_toucan2.png"}
-local collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, 0.35, 0.28}
+local p1 = {x= -0.125, y = -0.5, z = -0.25}
+local p2 = {x= 0.125, y = 0.3125, z = 0.375}
+local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, scale_baby)
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	

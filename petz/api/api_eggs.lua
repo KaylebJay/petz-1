@@ -2,7 +2,7 @@ local modpath, S = ...
 
 --Lay Egg
 petz.lay_egg = function(self)
-	if self.isinliquid then --do not put eggs when in liquid
+	if petz.isinliquid(self) then --do not put eggs when in liquid
 		return
 	end
 	local pos = self.object:get_pos()

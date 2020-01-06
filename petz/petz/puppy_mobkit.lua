@@ -3,45 +3,13 @@
 --
 local S = ...
 
-local pet_name= "puppy"
-local scale_model = 1.5
-local mesh = nil
-local textures = {}
-local fixed = {}
-local tiles = {}
-local collisionbox = {}
-
-if petz.settings.type_model == "cubic" then
-	local node_name = "petz:"..pet_name.."_block"
-	fixed = {
-		{-0.125, -0.5, 0.0625, -0.0625, -0.375, 0.125}, -- back_right_leg
-		{-0.125, -0.5, -0.125, -0.0625, -0.375, -0.0625}, -- front_right_leg
-		{0, -0.5, -0.125, 0.0625, -0.375, -0.0625}, -- front_left_leg
-		{0, -0.5, 0.0625, 0.0625, -0.375, 0.125}, -- back_left_leg
-		{-0.125, -0.375, -0.125, 0.0625, -0.25, 0.125}, -- body
-		{-0.125, -0.375, -0.25, 0.0625, -0.1875, -0.0625001}, -- head
-		{-0.0625, -0.3125, 0.125, 1.11759e-08, -0.25, 0.25}, -- tail
-		{-0.125, -0.1875, -0.1875, -0.0625, -0.125, -0.125}, -- right_ear
-		{0, -0.1875, -0.1875, 0.0625, -0.125, -0.125}, -- left_ear
-		{-0.125, -0.375, -0.3125, 0.0625, -0.3125, -0.25}, -- snout
-		{-0.0625, -0.4375, -0.25, 3.72529e-09, -0.375, -0.1875}, -- tongue
-	}
-	tiles = {
-		"petz_puppy_top.png",
-		"petz_puppy_bottom.png",
-		"petz_puppy_right.png",
-		"petz_puppy_left.png",
-		"petz_puppy_back.png",
-		"petz_puppy_front.png"
-	}
-	petz.register_cubic(node_name, fixed, tiles)		
-	textures= {"petz:puppy_block"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.125, 0.28}
-else
-	mesh = 'petz_puppy.b3d'	
-	textures= {"petz_puppy.png", "petz_puppy2.png", "petz_puppy3.png"}
-	collisionbox = {-0.35, -0.75*scale_model, -0.28, 0.35, -0.3125, 0.28}
-end
+local pet_name = "puppy"
+local scale_model = 2.25
+local mesh = 'petz_puppy.b3d'	
+local textures= {"petz_puppy.png", "petz_puppy2.png", "petz_puppy3.png"}
+local p1 = {x= -0.0625, y = -0.5, z = -0.125}
+local p2 = {x= 0.125, y = -0.1875, z = 0.25}
+local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, scale_baby)
 
 minetest.register_entity("petz:"..pet_name, {          
 	--Petz specifics	

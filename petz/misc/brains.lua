@@ -113,7 +113,7 @@ function mobkit.hq_followliquidair(self, prty, player)
 		local pos = mobkit.get_stand_pos(self)
 		local tpos = player:get_pos()
 		if self.can_swin then
-			if not(self.isinliquid) then
+			if not(petz.isinliquid(self)) then
 				--check if water below, dolphins
 				local node_name = mobkit.node_name_in(self, "below")
 				if minetest.get_item_group(node_name, "water") == 0  then
@@ -295,7 +295,7 @@ function mobkit.hq_liquid_recovery_flying(self, prty)
 	local func=function(self)		
 		self.object:set_acceleration({ x = 0.0, y = 0.125, z = 0.0 })
 		self.object:set_velocity({ x = 1.0, y = 1.0, z = 1.0 })
-		if not(self.isinliquid) then			
+		if not(petz.isinliquid(self)) then			
 			self.object:set_acceleration({ x = 0.0, y = 0.0, z = 0.0 })
 			return true
 		end

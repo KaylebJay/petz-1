@@ -71,10 +71,12 @@ end
 
 if petz.settings.type_model == "mesh" then
     petz.settings.visual = "mesh"
-    petz.settings.visual_size = {x=15.0, y=15.0}
+    petz.settings.visual_size = {x=10, y=10}
     petz.settings.rotate = 0
 else -- is 'cubic'
     petz.settings.visual = "wielditem"
     petz.settings.visual_size = {x=1.0, y=1.0}
     petz.settings.rotate = 180
 end
+
+

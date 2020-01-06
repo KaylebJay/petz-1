@@ -33,7 +33,7 @@ function petz.bh_start_follow(self, pos, player, prty)
 		local tpos = player:get_pos()
 		if wielded_item_name == self.follow and vector.distance(pos, tpos) <= self.view_range then 			
 			self.status = mobkit.remember(self, "status", "follow")			
-			if (self.can_fly) or (self.can_swin and self.isinliquid) then								
+			if (self.can_fly) or (self.can_swin and petz.isinliquid(self)) then								
 				mobkit.hq_followliquidair(self, prty, player)
 			else			
 				mobkit.hq_follow(self, prty, player)				
@@ -193,7 +193,7 @@ function petz.herbivore_brain(self)
 		end
 		
 		if prty < 20 then
-			if self.isinliquid then
+			if petz.isinliquid(self) then
 				if not(self.can_fly) then
 					mobkit.hq_liquid_recovery(self, 20)				
 					return
@@ -387,7 +387,7 @@ function petz.predator_brain(self)
 		
 		local prty = mobkit.get_queue_priority(self)		
 		
-		if prty < 40 and self.isinliquid then
+		if prty < 40 and petz.isinliquid(self) then
 			mobkit.hq_liquid_recovery(self, 40)
 			return
 		end		
@@ -496,7 +496,7 @@ function petz.bee_brain(self)
 	
 		local prty = mobkit.get_queue_priority(self)		
 		
-		if prty < 40 and self.isinliquid then
+		if prty < 40 and petz.isinliquid(self) then
 			mobkit.hq_liquid_recovery(self, 40)
 			return
 		end
@@ -584,7 +584,7 @@ function petz.aquatic_brain(self)
 		end
 	end		
 	
-	if not(self.is_mammal) and not(self.isinliquid) then --if not mammal, air suffocation							
+	if not(self.is_mammal) and not(petz.isinliquid(self)) then --if not mammal, air suffocation	
 		mobkit.hurt(self, petz.settings.air_damage)	
 	end
 	
@@ -660,7 +660,7 @@ function petz.semiaquatic_brain(self)
 		end
 	end
 	
-	if not(self.isinliquid) then
+	if not(petz.isinliquid(self)) then
 		mobkit.check_ground_suffocation(self)
 	end
 	
@@ -670,7 +670,7 @@ function petz.semiaquatic_brain(self)
 		local player = mobkit.get_nearby_player(self)
 		
 		if prty < 100 then
-			--if self.isinliquid then				
+			--if petz.isinliquid(self) then				
 				--mobkit.hq_liquid_recovery(self, 100)				
 			--end
 		end
@@ -695,7 +695,7 @@ function petz.semiaquatic_brain(self)
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 						if self.warn_attack == true then --attack player										
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
-							if self.isinliquid then
+							if petz.isinliquid(self) then
 								mobkit.hq_aqua_attack(self, 10, puncher, 6)				-- get revenge
 							else
 								mobkit.hq_hunt(self, 10, player)
@@ -719,12 +719,10 @@ function petz.semiaquatic_brain(self)
 		
 		--Roam default
 		if mobkit.is_queue_empty_high(self) and self.status == "" then
-			if self.isinliquid then
-				--minetest.chat_send_player("singleplayer", "liquid")	
+			if petz.isinliquid(self) then
 				mobkit.hq_aqua_roam(self, 0, self.max_speed)
 			else
-				mobkit.hq_roam(self, 0)
-				--minetest.chat_send_player("singleplayer", "ground")	
+				mobkit.hq_roam(self, 0)				
 			end
 		end		
 	end
@@ -782,7 +780,7 @@ function petz.monster_brain(self)
 		
 		local prty = mobkit.get_queue_priority(self)		
 		
-		if prty < 40 and self.isinliquid then
+		if prty < 40 and petz.isinliquid(self) then
 			mobkit.hq_liquid_recovery(self, 40)
 			return
 		end		

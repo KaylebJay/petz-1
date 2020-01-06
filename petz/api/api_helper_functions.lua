@@ -12,6 +12,16 @@ function petz.is_night()
 	end 
 end
 
+function petz.isinliquid(self)
+	local pos = self.object:get_pos()
+	local node = mobkit.nodeatpos(pos)
+	if node and node.drawtype == 'liquid' then
+		return true
+	else
+		return false
+	end	
+end
+
 function petz.round(x, n)
 	return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
 end

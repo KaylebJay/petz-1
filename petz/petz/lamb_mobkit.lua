@@ -4,7 +4,7 @@
 local S = ...
 
 local pet_name = "lamb"
-local scale_model = 1.7
+local scale_model = 2.55
 local scale_baby = 0.5
 local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model}
 local visual_size_baby = {x=petz.settings.visual_size.x*scale_model*scale_baby, y=petz.settings.visual_size.y*scale_model*scale_baby}
@@ -15,8 +15,9 @@ local textures = {}
 for n = 1, #skin_colors do
 	textures[n] = "petz_"..pet_name.."_"..skin_colors[n]..".png"
 end
-local collisionbox = {0.3125, -0.75*scale_model, 0.5, -0.15625, -0.3125, -0.3125}
-local collisionbox_baby = {0.3125*scale_baby, -0.75*scale_model*scale_baby, 0.5, -0.15625, -0.3125, -0.3125}
+local p1 = {x= -0.0625, y = -0.5, z = -0.125}
+local p2 = {x= 0.125, y = -0.125, z = 0.1875}
+local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, scale_baby)
 
 minetest.register_entity("petz:"..pet_name,{          
 	--Petz specifics	
