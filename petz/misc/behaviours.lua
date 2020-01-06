@@ -30,12 +30,12 @@ end
 function petz.bh_start_follow(self, pos, player, prty)
 	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()	
-		local player_pos = player:get_pos()
-		if wielded_item_name == self.follow and vector.distance(pos, player_pos) <= self.view_range then 			
+		local tpos = player:get_pos()
+		if wielded_item_name == self.follow and vector.distance(pos, tpos) <= self.view_range then 			
 			self.status = mobkit.remember(self, "status", "follow")			
 			if (self.can_fly) or (self.can_swin and self.isinliquid) then								
 				mobkit.hq_followliquidair(self, prty, player)
-			else
+			else			
 				mobkit.hq_follow(self, prty, player)				
 			end
 			return true
@@ -660,7 +660,9 @@ function petz.semiaquatic_brain(self)
 		end
 	end
 	
-	--mobkit.check_ground_suffocation(self)
+	if not(self.isinliquid) then
+		mobkit.check_ground_suffocation(self)
+	end
 	
 	if mobkit.timer(self, 1) then 
 	

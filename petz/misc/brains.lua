@@ -105,21 +105,23 @@ function mobkit.node_name_in(self, where)
 end
 
 --
--- Follow Fly Behaviour (2 functions)
+-- Follow Fly/Water Behaviour (2 functions)
 --
 
 function mobkit.hq_followliquidair(self, prty, player)
 	local func=function(self)
-		if self.can_swin and not(self.isinliquid) then
-			--check if water below, dolphins
-			local node_name = mobkit.node_name_in(self, "below")
-			if minetest.get_item_group(node_name, "water") == 0  then
-				petz.ownthing(self)
-				return true	
-			end
-		end
-		local pos = self.object:get_pos()
+		local pos = mobkit.get_stand_pos(self)
 		local tpos = player:get_pos()
+		if self.can_swin then
+			if not(self.isinliquid) then
+				--check if water below, dolphins
+				local node_name = mobkit.node_name_in(self, "below")
+				if minetest.get_item_group(node_name, "water") == 0  then
+					petz.ownthing(self)
+					return true	
+				end
+			end
+		end		
 		if pos and tpos then
 			local distance = vector.distance(pos, tpos)
 			if distance < self.view_range then
