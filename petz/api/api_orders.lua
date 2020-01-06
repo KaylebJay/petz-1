@@ -4,7 +4,7 @@ petz.ownthing = function(self)
 	self.status = mobkit.remember(self, "status", "")
 	if self.can_fly then
 		mobkit.hq_wanderfly(self, 0)
-	elseif self.can_swin and petz.isinliquid(self) then	
+	elseif self.can_swin and self.isinliquid then	
 		mobkit.hq_aqua_roam(self, 0, self.max_speed)
 	else
 		mobkit.hq_roam(self, 0)
@@ -54,7 +54,7 @@ petz.follow = function(self, player)
 	if self.can_fly then
 		mobkit.animate(self, "fly")
 		mobkit.hq_followliquidair(self, 100, player)
-	elseif self.can_swin and petz.isinliquid(self) then			
+	elseif self.can_swin and self.isinliquid then			
 		mobkit.animate(self, "def")
 		mobkit.hq_followliquidair(self, 100, player)
 	else
