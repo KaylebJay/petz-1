@@ -72,7 +72,8 @@ petz.childbirth = function(self)
 		if math.random(1, 2) == 1 then
 			baby_type = "petz:elephant_female" --could be a female baby elephant
 		end
-	end
+	end	
+	pos.y = pos.y + 1.01 -- birth a litte up		
 	local baby = minetest.add_entity(pos, baby_type, minetest.serialize(baby_properties))
 	local baby_entity = baby:get_luaentity()
 	baby_entity.is_baby = true
@@ -127,11 +128,17 @@ petz.growth_timer = function(self, dtime)
 	self.growth_time = mobkit.remember(self, "growth_time", self.growth_time + dtime) 
 	if self.growth_time >= petz.settings.growth_time then
 		self.is_baby = mobkit.remember(self, "is_baby", false)
+		local pos = self.object:get_pos()
+		pos.y = pos.y + 1.01 -- grows a litte up		
+		self.object:set_pos(pos)
+		local vel = self.object:get_velocity()		
+		vel.y=vel.y + 4.0
+		self.object:set_velocity(vel)
 		petz.set_properties(self, {
 			jump = false,
 			is_baby = false,
 			visual_size = self.visual_size,
 			collisionbox = self.collisionbox 
-		})		
+		})	
 	end
 end

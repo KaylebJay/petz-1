@@ -209,7 +209,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 						self.genes["gen2"] = static_data_table["gen1_mother"]					
 					else
 						self.genes["gen2"] = static_data_table["gen2_mother"]
-					end	
+					end					
 				end						
 				local textures_count
 				if self.mutation and (self.mutation > 0) then

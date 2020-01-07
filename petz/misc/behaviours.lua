@@ -239,6 +239,14 @@ function petz.herbivore_brain(self)
 				end
 			end
 		end
+		
+		--if prty < 7 and self.type == "moth" and mobkit.is_queue_empty_high(self) then --search for a squareball			
+			--local pos_torch_near = minetest.find_node_near(pos, self.view_range, "default:torch")			
+			--if pos_torch_near then
+				--mobkit.hq_approach_torch(self, 7, pos_torch_near)
+				--return			
+			--end
+		--end
 				
 		--Replace nodes by others		
 		if prty < 6 then			
@@ -272,13 +280,6 @@ function petz.herbivore_brain(self)
 				end
 			end
 		end
-		
-		--if prty < 5 and self.type == "moth" then --search for a squareball			
-			--local pos_torch_near = minetest.find_node_near(self.object:get_pos(), 10, "default:torch")	
-			--if pos_torch_near then				
-				--mobkit.hq_goto(self, 5, pos_torch_near)
-			--end
-		--end
 		
 		--search for a petz:pet_bowl		
 		if prty < 4 and self.tamed == true then
