@@ -75,6 +75,7 @@ petz.childbirth = function(self)
 	end	
 	pos.y = pos.y + 1.01 -- birth a litte up		
 	local baby = minetest.add_entity(pos, baby_type, minetest.serialize(baby_properties))
+	petz.do_sound_effect("object", baby, "petz_pop_sound")
 	local baby_entity = baby:get_luaentity()
 	baby_entity.is_baby = true
 	mobkit.remember(baby_entity, "is_baby", baby_entity.is_baby)
@@ -139,6 +140,7 @@ petz.growth_timer = function(self, dtime)
 			is_baby = false,
 			visual_size = self.visual_size,
 			collisionbox = self.collisionbox 
-		})	
+		})
+		petz.do_sound_effect("object", self.object, "petz_pop_sound")
 	end
 end
