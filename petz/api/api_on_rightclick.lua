@@ -18,9 +18,10 @@ petz.on_rightclick = function(self, clicker)
 	if not(clicker:is_player()) then
 		return false
 	end
+	local pet_name = self.type:gsub("^%l", string.upper)
 	local player_name = clicker:get_player_name()
 	local wielded_item = clicker:get_wielded_item()
-	local wielded_item_name = wielded_item:get_name()
+	local wielded_item_name = wielded_item:get_name()	
 	local show_form = false
 	if ((self.is_pet == true) and (self.owner == player_name) and (self.can_be_brushed == true))-- If brushing or spread beaver oil
 			and ((wielded_item_name == "petz:hairbrush") or (wielded_item_name == "petz:beaver_oil")) then                       
@@ -59,14 +60,13 @@ petz.on_rightclick = function(self, clicker)
 	elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then          	
 		local player_name = clicker:get_player_name()
 		if (self.is_pet == true and self.owner and self.owner ~= player_name and petz.settings.rob_mobs == false) then
-			minetest.chat_send_player(player_name, S("You are not the owner of the").." "..self.type..".")	
+			minetest.chat_send_player(player_name, S("You are not the owner of the").." "..S(pet_name)..".")	
 			return
 		end
 		if self.owner== nil or self.owner== "" or (self.owner ~= player_name and petz.settings.rob_mobs == true) then
 			petz.set_owner(self, 	player_name, false)
 		end			
-		petz.capture(self, clicker, true)
-		local pet_name = self.type:gsub("^%l", string.upper)
+		petz.capture(self, clicker, true)		
 		minetest.chat_send_player("singleplayer", S("Your").." "..S(pet_name).." "..S("has been captured")..".")				            
 	elseif self.breed and wielded_item_name == petz.settings[self.type.."_breed"] and not(self.is_baby) then
 		petz.breed(self, clicker, wielded_item, wielded_item_name)
