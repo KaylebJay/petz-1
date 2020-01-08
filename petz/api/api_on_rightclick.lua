@@ -32,7 +32,7 @@ petz.on_rightclick = function(self, clicker)
                     self.brushed = true
                     mobkit.remember(self, "brushed", self.brushed) 
                  else
-					minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("had already been brushed."))
+					minetest.chat_send_player(self.owner, S("Your").." "..S(pet_name).." "..S("had already been brushed."))
                  end                
 			else --it's beaver_oil						
 				if self.beaver_oil_applied == false then
@@ -40,7 +40,7 @@ petz.on_rightclick = function(self, clicker)
                     self.beaver_oil_applied = true
                     mobkit.remember(self, "beaver_oil_applied", self.beaver_oil_applied)
 				else 
-					minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("had already been spreaded with beaver oil."))
+					minetest.chat_send_player(self.owner, S("Your").." "..S(pet_name).." "..S("had already been spreaded with beaver oil."))
 				end     
 			end
 		end
