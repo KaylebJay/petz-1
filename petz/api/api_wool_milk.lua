@@ -31,8 +31,15 @@ petz.lamb_wool_regrow = function(self)
 end
 
 petz.lamb_wool_shave = function(self, clicker)
-	local inv = clicker:get_inventory()	
-	local new_stack = "wool:"..self.skin_colors[self.texture_no]
+	local inv = clicker:get_inventory()
+	local color
+	if not(self.colorized) then
+		color = self.skin_colors[self.texture_no]
+	else
+		color = self.colorized
+		self.colorized = mobkit.remember(self, "colorized", nil) --reset the color
+	end
+	local new_stack = "wool:".. color
 	if inv:room_for_item("main", new_stack) then
 		inv:add_item("main", new_stack)
 	else

@@ -125,6 +125,7 @@ petz.load_vars = function(self)
 	self.dreamcatcher = mobkit.recall(self, "dreamcatcher") or false
 	self.status = mobkit.recall(self, "status") or ""
 	self.warn_attack = false --reset the warn attack
+	self.colorized = mobkit.recall(self, "colorized") or nil
 end
 
 function petz.set_initial_properties(self, staticdata, dtime_s)	
@@ -254,6 +255,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", false)	
 		self.status = mobkit.remember(self, "status", "")
 		self.warn_attack = mobkit.remember(self, "warn_attack", false)
+		self.colorized = mobkit.remember(self, "colorized", nil)
 		if self.init_tamagochi_timer== true then
 			petz.init_tamagochi_timer(self)
 		end
@@ -318,7 +320,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.status = mobkit.remember(self, "status", static_data_table["fields"]["status"]) or ""
 		self.tamed = mobkit.remember(self, "tamed", minetest.is_yes(static_data_table["fields"]["tamed"]))	
 		self.owner = mobkit.remember(self, "owner", static_data_table["fields"]["owner"]) 
-		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 
+		self.colorized = mobkit.remember(self, "colorized", static_data_table["fields"]["colorized"]) or nil
+		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 		
 		if self.has_affinity == true then
 			self.affinity = mobkit.remember(self, "affinity", tonumber(static_data_table["fields"]["affinity"])) 
 		end
@@ -327,6 +330,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.lashing_count = mobkit.remember(self, "lashing_count", tonumber(static_data_table["fields"]["lashing_count"]	))	
 		end
 	end		
+		
 	--Custom textures
 	if captured_mob == true or self.breed == true then
 		local texture		
@@ -352,6 +356,11 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 		mobkit.remember(self, "texture_no", self.texture_no) 	
 		petz.set_properties(self, {textures = {texture}})	
+	end
+	if self.colorized then
+		if not(self.shaved) then
+			petz.colorize(self, self.colorized)
+		end
 	end
 	if self.breed == true then
 		if baby_born == true then
