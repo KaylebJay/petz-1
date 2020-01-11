@@ -59,6 +59,7 @@ for i = 1, #petz.petz_list do --load the settings
 	petz.settings[petz_type.."_breed"]  = settings:get(petz_type.."_breed", "")
 	petz.settings[petz_type.."_predators"]  = settings:get(petz_type.."_predators", "")
 	petz.settings[petz_type.."_preys"] = settings:get(petz_type.."_preys", "")
+	petz.settings[petz_type.."_colorized"] = settings:get_bool(petz_type.."_colorized", false)
 	petz.settings[petz_type.."_copulation_distance"] = tonumber(settings:get(petz_type.."_copulation_distance"))
 	if petz_type == "beaver" then
 		petz.settings[petz_type.."_create_dam"] = settings:get_bool(petz_type.."_create_dam", false)

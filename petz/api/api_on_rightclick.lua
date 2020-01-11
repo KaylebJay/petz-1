@@ -72,7 +72,7 @@ petz.on_rightclick = function(self, clicker)
 		petz.breed(self, clicker, wielded_item, wielded_item_name)
 	elseif (wielded_item_name == "petz:dreamcatcher") and (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then
 		petz.put_dreamcatcher(self, clicker, wielded_item, wielded_item_name)	
-	elseif minetest.get_item_group(wielded_item_name, "dye") > 0  then --Colorize textures
+	elseif petz.settings[self.type.."_colorized"] == true and minetest.get_item_group(wielded_item_name, "dye") > 0  then --Colorize textures
 		local color_group = petz.get_color_group(wielded_item_name)
 		if color_group and not(self.shaved) then
 			petz.colorize(self, color_group)
