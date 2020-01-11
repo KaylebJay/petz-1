@@ -23,7 +23,7 @@ mouse_predators = petz:kitty
 #or leave 'default' for all the biomes:
 mouse_spawn_biome = default
 
-- If you want to spwan a herd add:
+- If you want to spawn a herd of mouses, i.e. 4, add:
 
 mouse_spawn_herd = 4
 
