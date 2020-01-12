@@ -155,7 +155,7 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)
 				if spawn == true then
 					spawn_pos = petz.pos_to_spawn(random_mob_name, spawn_pos) --recalculate pos.y for bigger mobs
 					minetest.add_entity(spawn_pos, random_mob_name)	
-					minetest.chat_send_player("singleplayer", random_mob.. " spawned!!!")
+					--minetest.chat_send_player("singleplayer", random_mob.. " spawned!!!")
 				end							
 				--minetest.chat_send_player("singleplayer", "cave="..tostring(cave))				
 			end
