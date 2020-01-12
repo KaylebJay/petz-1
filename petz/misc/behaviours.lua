@@ -8,6 +8,7 @@ local modpath, S = ...
 function petz.bh_runaway_from_predator(self, pos)
 	local predator_list = petz.settings[self.type.."_predators"]
 	if predator_list then
+		predator_list = petz.str_remove_spaces(predator_list)
 		local predators = string.split(predator_list, ',')
 		for i = 1, #predators do --loop  thru all preys
 			--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
@@ -31,7 +32,7 @@ function petz.bh_start_follow(self, pos, player, prty)
 	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()	
 		local tpos = player:get_pos()
-		if wielded_item_name == self.follow and vector.distance(pos, tpos) <= self.view_range then 			
+		if petz.item_in_itemlist(wielded_item_name, self.follow) and vector.distance(pos, tpos) <= self.view_range then 			
 			self.status = mobkit.remember(self, "status", "follow")			
 			if (self.can_fly) or (self.can_swin and self.isinliquid) then								
 				mobkit.hq_followliquidair(self, prty, player)
@@ -146,6 +147,35 @@ function petz.bh_teleport(self, pos, player, player_pos)
 	end
 end
 
+-- Breed Behaviour
+
+function petz.bh_breed(self, pos)
+	if self.breed == true and self.is_rut == true and self.is_male == true then --search a couple for a male!
+		local couple_name = "petz:"..self.type
+		if self.type ==  "elephant" then
+			couple_name = couple_name.."_female"
+		end				
+		local couple_obj = mobkit.get_closest_entity(self, couple_name)	-- look for a couple
+		if couple_obj then
+			couple = couple_obj:get_luaentity()
+			if couple and couple.is_rut == true and couple.is_pregnant == false and couple.is_male == false then --if couple and female and is not pregnant and is rut
+				local couple_pos = couple.object:get_pos() --get couple pos						
+				local copulation_distance = petz.settings[self.type.."_copulation_distance"] or 1
+				if vector.distance(pos, couple_pos) <= copulation_distance then --if close
+					--Changue some vars						
+					self.is_rut = false
+					mobkit.remember(self, "is_rut", self.is_rut)
+					couple.is_rut = false
+					mobkit.remember(couple, "is_rut", couple.is_rut)				
+					couple.is_pregnant = true
+					mobkit.remember(couple, "is_pregnant", couple.is_pregnant)	
+					couple.father_genes = mobkit.remember(couple, "father_genes", self.genes)	
+					petz.do_particles_effect(couple.object, couple.object:get_pos(), "pregnant".."_"..couple.type)
+				end
+			end
+		end
+	end
+end
 --
 --Herbivore Behaviour
 --
@@ -254,31 +284,7 @@ function petz.herbivore_brain(self)
 		end
 		
 		if prty < 5 then
-			if self.breed == true and self.is_rut == true and self.is_male == true then --search a couple for a male!
-				local couple_name = "petz:"..self.type
-				if self.type ==  "elephant" then
-					couple_name = couple_name.."_female"
-				end				
-				local couple_obj = mobkit.get_closest_entity(self, couple_name)	-- look for a couple
-				if couple_obj then
-					couple = couple_obj:get_luaentity()
-					if couple and couple.is_rut == true and couple.is_pregnant == false and couple.is_male == false then --if couple and female and is not pregnant and is rut
-						local couple_pos = couple.object:get_pos() --get couple pos						
-						local copulation_distance = petz.settings[self.type.."_copulation_distance"] or 1
-						if vector.distance(pos, couple_pos) <= copulation_distance then --if close
-							--Changue some vars						
-							self.is_rut = false
-							mobkit.remember(self, "is_rut", self.is_rut)
-							couple.is_rut = false
-							mobkit.remember(couple, "is_rut", couple.is_rut)				
-							couple.is_pregnant = true
-							mobkit.remember(couple, "is_pregnant", couple.is_pregnant)	
-							couple.father_genes = mobkit.remember(couple, "father_genes", self.genes)	
-							petz.do_particles_effect(couple.object, couple.object:get_pos(), "pregnant".."_"..couple.type)
-						end
-					end
-				end
-			end
+			petz.bh_breed(self, pos)
 		end
 		
 		--search for a petz:pet_bowl		
@@ -419,6 +425,7 @@ function petz.predator_brain(self)
 			if self.tamed == false then
 				local preys_list = petz.settings[self.type.."_preys"]
 				if preys_list then
+					preys_list = petz.str_remove_spaces(preys_list)
 					local preys = string.split(preys_list, ',')
 					for i = 1, #preys  do --loop  thru all preys
 						--minetest.chat_send_player("singleplayer", "preys list="..preys[i])	
@@ -445,6 +452,10 @@ function petz.predator_brain(self)
 		--Replace nodes by others		
 		if prty < 6 then			
 			petz.bh_replace(self)
+		end
+		
+		if prty < 5 then
+			petz.bh_breed(self, pos)
 		end
 		
 		-- Default Random Sound		

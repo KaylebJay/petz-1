@@ -74,8 +74,6 @@ petz.load_vars = function(self)
 		end
 	elseif self.type == "puppy" then
 		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
-	elseif self.type == "wolf" then
-		self.wolf_to_puppy_count = mobkit.recall(self, "wolf_to_puppy_count") or petz.settings.wolf_to_puppy_count 
 	elseif self.type == "bee" then
 		self.behive = mobkit.recall(self, "behive") or nil
 	end
@@ -126,6 +124,9 @@ petz.load_vars = function(self)
 	self.status = mobkit.recall(self, "status") or ""
 	self.warn_attack = false --reset the warn attack
 	self.colorized = mobkit.recall(self, "colorized") or nil
+	self.convert = mobkit.recall(self, "convert") or nil
+	self.convert_to = mobkit.recall(self, "convert_to") or nil
+	self.convert_count = mobkit.recall(self, "convert_count") or 5
 end
 
 function petz.set_initial_properties(self, staticdata, dtime_s)	
@@ -148,9 +149,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)	
 			self.shaved = mobkit.remember(self, "shaved", false)	
 		elseif self.type == "puppy" then		
-			self.square_ball_attached = mobkit.remember(self, "square_ball_attached", false)			
-		elseif self.type == "wolf" then		
-			self.wolf_to_puppy_count = mobkit.remember(self, "wolf_to_puppy_count", petz.settings.wolf_to_puppy_count)
+			self.square_ball_attached = mobkit.remember(self, "square_ball_attached", false)				
 		elseif self.is_mountable == true then		
 			if baby_born == false then
 				self.max_speed_forward= mobkit.remember(self, "max_speed_forward", math.random(2, 4)) --set a random velocity for walk and run
@@ -256,6 +255,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.status = mobkit.remember(self, "status", "")
 		self.warn_attack = mobkit.remember(self, "warn_attack", false)
 		self.colorized = mobkit.remember(self, "colorized", nil)
+		self.convert = mobkit.remember(self, "convert", nil)
+		if petz.settings[self.type.."_convert_to"] then		
+			self.convert_to = mobkit.remember(self, "convert_to", petz.settings[self.type.."_convert_to"])
+		end
+		if petz.settings[self.type.."_convert_count"] then		
+			self.convert_count = mobkit.remember(self, "convert_count", petz.settings[self.type.."_convert_count"])
+		end
 		if self.init_tamagochi_timer== true then
 			petz.init_tamagochi_timer(self)
 		end
@@ -278,9 +284,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		--Mob Specific		
 		if self.type == "lamb" then --Lamb
 			self.food_count_wool = mobkit.remember(self, "food_count_wool", tonumber(static_data_table["fields"]["food_count_wool"])) 
-			self.shaved = mobkit.remember(self, "shaved", minetest.is_yes(static_data_table["fields"]["shaved"])) 		
-		elseif self.type == "wolf" then
-			self.wolf_to_puppy_count = mobkit.remember(self, "wolf_to_puppy_count", tonumber(static_data_table["fields"]["wolf_to_puppy_count"])) 
+			self.shaved = mobkit.remember(self, "shaved", minetest.is_yes(static_data_table["fields"]["shaved"])) 							
 		end
 		if self.is_mountable == true then		
 			self.saddle = minetest.is_yes(static_data_table["fields"]["saddle"])	
@@ -321,7 +325,10 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.tamed = mobkit.remember(self, "tamed", minetest.is_yes(static_data_table["fields"]["tamed"]))	
 		self.owner = mobkit.remember(self, "owner", static_data_table["fields"]["owner"]) 
 		self.colorized = mobkit.remember(self, "colorized", static_data_table["fields"]["colorized"]) or nil
-		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 		
+		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 
+		self.convert = mobkit.remember(self, "convert", static_data_table["fields"]["convert"]) or nil
+		self.convert_to = mobkit.remember(self, "convert_to", static_data_table["fields"]["convert_to"]) or nil
+		self.convert_count = mobkit.remember(self, "convert_count", tonumber(static_data_table["fields"]["convert_count"])) 		
 		if self.has_affinity == true then
 			self.affinity = mobkit.remember(self, "affinity", tonumber(static_data_table["fields"]["affinity"])) 
 		end

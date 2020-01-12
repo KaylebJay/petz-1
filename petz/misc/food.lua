@@ -57,14 +57,15 @@ minetest.register_craft({
 minetest.register_craftitem("petz:frog_leg", {
     description = S("Frog Leg"),
     inventory_image = "petz_frog_leg.png",
-    wield_image = "petz_frog_leg.png"
+    wield_image = "petz_frog_leg.png",
+    groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
 minetest.register_craftitem("petz:frog_leg_roasted", {
 	description = S("Roasted Frog Leg"),
 	inventory_image = "petz_frog_leg_roasted.png",	
 	on_use = minetest.item_eat(3),
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 
 minetest.register_craft({
@@ -78,14 +79,15 @@ minetest.register_craft({
 minetest.register_craftitem("petz:raw_parrot", {
     description = S("Raw Parrot"),
     inventory_image = "petz_raw_parrot.png",
-    wield_image = "petz_raw_parrot.png"
+    wield_image = "petz_raw_parrot.png",
+    groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
 minetest.register_craftitem("petz:roasted_parrot", {
 	description = S("Roasted Parrot"),
 	inventory_image = "petz_roasted_parrot.png",	
 	on_use = minetest.item_eat(2),
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 
 minetest.register_craft({
@@ -99,13 +101,15 @@ minetest.register_craft({
 minetest.register_craftitem("petz:raw_chicken", {
     description = S("Raw Chicken"),
     inventory_image = "petz_raw_chicken.png",
-    wield_image = "petz_raw_chicken.png"
+    wield_image = "petz_raw_chicken.png",
+    groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
 minetest.register_craftitem("petz:chicken_legs", {
     description = S("Chicken Legs"),
     inventory_image = "petz_chicken_legs.png",
     wield_image = "petz_chicken_legs.png",
+    groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
 minetest.register_craft({
@@ -119,6 +123,7 @@ minetest.register_craftitem("petz:roasted_chicken_legs", {
 	inventory_image = "petz_roasted_chicken_legs.png",	
 	on_use = minetest.item_eat(5),
 	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 
 minetest.register_craftitem("petz:chicken_legs_bucket", {
@@ -128,7 +133,7 @@ minetest.register_craftitem("petz:chicken_legs_bucket", {
 	on_use = function (itemstack, user, pointed_thing)
         return minetest.do_item_eat(12, "bucket:bucket_empty", itemstack, user, pointed_thing)
     end,	
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 
 minetest.register_craft({
@@ -149,8 +154,8 @@ minetest.register_craft({
 minetest.register_craftitem("petz:roasted_chicken", {
 	description = S("Roasted Chicken"),
 	inventory_image = "petz_roasted_chicken.png",	
-	on_use = minetest.item_eat(3),
-	groups = {flammable = 2, food = 2},
+	on_use = minetest.item_eat(3),	
+	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 
 minetest.register_craft({
@@ -164,14 +169,15 @@ minetest.register_craft({
 minetest.register_craftitem("petz:raw_porkchop", {
     description = S("Raw Porkchop"),
     inventory_image = "petz_raw_porkchop.png",
-    wield_image = "petz_raw_porkchop.png"
+    wield_image = "petz_raw_porkchop.png",
+    groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
 minetest.register_craftitem("petz:roasted_porkchop", {
 	description = S("Roasted Porkchop"),
 	inventory_image = "petz_roasted_porkchop.png",	
 	on_use = minetest.item_eat(3),
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 
 minetest.register_craft({
@@ -185,14 +191,15 @@ minetest.register_craft({
 minetest.register_craftitem("petz:mini_lamb_chop", {
     description = S("Mini Lamb Chop"),
     inventory_image = "petz_mini_lamb_chop.png",
-    wield_image = "petz_mini_lamb_chop.png"
+    wield_image = "petz_mini_lamb_chop.png",
+    groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
 minetest.register_craftitem("petz:roasted_lamb_chop", {
 	description = S("Roasted Lamb Chop"),
 	inventory_image = "petz_roasted_lamb_chop.png",	
 	on_use = minetest.item_eat(3),
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 
 minetest.register_craft({
@@ -206,14 +213,15 @@ minetest.register_craft({
 minetest.register_craftitem("petz:beef", {
     description = S("Beef"),
     inventory_image = "petz_beef.png",
-    wield_image = "petz_beef.png"
+    wield_image = "petz_beef.png",
+    groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
 minetest.register_craftitem("petz:steak", {
 	description = S("Beef Steak"),
 	inventory_image = "petz_steak.png",	
 	on_use = minetest.item_eat(3),
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 
 minetest.register_craft({
@@ -227,14 +235,15 @@ minetest.register_craft({
 minetest.register_craftitem("petz:raw_ducky", {
     description = S("Raw Ducky"),
     inventory_image = "petz_raw_ducky.png",
-    wield_image = "petz_raw_ducky.png"
+    wield_image = "petz_raw_ducky.png",
+    groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
 minetest.register_craftitem("petz:roasted_ducky", {
 	description = S("Roasted Ducky"),
 	inventory_image = "petz_roasted_ducky.png",	
 	on_use = minetest.item_eat(3),
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 
 minetest.register_craft({
@@ -266,7 +275,7 @@ minetest.register_craftitem("petz:blueberry_cheese_cake", {
 	description = S("Blueberry Cheese Cake"),
 	inventory_image = "petz_blueberry_cake.png",	
 	on_use = minetest.item_eat(6),
-	groups = {flammable = 2, food = 2},
+	groups = {flammable = 2, food = 2, food_cheese = 1},
 })
 
 minetest.register_craft({

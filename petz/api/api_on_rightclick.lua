@@ -18,7 +18,7 @@ petz.on_rightclick = function(self, clicker)
 	if not(clicker:is_player()) then
 		return false
 	end
-	local pet_name = self.type:gsub("^%l", string.upper)
+	local pet_name = petz.first_to_upper(self.type)
 	local player_name = clicker:get_player_name()
 	local wielded_item = clicker:get_wielded_item()
 	local wielded_item_name = wielded_item:get_name()	
@@ -51,12 +51,11 @@ petz.on_rightclick = function(self, clicker)
 		if petz.settings.tamagochi_mode == true and self.fed == false then
 			petz.do_feed(self)       
 		end
-		petz.refill(self) --Refill wool, milk or nothing
-		if self.type == "wolf" and wielded_item_name == "petz:bone" then
-			petz.wolf_to_puppy(self, player_name)
-		end     
-		petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
-		petz.do_particles_effect(self.object, self.object:get_pos(), "heart")   
+		petz.refill(self) --Refill wool, milk or nothing			
+	--convert to
+	elseif not(petz.str_is_empty(petz.settings[self.type.."_convert"])) and not(petz.str_is_empty(petz.settings[self.type.."_convert_to"]))
+		and petz.item_in_itemlist(wielded_item_name, petz.settings[self.type.."_convert"]) then
+			petz.convert(self, player_name)	
 	elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then          	
 		local player_name = clicker:get_player_name()
 		if (self.is_pet == true and self.owner and self.owner ~= player_name and petz.settings.rob_mobs == false) then

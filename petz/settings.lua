@@ -62,11 +62,12 @@ for i = 1, #petz.petz_list do --load the settings
 	petz.settings[petz_type.."_predators"]  = settings:get(petz_type.."_predators", "")
 	petz.settings[petz_type.."_preys"] = settings:get(petz_type.."_preys", "")
 	petz.settings[petz_type.."_colorized"] = settings:get_bool(petz_type.."_colorized", false)
-	petz.settings[petz_type.."_copulation_distance"] = tonumber(settings:get(petz_type.."_copulation_distance"))
+	petz.settings[petz_type.."_copulation_distance"] = tonumber(settings:get(petz_type.."_copulation_distance")) or 0.0
+	petz.settings[petz_type.."_convert"] = settings:get(petz_type.."_convert", nil)
+	petz.settings[petz_type.."_convert_to"] = settings:get(petz_type.."_convert_to", nil)
+	petz.settings[petz_type.."_convert_count"] = tonumber(settings:get(petz_type.."_convert_count")) or nil
 	if petz_type == "beaver" then
-		petz.settings[petz_type.."_create_dam"] = settings:get_bool(petz_type.."_create_dam", false)
-	elseif petz_type == "wolf" then
-		petz.settings[petz_type.."_to_puppy_count"] = tonumber(settings:get(petz_type.."_to_puppy_count")) or 0.0
+		petz.settings[petz_type.."_create_dam"] = settings:get_bool(petz_type.."_create_dam", false)		
 	elseif petz_type == "silkworm" then
 		petz.settings[petz_type.."_lay_egg_on_node "] = settings:get(petz_type.."_lay_egg_on_node", "")
 	end	

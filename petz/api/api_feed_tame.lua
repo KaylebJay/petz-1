@@ -63,7 +63,7 @@ end
 
 petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_count, tame)
 	-- Can eat/tame with item in hand		
-	if self.follow == wielded_item_name then		
+	if petz.item_in_itemlist(wielded_item_name, self.follow) then		
 		if creative_mode == false then -- if not in creative then take item
 			wielded_item:take_item()
 			clicker:set_wielded_item(wielded_item)
@@ -72,7 +72,7 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 		petz.update_nametag(self)		
 		if self.hp >= self.max_hp then
 			self.hp = self.max_hp
-			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", self.type, tostring(self.hp)))							
+			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", S(petz.first_to_upper(self.type)), tostring(self.hp)))							
 		end		
 		if self.tamed== true then
 			petz.update_nametag(self)
@@ -84,7 +84,7 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 			if tame then
 				if self.tamed == false then
 					petz.set_owner(self, clicker:get_player_name(), false)
-					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", self.type))
+					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", S(petz.first_to_upper(self.type))))
 					mobkit.clear_queue_high(self) -- clear behaviour (i.e. it was running away)	
 					if petz.settings.tamagochi_mode == true then
 						self.init_tamagochi_timer = true
@@ -120,7 +120,7 @@ petz.tame_whip= function(self, hitter)
 				if self.lashing_count >= petz.settings.lashing_tame_count then
 					self.lashing_count = mobkit.remember(self, "lashing_count", 0)	 --reset to 0
 					petz.set_owner(self, hitter:get_player_name(), true)					
-					minetest.chat_send_player(self.owner, S("A").." "..self.type.." "..S("has been tamed."))	
+					minetest.chat_send_player(self.owner, S("The").." "..S(petz.first_to_upper(self.type)).." "..S("has been tamed."))	
 					mobkit.clear_queue_high(self) -- do not attack				
 				end			
 			else

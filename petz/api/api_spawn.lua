@@ -1,22 +1,5 @@
 local modpath, S = ...
 
-petz.check_spawn_nodes = function(pet_name, node_name)
-	local match = false
-	local spawn_nodes_list = petz.settings[pet_name.."_spawn_nodes"]
-	if spawn_nodes_list then
-		local spawn_nodes = string.split(spawn_nodes_list, ',')
-		for j = 1, #spawn_nodes do --loop  thru all spawn nodes
-			--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[j])	
-			--minetest.chat_send_player("singleplayer", "node name="..node.name)						
-			if spawn_nodes[j] == node_name then --if node name matches
-				match = true
-				break
-			end
-		end						
-	end	
-	return match
-end
-
 petz.get_node_below = function(pos)
 	local pos_below = {
 		x = pos.x,
@@ -27,7 +10,7 @@ petz.get_node_below = function(pos)
 	return node
 end
 
-petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)	
+petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)		
 	local node = petz.get_node_below(spawn_pos) --the node below the spawn pos
 	local candidates_list = {} --Create a sublist of the petz with the same node to spawnand between max_height and min_height	
 	for i = 1, #petz.petz_list do
@@ -89,8 +72,8 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)
 					end
 				end
 			end
-		end
-		if can_spawn and petz.check_spawn_nodes(pet_name, node.name) == true then
+		end				
+		if can_spawn and petz.item_in_itemlist(node.name, petz.settings[pet_name.."_spawn_nodes"]) == true then
 			table.insert(candidates_list, pet_name)
 		end
 	end --end for
@@ -163,8 +146,8 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)
 				if i > 1 then					
 					local height, liquidflag = mobkit.get_terrain_height(spawn_pos, 32)					
 					if height then
-						local node = petz.get_node_below(spawn_pos)
-						if not(petz.check_spawn_nodes(random_mob, node.name)) then							
+						local node = petz.get_node_below(spawn_pos)						
+						if not(petz.item_in_itemlist(node.name, petz.settings[random_mob.."_spawn_nodes"])) then							
 							spawn = false
 						end
 					end
@@ -172,7 +155,7 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)
 				if spawn == true then
 					spawn_pos = petz.pos_to_spawn(random_mob_name, spawn_pos) --recalculate pos.y for bigger mobs
 					minetest.add_entity(spawn_pos, random_mob_name)	
-					--minetest.chat_send_player("singleplayer", random_mob.. " spawned!!!")
+					minetest.chat_send_player("singleplayer", random_mob.. " spawned!!!")
 				end							
 				--minetest.chat_send_player("singleplayer", "cave="..tostring(cave))				
 			end

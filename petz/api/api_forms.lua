@@ -147,7 +147,7 @@ petz.create_form = function(player_name)
 		end
     end
     if pet.is_wild == true then
-		form_orders =	form_orders .. "button_exit[3,5;2,1;btn_guard;"..S("Guard").."]"
+		form_orders =	form_orders .. "button_exit[3,4;2,1;btn_guard;"..S("Guard").."]"
     end
     final_form =
 		"size["..form_size.w..","..form_size.h..";]"..

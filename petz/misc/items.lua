@@ -338,7 +338,8 @@ minetest.register_craft({
 minetest.register_craftitem("petz:bone", {
     description = S("Bone"),
     inventory_image = "petz_bone.png",
-    wield_image = "petz_bone.png"
+    wield_image = "petz_bone.png",
+    groups = {bone = 1},
 })
 
 -- Elephant Tusk
