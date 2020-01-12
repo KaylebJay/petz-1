@@ -462,7 +462,7 @@ function petz.predator_brain(self)
 		petz.random_mob_sound(self)
 		
 		--Roam default			
-		if mobkit.is_queue_empty_high(self) then
+		if mobkit.is_queue_empty_high(self) and self.status == "" then
 			mobkit.hq_roam(self, 0)
 		end
 		
