@@ -216,7 +216,7 @@ minetest.register_craftitem("petz:lycanthropy_remedy", {
 
 minetest.register_craft({
     type = "shaped",
-    output = "petz:beaver_oil",
+    output = "petz:lycanthropy_remedy",
     recipe = {
         {"", "petz:wolf_jaw", ""},
         {"", "petz:wolf_fur", ""},
