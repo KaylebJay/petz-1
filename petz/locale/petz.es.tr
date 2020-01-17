@@ -166,6 +166,8 @@ Whip=Látigo
 Worker Bee=Abeja obrera
 Pet Whistle=Silbato para mascota
 Wolf=Lobo
+Wolf Jaw=Mandíbula de lobo
+Wolf Fur=Piel de lobo
 Write=Escribir
 Your=Tu
 You are not the owner of the=Tú no eres el propietario del
@@ -191,8 +193,6 @@ Light_brown=Beis
 Light_gray=Gris claro
 Pink=Rosa
 #Lycantrophy
-Wolf Jaw=Mandíbula de lobo
-Wolf Fur=Piel de lobo
 Lycanthropy Remedy=Remedio contra la Licantropía
 The Savage Stalkers=Los Acosadores Salvajes
 The Bravehide Pride=El Orgullo de Pielbrava
