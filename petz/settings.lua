@@ -48,6 +48,8 @@ petz.settings.bee_outing_ratio = tonumber(settings:get("bee_outing_ratio", "20")
 --petz.settings.max_behives_in_area  = tonumber(settings:get("max_behives_in_area")) or 0.0
 --Weapons
 petz.settings.pumpkin_grenade_damage = tonumber(settings:get("pumpkin_grenade_damage", "8"))
+--Lycanthropy
+petz.settings.lycanthropy = settings:get_bool("lycanthropy", true)
 --Mobs Specific
 for i = 1, #petz.petz_list do --load the settings
 	local petz_type = petz.petz_list[i]

@@ -140,6 +140,18 @@ minetest.register_craftitem("petz:ducky_feather", {
     groups = {feather = 1},
 })
 
+-- Wolf Drops
+
+minetest.register_craftitem("petz:wolf_jaw", {
+	description = S("Wolf Jaw"),
+	inventory_image = "petz_wolf_jaw.png",
+})
+
+minetest.register_craftitem("petz:wolf_fur", {
+	description = S("Wolf Fur"),
+	inventory_image = "petz_wolf_fur.png",
+})
+
 --Material for Lion's Cage
 
 minetest.register_node("petz:gray_paving_stone", {

@@ -175,6 +175,7 @@ You have no pets with a name to call.=No tienes mascotas con nombre para llamar.
 @1/@2 buckets of milk=@1/@2 cubos de leche
 The Milky Way=La Vía Lactea
 Milk @1 times=Ordeña una vaca @1 veces
+#Colors
 White=Blanco
 Dark_grey=Gris oscuro
 Brown=Marrón
@@ -189,3 +190,14 @@ Dark_brown=Marrón oscuro
 Light_brown=Beis
 Light_gray=Gris claro
 Pink=Rosa
+#Lycantrophy
+Wolf Jaw=Mandíbula de lobo
+Wolf Fur=Piel de lobo
+Lycanthropy Remedy=Remedio contra la Licantropía
+The Savage Stalkers=Los Acosadores Salvajes
+The Bravehide Pride=El Orgullo de Pielbrava
+The Hidden Tails=Las Colas Ocultas
+You've fallen ill with Lycanthropy!=¡Has enfermado de Licantropía!
+You've cured of Lycanthropy=Te has curado de la licantropía
+You are now a werewolf=Ahora eres un hombre lobo
+You are now a human=Ahora eres humano

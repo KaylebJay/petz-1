@@ -22,7 +22,3 @@ petz.do_sound_effect = function(dest, dest_object, soundfile)
 		minetest.sound_play(soundfile, {pos = dest_object, gain = 0.5, max_hear_distance = petz.settings.max_hear_distance,})
 	end
 end
-
-petz.set_properties = function(self, properties)
-	self.object:set_properties(properties) 			
-end

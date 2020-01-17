@@ -3,8 +3,20 @@ local modpath, S = ...
 --
 --Helper Functions
 --
+
+petz.set_properties = function(self, properties)
+	if type(self) == 'table' then
+		self = self.object
+	end
+	self:set_properties(properties)	
+end
+
 function petz.is_night()
-	local timeofday = minetest.get_timeofday() * 24000
+	local timeofday = minetest.get_timeofday()
+	if timeofday == nil then --can be nil if world not loaded
+		return nil
+	end
+	timeofday = timeofday  * 24000
 	if (timeofday < 4500) or (timeofday > 19500) then
 		return true
 	else
@@ -73,7 +85,7 @@ petz.item_in_itemlist = function(item_name, itemlist)
 		for i = 1, #items do --loop  thru all items
 			--minetest.chat_send_player("singleplayer", "itemlist item="..items[i])	
 			--minetest.chat_send_player("singleplayer", "item name="..item_name)			 
-			item = petz.str_remove_spaces(items[i]) --remove spaces
+			local item = petz.str_remove_spaces(items[i]) --remove spaces
 			if string.sub(item, 1, 5) == "group" then	
 				local item_group = minetest.get_item_group(item_name, string.sub(item, 7))
 				if item_group > 0 then

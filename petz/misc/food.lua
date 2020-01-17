@@ -122,7 +122,6 @@ minetest.register_craftitem("petz:roasted_chicken_legs", {
 	description = S("Roasted Chicken Legs"),
 	inventory_image = "petz_roasted_chicken_legs.png",	
 	on_use = minetest.item_eat(5),
-	groups = {flammable = 2, food = 2},
 	groups = {flammable = 2, food = 2, food_meat = 1},
 })
 

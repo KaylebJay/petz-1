@@ -1,508 +1,657 @@
 local modpath, S = ...
 
---
--- FLY BRAIN
---
+
+-- 1. HERBIBORE/FLYING MOBS BRAIN
+-- 2. PREDATOR BRAIN
+-- 3. BEE BRAIN
+-- 4. AQUATIC BRAIN
+-- 5. SEMIAQUATIC BRAIN
+-- 6. MONSTER BRAIN
+
 
 --
--- Function Helpers
+-- 1. HERBIBORE/FLYING MOBS BRAIN
 --
 
-function mobkit.check_height(self)
-	local yaw = self.object:get_yaw()
-	local dir_x = -math.sin(yaw) * (self.collisionbox[4] + 0.5)
-	local dir_z = math.cos(yaw) * (self.collisionbox[4] + 0.5)
+function petz.herbivore_brain(self)
+
 	local pos = self.object:get_pos()
-	local ypos = pos.y + self.collisionbox[2] -- just above floor
-	if minetest.line_of_sight(
-		{x = pos.x + dir_x, y = ypos, z = pos.z + dir_z}, {x = pos.x + dir_x, y = ypos - self.max_height, z = pos.z + dir_z}, 1) then
-		return false
-	end
-	return true
-end
 
-function mobkit.check_is_on_surface(self)
-	local pos = self.object:get_pos()
-	if pos.y > 0 then
-		return true
-	else
-		return false
-	end
-end
-
-function mobkit.check_ground_suffocation(self)
-	local spos = mobkit.get_stand_pos(self)
-	spos.y = spos.y+0.01
-	if self.type and mobkit.is_alive(self) and not(self.is_baby) then
-		local stand_pos = spos
-		stand_pos.y = spos.y + 0.5
-		local stand_node_pos = mobkit.get_node_pos(stand_pos)
-		local stand_node = mobkit.nodeatpos(stand_node_pos)
-		if stand_node and stand_node.walkable and stand_node.drawtype == "normal" then
-			local new_y = stand_pos.y + self.jump_height
-			if new_y <= 30927 then
-				self.object:set_pos({
-					x = stand_pos.x,
-					y = new_y,
-					z = stand_pos.z
-				})
+	local die = false	
+	
+	mobkit.vitals(self)
+	
+	if self.hp <= 0 then
+		die = true
+	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up		
+		if pos then
+			local node_light = minetest.get_node_light(pos, minetest.get_timeofday())
+			if node_light and self.max_daylight_level then
+				if node_light >= self.max_daylight_level then
+					die = true
+				end
 			end
 		end
+	end			
+	
+	if die == true then
+		petz.on_die(self)
+		return
 	end
-end
-
-function petz.set_velocity(self, velocity)
-	local yaw = self.object:get_yaw() or 0
-	self.object:set_velocity({
-		x = (math.sin(yaw) * -velocity.x),
-		y = velocity.y or 0,
-		z = (math.cos(yaw) * velocity.z),
-	})
-end
-
-function mobkit.node_name_in(self, where)
-	local pos = self.object:get_pos()
-	local yaw = self.object:get_yaw() 	
-	if yaw then
-		local dir_x = -math.sin(yaw)
-		local dir_z = math.cos(yaw)
-		local pos2
-		if where == "front" then
-			pos2 = {
-				x = pos.x + dir_x,
-				y = pos.y,
-				z = pos.z + dir_z,
-			}	
-		elseif where == "top" then
-			pos2= {
-				x = pos.x,
-				y = pos.y + 0.5,
-				z = pos.z,
-			}
-		elseif where == "below" then
-			pos2= {
-				x = pos.x,
-				y = pos.y - 0.75,
-				z = pos.z,
-			}
-		elseif where == "back" then	
-			pos2 = {
-				x = pos.x - dir_x,
-				y = pos.y,
-				z = pos.z - dir_z,
-			}	
+	
+	if self.can_fly then
+		self.object:set_acceleration({x=0, y=0, z=0})		
+	end
+	
+	mobkit.check_ground_suffocation(self)
+	
+	if mobkit.timer(self, 1) then 	
+	
+		--petz.env_damage(self) 
+	
+		local prty = mobkit.get_queue_priority(self)			
+			
+		if prty < 30 then
+			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
 		end
-		local node = minetest.get_node_or_nil(pos2)
-		if node and minetest.registered_nodes[node.name] then
-			--minetest.chat_send_player("singleplayer", node.name)	
-			return node.name
-		else
-			return nil
+		
+		if prty < 20 then
+			if petz.isinliquid(self) then
+				if not(self.can_fly) then
+					mobkit.hq_liquid_recovery(self, 20)				
+					return
+				else
+					mobkit.hq_liquid_recovery_flying(self, 20)		
+					return
+				end
+			end
 		end
-	else
-		return nil
+		
+		local player = mobkit.get_nearby_player(self)
+			
+		--Runaway from predator
+		if prty < 18  then		
+			if petz.bh_runaway_from_predator(self, pos) == true then
+				return
+			end
+		end
+		
+		--Follow Behaviour					
+		if prty < 16 then
+			if petz.bh_start_follow(self, pos, player, 16) == true then
+				return
+			end			
+		end
+		
+		if prty == 16 then			
+			if petz.bh_stop_follow(self, player) == true then
+				return
+			end
+		end
+					
+		--Runaway from Player		
+		if prty < 14 then
+			if not(self.can_fly) and self.tamed == false then --if no tamed
+				if player then
+					local player_pos = player:get_pos()
+					local wielded_item_name = player:get_wielded_item():get_name()	
+					if self.is_pet == false and self.follow ~= wielded_item_name and vector.distance(pos, player_pos) <= self.view_range then 	
+						mobkit.hq_runfrom(self, 14, player)
+						return
+					end
+				end
+			end
+		end
+		
+		--if prty < 7 and self.type == "moth" and mobkit.is_queue_empty_high(self) then --search for a squareball			
+			--local pos_torch_near = minetest.find_node_near(pos, self.view_range, "default:torch")			
+			--if pos_torch_near then
+				--mobkit.hq_approach_torch(self, 7, pos_torch_near)
+				--return			
+			--end
+		--end
+				
+		--Replace nodes by others		
+		if prty < 6 then			
+			petz.bh_replace(self)
+		end
+		
+		if prty < 5 then
+			petz.bh_breed(self, pos)
+		end
+		
+		--search for a petz:pet_bowl		
+		if prty < 4 and self.tamed == true then
+			local view_range = self.view_range
+			local nearby_nodes = minetest.find_nodes_in_area(
+				{x = pos.x - view_range, y = pos.y - 1, z = pos.z - view_range},
+				{x = pos.x + view_range, y = pos.y + 1, z = pos.z + view_range},
+				{"petz:pet_bowl"})
+			if #nearby_nodes >= 1 then		
+				local tpos = 	nearby_nodes[1] --the first match
+				local distance = vector.distance(pos, tpos)
+				if distance > 2 then					
+					mobkit.hq_goto(self, 4, tpos)		
+				elseif distance <=2 then
+					if (petz.settings.tamagochi_mode == true) and (self.fed == false) then
+						petz.do_feed(self)
+					end
+				end				
+			end			
+		end
+		
+		--if prty < 5 and self.type == "puppy" and self.tamed == true and self.square_ball_attached == false then --search for a squareball				
+			--local object_list = minetest.get_objects_inside_radius(self.object:get_pos(), 10)
+			--for i = 1,#object_list do
+				--local obj = object_list[i]
+				--local ent = obj:get_luaentity()				
+				--if ent and ent.name == "__builtin:item" then		
+					--minetest.chat_send_player("singleplayer", ent.itemstring)	
+					--if ent.itemstring == "petz:square_ball" then
+						--local spos = self.object:get_pos()
+						--local tpos = obj:get_pos()
+						--if vector.distance(spos, tpos) > 2 then
+							--if tpos then
+								--mobkit.hq_goto(self, 5, tpos)
+							--end
+						--else
+							--local meta = ent:get_meta()							
+							--local shooter_name = meta:get_string("shooter_name")
+							--petz.attach_squareball(ent, self, self.object, nil)
+						--end
+					--end
+				--end
+			--end
+		--end
+		
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		if prty < 3 then
+			--if self.is_arboreal == true then			
+				--if petz.check_if_climb(self) then
+					--mobkit.hq_climb(self, 3)
+				--end
+			--end
+		end
+		
+		if prty < 2 then	--Sleep Behaviour
+			petz.sleep(self, 2)
+		end
+		
+		--Roam default			
+		if mobkit.is_queue_empty_high(self) and self.status == "" then		
+			if not(self.can_fly) then
+				mobkit.hq_roam(self, 0)
+			else
+				mobkit.hq_wanderfly(self, 0)
+			end
+		end
+		
 	end
 end
 
 --
--- Follow Fly/Water Behaviour (2 functions)
+-- PREDATOR BRAIN
 --
 
-function mobkit.hq_followliquidair(self, prty, player)
-	local func=function(self)
-		local pos = mobkit.get_stand_pos(self)
-		local tpos = player:get_pos()
-		if self.can_swin then
-			if not(petz.isinliquid(self)) then
-				--check if water below, dolphins
-				local node_name = mobkit.node_name_in(self, "below")
-				if minetest.get_item_group(node_name, "water") == 0  then
-					petz.ownthing(self)
-					return true	
+function petz.predator_brain(self)
+
+	mobkit.vitals(self)
+	
+	if self.hp <= 0 then -- Die Behaviour
+		petz.on_die(self)
+		return	
+	end
+	
+	mobkit.check_ground_suffocation(self)
+			
+	if mobkit.timer(self, 1) then 
+		
+		local prty = mobkit.get_queue_priority(self)		
+		
+		if prty < 40 and petz.isinliquid(self) then
+			mobkit.hq_liquid_recovery(self, 40)
+			return
+		end		
+		
+		local pos = self.object:get_pos() --pos of the petz
+		
+		local player = mobkit.get_nearby_player(self) --get the player close
+		
+		if prty < 30 then
+			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+		end
+			
+		--Follow Behaviour					
+		if prty < 16 then
+			if petz.bh_start_follow(self, pos, player, 16) == true then
+				return
+			end
+		end
+		
+		if prty == 16 then			
+			if petz.bh_stop_follow(self, player) == true then
+				return
+			end
+		end
+		
+		-- hunt a prey
+		if prty < 12 then -- if not busy with anything important
+			if self.tamed == false then
+				local preys_list = petz.settings[self.type.."_preys"]
+				if preys_list then
+					preys_list = petz.str_remove_spaces(preys_list)
+					local preys = string.split(preys_list, ',')
+					for i = 1, #preys  do --loop  thru all preys
+						--minetest.chat_send_player("singleplayer", "preys list="..preys[i])	
+						--minetest.chat_send_player("singleplayer", "node name="..node.name)	
+						local prey = mobkit.get_closest_entity(self, preys[i])	-- look for prey						
+						if prey then									
+							--minetest.chat_send_player("singleplayer", "got it")	
+							mobkit.hq_hunt(self, 12, prey) -- and chase it
+							return
+						end					
+					end
+				end				
+			end
+		end
+						
+		if prty < 10 then
+			if player then
+				if petz.bh_attack_player(self, pos, 10, player) == true then
+					return
+				end
+			end
+		end
+
+		--Replace nodes by others		
+		if prty < 6 then			
+			petz.bh_replace(self)
+		end
+		
+		if prty < 5 then
+			petz.bh_breed(self, pos)
+		end
+		
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		--Roam default			
+		if mobkit.is_queue_empty_high(self) and self.status == "" then
+			mobkit.hq_roam(self, 0)
+		end
+		
+	end
+end
+
+--
+-- BEE BRAIN
+--
+
+function petz.bee_brain(self)
+
+	mobkit.vitals(self)
+
+	self.object:set_acceleration({x=0, y=0, z=0})
+
+	local behive_exists = petz.behive_exists(self)	
+	local meta, honey_count, bee_count
+	if behive_exists then
+		meta, honey_count, bee_count = petz.get_behive_stats(self.behive)		
+	end	
+	
+	if (self.hp <= 0) or (not(self.queen) and not(petz.behive_exists(self))) then		
+		if behive_exists then --decrease the total bee count			
+			petz.decrease_total_bee_count(self.behive)
+			petz.set_infotext_behive(meta, honey_count, bee_count)
+		end
+		petz.on_die(self) -- Die Behaviour
+		return		
+	elseif (petz.is_night() and not(self.queen)) then --all the bees sleep in their beehive
+		if behive_exists then			
+			bee_count = bee_count + 1
+			meta:set_int("bee_count", bee_count)
+			if self.pollen == true and (honey_count < petz.settings.max_honey_behive) then
+				honey_count = honey_count + 1
+				meta:set_int("honey_count", honey_count)
+			end
+			petz.set_infotext_behive(meta, honey_count, bee_count)				
+			self.object:remove()
+			return
+		end
+	end
+	
+	mobkit.check_ground_suffocation(self)		
+	
+	if mobkit.timer(self, 1) then
+	
+		local prty = mobkit.get_queue_priority(self)		
+		
+		if prty < 40 and petz.isinliquid(self) then
+			mobkit.hq_liquid_recovery(self, 40)
+			return
+		end
+		
+		local pos = self.object:get_pos()
+		
+		local player = mobkit.get_nearby_player(self)
+			
+		if prty < 30 then
+			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+		end
+			
+		--search for flowers
+		if prty < 20 and behive_exists then			
+			if not(self.queen) and not(self.pollen) and (honey_count < petz.settings.max_honey_behive) then
+				local view_range = self.view_range
+				local nearby_flowers = minetest.find_nodes_in_area(
+					{x = pos.x - view_range, y = pos.y - view_range, z = pos.z - view_range},
+					{x = pos.x + view_range, y = pos.y + view_range, z = pos.z + view_range},
+					{"group:flower"})
+				if #nearby_flowers >= 1 then	
+					local tpos = 	nearby_flowers[1] --the first match							
+					mobkit.hq_gotopollen(self, 20, tpos)		
+				end			
+			end	
+		end
+							
+		--search for the bee behive when pollen
+		if prty < 18 and behive_exists then	
+			if not(self.queen) and self.pollen == true and (honey_count < petz.settings.max_honey_behive) then	
+				if vector.distance(pos, self.behive) <= self.view_range then					
+					mobkit.hq_gotobehive(self, 18, pos)	
 				end
 			end
 		end		
-		if pos and tpos then
-			local distance = vector.distance(pos, tpos)
-			if (distance < self.view_range) then
-				if mobkit.is_queue_empty_low(self) then			
-					mobkit.lq_followliquidair(self, pos, tpos)
+	
+		--stay close behive
+		if prty < 15 and behive_exists then
+			if not(self.queen) then	
+			--minetest.chat_send_player("singleplayer", "testx")	
+				if math.abs(pos.x - self.behive.x) > self.view_range and math.abs(pos.z - self.behive.z) > self.view_range then				
+					mobkit.hq_approach_behive(self, pos, 15)	
 				end
-			elseif distance >= self.view_range then				
-				petz.ownthing(self)
-				return true
 			end
-		else
-			return true
 		end
-	end
-	mobkit.queue_high(self, func, prty)
-end
-
-function mobkit.hq_approach_torch(self, prty, tpos)
-	local func=function(self)
-		local pos = self.object:get_pos()
-		if pos and tpos then
-			local distance = vector.distance(pos, tpos)
-			if distance < self.view_range and (distance >= self.view_range) then
-				if mobkit.is_queue_empty_low(self) then			
-					mobkit.lq_followliquidair(self, pos, tpos)					
-				end
-			elseif distance >= self.view_range then				
-				petz.ownthing(self)
-				return true
+		
+		if prty < 13 and self.queen == true then --if queen try to create a colony (beehive)
+			local node_name = mobkit.node_name_in(self, "front")	
+			if minetest.get_item_group(node_name, "wood") > 0 or minetest.get_item_group(node_name, "leaves") > 0 then
+				minetest.set_node(pos, {name= "petz:beehive"})				
+				self.object:remove()
 			end
-		else
-			return true
 		end
-	end
-	mobkit.queue_high(self, func, prty)
-end
-
-function mobkit.lq_followliquidair(self, pos, tpos)
-	local func = function(self)
-		local dir = vector.direction(pos, tpos)
-		local velocity = {
-			x= self.max_speed* dir.x,
-			y= self.max_speed* dir.y,
-			z= self.max_speed* dir.z,
-		}
-		local new_yaw = minetest.dir_to_yaw(dir)
-		self.object:set_yaw(new_yaw)   
-		self.object:set_velocity(velocity)
-		return true
-	end
-	mobkit.queue_low(self,func)
-end
-
---
--- Wander Fly Behaviour (3 functions)
---
-
-function mobkit.hq_wanderfly(self, prty)
-	local func=function(self)
-		if mobkit.is_queue_empty_low(self) then									
-			mobkit.dumbstepfly(self)
-		end
-	end
-	mobkit.queue_high(self,func,prty)
-end
-
-function mobkit.dumbstepfly(self)
-	mobkit.lq_dumbfly(self, 0.3)	
-end
-
---3 fly status: ascend, descend and stand right.
---Each 3 seconds:
---1) Search if 'max_height' defined for each mob is reached, if yes: descend or stand.
---2) Check if over water, if yes: ascend.
---3) Check if node in front, if yes: random rotation backwards. This does mobs not stuck.
---4) Random rotation, to avoid mob go too much further.
---5) In each status a chance to change of status, important: more preference for 'ascend'
---than descend, cos this does the mobs stand on air, and climb mountains and trees.
-
-function mobkit.lq_dumbfly(self, speed_factor)
-	local timer = petz.settings.fly_check_time
-	local fly_status = "ascend"
-	speed_factor = speed_factor or 1
-	local func = function(self)
-		timer = timer - self.dtime			
-		if timer < 0 then			
-			--minetest.chat_send_player("singleplayer", tostring(timer))		
-			local velocity
-			local mob = self.object
-			local pos = mob:getpos()					
-			mobkit.animate(self, 'fly')
-			local random_num = math.random(1, 5)
-			if random_num <= 1 or mobkit.node_name_in(self, "front") ~= "air" then	
-				local yaw = self.object:get_yaw()
-				if yaw then
-					--minetest.chat_send_player("singleplayer", "test")	
-					local rotation_integer = math.random(0, 4)
-					local rotation_decimals = math.random()				
-					local new_yaw = yaw + rotation_integer + rotation_decimals
-					self.object:set_yaw(new_yaw)				
-				end			
-			end
-			if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz
-				random_num = math.random(1, 100)
-				if random_num < 70 then
-					fly_status = "descend"
-				else
-					fly_status = "stand"
-				end
-			else --check if water below, if yes ascend
-				local node_name = mobkit.node_name_in(self, "below")
-				if minetest.get_item_group(node_name, "water") >= 1  then
-					fly_status = "ascend"
-				end
-			end	
-			--minetest.chat_send_player("singleplayer", status)		
-			--local node_name_in_front = mobkit.node_name_in(self, "front")
-			if fly_status == "stand" then -- stand
-				velocity = {
-					x= self.max_speed* speed_factor *2,
-					y= 0.0,
-					z= self.max_speed* speed_factor *2,
-				}
-				random_num = math.random(1, 100)
-				if random_num < 20 and mobkit.check_height(self) == false then
-					fly_status = "descend"				
-				elseif random_num < 40 then		
-					fly_status = "ascend"							
-				end		
-				--minetest.chat_send_player("singleplayer", "stand")			
-			elseif fly_status == "descend" then -- descend				
-				velocity = {
-					x = self.max_speed* speed_factor,
-					y = -self.max_speed * speed_factor,
-					z = self.max_speed* speed_factor,
-				}
-				random_num = math.random(1, 100)
-				if random_num < 20 then
-					fly_status = "stand"
-				elseif random_num < 40 then		
-					fly_status = "ascend"											
-				end
-				--minetest.chat_send_player("singleplayer", "descend")	
-			else --ascend			
-				fly_status = "ascend"
-				velocity ={
-					x = self.max_speed * speed_factor,				
-					y = self.max_speed * speed_factor * 2,
-					z = self.max_speed * speed_factor,
-				}
-				--minetest.chat_send_player("singleplayer", tostring(velocity.x))
-				--minetest.chat_send_player("singleplayer", "ascend")			
-			end		
-			timer = petz.settings.fly_check_time
-			petz.set_velocity(self, velocity)
-			self.fly_velocity = velocity --save the velocity to set in each step, not only each x seconds
-			return true
-		else
-			if self.fly_velocity then
-				petz.set_velocity(self, self.fly_velocity)
-			else
-				petz.set_velocity(self, {x = 0.0, y = 0.0, z = 0.0})
-			end		
-		end
-	end
-	mobkit.queue_low(self,func)
-end
-
---
--- 'Take Off' Behaviour ( 2 funtions)
---
-
-function mobkit.hq_fly(self, prty)
-	local func=function(self)		
-		mobkit.animate(self, "fly")	
-		mobkit.lq_fly(self)	
-		mobkit.clear_queue_high(self)
-	end
-	mobkit.queue_high(self, func, prty)
-end
-
-function mobkit.lq_fly(self)
-	local func=function(self)
-		self.object:set_acceleration({ x = 0, y = 1, z = 0 })
-	end
-	mobkit.queue_low(self,func)
-end
-
-
-function mobkit.hq_liquid_recovery_flying(self, prty)	
-	local func=function(self)		
-		self.object:set_acceleration({ x = 0.0, y = 0.125, z = 0.0 })
-		self.object:set_velocity({ x = 1.0, y = 1.0, z = 1.0 })
-		if not(petz.isinliquid(self)) then			
-			self.object:set_acceleration({ x = 0.0, y = 0.0, z = 0.0 })
-			return true
-		end
-	end
-	mobkit.queue_high(self, func, prty)
-end
-
---
--- Alight Behaviour ( 2 funtions)
---
-
-function mobkit.hq_alight(self, prty)
-	local func = function(self)
-		local node_name = mobkit.node_name_in(self, "below")
-		if node_name == "air" then
-			mobkit.lq_alight(self)
-		elseif minetest.get_item_group(node_name, "water") >= 1  then
+		
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+				
+		--Roam default			
+		if mobkit.is_queue_empty_high(self) and self.status == "" then				
 			mobkit.hq_wanderfly(self, 0)
-			return true
-		else
-			--minetest.chat_send_player("singleplayer", "on ground")				
-			mobkit.animate(self, "stand")
-			mobkit.lq_idle(self, 2400)	
-			self.status = "stand"		
-			return true
 		end
+		
 	end
-	mobkit.queue_high(self, func, prty)
-end
-
-function mobkit.lq_alight(self)
-	local func=function(self)
-		--minetest.chat_send_player("singleplayer", "alight")	
-		self.object:set_acceleration({ x = 0, y = -1, z = 0 })
-		return true
-	end
-	mobkit.queue_low(self, func)
 end
 
 --
--- ARBOREAL BRAIN
+-- 4. AQUATIC BRAIN
 --
 
-function mobkit.hq_climb(self, prty)
-	local func=function(self)	
-		if not(petz.check_if_climb) then
-			self.object:set_acceleration({x = 0, y = 0, z = 0 })   								
-			mobkit.clear_queue_low(self)
-			mobkit.clear_queue_high(self)			
-			return true
-		else
-			mobkit.animate(self, 'climb')
-			self.object:set_acceleration({x = 0, y = 0.25, z = 0 })			
-		end					
+function petz.aquatic_brain(self)
+	
+	local pos = self.object:get_pos()
+	
+	mobkit.vitals(self)
+	
+	-- Die Behaviour
+	
+	if self.hp <= 0 then
+		petz.on_die(self)
+		return		
+	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up
+		if minetest.get_node_light(pos, minetest.get_timeofday()) >= self.max_daylight_level then
+			petz.on_die(self)
+			return
+		end
+	end		
+	
+	if not(self.is_mammal) and not(petz.isinliquid(self)) then --if not mammal, air suffocation	
+		mobkit.hurt(self, petz.settings.air_damage)	
 	end
-	mobkit.queue_high(self,func,prty)
-end
-
----
----Aquatic Brain
----
-function mobkit.hq_aqua_jump(self, prty)
-	local func = function(self)
-		--minetest.chat_send_player("singleplayer", "test")		
-		local vel_impulse = 4.0
-		local velocity = {
-			x = self.max_speed * (vel_impulse/3),
-			y = self.max_speed * vel_impulse,
-			z = self.max_speed * (vel_impulse/3),
-		}		
-		petz.set_velocity(self, velocity)
-		self.object:set_acceleration({x=1.0, y=vel_impulse, z=1.0})
-		self.status = "jump"
-		petz.do_sound_effect("object", self.object, "petz_splash")
-		minetest.after(0.5, function(self, velocity)
-			if mobkit.is_alive(self.object) then
-				self.status = ""
-				mobkit.clear_queue_high(self)
+	
+	mobkit.check_ground_suffocation(self)
+	
+	if mobkit.timer(self, 1) then 
+	
+		local prty = mobkit.get_queue_priority(self)						
+		local player = mobkit.get_nearby_player(self)
+		
+		--Follow Behaviour					
+		if prty < 16 then
+			if petz.bh_start_follow(self, pos, player, 16) == true then
+				return
+			end			
+		end
+		
+		if prty == 16 then			
+			if petz.bh_stop_follow(self, player) == true then
+				return
 			end
-		end, self, velocity)
-		return true
-	end
-	mobkit.queue_high(self, func, prty)
-end
-
-
----
----Bee Brain
----
-function mobkit.hq_gotopollen(self, prty, tpos)
-	local func = function(self)	
-		if self.pollen == true then
-			--mobkit.clear_queue_low(self)
-			--mobkit.clear_queue_high(self)	
-			return true
+		end			
+			
+		if prty < 10 then
+			if player and (self.attack_player == true) then
+				if petz.bh_attack_player(self, pos, 10, player) == true then
+					return
+				end		
+			end
 		end
-		mobkit.animate(self, "fly")
-		mobkit.lq_search_flower(self, tpos)
-	end
-	mobkit.queue_high(self, func, prty)
-end
-
-function mobkit.lq_search_flower(self, tpos)
-	local func = function(self)	
-		local pos = self.object:get_pos()			
-		local y_distance = tpos.y - pos.y				
-		local abs_y_distance = math.abs(y_distance)		
-		if (abs_y_distance > 1) and (abs_y_distance < self.view_range) then
-			petz.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
-		end
-		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 0.5) then					
-			self.pollen = true
-			petz.do_particles_effect(self.object, self.object:get_pos(), "pollen")
-			return true
-		end
-	end
-	mobkit.queue_low(self, func)
-end
-
-function mobkit.hq_gotobehive(self, prty, pos)
-	local func = function(self)	
-		if self.pollen == false or not(self.behive) then
-			return true
-		end
-		mobkit.animate(self, "fly")
-		mobkit.lq_search_behive(self)
-	end
-	mobkit.queue_high(self, func, prty)
-end
-
-function mobkit.lq_search_behive(self)
-	local func = function(self)	
-		local tpos
-		if self.behive then
-			tpos = self.behive
-		else
-			return true
-		end
-		local pos = self.object:get_pos()			
-		local y_distance = tpos.y - pos.y
-		local abs_y_distance = math.abs(y_distance)	
-		if (abs_y_distance > 1) and (abs_y_distance < self.view_range) then
-			petz.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
-		end
-		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 1.01)  then
-				if petz.behive_exists(self) then
-					self.object:remove()
-					local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
-					bee_count = bee_count + 1
-					meta:set_int("bee_count", bee_count)
-					honey_count = honey_count + 1
-					meta:set_int("honey_count", honey_count)
-					petz.set_infotext_behive(meta, honey_count, bee_count)											
-					self.pollen = false	
+		
+		if prty < 8 then		
+			if (self.can_jump) and not(self.status== "jump") and (pos.y < 2 and pos.y > 0) and (mobkit.is_in_deep(self)) then
+				local random_number = math.random(1, 25)
+				if random_number == 1 then
+					--minetest.chat_send_player("singleplayer", "jump")
+					mobkit.clear_queue_high(self)	
+					mobkit.hq_aqua_jump(self, 8)
 				end
-		end						
+			end
+		end
+			
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		--Roam default			
+		if mobkit.is_queue_empty_high(self)  and self.status == "" and not(self.status== "jump") then
+			mobkit.hq_aqua_roam(self, 0, self.max_speed)
+		end		
 	end
-	mobkit.queue_low(self, func)
 end
 
-function mobkit.hq_approach_behive(self, pos, prty)
-	local func = function(self)			
-		if math.abs(pos.x - self.behive.x) <= (self.view_range / 2) or math.abs(pos.z - self.behive.z) <= (self.view_range / 2) then
-			mobkit.clear_queue_low(self)
-			mobkit.clear_queue_high(self)	
-			return true
+--
+-- 5. SEMIAQUATIC BRAIN
+--
+
+function petz.semiaquatic_brain(self)
+	
+	local pos = self.object:get_pos()
+	
+	mobkit.vitals(self)
+	
+	-- Die Behaviour
+	
+	if self.hp <= 0 then
+		petz.on_die(self)
+		return		
+	elseif not(petz.is_night()) and self.die_at_daylight == true then --it dies when sun rises up
+		if minetest.get_node_light(pos, minetest.get_timeofday()) >= self.max_daylight_level then
+			petz.on_die(self)
+			return
 		end
-		mobkit.lq_approach_behive(self)
 	end
-	mobkit.queue_high(self, func, prty)
+	
+	if not(petz.isinliquid(self)) then
+		mobkit.check_ground_suffocation(self)
+	end
+	
+	if mobkit.timer(self, 1) then 
+	
+		local prty = mobkit.get_queue_priority(self)						
+		local player = mobkit.get_nearby_player(self)
+		
+		if prty < 100 then
+			--if petz.isinliquid(self) then				
+				--mobkit.hq_liquid_recovery(self, 100)				
+			--end
+		end
+		
+		--Follow Behaviour					
+		if prty < 16 then
+			if petz.bh_start_follow(self, pos, player, 16) == true then
+				return
+			end			
+		end
+		
+		if prty == 16 then			
+			if petz.bh_stop_follow(self, player) == true then
+				return
+			end
+		end
+				
+		if prty < 10 then
+			if player then
+				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
+					local player_pos = player:get_pos()
+					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
+						if self.warn_attack == true then --attack player										
+							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
+							if petz.isinliquid(self) then
+								mobkit.hq_aqua_attack(self, 10, puncher, 6)				-- get revenge
+							else
+								mobkit.hq_hunt(self, 10, player)
+							end
+						end
+					end
+				end
+			end
+		end
+		
+		if prty < 6 then			
+			petz.bh_replace(self)
+		end
+		
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		if self.petz_type == "beaver" then --beaver's dam
+			petz.create_dam(self, pos)
+		end
+		
+		--Roam default
+		if mobkit.is_queue_empty_high(self) and self.status == "" then
+			if petz.isinliquid(self) then
+				mobkit.hq_aqua_roam(self, 0, self.max_speed)
+			else
+				mobkit.hq_roam(self, 0)				
+			end
+		end		
+	end
 end
 
-function mobkit.lq_approach_behive(self)
-	local func = function(self)		
-		local tpos
-		if self.behive then
-			tpos = self.behive
-		else
-			return true
-		end
-		local pos = self.object:get_pos()			
-		local y_distance = tpos.y - pos.y
-		local abs_y_distance = math.abs(y_distance)
-		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, (self.view_range / 4) ) then
-			mobkit.clear_queue_high(self)	
-			return true
-		end
+--
+-- 6. MONSTER BRAIN
+--
+
+function petz.monster_brain(self)
+
+	mobkit.vitals(self)
+	
+	if self.hp <= 0 then -- Die Behaviour
+		petz.on_die(self)
+		return	
 	end
-	mobkit.queue_low(self, func)
+	
+	mobkit.check_ground_suffocation(self)
+			
+	if mobkit.timer(self, 1) then 
+		
+		local prty = mobkit.get_queue_priority(self)		
+		
+		if prty < 40 and petz.isinliquid(self) then
+			mobkit.hq_liquid_recovery(self, 40)
+			return
+		end		
+		
+		local pos = self.object:get_pos() --pos of the petz
+		
+		local player = mobkit.get_nearby_player(self) --get the player close
+		
+		if prty < 30 then
+			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+		end
+					
+		-- hunt a prey
+		if prty < 12 then -- if not busy with anything important
+			if self.tamed == false then
+				local preys_list = petz.settings[self.type.."_preys"]
+				if preys_list then
+					local preys = string.split(preys_list, ',')
+					for i = 1, #preys  do --loop  thru all preys
+						--minetest.chat_send_player("singleplayer", "preys list="..preys[i])	
+						--minetest.chat_send_player("singleplayer", "node name="..node.name)	
+						local prey = mobkit.get_closest_entity(self, preys[i])	-- look for prey						
+						if prey then	
+							self.max_speed = 2.5								
+							--minetest.chat_send_player("singleplayer", "got it")	
+							mobkit.hq_hunt(self, 12, prey) -- and chase it
+							return
+						end					
+					end
+				end				
+			end
+		end					
+						
+		if prty < 10 then
+			if player then			
+				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
+					local player_pos = player:get_pos()
+					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
+						if self.type == "mr_pumpkin" then --teleport to player's back							
+							local random_num = math.random(1, 3)
+							if random_num == 1 then								
+								if (self.hp <= self.max_hp / 2) then																	
+									petz.bh_teleport(self, pos, player, player_pos)
+									return
+								else
+									petz.do_sound_effect("object", self.object, "petz_fireball")
+									if not petz.spawn_throw_object(self.object, 20, "petz:ent_jack_o_lantern_grenade") then
+										return -- something failed
+									end	
+								end							
+							end
+						end
+						self.max_speed = 2.5
+						mobkit.hq_hunt(self, 10, player)								
+						return
+					end
+				end
+			end
+		end
+
+		--Replace nodes by others		
+		if prty < 6 then			
+			petz.bh_replace(self)
+		end
+		
+		-- Default Random Sound		
+		petz.random_mob_sound(self)
+		
+		--Roam default			
+		if mobkit.is_queue_empty_high(self) then
+			self.max_speed = 1.5
+			mobkit.hq_roam(self, 0)
+		end
+		
+	end
 end

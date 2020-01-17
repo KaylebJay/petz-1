@@ -9,7 +9,7 @@ local mesh = 'petz_kitty.b3d'
 local textures= {"petz_kitty.png", "petz_kitty2.png", "petz_kitty3.png", "petz_kitty4.png", "petz_kitty5.png", "petz_kitty6.png"}
 local p1 = {x= -0.0625, y = -0.5, z = -0.3125}
 local p2 = {x= 0.125, y = -0.0625, z = 0.3125}
-local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, scale_baby)
+local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, nil)
 
 minetest.register_entity("petz:"..pet_name, {          
 	--Petz specifics	
