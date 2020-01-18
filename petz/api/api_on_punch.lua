@@ -77,7 +77,7 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			if (self.texture_no == (self.skin_colors-self.mutation+1)) or (self.type == "wolf" and (math.random(1, 200) == 1))
 				or (self.type == "werewolf" and (math.random(1, 10) == 1)) then
 					--if black wolf or get the chance or another werewolf
-					petz.set_lycanthropy(player)
+					petz.set_lycanthropy(puncher)
 			end
 		end
 	end
