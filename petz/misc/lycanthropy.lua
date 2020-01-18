@@ -266,7 +266,7 @@ minetest.register_globalstep(function(dtime)
 end)
 
 --
--- On_JoinPlayer: Checj if werewolf and act in consequence
+-- On_JoinPlayer: Check if werewolf and act in consequence
 --
 
 minetest.register_on_joinplayer(
