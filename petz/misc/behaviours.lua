@@ -200,7 +200,13 @@ function petz.bh_attack_player(self, pos, prty, player)
 			self.warn_attack = true
 		end
 	end
-	if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
+	local werewolf = false
+	if petz.settings["lycanthropy"] then
+		if petz.is_werewolf(player) then
+			werewolf = true
+		end
+	end
+	if (self.tamed == false and werewolf == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
 		local player_pos = player:get_pos()
 		if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 			if self.attack_player == true or self.warn_attack == true then --attack player	

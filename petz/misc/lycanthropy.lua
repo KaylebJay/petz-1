@@ -1,20 +1,10 @@
 local modpath, S = ...
 
 local lycanthropy = {}
-lycanthropy.clans = {
-	{
-		name = S("The Savage Stalkers")
-	},
-	{
-		name = S("The Bravehide Pride")
-	},
-	{
-		name = S("The Hidden Tails")
-	},
-}
 lycanthropy.werewolf = {}
 lycanthropy.werewolf.model = "petz_werewolf.b3d"
-lycanthropy.werewolf.textures = {"petz_werewolf_gray.png"} 
+lycanthropy.werewolf.model_3d = "3d_armor_werewolf.b3d"
+lycanthropy.werewolf.textures = {"petz_werewolf_dark_gray.png", "petz_werewolf_gray.png", "petz_werewolf_brown.png", "petz_werewolf_black.png"} 
 lycanthropy.werewolf.collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3}
 lycanthropy.werewolf.animation_speed = 30
 lycanthropy.werewolf.animations = {
@@ -24,6 +14,32 @@ lycanthropy.werewolf.animations = {
 	mine = {x = 189, y = 198},
 	walk_mine = {x = 200, y = 219},
 	sit = {x = 81,  y = 160},
+}
+lycanthropy.werewolf.override_table = {
+	speed = 1.5,
+	jump = 1.5,
+	gravity = 0.95,
+    sneak = true,
+	sneak_glitch = false,
+	new_move = true,
+}
+lycanthropy.clans = {
+	{
+		name = S("The Savage Stalkers"),
+		texture = lycanthropy.werewolf.textures[1],
+	},
+	{
+		name = S("The Bravehide Pride"),
+		texture = lycanthropy.werewolf.textures[2]
+	},
+	{
+		name = S("The Hidden Tails"),
+		texture = lycanthropy.werewolf.textures[3],
+	},
+	{
+		name = S("The Fierce Manes"),
+		texture = lycanthropy.werewolf.textures[4],
+	},
 }
 
 player_api.register_model(lycanthropy.werewolf.model, {
@@ -35,33 +51,96 @@ player_api.register_model(lycanthropy.werewolf.model, {
 	eye_height = 1.47,
 })
 
+---
+--- Helper Functions
+---
+
+function petz.is_werewolf(player)
+	local meta = player:get_meta()
+	if meta:get_int("petz:werewolf") == 1 then
+		return true
+	else
+		return false
+	end
+end
+
+function petz.has_lycanthropy(player)
+	local meta = player:get_meta()
+	if meta:get_int("petz:lycanthropy") == 1 then
+		return true
+	else
+		return false
+	end
+end
+
+function petz.set_old_override_table(player)
+	local meta = player:get_meta()
+	local override_table = meta:get_string("petz:old_override_table")
+	if override_table then
+		player:set_physics_override(minetest.deserialize(override_table))
+	end
+end
+
+function petz.show_werewolf_vignette(player)
+	local hud_id = player:hud_add({
+		hud_elem_type = "image",
+		text = "petz_werewolf_vignette.png",
+		position = {x=0, y=0},
+		scale = {x=-100, y=-100},
+		alignment = {x=1, y=1},
+		offset = {x=0, y=0}
+	})
+	local meta = player:get_meta()
+	meta:set_int("petz:werewolf_vignette_id", hud_id)
+end
+
+function petz.remove_werewolf_vignette(player)
+	local meta = player:get_meta()	
+	local hud_id = meta:get_int("petz:werewolf_vignette_id")
+	if hud_id then
+		player:hud_remove(hud_id)
+	end
+end
+
+
+---
+--- Set, Unset & Reset Functions
+---
+
 petz.set_lycanthropy = function(player)
 	local meta = player:get_meta()
 	local player_name = player:get_player_name()
-	player_api.set_model(player, lycanthropy.werewolf.model)
+	local model
+	if minetest.get_modpath("3d_armor") ~= nil then
+		model = lycanthropy.werewolf.model_3d 
+	else
+		model = lycanthropy.werewolf.model
+	end
+	player_api.set_model(player, model)
 	player:set_local_animation(
 		{x = 0,   y = 79},
 		{x = 168, y = 187},
 		{x = 189, y = 198},
 		{x = 200, y = 219},
 		30
-	)
-	local werewolf = meta:get_int("petz:werewolf")
-	local werewolf_texture_no = 1
-	local werewolf_texture
-	if werewolf == 0 then
-		meta:set_int("petz:lycanthropy", 1)
-		meta:set_int("petz:werewolf", 1)
-		werewolf_texture_no = math.random(1, #lycanthropy.werewolf.textures)
-		werewolf_texture = lycanthropy.werewolf.textures[werewolf_texture_no]
-		meta:set_int("petz:werewolf_texture_no", werewolf_texture_no)
+	)	
+	local werewolf_texture	
+	if not(petz.has_lycanthropy(player)) then
+		meta:set_int("petz:lycanthropy", 1)				
 		local clan_index = math.random(1, #lycanthropy.clans)
-		meta:set_int("petz:werewolf_clan_idx", clan_index)
+		meta:set_int("petz:werewolf_clan_idx", clan_index)			
+		werewolf_texture = lycanthropy.werewolf.textures[clan_index]
 		minetest.chat_send_player(player_name, S("You've fallen ill with Lycanthropy!"))	
-	else
-		werewolf_texture_no = meta:get_int("petz:werewolf_texture_no")
-		werewolf_texture = lycanthropy.werewolf.textures[werewolf_texture_no]		
+		local override_table = player:get_physics_override()
+		if override_table then
+			meta:set_string("petz:old_override_table", minetest.serialize(override_table))	
+		end
+	else						
+		werewolf_texture = lycanthropy.werewolf.textures[meta:get_int("petz:werewolf_clan_idx")]
 	end
+	player:set_physics_override(lycanthropy.werewolf.override_table)
+	petz.show_werewolf_vignette(player)
+	meta:set_int("petz:werewolf", 1)
 	if minetest.get_modpath("3d_armor") ~= nil then
 		petz.set_3d_armor_lycanthropy(player)	
 	else
@@ -79,6 +158,8 @@ petz.unset_lycanthropy = function(player)
 	else
 		player_api.set_model(player, "character.b3d")		
 	end
+	petz.set_old_override_table(player)
+	petz.remove_werewolf_vignette(player)
 	meta:set_int("petz:werewolf", 0)
 	if minetest.get_modpath("3d_armor") ~= nil then
 		petz.unset_3d_armor_lycanthropy(player)	
@@ -90,13 +171,19 @@ end
 petz.reset_lycanthropy = function(player)
 	local player_name = player:get_player_name()
 	local meta = player:get_meta()
-	if meta:get_int("petz:werewolf") == 1 then
+	if petz.is_werewolf(player) then
 		petz.unset_lycanthropy(player)
+	else
+		petz.remove_werewolf_vignette(player)
+		petz.set_old_override_table(player)
 	end
 	meta:set_int("petz:lycanthropy", 0)
-	minetest.chat_send_player(player_name, S("You've cured of Lycanthropy"))
-	
+	minetest.chat_send_player(player_name, S("You've cured of Lycanthropy"))	
 end
+
+---
+--- Register Functions
+---
 
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
 	if not(hitter.type == "petz:wolf") then
@@ -118,16 +205,19 @@ minetest.register_globalstep(function(dtime)
 		if (current_period_of_day ~= last_period_of_day) then --only continue if there is a change day-night or night-day
 			last_period_of_day = current_period_of_day
 			for _, player in pairs(minetest.get_connected_players()) do				
-				local player_name = player:get_player_name()
-				local meta = player:get_meta()		
-				local msg = ""
-				if meta:get_int("petz:lycanthropy") == 1 then
+				local player_name = player:get_player_name()	
+				local msg = ""				
+				if petz.has_lycanthropy(player) then					
 					if petz.is_night() == true then
-						petz.set_lycanthropy(player)
-						msg = S("You are now a werewolf")
+						if not(petz.is_werewolf(player)) then
+							petz.set_lycanthropy(player)
+							msg = S("You are now a werewolf")
+						end
 					else
-						petz.unset_lycanthropy(player)
-						msg = S("You are now a human")
+						if petz.is_werewolf(player) then
+							petz.unset_lycanthropy(player)
+							msg = S("You are now a human")
+						end
 					end
 				end
 				minetest.chat_send_player(player_name, msg)	
@@ -137,17 +227,35 @@ minetest.register_globalstep(function(dtime)
 end)
 
 minetest.register_on_joinplayer(function(player)
-	local meta = player:get_meta()	
-	if meta:get_int("petz:werewolf") == 1 then
-		petz.set_lycanthropy(player)		
+	if petz.has_lycanthropy(player) then
+		if petz.is_night() and not(petz.is_werewolf(player)) then
+			petz.set_lycanthropy(player)
+		elseif not(petz.is_night()) and petz.is_werewolf(player) then
+			petz.unset_lycanthropy(player)
+		end
 	end
 end)
+
+minetest.register_on_item_eat(
+    function(hp_change, replace_with_item, itemstack, user, pointed_thing)
+    	local user_name = user:get_player_name()		
+		if petz.is_werewolf(user) and (minetest.get_item_group(itemstack:get_name(), "group:food_meat_raw") == 0) then
+			local user_name = user:get_player_name()
+			minetest.chat_send_player(user_name, S("Werewolves only can eat raw meat!"))							
+			return itemstack			
+		end        
+    end
+)
+
+---
+--- Set & Unset for 3D Armor
+---
 
 petz.set_3d_armor_lycanthropy = function(player)
 	local player_name = player:get_player_name()
 	local meta = player:get_meta()
 	default.player_set_textures(player, {
-		lycanthropy.werewolf.textures[meta:get_int("petz:werewolf_texture_no")],
+		lycanthropy.werewolf.textures[meta:get_int("petz:werewolf_clan_idx")],
 		armor.textures[player_name].armor,
 		armor.textures[player_name].wielditem,
 	})
@@ -164,16 +272,33 @@ end
 
 if minetest.get_modpath("3d_armor") ~= nil then --Armors (optional)
 	armor:register_on_update(function(player)
-		local meta = player:get_meta()
-		if meta:get_int("petz:werewolf") == 1 then			
+		if petz.is_werewolf(player) then			
 			petz.set_3d_armor_lycanthropy(player)
 		end
 	end)
+	
+	default.player_register_model(lycanthropy.werewolf.model_3d, {
+	animation_speed = 30,
+	textures = {
+		lycanthropy.werewolf.textures[1],
+		"3d_armor_trans.png",
+		"3d_armor_trans.png",
+	},
+	animations = {
+		stand = {x=0, y=79},
+		lay = {x=162, y=166},
+		walk = {x=168, y=187},
+		mine = {x=189, y=198},
+		walk_mine = {x=200, y=219},
+		sit = {x=81, y=160},
+	},
+})
 end
 
 --
 --CHAT COMMANDS
 --
+
 minetest.register_chatcommand("werewolf", {
 	description = "Convert a player into a werewolf",
 	privs = {
@@ -181,8 +306,8 @@ minetest.register_chatcommand("werewolf", {
     },
     func = function(name, param)
 		local subcommand, player_name = string.match(param, "([%a%d_-]+) ([%a%d_-]+)")	
-		if not(subcommand == "set") and not(subcommand == "unset") and not(subcommand == "reset") then							
-			return true, "Error: The subcomands for the werewolf command are 'set' / 'unset'"
+		if not(subcommand == "set") and not(subcommand == "unset") and not(subcommand == "reset") and not(subcommand == "clan") then							
+			return true, "Error: The subcomands for the werewolf command are 'set' / 'unset' / 'reset' / 'clan'"
 		end
 		if player_name then	
 			local player = minetest.get_player_by_name(player_name)
@@ -192,10 +317,14 @@ minetest.register_chatcommand("werewolf", {
 					return true, player_name .." ".."set to werewolf!"
 				elseif subcommand == "unset" then
 					petz.unset_lycanthropy(player)
-					return true, "The werewolf".." "..player_name .." ".."reseted to human!"
+					return true, "The werewolf".." "..player_name .." ".."set to human!"
 				elseif subcommand == "reset" then
 					petz.reset_lycanthropy(player)
 					return true, "The lycanthropy of".." "..player_name .." ".."was cured!"
+				elseif subcommand == "clan" then
+					local meta = player:get_meta()
+					local clan_name = lycanthropy.clans[meta:get_int("petz:werewolf_clan_idx")].name
+					return true, "The clan of".." "..player_name .." ".."is".." '"..clan_name.."'"
 				end
 			else
 				return false, player_name .." ".."not online!"
@@ -206,12 +335,20 @@ minetest.register_chatcommand("werewolf", {
     end,
 })
 
---Lycanthropy Items
+--
+-- Lycanthropy Items
+--
 
 minetest.register_craftitem("petz:lycanthropy_remedy", {
     description = S("Lycanthropy Remedy"),
     inventory_image = "petz_lycanthropy_remedy.png",
-    wield_image = "petz_lycanthropy_remedy.png"
+    wield_image = "petz_lycanthropy_remedy.png",
+    on_use = function (itemstack, user, pointed_thing)        
+		if petz.has_lycanthropy(user) then
+			petz.reset_lycanthropy(user)
+		end        
+        return minetest.do_item_eat(0, "vessels:glass_bottle", itemstack, user, pointed_thing)
+    end,	
 })
 
 minetest.register_craft({
@@ -219,7 +356,7 @@ minetest.register_craft({
     output = "petz:lycanthropy_remedy",
     recipe = {
         {"", "petz:wolf_jaw", ""},
-        {"", "petz:wolf_fur", ""},
+        {"dye:white", "petz:wolf_fur", "dye:violet"},
         {"", "petz:beaver_oil", ""},
     }
 })
@@ -280,9 +417,6 @@ minetest.register_entity("petz:"..pet_name,{
 		stand={range={x=0, y=79}, speed=30, loop=true},	
 	},
 	sounds = {
-		misc = "petz_merry_christmas",
-		attack = "petz_ho_ho_ho",
-		laugh = "petz_ho_ho_ho",
 		die = "petz_monster_die",
 	},
 	

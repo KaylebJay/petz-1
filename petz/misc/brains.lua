@@ -613,8 +613,14 @@ function petz.monster_brain(self)
 		end					
 						
 		if prty < 10 then
-			if player then			
-				if (self.tamed == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
+			if player then
+				local werewolf = false
+				if petz.settings["lycanthropy"] then
+					if petz.is_werewolf(player) then
+						werewolf = true
+					end
+				end			
+				if (self.tamed == false and werewolf == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
 					local player_pos = player:get_pos()
 					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
 						if self.type == "mr_pumpkin" then --teleport to player's back							
