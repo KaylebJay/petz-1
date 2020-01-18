@@ -1,5 +1,13 @@
 local modpath, S = ...
 
+petz.puncher_is_player = function(puncher)
+	if type(puncher) == 'userdata' and puncher:is_player() then
+		return true
+	else
+		return false
+	end
+end
+
 petz.calculate_damage = function(tool_capabilities)
 	local damage_points
 	if tool_capabilities.damage_groups["fleshy"] ~= nil or tool_capabilities.damage_groups["fleshy"] ~= "" then		
@@ -55,7 +63,7 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 		if self.is_wild == true then
 			petz.tame_whip(self, puncher)
 		end
-		if type(puncher) == 'userdata' and puncher:is_player() then		
+		if petz.puncher_is_player(puncher) then		
 			if self.dreamcatcher == true and self.owner ~= puncher:get_player_name() then --The dreamcatcher protects the petz
 				return
 			end
@@ -76,8 +84,10 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 		if petz.settings["lycanthropy"] and (self.type == "wolf" or self.type == "werewolf") then -- lycanthropy!
 			if (self.texture_no == (self.skin_colors-self.mutation+1)) or (self.type == "wolf" and (math.random(1, 200) == 1))
 				or (self.type == "werewolf" and (math.random(1, 10) == 1)) then
-					--if black wolf or get the chance or another werewolf
-					petz.set_lycanthropy(puncher)
+					if petz.puncher_is_player(puncher) then
+						--if black wolf or get the chance or another werewolf
+						petz.set_lycanthropy(puncher)
+					end
 			end
 		end
 	end
