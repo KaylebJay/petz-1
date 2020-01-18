@@ -434,9 +434,8 @@ minetest.register_entity("petz:"..pet_name,{
 	capture_item = nil,
 	follow = petz.settings.werewolf_follow,	
 	drops = {
-		{name = "petz:christmas_present", chance = 3, min = 1, max = 1,},
-		{name = "petz:gingerbread_cookie", chance = 1, min = 1, max = 6,},
-		{name = "petz:candy_cane", chance = 1, min = 1, max = 6,},
+		{name = "petz:wolf_fur", chance = 5, min = 1, max = 1,},
+		{name = "petz:wolf_jaw", chance = 5, min = 1, max = 1,},		
 	},
 	rotate = petz.settings.rotate,
 	physical = true,
