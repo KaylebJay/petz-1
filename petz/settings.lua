@@ -50,6 +50,8 @@ petz.settings.bee_outing_ratio = tonumber(settings:get("bee_outing_ratio", "20")
 petz.settings.pumpkin_grenade_damage = tonumber(settings:get("pumpkin_grenade_damage", "8"))
 --Lycanthropy
 petz.settings.lycanthropy = settings:get_bool("lycanthropy", true)
+petz.settings.lycanthropy_infection_chance_by_wolf = tonumber(settings:get("lycanthropy_infection_chance_by_wolf", "200")) 
+petz.settings.lycanthropy_infection_chance_by_werewolf = tonumber(settings:get("lycanthropy_infection_chance_by_werewolf", "10")) 
 --Mobs Specific
 for i = 1, #petz.petz_list do --load the settings
 	local petz_type = petz.petz_list[i]
