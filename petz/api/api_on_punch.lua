@@ -80,15 +80,6 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 		if self.is_wild == true and self.tamed == false and self.attack_player == false then --if you hit it, will attack player
 			self.warn_attack = true	
 			mobkit.clear_queue_high(self)
-		end
-		if petz.settings["lycanthropy"] and (self.type == "wolf" or self.type == "werewolf") then -- lycanthropy!
-			if (self.texture_no == (self.skin_colors-self.mutation+1)) or (self.type == "wolf" and (math.random(1, 200) == 1))
-				or (self.type == "werewolf" and (math.random(1, 10) == 1)) then
-					if petz.puncher_is_player(puncher) then
-						--if black wolf or get the chance or another werewolf
-						petz.set_lycanthropy(puncher)
-					end
-			end
-		end
+		end		
 	end
 end
