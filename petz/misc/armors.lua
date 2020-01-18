@@ -128,3 +128,32 @@ armor:register_armor("petz:pumpkin_hood", {
 		petz.armor_destroy("brewing_break_armor_sound", player)
 	end,
 })
+
+
+--
+--THE WOLF COAT
+--
+
+armor:register_armor("petz:prince_north_coat", {
+	description = S("Prince of North Coat"),
+	inventory_image = "petz_prince_north_coat_inv.png",
+	texture = "petz_prince_north_coat.png",
+	preview = "petz_prince_north_coat_preview.png",
+	groups = {armor_torso=1, armor_use=350, flammable=0},
+	armor_groups = {fleshy=10, radiation=10},
+	damage_groups = {cracky=3, snappy=3, choppy=3, crumbly=3, level=1},
+	reciprocate_damage = true,
+	on_destroy = function(player, index, stack)
+		petz.armor_destroy("brewing_break_armor_sound", player)	
+	end,
+})
+
+minetest.register_craft({
+	output = "petz:prince_north_coat",
+	type = "shaped",
+	recipe = {
+		{"", "petz:wolf_fur", ""},
+		{"", "wool:blue", ""},
+		{"group:leather", "wool:blue", "group:leather"},
+	},
+})

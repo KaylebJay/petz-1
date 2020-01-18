@@ -124,7 +124,8 @@ minetest.register_craftitem("petz:turtle_shell", {
 minetest.register_craftitem("petz:leather", {
     description = S("Leather"),
     inventory_image = "petz_leather.png",
-    wield_image = "petz_leather.png"
+    wield_image = "petz_leather.png",
+    groups = {leather = 1, flammable = 2}
 })
 
 minetest.register_craftitem("petz:beaver_fur", {
