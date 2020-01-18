@@ -277,4 +277,15 @@ Author: Alexander
 http://www.orangefreesounds.com/pop-sound-effect/
 The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
-
+--------------------------------------------
+filenames: petz_werewolf_sound.ogg
+Author: Alexander
+http://www.orangefreesounds.com/wolf-howls/
+The sound effect is permitted for commercial use
+under license Creative Commons Attribution 4.0 International License
+--------------------------------------------
+filenames: petz_monster_roar.ogg
+Author: Alexander
+http://www.orangefreesounds.com/monster-sound/
+The sound effect is permitted for commercial use
+under license Creative Commons Attribution 4.0 International License

@@ -102,7 +102,6 @@ function petz.remove_werewolf_vignette(player)
 	end
 end
 
-
 ---
 --- Set, Unset & Reset Functions
 ---
@@ -190,14 +189,14 @@ end
 ---
 
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)	
-	if petz.puncher_is_player(hitter) or petz.is_werewolf(player) then -- a hitter-player cannot infect and the player should not be a werewolf yet
+	if hitter:is_player() or petz.is_werewolf(player) then -- a hitter-player cannot infect and the player should not be a werewolf yet
 		return
 	end
 	local hitter_ent = hitter:get_luaentity() --the hitter is an entity, not a player
 	if not(hitter_ent.type == "wolf") and not(hitter_ent.type == "werewolf") then --thse can infect
 		return
 	end
-	if (hitter_ent.texture_no == (#hitter_ent.skin_colors-hitter_ent.mutation+1))
+	if (hitter_ent.type == "wolf" and hitter_ent.texture_no == (#hitter_ent.skin_colors-hitter_ent.mutation+1))
 		or (hitter_ent.type == "wolf" and (math.random(1, petz.settings.lycanthropy_infection_chance_by_wolf) == 1))
 			or (hitter_ent.type == "werewolf" and (math.random(1, petz.settings.lycanthropy_infection_chance_by_werewolf) == 1)) then
 				--Conditions to infect: black wolf or get the chance of another wolf or werewolf
@@ -457,7 +456,7 @@ minetest.register_entity("petz:"..pet_name,{
 	jump_height = 1.5,
 	view_range = 20,
 	lung_capacity = 10, -- seconds
-	max_hp = 50,  		
+	max_hp = 50,
 	
 	attack={range=0.5, damage_groups={fleshy=9}},	
 	animation = {
@@ -466,6 +465,8 @@ minetest.register_entity("petz:"..pet_name,{
 		stand={range={x=0, y=79}, speed=30, loop=true},	
 	},
 	sounds = {
+		misc = "petz_werewolf_howl",
+		attack = "petz_monster_roar",
 		die = "petz_monster_die",
 	},
 	
