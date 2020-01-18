@@ -186,7 +186,7 @@ end
 ---
 
 ---
---- Infection Engine here:
+--- On_punch: Infection Engine here.
 ---
 
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)	
@@ -200,10 +200,36 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
 	if (hitter_ent.texture_no == (#hitter_ent.skin_colors-hitter_ent.mutation+1))
 		or (hitter_ent.type == "wolf" and (math.random(1, petz.settings.lycanthropy_infection_chance_by_wolf) == 1))
 			or (hitter_ent.type == "werewolf" and (math.random(1, petz.settings.lycanthropy_infection_chance_by_werewolf) == 1)) then
-				--Conditions to infect: black wolf or get the chance or another wolf or werewolf
+				--Conditions to infect: black wolf or get the chance of another wolf or werewolf
 				petz.set_lycanthropy(player)
 	end
 end)
+
+---
+--- On_punch: Less damage if you were a werewolf
+---
+
+minetest.register_on_punchplayer(
+	function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
+		if not(petz.is_werewolf(player)) or not(hitter) then
+			return
+		end
+		local hp = player:get_hp()
+		if hp - damage > 0 or hp <= 0 then
+			return
+		end
+		local werewolf_damage_reduction = 0.5	
+		local overrided_damage = (tool_capabilities.damage_groups.fleshy or 1) * werewolf_damage_reduction 
+		hp = hp - overrided_damage
+		--minetest.chat_send_player(hitter:get_player_name(), tostring(overrided_damage))
+		player:set_hp(hp)
+		return true
+	end
+)
+
+---
+--- Cycle day/night to change
+---
 
 local timer = 0
 local last_period_of_day
@@ -239,6 +265,10 @@ minetest.register_globalstep(function(dtime)
 	end
 end)
 
+--
+-- On_JoinPlayer: Checj if werewolf and act in consequence
+--
+
 minetest.register_on_joinplayer(
 	function(player)
 		if petz.has_lycanthropy(player) then
@@ -251,6 +281,10 @@ minetest.register_on_joinplayer(
 	end
 )
 
+--
+-- A werewolf only can eat raw meat
+--
+
 minetest.register_on_item_eat(
     function(hp_change, replace_with_item, itemstack, user, pointed_thing)
     	local user_name = user:get_player_name()		
@@ -260,24 +294,6 @@ minetest.register_on_item_eat(
 			return itemstack			
 		end        
     end
-)
-
-minetest.register_on_punchplayer(
-	function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
-		if not(petz.is_werewolf(player)) or not(hitter) then
-			return
-		end
-		local hp = player:get_hp()
-		if hp - damage > 0 or hp <= 0 then
-			return
-		end
-		local werewolf_damage_reduction = 0.5	
-		local overrided_damage = (tool_capabilities.damage_groups.fleshy or 1) * werewolf_damage_reduction 
-		hp = hp - overrided_damage
-		--minetest.chat_send_player(hitter:get_player_name(), tostring(overrided_damage))
-		player:set_hp(hp)
-		return true
-	end
 )
 
 ---
