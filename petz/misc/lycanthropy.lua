@@ -185,18 +185,22 @@ end
 --- Register Functions
 ---
 
+---
+--- Infection Engine here:
+---
+
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)	
-	if petz.puncher_is_player(hitter) or petz.is_werewolf(player) then
+	if petz.puncher_is_player(hitter) or petz.is_werewolf(player) then -- a hitter-player cannot infect and the player should not be a werewolf yet
 		return
 	end
-	local hitter_ent = hitter:get_luaentity()
-	if not(hitter_ent.type == "wolf") and not(hitter_ent.type == "werewolf") then
+	local hitter_ent = hitter:get_luaentity() --the hitter is an entity, not a player
+	if not(hitter_ent.type == "wolf") and not(hitter_ent.type == "werewolf") then --thse can infect
 		return
 	end
 	if (hitter_ent.texture_no == (#hitter_ent.skin_colors-hitter_ent.mutation+1))
 		or (hitter_ent.type == "wolf" and (math.random(1, petz.settings.lycanthropy_infection_chance_by_wolf) == 1))
 			or (hitter_ent.type == "werewolf" and (math.random(1, petz.settings.lycanthropy_infection_chance_by_werewolf) == 1)) then
-				--if black wolf or get the chance or another werewolf
+				--Conditions to infect: black wolf or get the chance or another wolf or werewolf
 				petz.set_lycanthropy(player)
 	end
 end)
