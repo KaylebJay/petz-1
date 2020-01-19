@@ -390,7 +390,7 @@ minetest.register_chatcommand("werewolf", {
 minetest.register_craftitem("petz:lycanthropy_remedy", {
     description = S("Lycanthropy Remedy"),
     inventory_image = "petz_lycanthropy_remedy.png",
-    wield_image = "petz_lycanthropy_remedy.png",
+    wield_image = "petz_lycanthropy_remedy.png",   
     on_use = function (itemstack, user, pointed_thing)        
 		if petz.has_lycanthropy(user) then
 			petz.reset_lycanthropy(user)
