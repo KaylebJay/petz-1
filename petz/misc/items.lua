@@ -496,13 +496,4 @@ minetest.register_craft({
 	}
 })
 
---Bonemeal support
-if minetest.get_modpath("bonemeal") ~= nil then	
-	minetest.register_craft({
-		type = "shapeless",
-		output = "bonemeal:bonemeal",
-		recipe = {"petz:bone"},
-	})
-end
-
 

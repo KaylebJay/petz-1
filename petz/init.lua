@@ -29,24 +29,7 @@ assert(loadfile(modpath .. "/settings.lua"))(modpath, S) --Load the settings
 petz.petz_list_by_owner = {} --a list of tamed petz with owner
 
 assert(loadfile(modpath .. "/api/api.lua"))(modpath, modname, S)
-assert(loadfile(modpath .. "/misc/mount.lua"))(modpath, S) --Load the mount engine
-assert(loadfile(modpath .. "/misc/brains.lua"))(modpath, S)
-assert(loadfile(modpath .. "/misc/behaviours.lua"))(modpath, S)
-assert(loadfile(modpath .. "/misc/nodes.lua"))(modpath, S) --Load the nodes
-assert(loadfile(modpath .. "/misc/items.lua"))(modpath, S) --Load the items
-assert(loadfile(modpath .. "/misc/chests.lua"))(modpath, S) --Load the chests
-assert(loadfile(modpath .. "/misc/food.lua"))(modpath, S) --Load the food items
-assert(loadfile(modpath .. "/misc/hunger.lua"))(modpath, S) --Load the food items
-if petz.settings["lycanthropy"] then
-	assert(loadfile(modpath .. "/misc/lycanthropy.lua"))(modpath, S) --Load the food items
-end
-if minetest.get_modpath("3d_armor") ~= nil then --Armors (optional)
-	assert(loadfile(modpath .. "/misc/armors.lua"))(modpath, S)
-end
-assert(loadfile(modpath .. "/misc/weapons.lua"))(modpath, S) --Load the spawn engine
---if minetest.get_modpath("awards") ~= nil then	
-	--assert(loadfile(modpath .. "/misc/awards.lua"))(modpath, S) --Load the awards
---end
+assert(loadfile(modpath .. "/misc/misc.lua"))(modpath, S)
 
 petz.file_exists = function(name)
    local f = io.open(name,"r")
