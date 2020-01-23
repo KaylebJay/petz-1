@@ -496,4 +496,29 @@ minetest.register_craft({
 	}
 })
 
+--Parchment
 
+minetest.register_craftitem("petz:parchment", {
+	description = S("Parchment"),
+	inventory_image = "petz_parchment.png",	
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "petz:parchment",
+	recipe = {
+		{"", "", ""},
+		{"", "", ""},
+		{"petz:leather", "petz:leather", "petz:leather"},
+	}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "default:book",
+	recipe = {
+		{"petz:parchment", "", ""},
+		{"petz:parchment", "", ""},
+		{"petz:parchment", "", ""},
+	}
+})
