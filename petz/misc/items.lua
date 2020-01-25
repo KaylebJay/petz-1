@@ -532,10 +532,12 @@ minetest.register_craftitem("petz:horseshoe", {
 
 minetest.register_craft({
 	type = "shaped",
-	output = "petz:hoeseshoe",
+	output = "petz:horseshoe",
 	recipe = {
 		{"", "default:steel_ingot", ""},
 		{"default:steel_ingot", "", "default:steel_ingot"},
 		{"default:steel_ingot", "", "default:steel_ingot"},
 	}
 })
+
+minetest.register_alias("petz:horseshoe", "mobs:bucket_milk")

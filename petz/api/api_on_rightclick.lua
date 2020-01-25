@@ -106,7 +106,7 @@ petz.on_rightclick = function(self, clicker)
 		else
 			minetest.add_item(clicker:get_pos(), new_stack)
 		end
-	elseif self.type == "pony" and (wielded_item_name == "petz:horseshoe") then
+	elseif (self.type == "pony") and (wielded_item_name == "petz:horseshoe") and (self.owner == player_name) then
 		petz.put_horseshoe(self, clicker)	
 	elseif self.is_mountable == true then
 		show_form = petz.mount(self, clicker, wielded_item, wielded_item_name)        
