@@ -80,6 +80,9 @@ petz.load_vars = function(self)
 	if self.milkable == true then
 		self.milked = mobkit.recall(self, "milked") or false
 	end
+	if self.type == "pony" then	
+		self.horseshoes = mobkit.recall(self, "horseshoes") or 0
+	end
 	if self.lay_eggs == true then
 		self.eggs_count = mobkit.recall(self, "eggs_count") or 0
 	end
@@ -163,6 +166,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				self.saddlebag_ref = nil
 				self.saddlebag_inventory = mobkit.remember(self, "saddlebag_inventory", {})
 			end
+		end
+		if self.type == "pony" then	
+			self.horseshoes = mobkit.remember(self, "horseshoes", 0)	
 		end
 		if self.sleep_at_night or self.sleep_at_day then
 			local sleep_time = (self.sleep_ratio or 1) * 4499
@@ -295,6 +301,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self.accel = mobkit.remember(self, "accel", tonumber(static_data_table["fields"]["accel"])) 			
 			mobkit.remember(self, "driver", nil) --no driver
 		end
+		if self.type == "pony" then	
+			self.horseshoes = mobkit.remember(self, "horseshoes", tonumber(static_data_table["fields"]["horseshoes"])) 	
+		end	
 		if self.sleep_at_night or self.sleep_at_day then
 			self.sleep_start_time = mobkit.remember(self, "sleep_start_time", tonumber(static_data_table["fields"]["sleep_start_time"])) 
 			self.sleep_end_time = mobkit.remember(self, "sleep_end_time", tonumber(static_data_table["fields"]["sleep_end_time"])) 			
@@ -368,6 +377,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		if not(self.shaved) then
 			petz.colorize(self, self.colorized)
 		end
+	end
+	if self.horseshoes then
+		petz.horseshoes_speedup(self)
 	end
 	if self.breed == true then
 		if baby_born == true then

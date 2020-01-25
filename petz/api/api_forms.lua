@@ -113,6 +113,11 @@ petz.create_form = function(player_name)
 				"label["..pregnant_text_x..","..pregnant_text_y..";"..S("To adult").." ("..tostring(growth_remain_time).."s)]"
 		end
 	end
+	if pet.type == "pony" then
+		local horseshoes = pet.horseshoes or 0
+		more_form_orders = more_form_orders..	
+			"image_button_exit[5,0;1,1;petz_horseshoe.png;btn_horseshoes;"..tostring(horseshoes).."]"
+	end
     if pet.type == "parrot" then
 		form_size.h = form_size.h + 1
 		buttonexit_pos.y = buttonexit_pos.y + 1
@@ -216,7 +221,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 							"list[current_player;main;0,4;8,4;]"		
 			minetest.show_formspec(player_name, "petz:saddlebag_inventory", formspec)		
 		elseif fields.btn_bowl then
-			minetest.show_formspec(player_name, "petz:food_form", petz.create_food_form(pet))		
+			minetest.show_formspec(player_name, "petz:food_form", petz.create_food_form(pet))	
+		elseif fields.btn_horseshoes then
+			petz.horseshoes_reset(pet)
 		end
 		if fields.ipt_name then
 			pet.tag = minetest.formspec_escape(string.sub(fields.ipt_name, 1 , 12))

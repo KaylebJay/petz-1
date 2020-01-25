@@ -522,3 +522,20 @@ minetest.register_craft({
 		{"petz:parchment", "", ""},
 	}
 })
+
+--Horseshoe
+
+minetest.register_craftitem("petz:horseshoe", {
+	description = S("Horseshoe"),
+	inventory_image = "petz_horseshoe.png",	
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "petz:hoeseshoe",
+	recipe = {
+		{"", "default:steel_ingot", ""},
+		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"default:steel_ingot", "", "default:steel_ingot"},
+	}
+})

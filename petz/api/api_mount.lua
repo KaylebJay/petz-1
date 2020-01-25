@@ -12,12 +12,14 @@ petz.mount = function(self, clicker, wielded_item, wielded_item_name)
 			return false
 		elseif (self.saddle or self.saddlebag) and wielded_item_name == "petz:shears" then
 			if self.saddle then
-				minetest.add_item(self.object:get_pos(), "petz:saddle")				
+				minetest.add_item(self.object:get_pos(), "petz:saddle")
+				petz.do_sound_effect("object", self.object, "petz_pop_sound")	
 				self.saddle = false	
 				mobkit.remember(self, "saddle", self.saddle)	
 			end	
 			if self.saddlebag then
-				minetest.add_item(self.object:get_pos(), "petz:saddlebag")				
+				minetest.add_item(self.object:get_pos(), "petz:saddlebag")
+				petz.do_sound_effect("object", self.object, "petz_pop_sound")			
 				self.saddlebag = false
 				mobkit.remember(self, "saddlebag", self.saddlebag)		
 			end
@@ -70,4 +72,5 @@ petz.put_saddle = function(self, clicker, wielded_item, wielded_item_name)
 		wielded_item:take_item()
 		clicker:set_wielded_item(wielded_item)
 	end
+	petz.do_sound_effect("object", self.object, "petz_put_sound")
 end

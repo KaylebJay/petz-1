@@ -19,6 +19,7 @@ end
 petz.drop_dreamcatcher = function(self)
 	if self.dreamcatcher == true then --drop the dreamcatcher
 		minetest.add_item(self.object:get_pos(), "petz:dreamcatcher")
+		petz.do_sound_effect("object", self.object, "petz_pop_sound")
 		self.dreamcatcher = false
 		mobkit.remember(self, "dreamcatcher", self.dreamcatcher)
 	end

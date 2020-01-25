@@ -1,5 +1,13 @@
 local modpath, S = ...
 
+petz.drop_velocity = function(obj)
+	obj:set_velocity({
+		x = math.random(-10, 10) / 9,
+		y = 6,
+		z = math.random(-10, 10) / 9,
+	})	
+end
+
 petz.drop_items = function(self)	
 	if not self.drops or #self.drops == 0 then 	-- check for nil or no drops
 		return
@@ -20,11 +28,7 @@ petz.drop_items = function(self)
 				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
 			end
 			if obj and obj:get_luaentity() then
-				obj:set_velocity({
-					x = math.random(-10, 10) / 9,
-					y = 6,
-					z = math.random(-10, 10) / 9,
-				})
+				petz.drop_velocity(obj)
 			elseif obj then
 				obj:remove() -- item does not exist
 			end
@@ -39,6 +43,7 @@ petz.node_drop_items = function(pos)
 	if not drops or #drops == 0 then 	-- check for nil or no drops
 		return
 	end
+	local obj
 	for n = 1, #drops do
 		if math.random(1, drops[n].chance) == 1 then
 			num = math.random(drops[n].min or 0, drops[n].max or 1)
@@ -47,11 +52,7 @@ petz.node_drop_items = function(pos)
 				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
 			end
 			if obj and obj:get_luaentity() then
-				obj:set_velocity({
-					x = math.random(-10, 10) / 9,
-					y = 6,
-					z = math.random(-10, 10) / 9,
-				})
+				petz.drop_velocity(obj)
 			elseif obj then
 				obj:remove() -- item does not exist
 			end
@@ -66,11 +67,7 @@ petz.player_drop_item = function(player, item, num)
 	local pos = player:get_pos()
 	local obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
 	if obj and obj:get_luaentity() then
-		obj:set_velocity({
-			x = math.random(-10, 10) / 9,
-			y = 6,
-			z = math.random(-10, 10) / 9,
-		})
+		petz.drop_velocity(obj)
 	elseif obj then
 		obj:remove() -- item does not exist
 	end
