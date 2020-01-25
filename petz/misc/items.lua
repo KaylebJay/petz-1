@@ -540,4 +540,4 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_alias("petz:horseshoe", "mobs:bucket_milk")
+minetest.register_alias("petz:horseshoe", "mobs:horseshoe_steel")
