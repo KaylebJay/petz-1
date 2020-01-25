@@ -21,10 +21,11 @@ petz.pony_breed = function(self, clicker, wielded_item, wielded_item_name)
 	if wielded_item_name == "petz:glass_syringe" and self.is_male== true then		
 		local new_wielded_item = ItemStack("petz:glass_syringe_sperm")
 		local meta = new_wielded_item:get_meta()
+		local speedup = (self.horseshoes * petz.settings.horseshoe_speedup) or 0
 		meta:set_string("petz_type", self.type)
-		meta:set_int("max_speed_forward", self.max_speed_forward)
-		meta:set_int("max_speed_reverse", self.max_speed_reverse)
-		meta:set_int("accel", self.accel)
+		meta:set_int("max_speed_forward", (self.max_speed_forward - speedup))
+		meta:set_int("max_speed_reverse", (self.max_speed_reverse - speedup))
+		meta:set_int("accel", (self.accel - speedup))
 		clicker:set_wielded_item(new_wielded_item)
 	elseif wielded_item_name == "petz:glass_syringe_sperm" and self.is_male== false then	 
 		local meta = wielded_item:get_meta()
@@ -94,22 +95,23 @@ petz.pregnant_timer = function(self, dtime)
 		local baby_entity = petz.childbirth(self)
 		if self.is_mountable == true then		
 			--Set the genetics accordingly the father and the mother
+			local speedup = (self.horseshoes * petz.settings.horseshoe_speedup) or 0
 			local random_number = math.random(-1, 1)
-			local new_max_speed_forward = petz.round(((self.father_veloc_stats["max_speed_forward"] or 1) + self.max_speed_forward)/2, 0) + random_number
+			local new_max_speed_forward = petz.round(((self.father_veloc_stats["max_speed_forward"] or 1) + (self.max_speed_forward-speedup))/2, 0) + random_number
 			if new_max_speed_forward <= 0 then
 				new_max_speed_forward = 0
 			elseif new_max_speed_forward > 10 then
 				new_max_speed_forward = 10
 			end
 			random_number = math.random(-1, 1)
-			local new_max_speed_reverse = petz.round(((self.father_veloc_stats["max_speed_reverse"] or 1) + self.max_speed_reverse)/2, 0) + random_number
+			local new_max_speed_reverse = petz.round(((self.father_veloc_stats["max_speed_reverse"] or 1) + (self.max_speed_reverse-speedup))/2, 0) + random_number
 			if new_max_speed_reverse <= 0 then
 				new_max_speed_reverse = 0
 			elseif new_max_speed_reverse > 10 then
 				new_max_speed_reverse = 10
 			end
 			random_number = math.random(-1, 1)
-			local new_accel  = petz.round(((self.father_veloc_stats["accel"] or 1) + self.accel)/2, 0) + random_number
+			local new_accel  = petz.round(((self.father_veloc_stats["accel"] or 1) + (self.accel-speedup))/2, 0) + random_number
 			if new_accel <= 0 then
 				new_accel = 0
 			elseif new_accel > 10 then
