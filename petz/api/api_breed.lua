@@ -21,7 +21,7 @@ petz.pony_breed = function(self, clicker, wielded_item, wielded_item_name)
 	if wielded_item_name == "petz:glass_syringe" and self.is_male== true then		
 		local new_wielded_item = ItemStack("petz:glass_syringe_sperm")
 		local meta = new_wielded_item:get_meta()
-		local speedup = (self.horseshoes * petz.settings.horseshoe_speedup) or 0
+		local speedup = (self.horseshoes or 0) * petz.settings.horseshoe_speedup
 		meta:set_string("petz_type", self.type)
 		meta:set_int("max_speed_forward", (self.max_speed_forward - speedup))
 		meta:set_int("max_speed_reverse", (self.max_speed_reverse - speedup))
@@ -95,7 +95,7 @@ petz.pregnant_timer = function(self, dtime)
 		local baby_entity = petz.childbirth(self)
 		if self.is_mountable == true then		
 			--Set the genetics accordingly the father and the mother
-			local speedup = (self.horseshoes * petz.settings.horseshoe_speedup) or 0
+			local speedup = (self.horseshoes or 0) * petz.settings.horseshoe_speedup
 			local random_number = math.random(-1, 1)
 			local new_max_speed_forward = petz.round(((self.father_veloc_stats["max_speed_forward"] or 1) + (self.max_speed_forward-speedup))/2, 0) + random_number
 			if new_max_speed_forward <= 0 then
