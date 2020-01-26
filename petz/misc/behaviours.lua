@@ -195,7 +195,7 @@ end
 --
 
 function petz.bh_attack_player(self, pos, prty, player)
-	if not(self.attack_player) and not(self.warn_attack) then
+	if (self.attack_pack) and not(self.warn_attack) then
 		if petz.bh_check_pack(self) then
 			self.warn_attack = true
 		end
@@ -209,17 +209,23 @@ function petz.bh_attack_player(self, pos, prty, player)
 	if (self.tamed == false and werewolf == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
 		local player_pos = player:get_pos()
 		if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
-			if self.attack_player == true or self.warn_attack == true then --attack player	
+			if (self.attack_player and not(self.avoid_player)) or (self.warn_attack == true) then --attack player	
 				if self.can_swin then
 					mobkit.hq_aqua_attack(self, prty, player, 6)
+				elseif self.can_fly then
+					mobkit.hq_flyhunt(self, prty, player)
 				else
 					mobkit.hq_hunt(self, prty, player) -- try to repel them
 				end
 				return true
 			else
-				if not(self.can_swin) then
-					mobkit.hq_runfrom(self, prty, player)  -- run away from player
-					return true
+				if not(self.can_swin) and not(self.can_fly) then
+					if self.avoid_player then
+						mobkit.hq_runfrom(self, prty, player)  -- run away from player
+						return true
+					else
+						return false
+					end
 				else
 					return false
 				end
@@ -362,7 +368,9 @@ function mobkit.hq_followliquidair(self, prty, player)
 		end		
 		if pos and tpos then
 			local distance = vector.distance(pos, tpos)
-			if (distance < self.view_range) then
+			if distance < 3 then
+				return
+			elseif (distance < self.view_range) then
 				if mobkit.is_queue_empty_low(self) then			
 					mobkit.lq_followliquidair(self, pos, tpos)
 				end
@@ -379,18 +387,23 @@ end
 
 function mobkit.lq_followliquidair(self, pos, tpos)
 	local func = function(self)
-		local dir = vector.direction(pos, tpos)
-		local velocity = {
-			x= self.max_speed* dir.x,
-			y= self.max_speed* dir.y,
-			z= self.max_speed* dir.z,
-		}
-		local new_yaw = minetest.dir_to_yaw(dir)
-		self.object:set_yaw(new_yaw)   
-		self.object:set_velocity(velocity)
+		mobkit.flyto(self, pos, tpos)
 		return true
 	end
 	mobkit.queue_low(self,func)
+end
+
+function mobkit.flyto(self, pos, tpos)
+	tpos.y = tpos.y + 1.0
+	local dir = vector.direction(pos, tpos)
+	local velocity = {
+		x= self.max_speed* dir.x,
+		y= self.max_speed* dir.y,
+		z= self.max_speed* dir.z,
+	}
+	local new_yaw = minetest.dir_to_yaw(dir)
+	self.object:set_yaw(new_yaw)   
+	self.object:set_velocity(velocity)
 end
 
 --
@@ -593,6 +606,78 @@ function mobkit.lq_alight(self)
 		return true
 	end
 	mobkit.queue_low(self, func)
+end
+
+---
+---Fly Attack Behaviour
+---
+
+function mobkit.hq_flyhunt(self, prty, tgtobj)
+	local func = function(self)
+		if not mobkit.is_alive(tgtobj) then return true end
+		if mobkit.is_queue_empty_low(self) then
+			local pos = mobkit.get_stand_pos(self)
+			local opos = tgtobj:get_pos()
+			local dist = vector.distance(pos,opos)
+			if dist > self.view_range then
+				return true
+			elseif dist > 3 then
+				mobkit.flyto(self, pos, opos)				
+			else
+				--minetest.chat_send_player("singleplayer", "hq fly attack")	
+				mobkit.hq_flyattack(self, prty+1, tgtobj)					
+			end
+		end
+	end
+	mobkit.queue_high(self,func,prty)
+end
+
+function mobkit.hq_flyattack(self, prty, tgtobj)
+	local func = function(self)
+		if not mobkit.is_alive(tgtobj) then
+			return true
+		end
+		if mobkit.is_queue_empty_low(self) then
+			local pos = self.object:get_pos()
+			local tpos = mobkit.get_stand_pos(tgtobj)
+			local dist = vector.distance(pos,tpos)			
+			if dist > 3 then 
+				return true
+			else
+				mobkit.lq_flyattack(self, tgtobj) 
+			end
+		end
+	end
+	mobkit.queue_high(self,func,prty)
+end
+
+function mobkit.lq_flyattack(self, target)	
+	local tgtbox = target:get_properties().collisionbox
+	local func = function(self)
+		if not mobkit.is_alive(target) then
+			return true
+		end
+		local tgtpos = target:get_pos()
+		local pos = self.object:get_pos()
+		-- calculate attack spot
+		local dist = vector.distance(pos, tgtpos)	
+		if dist <= 1.5 then	--bite
+			target:punch(self.object, 1, self.attack)			
+			local vy = self.object:get_velocity().y -- bounce off
+			local yaw = self.object:get_yaw()
+			local dir = minetest.yaw_to_dir(yaw)
+			self.object:set_velocity({x=dir.x*-3,y=vy,z=dir.z*-3})				
+			mobkit.make_sound(self,'attack') -- play attack sound if defined
+			if self.attack_kamikaze then
+				self.hp = 0 --bees must to die!!!
+			end
+		else
+			mobkit.flyto(self, pos, tgtpos)	
+		end
+		mobkit.lq_idle(self, 0.3)
+		return true
+	end
+	mobkit.queue_low(self,func)
 end
 
 --

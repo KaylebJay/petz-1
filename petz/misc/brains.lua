@@ -383,6 +383,14 @@ function petz.bee_brain(self)
 			end
 		end
 		
+		if prty < 10 then
+			if player then
+				if petz.bh_attack_player(self, pos, 10, player) == true then
+					return
+				end
+			end
+		end
+		
 		-- Default Random Sound		
 		petz.random_mob_sound(self)
 				
