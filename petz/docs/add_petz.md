@@ -66,6 +66,20 @@ If you can your mouse with this mode add/edit:
 
 init_tamagochi_timer = false,
 
+####Bloody Mode
+
+In petz.conf set:
+
+blood = true
+
+You can set a custom texture in the hardcoded petz definition:
+
+blood_texture = ""
+
+You can disable the blood individually in the hardcoded petz definition:
+
+no_blood = true
+
 ####Spawn
 
 There is a set of spawn settings you could kie to add to the 'minetest.register_entity' definition:

@@ -37,6 +37,8 @@ petz.settings.fly_check_time = tonumber(settings:get("fly_check_time"))
 petz.settings.pregnant_count = tonumber(settings:get("pregnant_count"))
 petz.settings.pregnancy_time = tonumber(settings:get("pregnancy_time"))
 petz.settings.growth_time = tonumber(settings:get("growth_time"))
+--Blood
+petz.settings.blood = settings:get_bool("blood", true)
 --Lashing
 petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "3"))
 --Bee Stuff

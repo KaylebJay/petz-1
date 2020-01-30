@@ -12,7 +12,7 @@ local p2 = {x= 0.125, y = -0.0625, z = 0.3125}
 local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, nil)
 
 minetest.register_entity("petz:"..pet_name, {          
-	--Petz specifics	
+	--Petz specifics
 	type = "kitty",	
 	init_tamagochi_timer = true,	
 	is_pet = true,

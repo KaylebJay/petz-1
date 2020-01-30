@@ -102,7 +102,7 @@ function petz.herbivore_brain(self)
 				end
 			end
 		end
-		
+			
 		--if prty < 7 and self.type == "moth" and mobkit.is_queue_empty_high(self) then --search for a squareball			
 			--local pos_torch_near = minetest.find_node_near(pos, self.view_range, "default:torch")			
 			--if pos_torch_near then

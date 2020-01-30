@@ -54,7 +54,7 @@ petz.lamb_wool_shave = function(self, clicker)
 	end 
 	self.shaved = mobkit.remember(self, "shaved", true)        
 	self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)	
-	petz.afraid(self, clicker:get_pos())
+	petz.bh_afraid(self, clicker:get_pos())
 	petz.do_sound_effect("object", self.object, "petz_pop_sound")
 end
 
@@ -97,5 +97,5 @@ petz.cut_feather = function(self, clicker)
 		minetest.add_item(self.object:get_pos(), item_stack)
 	end
     petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
-	petz.afraid(self, clicker:get_pos())
+	petz.bh_afraid(self, clicker:get_pos())
 end

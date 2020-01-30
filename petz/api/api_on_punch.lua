@@ -24,25 +24,6 @@ petz.kick_back= function(self, dir)
 	self.object:set_velocity({x=hvel.x, y=2, z=hvel.z})
 end
 
-petz.lookat=function(self, pos2)
-	local pos1 = self.object:get_pos()
-	local vec = {x = pos1.x - pos2.x, y = pos1.y - pos2.y, z = pos1.z - pos2.z}
-	local yaw = math.atan(vec.z / vec.x) - math.pi / 2
-	if pos1.x >= pos2.x then
-		yaw = yaw + math.pi
-	end
-   self.object:set_yaw(yaw + math.pi)
-end
-
-petz.afraid= function(self, pos) 
-	petz.lookat(self, pos)
-	local x = self.object:get_velocity().x
-	local z = self.object:get_velocity().z	
-	local hvel = vector.multiply(vector.normalize({x= x, y= 0 ,z= z}), 4)
-	mobkit.clear_queue_high(self)
-	self.object:set_velocity({x= hvel.x, y= 0, z= hvel.z})
-end
-
 petz.punch_tamagochi = function (self, puncher)
     if petz.settings.tamagochi_mode == true then         
         if self.owner == puncher:get_player_name() then
@@ -73,7 +54,10 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)							
 		end	
 		petz.kick_back(self, dir) -- kickback	
-		petz.do_sound_effect("object", self.object, "petz_default_punch")	
+		petz.do_sound_effect("object", self.object, "petz_default_punch")	--sound
+		if (petz.settings.blood == true and not(self.no_blood)) then --blood
+			petz.blood(self)
+		end
 		if self.hp <= 0 and self.driver then --important for mountable petz!
 			petz.force_detach(self.driver)
 		end

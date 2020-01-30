@@ -5,6 +5,16 @@ local modpath, S = ...
 -- Helpers Functions
 --
 
+petz.lookat = function(self, pos2)
+	local pos1 = self.object:get_pos()
+	local vec = {x = pos1.x - pos2.x, y = pos1.y - pos2.y, z = pos1.z - pos2.z}
+	local yaw = math.atan(vec.z / vec.x) - math.pi / 2
+	if pos1.x >= pos2.x then
+		yaw = yaw + math.pi
+	end
+   self.object:set_yaw(yaw + math.pi)
+end
+
 function petz.bh_check_pack(self)
 	if mobkit.get_closest_entity(self, "petz:"..self.type) then
 		return true
@@ -238,6 +248,14 @@ function petz.bh_attack_player(self, pos, prty, player)
 	end
 end
 
+petz.bh_afraid= function(self, pos) 
+	petz.lookat(self, pos)
+	local x = self.object:get_velocity().x
+	local z = self.object:get_velocity().z	
+	self.object:set_velocity({x= 4.0, y= 0, z= 4.0})
+	--self.object:set_acceleration({x= hvel.x, y= 0, z= hvel.z})
+end
+
 --
 -- Enviromental Damage
 --
@@ -371,8 +389,8 @@ function mobkit.hq_followliquidair(self, prty, player)
 			if distance < 3 then
 				return
 			elseif (distance < self.view_range) then
-				if mobkit.is_queue_empty_low(self) then			
-					mobkit.lq_followliquidair(self, pos, tpos)
+				if mobkit.is_queue_empty_low(self) then					
+					mobkit.lq_followliquidair(self, player)
 				end
 			elseif distance >= self.view_range then				
 				petz.ownthing(self)
@@ -385,16 +403,22 @@ function mobkit.hq_followliquidair(self, prty, player)
 	mobkit.queue_high(self, func, prty)
 end
 
-function mobkit.lq_followliquidair(self, pos, tpos)
+function mobkit.lq_followliquidair(self, target)
 	local func = function(self)
-		mobkit.flyto(self, pos, tpos)
+		mobkit.flyto(self, target)
 		return true
 	end
 	mobkit.queue_low(self,func)
 end
 
-function mobkit.flyto(self, pos, tpos)
-	tpos.y = tpos.y + 1.0
+function mobkit.flyto(self, target)
+	local pos = self.object:get_pos()
+	local tpos = target:get_pos()
+	local tgtbox = target:get_properties().collisionbox
+	local height = math.abs(tgtbox[3]) + math.abs(tgtbox[6])
+	--minetest.chat_send_player("singleplayer", tostring(tpos.y))	
+	--minetest.chat_send_player("singleplayer", tostring(height))	
+	tpos.y = tpos.y + 2 * (height)
 	local dir = vector.direction(pos, tpos)
 	local velocity = {
 		x= self.max_speed* dir.x,
@@ -418,7 +442,7 @@ function mobkit.hq_approach_torch(self, prty, tpos)
 			local distance = vector.distance(pos, tpos)
 			if distance < self.view_range and (distance >= self.view_range) then
 				if mobkit.is_queue_empty_low(self) then			
-					mobkit.lq_followliquidair(self, pos, tpos)					
+					mobkit.lq_followliquidair(self, target)					
 				end
 			elseif distance >= self.view_range then				
 				petz.ownthing(self)
@@ -618,11 +642,11 @@ function mobkit.hq_flyhunt(self, prty, tgtobj)
 		if mobkit.is_queue_empty_low(self) then
 			local pos = mobkit.get_stand_pos(self)
 			local opos = tgtobj:get_pos()
-			local dist = vector.distance(pos,opos)
+			local dist = vector.distance(pos, opos)
 			if dist > self.view_range then
 				return true
 			elseif dist > 3 then
-				mobkit.flyto(self, pos, opos)				
+				mobkit.flyto(self, tgtobj)				
 			else
 				--minetest.chat_send_player("singleplayer", "hq fly attack")	
 				mobkit.hq_flyattack(self, prty+1, tgtobj)					
@@ -672,7 +696,7 @@ function mobkit.lq_flyattack(self, target)
 				self.hp = 0 --bees must to die!!!
 			end
 		else
-			mobkit.flyto(self, pos, tgtpos)	
+			mobkit.flyto(self, target)	
 		end
 		mobkit.lq_idle(self, 0.3)
 		return true
