@@ -110,6 +110,11 @@ function petz.herbivore_brain(self)
 				--return			
 			--end
 		--end
+
+		--Replace nodes by others		
+		if prty < 7 then			
+			petz.poop(self, pos)
+		end
 				
 		--Replace nodes by others		
 		if prty < 6 then			

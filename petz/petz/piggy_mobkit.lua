@@ -22,6 +22,7 @@ minetest.register_entity("petz:"..pet_name,{
 	can_be_brushed = false,
 	capture_item = "lasso",
 	follow = petz.settings.piggy_follow,
+	poop_rate = 200,
 	drops = {
 		{name = "petz:raw_porkchop", chance = 2, min = 1, max = 1,},		
 		{name = "petz:bone", chance = 5, min = 1, max = 1,},

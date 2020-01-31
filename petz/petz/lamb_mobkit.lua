@@ -41,6 +41,7 @@ minetest.register_entity("petz:"..pet_name,{
         {"group:grass", "air", -1},
         {"default:dirt_with_grass", "default:dirt", -2}
     },
+    poop_rate = 200,
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!

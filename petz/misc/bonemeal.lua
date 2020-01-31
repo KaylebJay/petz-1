@@ -2,13 +2,11 @@ local modpath, S = ...
 
 --Bonemeal support
 
-if minetest.get_modpath("bonemeal") ~= nil then	
-	minetest.register_craft({
-		type = "shapeless",
-		output = "bonemeal:bonemeal",
-		recipe = {"petz:bone"},
-	})
-end
+minetest.register_craft({
+	type = "shapeless",
+	output = "bonemeal:bonemeal",
+	recipe = {"petz:bone"},
+})
 
 minetest.register_craft({
 	output = "bonemeal:gelatin_powder 4",
@@ -26,4 +24,10 @@ minetest.register_craft({
 	type = "shapeless",
 	output = "petz:bone 2",
 	recipe = {"bonemeal:bone"},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "bonemeal:mulch",
+	recipe = {"petz:poop"},
 })

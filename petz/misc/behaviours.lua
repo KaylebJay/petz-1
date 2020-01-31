@@ -118,7 +118,7 @@ function mobkit.node_name_in(self, where)
 		elseif where == "below" then
 			pos2= {
 				x = pos.x,
-				y = pos.y - 0.75,
+				y = pos.y - 1.5,
 				z = pos.z,
 			}
 		elseif where == "back" then	
@@ -127,10 +127,15 @@ function mobkit.node_name_in(self, where)
 				y = pos.y,
 				z = pos.z - dir_z,
 			}	
+		elseif where == "self" then
+			pos2= {
+				x = pos.x,
+				y = pos.y - 0.75,
+				z = pos.z,
+			}
 		end
 		local node = minetest.get_node_or_nil(pos2)
-		if node and minetest.registered_nodes[node.name] then
-			--minetest.chat_send_player("singleplayer", node.name)	
+		if node and minetest.registered_nodes[node.name] then			
 			return node.name
 		else
 			return nil
