@@ -41,6 +41,7 @@ petz.settings.growth_time = tonumber(settings:get("growth_time"))
 petz.settings.blood = settings:get_bool("blood", false)
 --Blood
 petz.settings.poop = settings:get_bool("poop", true)
+petz.settings.poop_rate = tonumber(settings:get("poop_rate", "200"))
 petz.settings.poop_decay = tonumber(settings:get("poop_decay", "1200"))
 --Lashing
 petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "3"))
