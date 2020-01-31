@@ -534,4 +534,12 @@ minetest.register_node("petz:poop", {
 			{-0.0625, -0.3125, -0.0625, 0.0625, -0.25, 0.0625},
         },
 	},
+	after_place_node = function(pos, placer, itemstack, pointed_thing)
+		local timer = minetest.get_node_timer(pos)
+		timer:start(petz.settings.poop_decay)
+	end,
+	on_timer = function(pos, elapsed)
+		minetest.remove_node(pos)
+		return false
+	end,
 })
