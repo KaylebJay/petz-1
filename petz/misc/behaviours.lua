@@ -66,6 +66,25 @@ function mobkit.check_is_on_surface(self)
 	end
 end
 
+function petz.is_standing(self)
+	local velocity = self.object:get_velocity()
+	local speed = vector.length(velocity)
+	if speed == 0 then
+		return true
+	else
+		return false
+	end
+end
+
+function petz.is_jumping(self)
+	if self.isonground == true then
+		return false
+	else
+		return true
+	end
+end
+	
+
 function mobkit.check_ground_suffocation(self)
 	local spos = mobkit.get_stand_pos(self)
 	spos.y = spos.y+0.01
@@ -116,11 +135,8 @@ function mobkit.node_name_in(self, where)
 				z = pos.z,
 			}
 		elseif where == "below" then
-			pos2= {
-				x = pos.x,
-				y = pos.y - 1.5,
-				z = pos.z,
-			}
+			pos2 = mobkit.get_stand_pos(self)
+			pos2.y = pos2.y - 0.1
 		elseif where == "back" then	
 			pos2 = {
 				x = pos.x - dir_x,

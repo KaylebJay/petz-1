@@ -5,7 +5,7 @@ local modpath, S = ...
 --
 
 petz.poop = function(self, pos)
-	if not(petz.settings.poop) or not(self.tamed) or not(self.poop) or self.child == true or self.object:get_velocity().y ~= 0 or math.random(1, petz.settings.poop_rate) > 1 then
+	if not(petz.settings.poop) or not(self.tamed) or not(self.poop) or self.child == true or petz.is_jumping(self) or not(petz.is_standing(self)) or math.random(1, petz.settings.poop_rate) > 1 then
 		return
 	end
 	local node_name_below = mobkit.node_name_in(self, "below")	
