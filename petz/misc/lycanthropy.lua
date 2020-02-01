@@ -388,8 +388,9 @@ minetest.register_chatcommand("howl", {
     func = function(name, param)
 		local player = minetest.get_player_by_name(name)
 		if player then
-			if petz.is_werewolf(player) then
-				petz.do_sound_effect("player", player, "petz_werewolf_howl")
+			if petz.is_werewolf(player) then		
+				local pos = player:get_pos()
+				petz.do_sound_effect("pos", pos, "petz_werewolf_howl")
 			else
 				return false, "Error: You are not a werewolf."
 			end
