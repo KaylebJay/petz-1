@@ -543,3 +543,23 @@ minetest.register_node("petz:poop", {
 		return false
 	end,
 })
+
+minetest.register_node("petz:poop_block", {
+	description = S("Poop Block"),  
+	drawtype = "allfaces_optional",
+	tiles = {"petz_poop.png"},
+	paramtype = "light",
+	is_ground_content = false,
+	groups = {snappy = 3, flammable = 3, leaves = 1},
+	sounds = default.node_sound_leaves_defaults(),
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "petz:poop_block",
+    recipe = {        
+        {'petz:poop', 'petz:poop', 'petz:poop'},
+        {'petz:poop', 'petz:poop', 'petz:poop'},
+        {'petz:poop', 'petz:poop', 'petz:poop'},
+    }
+})
