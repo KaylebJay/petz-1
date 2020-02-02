@@ -4,6 +4,57 @@ local modpath, S = ...
 --'set_initial_properties' is call by 'on_activate' for each pet
 --
 
+petz.dyn_prop = {
+	accel = {type= "int", default = 1},
+	affinity = {type= "int", default = 100},
+	beaver_oil_applied = {type= "boolean", default = false},
+	behive = {type= "pos", default = false},
+	brushed = {type= "boolean", default = false},
+	child = {type= "boolean", default = false},
+	colorized = {type= "string", default = nil},
+	convert = {type= "string", default = nil},
+	convert_count = {type= "int", default = 5},
+	convert_to = {type= "string", default = nil},
+	dreamcatcher = {type= "boolean", default = false},
+	driver = {type= "player", default = nil},
+	eggs_count = {type= "int", default = 0},
+	father_genes = {type= "table", default = {}},
+	father_veloc_stats = {type= "table", default = {}},	
+	fed = {type= "boolean", default = true},
+	food_count = {type= "int", default = 0},
+	food_count_wool = {type= "int", default = 0},
+	genes = {type= "table", default = {}},
+	growth_time = {type= "int", default = 0},	
+	horseshoes = {type= "int", default = 0},
+	is_baby = {type= "boolean", default = false},
+	is_male = {type= "boolean", default = false},
+	is_pregnant = {type= "boolean", default = false},				
+	is_rut = {type= "boolean", default = false},
+	lashed = {type= "boolean", default = false},
+	lashing_count = {type= "int", default = 0},
+	max_speed_forward = {type= "int", default = 1},
+	max_speed_reverse = {type= "int", default = 1},
+	milked = {type= "boolean", default = false},
+	owner = {type= "string", default = nil},	
+	pregnant_count = {type= "int", default = petz.settings.pregnant_count},
+	pregnant_time = {type= "int", default = 0},
+	saddle = {type= "boolean", default = false},
+	saddlebag = {type= "boolean", default = false},
+	saddlebag_inventory = {type= "table", default = nil},
+	set_vars = {type= "boolean", default = false},	
+	shaved = {type= "boolean", default = false},
+	show_tag = {type= "boolean", default = false},
+	sleep_end_time = {type= "int", default = 23999},
+	sleep_start_time = {type= "int", default = 19500},
+	square_ball_attached = {type= "boolean", default = false},
+	status = {type= "string", default = ""},
+	tag = {type= "string", default = ""},
+	tamed = {type= "boolean", default = false},
+	texture_no = {type= "int", default = 1},
+	warn_attack = {type= "boolean", default = false},
+	was_killed_by_player = {type= "boolean", default = false},	
+}
+
 petz.genetics_random_texture = function(self, textures_count)	
 	local skins_count = #self.skin_colors
 	
@@ -57,79 +108,14 @@ petz.genetics_texture  = function(self, textures_count)
 	end
 end
 
-petz.load_vars = function(self)
-	--Only specific mobs
-	if self.type == "lamb" then
-		self.shaved = mobkit.recall(self, "shaved") or false
-		self.food_count_wool = mobkit.recall(self, "food_count_wool") or 0
-	elseif self.is_mountable == true then
-		self.saddle = mobkit.recall(self, "saddle") or false
-		self.saddlebag = mobkit.recall(self, "saddlebag") or false		
-		self.driver = mobkit.recall(self, "driver") or nil
-		self.max_speed_forward = mobkit.recall(self, "max_speed_forward") or 1
-		self.max_speed_reverse = mobkit.recall(self, "max_speed_reverse") or 1
-		self.accel = mobkit.recall(self, "accel") or 1
-		if self.has_saddlebag == true then		
-			self.saddlebag_inventory = mobkit.recall(self, "saddlebag_inventory") or nil
-		end
-	elseif self.type == "puppy" then
-		self.square_ball_attached = false --cos the square ball is detached when die/leave server...
-	elseif self.type == "bee" then
-		self.behive = mobkit.recall(self, "behive") or nil
+petz.load_vars = function(self)	
+	for key, value in pairs(petz.dyn_prop) do
+		self[key] = mobkit.recall(self, key) or value["default"]
 	end
-	if self.milkable == true then
-		self.milked = mobkit.recall(self, "milked") or false
-	end
-	if self.type == "pony" then	
-		self.horseshoes = mobkit.recall(self, "horseshoes") or 0
-	end
-	if self.lay_eggs == true then
-		self.eggs_count = mobkit.recall(self, "eggs_count") or 0
-	end
-	if self.sleep_at_night or self.sleep_at_day then
-		self.sleep_start_time = mobkit.recall(self, "sleep_start_time") or 19500
-		self.sleep_end_time = mobkit.recall(self, "sleep_end_time") or 23999
-		--minetest.chat_send_player("singleplayer", "sleep_start_time="..tostring(self.sleep_start_time).."/sleep_end_time="..tostring(self.sleep_end_time))	
-	end
-	--Mobs that can have babies
-	if self.breed == true then		
-		self.is_male = mobkit.recall(self, "is_male") or false
-		self.is_rut = mobkit.recall(self, "is_rut") or false
-		self.is_pregnant = mobkit.recall(self, "is_pregnant") or false				
-		self.pregnant_time = mobkit.recall(self, "pregnant_time") or 0.0
-		self.father_genes = mobkit.recall(self, "father_genes") or {}
-		self.father_veloc_stats = mobkit.recall(self, "father_veloc_stats") or {}
-		self.pregnant_count = mobkit.recall(self, "pregnant_count") or petz.settings.pregnant_count 
-		self.is_baby = mobkit.recall(self, "is_baby") or false
-		self.growth_time = mobkit.recall(self, "growth_time") or 0.0		
-		self.genes = mobkit.recall(self, "genes") or {}
-	end
-	--All the mobs	
-	self.tag = mobkit.recall(self, "tag") or ""
-	self.show_tag = mobkit.recall(self, "show_tag") or false
-	self.tamed = mobkit.recall(self, "tamed") or false
-	self.owner = mobkit.recall(self, "owner") or nil
-	--Insert in the table of petz by owner
-	if self.owner then
+	if self.owner then --Insert in the table of petz by owner
 		petz.insert_petz_list_by_owner(self)
 	end
-	self.affinity = mobkit.recall(self, "affinity") or 100
-	self.fed = mobkit.recall(self, "fed") or true
-	self.brushed = mobkit.recall(self, "brushed") or false
-	if self.is_wild == true then
-		self.lashed = mobkit.recall(self, "lashed") or false
-		self.lashing_count = mobkit.recall(self, "lashing_count") or 0
-	end
-	self.food_count = mobkit.recall(self, "food_count") or 0
-	self.beaver_oil_applied = mobkit.recall(self, "beaver_oil_applied") or false
-	self.child = mobkit.recall(self, "child") or false
-	self.dreamcatcher = mobkit.recall(self, "dreamcatcher") or false
-	self.status = mobkit.recall(self, "status") or ""
 	self.warn_attack = false --reset the warn attack
-	self.colorized = mobkit.recall(self, "colorized") or nil
-	self.convert = mobkit.recall(self, "convert") or nil
-	self.convert_to = mobkit.recall(self, "convert_to") or nil
-	self.convert_count = mobkit.recall(self, "convert_count") or 5
 end
 
 function petz.set_initial_properties(self, staticdata, dtime_s)	
@@ -286,65 +272,22 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	--
 	--3. CAPTURED MOBS
 	--
-	else 
-		--Mob Specific		
-		if self.type == "lamb" then --Lamb
-			self.food_count_wool = mobkit.remember(self, "food_count_wool", tonumber(static_data_table["fields"]["food_count_wool"])) 
-			self.shaved = mobkit.remember(self, "shaved", minetest.is_yes(static_data_table["fields"]["shaved"])) 							
-		end
-		if self.is_mountable == true then		
-			self.saddle = minetest.is_yes(static_data_table["fields"]["saddle"])	
-			self.saddlebag = minetest.is_yes(static_data_table["fields"]["saddlebag"])
-			self.saddlebag_inventory = minetest.deserialize(static_data_table["fields"]["saddlebag_inventory"])
-			self.max_speed_forward = mobkit.remember(self, "max_speed_forward", tonumber(static_data_table["fields"]["max_speed_forward"]	)) 
-			self.max_speed_reverse = mobkit.remember(self, "max_speed_reverse", tonumber(static_data_table["fields"]["max_speed_reverse"])) 
-			self.accel = mobkit.remember(self, "accel", tonumber(static_data_table["fields"]["accel"])) 			
-			mobkit.remember(self, "driver", nil) --no driver
-		end
-		if self.type == "pony" then	
-			self.horseshoes = mobkit.remember(self, "horseshoes", tonumber(static_data_table["fields"]["horseshoes"])) 	
+	else 		
+		for key, value in pairs(petz.dyn_prop) do
+			local prop_value
+			if value["type"] == "string" then
+				prop_value = static_data_table["fields"]["colorized"]
+			elseif value["type"] == "int" then
+				prop_value = tonumber(static_data_table["fields"][key])
+			elseif value["type"] == "boolean" then
+				prop_value = minetest.is_yes(static_data_table["fields"][key])
+			elseif value["type"] == "table" then
+				prop_value = minetest.deserialize(static_data_table["fields"][key])
+			elseif value["type"] == "player" then
+				prop_value = nil
+			end
+			self[key] = mobkit.remember(self, key, prop_value) or value["default"]
 		end	
-		if self.sleep_at_night or self.sleep_at_day then
-			self.sleep_start_time = mobkit.remember(self, "sleep_start_time", tonumber(static_data_table["fields"]["sleep_start_time"])) 
-			self.sleep_end_time = mobkit.remember(self, "sleep_end_time", tonumber(static_data_table["fields"]["sleep_end_time"])) 			
-		end
-		--Mobs that can have babies
-		if self.breed == true then
-			self.is_male = mobkit.remember(self, "is_male", minetest.is_yes(static_data_table["fields"]["is_male"])	) 
-			self.is_rut = mobkit.remember(self, "is_rut", minetest.is_yes(static_data_table["fields"]["is_rut"])) 
-			self.is_pregnant = mobkit.remember(self, "is_pregnant", minetest.is_yes(static_data_table["fields"]["is_pregnant"])) 
-			self.pregnant_time = mobkit.remember(self, "pregnant_time", tonumber(static_data_table["fields"]["pregnant_time"])) 
-			self.father_genes = mobkit.remember(self, "father_genes", minetest.deserialize(static_data_table["fields"]["father_genes"])) 
-			self.father_veloc_stats = mobkit.remember(self, "father_veloc_stats", minetest.deserialize(static_data_table["fields"]["father_veloc_stats"])) 			
-			self.is_baby = mobkit.remember(self, "is_baby", minetest.is_yes(static_data_table["fields"]["is_baby"])) 
-			self.growth_time = mobkit.remember(self, "growth_time", tonumber(static_data_table["fields"]["growth_time"]))
-			self.pregnant_count = mobkit.remember(self, "pregnant_count", tonumber(static_data_table["fields"]["pregnant_count"])) 	
-			self.genes = mobkit.remember(self, "genes", minetest.deserialize(static_data_table["fields"]["genes"])) 	
-		end		
-		if self.lay_eggs == true then
-			self.eggs_count = tonumber(static_data_table["fields"]["eggs_count"])
-		end		
-		--ALL the mobs		
-		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])
-		self.set_vars = mobkit.remember(self, "set_vars", true) 		
-		self.tag = mobkit.remember(self, "tag", static_data_table["fields"]["tag"]) or ""
-		self.show_tag = mobkit.remember(self, "show_tag", minetest.is_yes(static_data_table["fields"]["show_tag"])) 
-		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", minetest.is_yes(static_data_table["fields"]["dreamcatcher"])) 
-		self.status = mobkit.remember(self, "status", static_data_table["fields"]["status"]) or ""
-		self.tamed = mobkit.remember(self, "tamed", minetest.is_yes(static_data_table["fields"]["tamed"]))	
-		self.owner = mobkit.remember(self, "owner", static_data_table["fields"]["owner"]) 
-		self.colorized = mobkit.remember(self, "colorized", static_data_table["fields"]["colorized"]) or nil
-		self.food_count = mobkit.remember(self, "food_count", tonumber(static_data_table["fields"]["food_count"])) 
-		self.convert = mobkit.remember(self, "convert", static_data_table["fields"]["convert"]) or nil
-		self.convert_to = mobkit.remember(self, "convert_to", static_data_table["fields"]["convert_to"]) or nil
-		self.convert_count = mobkit.remember(self, "convert_count", tonumber(static_data_table["fields"]["convert_count"])) 		
-		if self.has_affinity == true then
-			self.affinity = mobkit.remember(self, "affinity", tonumber(static_data_table["fields"]["affinity"])) 
-		end
-		if self.is_wild == true then
-			self.lashed = mobkit.remember(self, "lashed", false)	
-			self.lashing_count = mobkit.remember(self, "lashing_count", tonumber(static_data_table["fields"]["lashing_count"]	))	
-		end
 	end		
 		
 	--Custom textures
@@ -378,7 +321,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			petz.colorize(self, self.colorized)
 		end
 	end
-	if self.horseshoes then
+	if self.horseshoes and captured_mob == false then
 		petz.horseshoes_speedup(self)
 	end
 	if self.breed == true then

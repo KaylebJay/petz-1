@@ -83,7 +83,6 @@ function petz.is_jumping(self)
 		return true
 	end
 end
-	
 
 function mobkit.check_ground_suffocation(self)
 	local spos = mobkit.get_stand_pos(self)
