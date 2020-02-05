@@ -336,7 +336,7 @@ petz.create_affinity_form = function(self)
 	local red_color = "#DF013A"
 	local fed_status
 	local feed_status_color
-	if self.fed then
+	if self.fed == true then
 		feed_status = S("Fed")
 		feed_status_color = green_color
 	else
