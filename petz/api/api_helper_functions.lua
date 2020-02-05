@@ -34,7 +34,7 @@ function petz.isinliquid(self)
 	end	
 end
 
-function petz.round(x, n)
+function petz.round(x)
 	return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
 end
 

@@ -1,6 +1,5 @@
 local modpath, S = ...
 
-
 --Context
 --In this temporary table is saved the reference to an entity by its owner
 --to show the when on_rightclick form is shown
@@ -23,29 +22,9 @@ petz.on_rightclick = function(self, clicker)
 	local wielded_item = clicker:get_wielded_item()
 	local wielded_item_name = wielded_item:get_name()	
 	local show_form = false
-	if ((self.is_pet == true) and (self.owner == player_name) and (self.can_be_brushed == true))-- If brushing or spread beaver oil
-			and ((wielded_item_name == "petz:hairbrush") or (wielded_item_name == "petz:beaver_oil")) then                       
-		if petz.settings.tamagochi_mode == true then
-			if wielded_item_name == "petz:hairbrush" then
-				if self.brushed == false then
-					petz.set_affinity(self, true, 5)
-                    self.brushed = true
-                    mobkit.remember(self, "brushed", self.brushed) 
-                 else
-					minetest.chat_send_player(self.owner, S("Your").." "..S(pet_name).." "..S("had already been brushed."))
-                 end                
-			else --it's beaver_oil						
-				if self.beaver_oil_applied == false then
-					petz.set_affinity(self, true, 20)
-                    self.beaver_oil_applied = true
-                    mobkit.remember(self, "beaver_oil_applied", self.beaver_oil_applied)
-				else 
-					minetest.chat_send_player(self.owner, S("Your").." "..S(pet_name).." "..S("had already been spreaded with beaver oil."))
-				end     
-			end
-		end
-		petz.do_sound_effect("object", self.object, "petz_brushing")
-		petz.do_particles_effect(self.object, self.object:get_pos(), "star")
+	if ((self.is_pet == true) and (self.owner == player_name) and (self.can_be_brushed == true)) -- If brushing or spread beaver oil
+		and ((wielded_item_name == "petz:hairbrush") or (wielded_item_name == "petz:beaver_oil")) then                       
+			petz.brush(self, wielded_item_name, pet_name)
 	--If feeded
 	elseif petz.feed_tame(self, clicker, wielded_item, wielded_item_name, 5, true) then
 		if petz.settings.tamagochi_mode == true and self.fed == false then

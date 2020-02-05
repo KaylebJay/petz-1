@@ -53,7 +53,7 @@ petz.remove_owner = function(self)
 end
 
 petz.do_feed = function(self)
-	petz.set_affinity(self, true, 5)                
+	petz.set_affinity(self, petz.settings.tamagochi_feed_hunger_rate)                
 	self.fed = mobkit.remember(self, "fed", true)
 end
 
@@ -68,7 +68,7 @@ petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_c
 			wielded_item:take_item()
 			clicker:set_wielded_item(wielded_item)
 		end		
-		mobkit.heal(self, 4)	
+		petz.set_health(self, petz.settings.tamagochi_feed_hunger_rate)
 		petz.update_nametag(self)		
 		if self.hp >= self.max_hp then
 			self.hp = self.max_hp

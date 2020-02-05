@@ -55,6 +55,12 @@ petz.dyn_prop = {
 	was_killed_by_player = {type= "boolean", default = false},	
 }
 
+petz.cleanup_prop= function(self)	
+	self.warn_attack = false --reset the warn attack
+	self.driver = nil --no driver
+	self.was_killed_by_player = false --reset the warn attack	
+end
+
 petz.genetics_random_texture = function(self, textures_count)	
 	local skins_count = #self.skin_colors
 	
@@ -115,7 +121,7 @@ petz.load_vars = function(self)
 	if self.owner then --Insert in the table of petz by owner
 		petz.insert_petz_list_by_owner(self)
 	end
-	self.warn_attack = false --reset the warn attack
+	petz.cleanup_prop(self)	 --Reset some vars
 end
 
 function petz.set_initial_properties(self, staticdata, dtime_s)	

@@ -38,7 +38,7 @@ petz.create_form_list_by_owner = function(user_name, user_pos)
 				local pet_pos =  pet.object:get_pos() 
 				local pet_pos_x, pet_pos_y, pet_pos_z
 				if pet_pos then
-					distance = tostring(petz.round(vector.distance(user_pos, pet_pos) , 1))
+					distance = tostring(petz.round(vector.distance(user_pos, pet_pos)))
 					pet_pos_x = tostring(math.floor(pet_pos.x+0.5))
 					pet_pos_y = tostring(math.floor(pet_pos.y+0.5))
 					pet_pos_z = tostring(math.floor(pet_pos.z+0.5))

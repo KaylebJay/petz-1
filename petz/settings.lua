@@ -7,9 +7,15 @@ petz.settings.petz_list = settings:get("petz_list", "")
 petz.petz_list = string.split(petz.settings.petz_list, ',')
 petz.settings.disable_monsters = settings:get_bool("disable_monsters", false)
 petz.settings.type_model = settings:get("type_model", "mesh")
+--Tamagochi Mode
 petz.settings.tamagochi_mode = settings:get_bool("tamagochi_mode", true)
 petz.settings.tamagochi_check_time = tonumber(settings:get("tamagochi_check_time"))
-petz.settings.tamagochi_hunger_damage = tonumber(settings:get("tamagochi_hunger_damage"))
+petz.settings.tamagochi_reduction_factor = tonumber(settings:get("tamagochi_reduction_factor")) or 0.1
+petz.settings.tamagochi_punch_rate = tonumber(settings:get("tamagochi_punch_rate")) or 0.1
+petz.settings.tamagochi_feed_hunger_rate = tonumber(settings:get("tamagochi_feed_hunger_rate")) or 0.1
+petz.settings.tamagochi_brush_rate = tonumber(settings:get("tamagochi_brush_rate")) or 0.1
+petz.settings.tamagochi_beaver_oil_rate = tonumber(settings:get("tamagochi_beaver_oil_rate")) or 0.1
+petz.settings.tamagochi_lashing_rate = tonumber(settings:get("tamagochi_lashing_rate")) or 0.1
 petz.settings.tamagochi_check_if_player_online = settings:get_bool("tamagochi_check_if_player_online", true)
 --Create a table with safe nodes
 local tamagochi_safe_nodes = settings:get("tamagochi_safe_nodes", "")

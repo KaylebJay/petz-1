@@ -27,10 +27,7 @@ end
 petz.punch_tamagochi = function (self, puncher)
     if petz.settings.tamagochi_mode == true then         
         if self.owner == puncher:get_player_name() then
-            if self.affinity == nil then
-                self.affinity = 100       
-            end
-            petz.set_affinity(self, false, 20)            
+            petz.set_affinity(self, -petz.settings.tamagochi_punch_rate)            
         end
     end
 end

@@ -21,7 +21,7 @@ petz.create_form = function(player_name)
 			form_title = S("Orders")
 			hungrystuff_pos = {x= 3, y = 2}
 			affinity_stuff =
-				"image[3,3;1,1;petz_affinity_heart.png]"..
+				"image_button[3,3;1,1;petz_affinity_heart.png;btn_affinity;]"..
 				"label[4,3;".. tostring(pet.affinity).."%]"
 		else
 			form_size.w= form_size.w
@@ -34,13 +34,15 @@ petz.create_form = function(player_name)
             "label[1,2;".. form_title .."]"..
             "image_button[".. hungrystuff_pos.x ..",".. hungrystuff_pos.y ..";1,1;petz_pet_bowl_inv.png;btn_bowl;]"..
             affinity_stuff            
-        local hungry_label = ""
+        local hungry_label = ""        
+        local health_label = S("Health").." = "..tostring(pet.hp)
         if pet.fed == false then
-            hungry_label = "Hungry"
+            hungry_label = S("Hungry")
         else
-            hungry_label = "Satiated"
+            hungry_label = S("Satiated")
         end
-        tamagochi_form_stuff = tamagochi_form_stuff .. "label[".. hungrystuff_pos.x +1 ..",".. hungrystuff_pos.y ..";"..S(hungry_label).."]"
+        hungry_label = hungry_label.."\n"..health_label
+        tamagochi_form_stuff = tamagochi_form_stuff .. "label[".. hungrystuff_pos.x +1 ..",".. hungrystuff_pos.y ..";"..hungry_label.."]"
     else
 		if pet.has_saddlebag == true and pet.saddlebag == true then
 			form_size.w= form_size.w + 1	
@@ -221,7 +223,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 							"list[current_player;main;0,4;8,4;]"		
 			minetest.show_formspec(player_name, "petz:saddlebag_inventory", formspec)		
 		elseif fields.btn_bowl then
-			minetest.show_formspec(player_name, "petz:food_form", petz.create_food_form(pet))	
+			minetest.show_formspec(player_name, "petz:food_form", petz.create_food_form(pet))
+		elseif fields.btn_affinity then
+			minetest.show_formspec(player_name, "petz:affinity_form", petz.create_affinity_form(pet))	
 		elseif fields.btn_horseshoes then
 			petz.horseshoes_reset(pet)
 		end
@@ -321,6 +325,38 @@ petz.create_food_form = function(self)
 		end
 		formspec = formspec .. "label[0,2;"..S("It breeds with")..": ".. breed_item_desc .."]"
 	end
+    return formspec
+end
+
+petz.create_affinity_form = function(self)	
+	local formspec = ""
+	local form_size = {w= 3, h= 4}
+	local button_exit = {x= 1, y= 3}
+	local green_color = "#3ADF00"
+	local red_color = "#DF013A"
+	local fed_status
+	local feed_status_color
+	if self.fed then
+		feed_status = S("Fed")
+		feed_status_color = green_color
+	else
+		feed_status = S("Hungry")..": " .. tostring(petz.calculate_affinity_change(-petz.settings.tamagochi_feed_hunger_rate))
+		feed_status_color = red_color
+	end
+	if self.brushed then		
+		brushing_status = S("Brushed")
+		brushing_status_color = green_color
+	else
+		brushing_status = S("Not brushed")..": " .. tostring(petz.calculate_affinity_change(-petz.settings.tamagochi_brush_rate))
+		brushing_status_color = red_color
+	end
+	formspec =
+		"size["..form_size.w..","..form_size.h.."]"..
+		"image[0,0;1,1;petz_affinity_heart.png]"..
+		"label[1,0;"..S("Affinity").."]"..
+		"label[0,1;".. minetest.colorize(feed_status_color, feed_status).."]"..
+		"label[0,2;".. minetest.colorize(brushing_status_color, brushing_status).."]"..		
+		"button_exit["..button_exit.x..","..button_exit.y..";1,2;btn_exit;"..S("Close").."]"	
     return formspec
 end
 
