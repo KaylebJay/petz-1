@@ -362,9 +362,9 @@ end
 
 --On receive fields
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if formname ~= "petz:food_form" then
+	if formname ~= "petz:food_form" and formname ~= "petz:affinity_form" then
 		return false
-	end	
+	end
 	local player_name = player:get_player_name()
 	local pet = petz.pet[player_name]
 	if pet and (mobkit.is_alive(pet)) then 
