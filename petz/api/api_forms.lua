@@ -78,7 +78,7 @@ petz.create_form = function(player_name)
 			gender = S("Female")
 		end				
 		tamagochi_form_stuff = tamagochi_form_stuff..
-			"label[3,1;"..gender.."]"
+			"label[3,0.875;"..gender.."]"
 		local pregnant_icon_x
 		local pregnant_icon_y 
 		local pregnant_text_x
@@ -161,6 +161,7 @@ petz.create_form = function(player_name)
 		"real_coordinates[true]"..
 		tamagochi_form_stuff..        
 		form_orders..
+		"style_type[button_exit;bgcolor=#006699;textcolor=white]"..		
 		"button_exit["..(buttonexit_pos.x+0.5)..","..(buttonexit_pos.y+0.75)..";1,1;btn_close;"..S("Close").."]"
 	return final_form
 end
