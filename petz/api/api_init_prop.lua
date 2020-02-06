@@ -283,7 +283,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		for key, value in pairs(petz.dyn_prop) do
 			local prop_value
 			if value["type"] == "string" then
-				prop_value = static_data_table["fields"]["colorized"]
+				prop_value = static_data_table["fields"][key]
 			elseif value["type"] == "int" then
 				prop_value = tonumber(static_data_table["fields"][key])
 			elseif value["type"] == "boolean" then
