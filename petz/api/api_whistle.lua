@@ -73,7 +73,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		local event = minetest.explode_textlist_event(fields.petz_list)		
 		local pet_index = event.index	
 		local pet = petz.petz_list_by_owner[player_name][pet_index]
+		--minetest.chat_send_player("singleplayer", "test1")
 		if pet then
+		--minetest.chat_send_player("singleplayer", "test2")
 			local pos_front_player = petz.pos_front_player(player)
 			local pet_pos = {
 				x = pos_front_player.x,

@@ -25,6 +25,9 @@ petz.kick_back= function(self, dir)
 end
 
 petz.punch_tamagochi = function (self, puncher)
+	if self.affinity == nil then
+		return
+    end
     if petz.settings.tamagochi_mode == true then         
         if self.owner == puncher:get_player_name() then
             petz.set_affinity(self, -petz.settings.tamagochi_punch_rate)            
