@@ -158,7 +158,7 @@ petz.create_form = function(player_name)
     end
     final_form =
 		"size["..(form_size.w+0.875)..","..(form_size.h+1)..";]"..
-		"real_coordinates[true]"..
+		"real_coordinates[true]"..		
 		tamagochi_form_stuff..        
 		form_orders..
 		"style_type[button_exit;bgcolor=#006699;textcolor=white]"..		

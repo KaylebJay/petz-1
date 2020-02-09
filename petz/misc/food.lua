@@ -58,6 +58,7 @@ minetest.register_craftitem("petz:frog_leg", {
     description = S("Frog Leg"),
     inventory_image = "petz_frog_leg.png",
     wield_image = "petz_frog_leg.png",
+    on_use = minetest.item_eat(1),
     groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
@@ -80,6 +81,7 @@ minetest.register_craftitem("petz:raw_parrot", {
     description = S("Raw Parrot"),
     inventory_image = "petz_raw_parrot.png",
     wield_image = "petz_raw_parrot.png",
+    on_use = minetest.item_eat(1),
     groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
@@ -102,6 +104,7 @@ minetest.register_craftitem("petz:raw_chicken", {
     description = S("Raw Chicken"),
     inventory_image = "petz_raw_chicken.png",
     wield_image = "petz_raw_chicken.png",
+    on_use = minetest.item_eat(1),
     groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
@@ -109,6 +112,7 @@ minetest.register_craftitem("petz:chicken_legs", {
     description = S("Chicken Legs"),
     inventory_image = "petz_chicken_legs.png",
     wield_image = "petz_chicken_legs.png",
+    on_use = minetest.item_eat(1),
     groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
@@ -169,6 +173,7 @@ minetest.register_craftitem("petz:raw_porkchop", {
     description = S("Raw Porkchop"),
     inventory_image = "petz_raw_porkchop.png",
     wield_image = "petz_raw_porkchop.png",
+    on_use = minetest.item_eat(1),
     groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
@@ -191,6 +196,7 @@ minetest.register_craftitem("petz:mini_lamb_chop", {
     description = S("Mini Lamb Chop"),
     inventory_image = "petz_mini_lamb_chop.png",
     wield_image = "petz_mini_lamb_chop.png",
+    on_use = minetest.item_eat(1),
     groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
@@ -213,6 +219,7 @@ minetest.register_craftitem("petz:beef", {
     description = S("Beef"),
     inventory_image = "petz_beef.png",
     wield_image = "petz_beef.png",
+    on_use = minetest.item_eat(1),
     groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
@@ -235,6 +242,7 @@ minetest.register_craftitem("petz:raw_ducky", {
     description = S("Raw Ducky"),
     inventory_image = "petz_raw_ducky.png",
     wield_image = "petz_raw_ducky.png",
+    on_use = minetest.item_eat(1),
     groups = {flammable = 2, food = 2, food_meat_raw = 1},
 })
 
