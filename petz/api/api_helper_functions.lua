@@ -38,6 +38,16 @@ function petz.round(x)
 	return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
 end
 
+function petz.vartostring(var)
+	if var == true or var == 1 or var == "true" then
+		return "true"
+	elseif var == false or var == nil or var == 0 or var == "false" then
+		return "false"
+	else
+		return "false"
+	end
+end
+
 function petz.set_list(list)
   local set = {}
   for _, l in ipairs(list) do set[l] = true end

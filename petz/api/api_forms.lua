@@ -56,19 +56,14 @@ petz.create_form = function(player_name)
 		if not(pet.tag) then
 			pet.tag = ""
 		end
-		local selected
-		if pet.show_tag == true then
-			selected = "true"
-		else
-			selected = "false"
-		end
 		if pet.dreamcatcher == true then
 			tamagochi_form_stuff = tamagochi_form_stuff..
 			"image_button_exit[4,0.375;1,1;petz_dreamcatcher.png;btn_dreamcatcher;]"
 		end
 		tamagochi_form_stuff = tamagochi_form_stuff..
 		"field[0.375,2;3,0.5;ipt_name;"..S("Name")..":"..";"..pet.tag.."]"..		
-		"checkbox[3.5,2.25;btn_show_tag;"..S("Show tag")..";"..selected.."]"
+		"checkbox[3.5,1.75;btn_muted;"..S("Muted")..";"..petz.vartostring(pet.muted).."]"..
+		"checkbox[3.5,2.25;btn_show_tag;"..S("Show tag")..";"..petz.vartostring(pet.show_tag).."]"
 	end
 	if pet.breed == true then --Show the Gender
 		local gender = ''
@@ -204,6 +199,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 					pet.object:set_detach()
 				end
 			end, pet)
+		elseif fields.btn_muted then			
+			pet.muted= mobkit.remember(pet, "muted", minetest.is_yes(fields.btn_muted))
 		elseif fields.btn_show_tag then			
 			pet.show_tag = mobkit.remember(pet, "show_tag", minetest.is_yes(fields.btn_show_tag))
 		elseif fields.btn_dreamcatcher then		

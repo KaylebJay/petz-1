@@ -5,6 +5,9 @@ local modpath, S = ...
 --
 
 petz.random_mob_sound = function(self)
+	if self.muted == true then
+		return
+	end
 	local random_number = math.random(1, petz.settings.misc_sound_chance)
 	if random_number == 1 then
 		if self.sounds and self.sounds['misc'] then 

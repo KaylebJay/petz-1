@@ -35,6 +35,7 @@ petz.dyn_prop = {
 	max_speed_forward = {type= "int", default = 1},
 	max_speed_reverse = {type= "int", default = 1},
 	milked = {type= "boolean", default = false},
+	muted = {type= "boolean", default = false},
 	owner = {type= "string", default = nil},	
 	pregnant_count = {type= "int", default = petz.settings.pregnant_count},
 	pregnant_time = {type= "int", default = 0},
@@ -255,6 +256,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.warn_attack = mobkit.remember(self, "warn_attack", false)
 		self.colorized = mobkit.remember(self, "colorized", nil)
 		self.convert = mobkit.remember(self, "convert", nil)
+		self.muted = mobkit.remember(self, "muted", false)
 		if petz.settings[self.type.."_convert_to"] then		
 			self.convert_to = mobkit.remember(self, "convert_to", petz.settings[self.type.."_convert_to"])
 		end
