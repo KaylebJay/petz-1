@@ -5,6 +5,16 @@ local modpath, S = ...
 -- Helpers Functions
 --
 
+petz.lookback = function(self, pos2)
+	local pos1 = self.object:get_pos()
+	local vec = {x = pos1.x - pos2.x, y = pos1.y - pos2.y, z = pos1.z - pos2.z}
+	local yaw = math.atan(vec.z / vec.x) - math.pi / 2
+	if pos1.x >= pos2.x then
+		yaw = yaw + math.pi
+	end
+   self.object:set_yaw(yaw + math.pi)
+end
+
 petz.lookat = function(self, pos2)
 	local pos1 = self.object:get_pos()
 	local vec = {x = pos1.x - pos2.x, y = pos1.y - pos2.y, z = pos1.z - pos2.z}
@@ -269,7 +279,7 @@ function petz.bh_attack_player(self, pos, prty, player)
 end
 
 petz.bh_afraid= function(self, pos) 
-	petz.lookat(self, pos)
+	petz.lookback(self, pos)
 	local x = self.object:get_velocity().x
 	local z = self.object:get_velocity().z	
 	self.object:set_velocity({x= 4.0, y= 0, z= 4.0})

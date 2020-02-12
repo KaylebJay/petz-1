@@ -625,7 +625,7 @@ function petz.monster_brain(self)
 			end
 		end					
 						
-		if prty < 10 then
+		if prty < 10 then			
 			if player then
 				local werewolf = false
 				if petz.settings["lycanthropy"] then
@@ -633,25 +633,11 @@ function petz.monster_brain(self)
 						werewolf = true
 					end
 				end			
-				if (self.tamed == false and werewolf == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
+				if (self.tamed == false and werewolf == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
 					local player_pos = player:get_pos()
-					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
-						if self.type == "mr_pumpkin" then --teleport to player's back							
-							local random_num = math.random(1, 3)
-							if random_num == 1 then								
-								if (self.hp <= self.max_hp / 2) then																	
-									petz.bh_teleport(self, pos, player, player_pos)
-									return
-								else
-									petz.do_sound_effect("object", self.object, "petz_fireball")
-									if not petz.spawn_throw_object(self.object, 20, "petz:ent_jack_o_lantern_grenade") then
-										return -- something failed
-									end	
-								end							
-							end
-						end
+					if vector.distance(pos, player_pos) <= self.view_range then	-- if player close						
 						self.max_speed = 2.5
-						mobkit.hq_hunt(self, 10, player)								
+						mobkit.hq_hunt(self, 10, player)						
 						return
 					end
 				end

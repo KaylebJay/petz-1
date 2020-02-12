@@ -2,7 +2,7 @@ local modpath, S = ...
 
 --effects can be: fire
 
-function petz.throw(self, dtime, damage, effect, particles)
+function petz.throw(self, dtime, damage, effect, particles, sound)
 	if self.shooter_name == "" then
 		if self.object:get_attach() == nil then
 			self.object:remove()
@@ -23,14 +23,28 @@ function petz.throw(self, dtime, damage, effect, particles)
 			--minetest.chat_send_player("singleplayer", thing.type)
 			local thing_ent = thing.ref:get_luaentity()			
 			if not(thing.ref:is_player()) or (thing.ref:is_player() and not(thing.ref:get_player_name() == self.shooter_name)) then
+				local ent_pos
 				if thing.ref:is_player() then
 					thing.ref:punch(thing.ref, 1.0, {full_punch_interval = 1.0, damage_groups = {fleshy=damage}}, nil)
-					 petz.do_sound_effect("player", thing.ref, "petz_firecracker")
+					ent_pos = thing.ref:get_pos()
+					if sound then
+						petz.do_sound_effect("player", thing.ref, sound)
+					end
 				else
 					mobkit.hurt(thing_ent, damage)
-					petz.do_sound_effect("object", thing.ref, "petz_firecracker")
-				end				
-				petz.do_particles_effect(nil, pos, "fire")
+					ent_pos = thing_ent:get_pos()
+					if sound then
+						petz.do_sound_effect("object", thing.ref, sound)
+					end
+				end
+				if effect then
+					if effect == "cobweb" then
+						minetest.set_node(ent_pos, {name = "petz:cobweb"})
+					end
+				end
+				if particles then		
+					petz.do_particles_effect(nil, pos, particles)
+				end
 				self.waiting_for_removal = true
 				self.object:remove()
 				return
@@ -58,6 +72,16 @@ function petz.throw(self, dtime, damage, effect, particles)
 							--end
 						end	
 						petz.do_sound_effect("pos", node_pos, "petz_firecracker")					
+					elseif effect == "cobweb" then
+						local pos_above = {
+							x = node_pos.x,
+							y = node_pos.y +1,
+							z = node_pos.z,
+						}
+						local node_above = minetest.get_node(pos_above)
+						if node_above.name == "air" then
+							minetest.set_node(pos_above, {name = "petz:cobweb"})
+						end
 					end
 				end
 				self.waiting_for_removal = true
@@ -70,9 +94,11 @@ function petz.throw(self, dtime, damage, effect, particles)
 	self.old_pos = pos
 end
 
-function petz.spawn_throw_object(user, strength, entity)
+function petz.spawn_throw_object(user, strength, entity)	
 	local pos = user:get_pos()
-	pos.y = pos.y + 1.5 -- camera offset	
+	if user:is_player() then	
+		pos.y = pos.y + 1.5 -- camera offset	
+	end
 	--minetest.chat_send_player("singleplayer", tostring(pos))
 	local obj = minetest.add_entity(pos, entity)
 	if not obj then
@@ -95,4 +121,33 @@ function petz.spawn_throw_object(user, strength, entity)
 	obj:set_yaw(yaw - 0.5 * math.pi)
 	obj:set_velocity(vector.multiply(dir, strength))
 	return true
+end
+
+function petz.register_throw_entity(name, textures, damage, effect, particles, sound)
+	minetest.register_entity(name, {
+		hp_max = 4,       -- possible to catch the arrow (pro skills)
+		physical = false, -- use Raycast
+		collisionbox = {-0.1, -0.1, -0.1, 0.1, 0.1, 0.1},
+		visual = "wielditem",
+		textures = {textures},	
+		visual_size = {x = 1.0, y = 1.0},
+		old_pos = nil,
+		shooter_name = "",
+		parent_entity = nil,
+		waiting_for_removal = false,
+
+		on_activate = function(self)
+			self.object:set_acceleration({x = 0, y = -9.81, z = 0})
+		end,
+	
+		on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
+			return false
+		end,
+		
+		on_step = function(self, dtime)		
+			petz.throw(self, dtime, damage, effect, particles, sound)
+		end,
+})
+
+
 end

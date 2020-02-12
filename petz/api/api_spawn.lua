@@ -10,8 +10,13 @@ petz.get_node_below = function(pos)
 	return node
 end
 
-petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr)		
-	local node = petz.get_node_below(spawn_pos) --the node below the spawn pos
+petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr, liquidflag)
+	local node
+	if not(liquidflag) then
+		node = petz.get_node_below(spawn_pos) --the node below the spawn pos
+	else
+		node = minetest.get_node(spawn_pos)
+	end
 	local candidates_list = {} --Create a sublist of the petz with the same node to spawnand between max_height and min_height	
 	for i = 1, #petz.petz_list do
 		local pet_name
@@ -169,7 +174,7 @@ minetest.register_globalstep(function(dtime)
 	local interval = petz.settings.spawn_interval	
 	local spawn_pos, liquidflag, cave = mobkit.get_spawn_pos_abr(dtime, interval, radius, petz.settings.spawn_chance, 0.2)	
 	if spawn_pos then
-		petz.spawn_mob(spawn_pos, true, abr)
+		petz.spawn_mob(spawn_pos, true, abr, liquidflag)
 	end
 end)
 

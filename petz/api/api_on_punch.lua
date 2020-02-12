@@ -65,5 +65,21 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			self.warn_attack = true	
 			mobkit.clear_queue_high(self)
 		end
+		if self.type == "mr_pumpkin" then --teleport to player's back														
+			if math.random(1, 3) == 1 then
+				--petz.lookat(self, puncher:get_pos())
+				if (self.hp <= self.max_hp / 2) then																	
+					petz.bh_teleport(self, pos, player, player_pos)									
+				else
+					petz.do_sound_effect("object", self.object, "petz_fireball")
+					petz.spawn_throw_object(self.object, 20, "petz:ent_jack_o_lantern_grenade")					
+				end				
+			end
+		elseif self.type == "tarantula" then							
+			if math.random(1, 5) == 1 then
+				--petz.lookat(self, puncher:get_pos())
+				petz.spawn_throw_object(self.object, 20, "petz:ent_cobweb")							
+			end
+		end
 	end
 end
