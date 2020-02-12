@@ -41,6 +41,9 @@ end
 
 function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
 	if mobkit.is_alive(self) then
+		if puncher == self.driver then
+			return
+		end
 		if self.is_wild == true then
 			petz.tame_whip(self, puncher)
 		end
