@@ -106,14 +106,14 @@ function petz.attach(entity, player)
 	petz.force_detach(player)
 	player:set_attach(entity.object, "", attach_at, entity.player_rotation)
 	default.player_attached[player:get_player_name()] = true
-	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
 	player:set_properties({
 		visual_size = {
-			x = entity.driver_scale.x,
-			y = entity.driver_scale.y
+			x = petz.truncate(entity.driver_scale.x, 2),
+			y = petz.truncate(entity.driver_scale.y, 2)
 		},
 		pointable = false
 	})
+	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
 	minetest.after(0.2, function()
 		default.player_set_animation(player, "sit" , 30)
 	end)

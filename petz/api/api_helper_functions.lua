@@ -38,6 +38,11 @@ function petz.round(x)
 	return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
 end
 
+function petz.truncate(number, decimals)
+    local power = 10^decimals
+    return math.floor(number * power) / power
+end
+
 function petz.vartostring(var)
 	if var == true or var == 1 or var == "true" then
 		return "true"
