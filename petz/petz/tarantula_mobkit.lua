@@ -56,8 +56,8 @@ minetest.register_entity("petz:"..pet_name,{
 		attack= {range={x=34, y=40}, speed=30, loop=false},
 	},	
 	sounds = {
-		misc = "petz_merry_christmas",
-		attack = "petz_ho_ho_ho",
+		--misc = "petz_merry_christmas",
+		--attack = "petz_ho_ho_ho",
 		die = "petz_monster_die",
 	},
 	
