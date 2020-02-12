@@ -563,4 +563,3 @@ minetest.register_craft({
         {'petz:poop', 'petz:poop', 'petz:poop'},
     }
 })
-

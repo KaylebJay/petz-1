@@ -295,3 +295,13 @@ Author: Alexander
 http://www.orangefreesounds.com/button-click-sound-effect/
 The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filename: petz_spider_attack.ogg
+Author: salamisound
+https://www.salamisound.com/7352643-quick-hiss-with-air-flowing
+License: https://www.salamisound.com/info1
+--------------------------------------------
+filename: petz_cobweb_throw.ogg
+Author: salamisound
+https://www.salamisound.com/4691898-hiss-of-air-and-light-flow
+License: https://www.salamisound.com/info1

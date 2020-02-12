@@ -49,8 +49,14 @@ minetest.register_node("petz:cobweb", {
 	drop = "farming:string",
 	sounds = default.node_sound_leaves_defaults(),
 	on_construct = function(pos)
-		local timer = minetest.get_node_timer(pos)
-		timer:start(petz.settings.cobweb_decay)
+		local timer = minetest.get_node_timer(pos) --throwed cobwebs dissapear after some time 
+		timer:start(petz.settings.cobweb_decay)		
+	end,
+	after_place_node = function(pos, placer, itemstack, pointed_thing)
+		if placer:is_player() then
+			local timer = minetest.get_node_timer(pos) --put cobwebs by players do not dissapear
+			timer:stop()
+		end
 	end,
 	on_timer = function(pos, elapsed)
 		minetest.remove_node(pos)
@@ -58,7 +64,7 @@ minetest.register_node("petz:cobweb", {
 	end,
 })
 
-petz.register_throw_entity("petz:ent_cobweb", "petz:cobweb", 1, "cobweb", nil, nil)
+petz.register_throw_entity("petz:ent_cobweb", "petz:cobweb", 1, "cobweb", nil, "petz_cobweb_throw")
 
 minetest.register_craft({
 	output = "petz:cobweb",

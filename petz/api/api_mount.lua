@@ -5,6 +5,12 @@ local modpath, S = ...
 --
 
 petz.mount = function(self, clicker, wielded_item, wielded_item_name)
+	if clicker:is_player() then
+		local player_pressed_keys = clicker:get_player_control()
+		if player_pressed_keys["sneak"] == true then
+			return true
+		end
+	end
 	if self.tamed and self.owner == clicker:get_player_name() then    			
 		if self.driver and clicker == self.driver then -- detatch player already riding horse
 			petz.detach(clicker, {x = 1, y = 0, z = 1})

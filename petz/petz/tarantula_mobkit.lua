@@ -4,15 +4,15 @@
 local S = ...
 
 local pet_name = "tarantula"
-local scale_model = 2.0
+local scale_model = 1.85
 local mesh = 'petz_tarantula.b3d'	
 local textures = {"petz_tarantula_orange.png", "petz_tarantula_black.png"}
 local visual_size = {x=petz.settings.visual_size.x*scale_model, y=petz.settings.visual_size.y*scale_model}
-local p1 = {x= -0.25, y = -0.5, z = -0.125}
-local p2 = {x= 0.1875, y = -0.125, z = 0.3125}
+local p1 = {x= -0.25, y = -0.5, z = -0.25}
+local p2 = {x= 0.3125, y = -0.25, z = 0.3125}
 local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, nil)
 
-minetest.register_entity("petz:"..pet_name,{          
+minetest.register_entity("petz:"..pet_name, {          
 	--Petz specifics	
 	type = "tarantula",	
 	init_tamagochi_timer = false,		
@@ -28,6 +28,7 @@ minetest.register_entity("petz:"..pet_name,{
 	follow = petz.settings.tarantula_follow,	
 	drops = {
 		{name = "farming:string", chance = 3, min = 1, max = 1,},
+		{name = "petz:spider_eye", chance = 3, min = 1, max = 1,},
 	},
 	rotate = petz.settings.rotate,
 	physical = true,
@@ -44,7 +45,7 @@ minetest.register_entity("petz:"..pet_name,{
 	springiness= 0,
 	buoyancy = 0.5, -- portion of hitbox submerged
 	max_speed = 1.5,
-	jump_height = 1.5,
+	jump_height = 2.1,
 	view_range = 10,
 	lung_capacity = 10, -- seconds
 	max_hp = 30,  		
@@ -57,8 +58,7 @@ minetest.register_entity("petz:"..pet_name,{
 	},	
 	sounds = {
 		--misc = "petz_merry_christmas",
-		--attack = "petz_ho_ho_ho",
-		die = "petz_monster_die",
+		attack = "petz_spider_attack",		
 	},
 	
 	logic = petz.monster_brain,
