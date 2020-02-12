@@ -40,8 +40,8 @@ end
 --
 
 function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
-	if mobkit.is_alive(self) then
-		if puncher == self.driver then
+	if mobkit.is_alive(self) then		
+		if self.is_mountable and puncher == self.driver then --Do not punch when you mount on it
 			return
 		end
 		if self.is_wild == true then
@@ -61,7 +61,7 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 		if (petz.settings.blood == true and not(self.no_blood)) then --blood
 			petz.blood(self)
 		end
-		if self.hp <= 0 and self.driver then --important for mountable petz!
+		if self.is_mountable and self.hp <= 0 and self.driver then --important for mountable petz!
 			petz.force_detach(self.driver)
 		end
 		if self.is_wild and not(self.tamed) and not(self.attack_player) then --if you hit it, will attack player
