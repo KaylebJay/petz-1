@@ -23,6 +23,10 @@ petz.dyn_prop = {
 	fed = {type= "boolean", default = true},
 	food_count = {type= "int", default = 0},
 	food_count_wool = {type= "int", default = 0},
+	gallop = {type= "boolean", default = false},
+	gallop_time = {type= "int", default = 0},
+	gallop_exhausted = {type= "boolean", default = false},
+	gallop_recover_time = {type= "int", default = petz.settings.gallop_recover_time},
 	genes = {type= "table", default = {}},
 	growth_time = {type= "int", default = 0},	
 	horseshoes = {type= "int", default = 0},
@@ -159,6 +163,10 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				self.saddlebag_ref = nil
 				self.saddlebag_inventory = mobkit.remember(self, "saddlebag_inventory", {})
 			end
+			gallop = mobkit.remember(self, "gallop", false)
+			gallop_time = mobkit.remember(self, "gallop_time", 0)
+			gallop_exhausted = mobkit.remember(self, "gallop_exhausted", false)
+			gallop_recover_time = mobkit.remember(self, "gallop_recover_time", petz.settings.gallop_recover_time)
 		end
 		if self.type == "pony" then	
 			self.horseshoes = mobkit.remember(self, "horseshoes", 0)	

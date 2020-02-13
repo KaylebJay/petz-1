@@ -9,4 +9,7 @@ petz.on_step = function(self, dtime)
 	elseif self.is_baby == true then
 		petz.growth_timer(self, dtime)
 	end
+	if self.gallop == true then
+		petz.gallop(self, dtime)
+	end
 end

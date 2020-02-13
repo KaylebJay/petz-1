@@ -976,12 +976,12 @@ function mobkit.lq_mountdriver(self)
 		--minetest.chat_send_player("singleplayer", tostring(velocity))	
 		-- process controls		
 		local ctrl = self.driver:get_player_control()
-		if ctrl.up and ctrl.sneak then
+		if ctrl.up and ctrl.aux1 then
 			auto_drive = true
 		elseif auto_drive and ctrl.sneak then
 			auto_drive = false
 		end
-		if (ctrl.up or (auto_drive==true)) and self.isonground then -- move forwards
+		if (ctrl.up or auto_drive) and self.isonground then -- move forwards
 			velocity = velocity + (self.accel/2)
 			if ctrl.jump then
 				velo.y = velo.y + (self.jump_height)*4
@@ -1003,6 +1003,15 @@ function mobkit.lq_mountdriver(self)
 			mobkit.animate(self, "stand")
 			return	
 		end
+		--Gallop		
+		if ctrl.up and ctrl.sneak and not(self.gallop_exhausted) then
+			if self.gallop == false then
+				self.gallop = true
+				petz.do_sound_effect("object", self.object, "petz_horse_whinny")
+				petz.do_sound_effect("object", self.object, "petz_horse_gallop")
+			end
+			velocity = velocity + self.accel
+		end
 		--minetest.chat_send_player("singleplayer", tostring(velocity))	
 		-- fix mob rotation
 		local horz = self.driver:get_look_horizontal() or 0
@@ -1021,8 +1030,12 @@ function mobkit.lq_mountdriver(self)
 		local new_velo = {x = 0, y = 0, z = 0}
 		local new_acce = {x = 0, y = mobkit.gravity, z = 0}
 		new_velo = get_velocity(velocity, self.object:get_yaw() - rot_view, velo.y)		
-		self.object:set_velocity(new_velo)		
-		mobkit.animate(self, "walk")	-- set animation
+		self.object:set_velocity(new_velo)
+		if not(self.gallop) then
+			mobkit.animate(self, "walk")	-- set animation
+		else
+			mobkit.animate(self, "run")
+		end
 		new_acce.y = new_acce.y + acce_y
 		--minetest.chat_send_player("singleplayer", tostring(new_acce.y))	
 		self.object:set_acceleration(new_acce)		

@@ -86,3 +86,20 @@ function petz.detach(player, offset)
 		player:set_pos(pos)
 	end)
 end
+
+--
+--Gallop
+--
+function petz.gallop(self, dtime)
+	self.gallop_time = self.gallop_time + dtime	
+	if self.gallop_time >= petz.settings.gallop_time then
+		self.gallop = false
+		self.gallop_time = 0
+		self.gallop_exhausted = true
+		minetest.after(petz.settings.gallop_recover_time, function(self)
+			if mobkit.is_alive(self) then
+				self.gallop_exhausted = false
+			end
+		end, self)
+	end
+end

@@ -305,3 +305,14 @@ filename: petz_cobweb_throw.ogg
 Author: salamisound
 https://www.salamisound.com/4691898-hiss-of-air-and-light-flow
 License: https://www.salamisound.com/info1
+--------------------------------------------
+filename: petz_horse_gallop.ogg
+Author: maugusto_sfx
+https://freesound.org/people/maugusto_sfx/sounds/468030/
+License: This work is licensed under the Creative Commons 0 License.
+--------------------------------------------
+filename: petz_horse_winny.ogg
+Author: Alexander
+http://www.orangefreesounds.com/horse-whinny-3/
+License: The song is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
