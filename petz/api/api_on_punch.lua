@@ -56,8 +56,7 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			petz.update_nametag(self)
 			self.was_killed_by_player = petz.was_killed_by_player(self, puncher)							
 		end	
-		petz.kick_back(self, dir) -- kickback	
-		petz.do_sound_effect("object", self.object, "petz_default_punch")	--sound
+		petz.kick_back(self, dir) -- kickback		
 		if (petz.settings.blood == true and not(self.no_blood)) then --blood
 			petz.blood(self)
 		end
@@ -84,5 +83,6 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 				petz.spawn_throw_object(self.object, 20, "petz:ent_cobweb")							
 			end
 		end
+		petz.do_sound_effect("object", self.object, "petz_default_punch") --sound
 	end
 end

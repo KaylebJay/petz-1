@@ -51,6 +51,8 @@ petz.settings.poop_rate = tonumber(settings:get("poop_rate", "200"))
 petz.settings.poop_decay = tonumber(settings:get("poop_decay", "1200"))
 --Cobweb
 petz.settings.cobweb_decay = tonumber(settings:get("cobweb_decay", "1200"))
+--Mount Pointable Driver
+petz.settings.pointable_driver = settings:get_bool("pointable_driver", true)
 --Lashing
 petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "3"))
 --Bee Stuff
