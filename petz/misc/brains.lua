@@ -40,7 +40,7 @@ function petz.herbivore_brain(self)
 	end
 	
 	if self.can_fly then
-		self.object:set_acceleration({x=0, y=0, z=0})		
+		self.object:set_acceleration({x=0, y=0, z=0})
 	end
 	
 	mobkit.check_ground_suffocation(self)
@@ -53,6 +53,13 @@ function petz.herbivore_brain(self)
 			
 		if prty < 30 then
 			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+		end
+		
+		if prty < 25 then
+			if self.driver then				
+				mobkit.hq_mountdriver(self, 25)
+				return
+			end
 		end
 		
 		if prty < 20 then
