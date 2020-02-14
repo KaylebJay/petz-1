@@ -12,7 +12,7 @@ petz.mount = function(self, clicker, wielded_item, wielded_item_name)
 		end
 	end
 	if self.tamed and self.owner == clicker:get_player_name() then    			
-		if self.driver and clicker == self.driver then -- detatch player already riding horse
+		if self.driver and clicker == self.driver then -- detatch player already riding horse			
 			petz.detach(clicker, {x = 1, y = 0, z = 1})
 			mobkit.clear_queue_low(self)
 			return false
@@ -42,7 +42,7 @@ petz.mount = function(self, clicker, wielded_item, wielded_item_name)
 				petz.put_saddle(self, clicker, wielded_item, wielded_item_name)					
 				return false
 			end
-		elseif not self.driver and self.saddle then -- Mount petz	
+		elseif not(self.driver) and self.saddle then -- Mount petz
 			petz.set_properties(self, {stepheight = 1.1})					
 			petz.attach(self, clicker)
 			return false	

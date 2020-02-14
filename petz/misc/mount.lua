@@ -1,7 +1,7 @@
 local modpath, S = ...
 
 minetest.register_on_leaveplayer(function(player)
-	petz.force_detach(player)	
+	petz.force_detach(player)
 end)
 
 minetest.register_on_shutdown(function()
@@ -29,6 +29,8 @@ end)
 
 -------------------------------------------------------------------------------
 
+petz.mount_attached = {}
+
 function petz.attach(entity, player)
 	local attach_at, eye_offset = {}, {}
 	entity.player_rotation = entity.player_rotation or {x = 0, y = 0, z = 0}
@@ -41,11 +43,14 @@ function petz.attach(entity, player)
 	end
 	attach_at = entity.driver_attach_at
 	eye_offset = entity.driver_eye_offset
-	entity.driver = player	
 	petz.force_detach(player)
+	entity.driver = player
 	player:set_attach(entity.object, "", attach_at, entity.player_rotation)
-	default.player_attached[player:get_player_name()] = true	
+	local player_name = player:get_player_name()
+	petz.mount_attached[player_name] = entity
+	default.player_attached[player_name] = true	
 	player:set_properties({
+		petz_mount = entity,
 		visual_size = {
 			x = petz.truncate(entity.driver_scale.x, 2),
 			y = petz.truncate(entity.driver_scale.y, 2)
@@ -60,22 +65,22 @@ function petz.attach(entity, player)
 end
 
 petz.force_detach = function(player)
-	local attached_to = player:get_attach()
-	if not attached_to then		
+	entity = petz.mount_attached[player:get_player_name()]
+	if not(entity) then		
 		return
 	end
-	local entity = attached_to:get_luaentity()
 	if entity.driver and entity.driver == player then
-		entity.driver = nil
+		entity.driver = nil			
 	end
 	player:set_detach()
 	default.player_attached[player:get_player_name()] = false
 	player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 	default.player_set_animation(player, "stand" , 30)	
 	player:set_properties({
+		petz_mount = nil,
 		visual_size = {x = 1, y = 1},
 		pointable = true
-	})
+	})	
 end
 
 function petz.detach(player, offset)
