@@ -10,8 +10,14 @@ petz.random_mob_sound = function(self)
 	end
 	local random_number = math.random(1, petz.settings.misc_sound_chance)
 	if random_number == 1 then
-		if self.sounds and self.sounds['misc'] then 
-			petz.do_sound_effect("object", self.object, self.sounds['misc'])
+		if self.sounds and self.sounds['misc'] then
+			local misc_sound
+			if (type(self.sounds['misc']) == "table") then
+				misc_sound = self.sounds['misc'][math.random(1, #self.sounds['misc'])]
+			else
+				misc_sound = self.sounds['misc']
+			end
+			petz.do_sound_effect("object", self.object, misc_sound)
 		end
 	end
 end

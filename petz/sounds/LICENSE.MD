@@ -316,3 +316,13 @@ Author: Alexander
 http://www.orangefreesounds.com/horse-whinny-3/
 License: The song is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filename: petz_pony_snort.ogg
+Author: www.zapsplat.com
+https://www.zapsplat.com/music/horse-snort-human-mimicking-1/
+License: https://www.zapsplat.com/license-type/standard-license/
+--------------------------------------------
+filename: petz_pony_blow_lips.ogg
+Author: www.zapsplat.com
+https://www.zapsplat.com/music/horse-blow-lips/
+License: https://www.zapsplat.com/license-type/standard-license/
