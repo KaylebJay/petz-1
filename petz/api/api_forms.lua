@@ -156,7 +156,7 @@ petz.create_form = function(player_name)
 		"real_coordinates[true]"..		
 		tamagochi_form_stuff..        
 		form_orders..
-		"style_type[button_exit;bgcolor=#006699;textcolor=white]"..		
+		"style_type[button_exit;bgcolor=#006699;textcolor=white]"..
 		"button_exit["..(buttonexit_pos.x+0.5)..","..(buttonexit_pos.y+0.75)..";1,1;btn_close;"..S("Close").."]"
 	return final_form
 end
@@ -234,7 +234,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			if not(pet.tag == "") then
 				petz.insert_petz_list_by_owner(pet)
 			else
-				minetest.chat_send_player("singleplayer", "remove")
 				petz.remove_petz_list_by_owner(pet, true)
 			end
 		end
@@ -335,24 +334,22 @@ end
 petz.create_affinity_form = function(self)	
 	local formspec = ""
 	local form_size = {w= 3, h= 4}
-	local button_exit = {x= 1, y= 3}
-	local green_color = "#3ADF00"
-	local red_color = "#DF013A"
+	local button_exit = {x= 1, y= 3}	
 	local fed_status
 	local feed_status_color
 	if self.fed == true then
 		feed_status = S("Fed")
-		feed_status_color = green_color
+		feed_status_color = petz.colors["green"] 
 	else
 		feed_status = S("Hungry")..": " .. tostring(petz.calculate_affinity_change(-petz.settings.tamagochi_feed_hunger_rate))
-		feed_status_color = red_color
+		feed_status_color = petz.colors["red"] 
 	end
 	if self.brushed then		
 		brushing_status = S("Brushed")
-		brushing_status_color = green_color
+		brushing_status_color = petz.colors["green"] 
 	else
 		brushing_status = S("Not brushed")..": " .. tostring(petz.calculate_affinity_change(-petz.settings.tamagochi_brush_rate))
-		brushing_status_color = red_color
+		brushing_status_color = petz.colors["red"] 
 	end
 	formspec =
 		"size["..form_size.w..","..form_size.h.."]"..

@@ -363,24 +363,6 @@ minetest.register_craftitem("petz:elephant_tusk", {
 	groups = {},
 })
 
--- Dreamcatcher
-
-minetest.register_craftitem("petz:dreamcatcher", {
-	description = S("Pet Dreamcatcher"),
-	inventory_image = "petz_dreamcatcher.png",
-	groups = {},
-})
-
-minetest.register_craft({
-	type = "shaped",
-	output = "petz:dreamcatcher",
-	recipe = {
-		{"", "group:wood", ""},
-		{"farming:string", "farming:string", "farming:string"},
-		{"petz:ducky_feather", "petz:ducky_feather", "petz:ducky_feather"},
-	}
-})
-
 minetest.register_node("petz:bottle_moth", {
 	description = S("Bottle with Moth"),
 	drawtype = "plantlike",

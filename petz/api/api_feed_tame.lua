@@ -7,13 +7,13 @@ petz.insert_petz_list_by_owner = function(self)
 		end
 		local insert = true
 		for i = 1, #petz.petz_list_by_owner[self.owner] do
-			if petz.petz_list_by_owner[self.owner] == self then
+			if petz.petz_list_by_owner[self.owner][i].pet == self then
 				insert = false
 				break
 			end
 		end
-		if insert == true then --if not yet
-			table.insert(petz.petz_list_by_owner[self.owner], self)
+		if insert == true then --if not yet			
+			table.insert(petz.petz_list_by_owner[self.owner], {["pet"] = self, metadata = {["tag"] = self.tag, ["type"] = self.type, ["last_pos"] = nil}})
 		end
 	end
 end
@@ -22,9 +22,9 @@ petz.remove_petz_list_by_owner = function(self, force)
 	if self.tag ~= "" or force then
 		if petz.petz_list_by_owner[self.owner] then
 			local temp_table = {}
-			for key, pet in ipairs(petz.petz_list_by_owner[self.owner]) do
-				if pet ~= self then
-					table.insert(temp_table, pet)
+			for key, pet_table in ipairs(petz.petz_list_by_owner[self.owner]) do
+				if pet_table.pet ~= self then
+					table.insert(temp_table, pet_table)
 					--minetest.chat_send_player("singleplayer", self.tag)	
 				end
 			end

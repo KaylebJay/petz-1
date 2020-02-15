@@ -32,7 +32,8 @@ petz.create_form_list_by_owner = function(user_name, user_pos)
 			return ''
 		end
 		local item_list = ""
-		for key, pet in ipairs(item_list_table) do
+		for key, pet_table in ipairs(item_list_table) do
+			local pet = pet_table.pet
 			if mobkit.is_alive(pet) then -- check if alive
 				local pet_type =  pet.type:gsub("^%l", string.upper) 
 				local pet_pos =  pet.object:get_pos() 
@@ -72,7 +73,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		local player_name = player:get_player_name()
 		local event = minetest.explode_textlist_event(fields.petz_list)		
 		local pet_index = event.index	
-		local pet = petz.petz_list_by_owner[player_name][pet_index]
+		if not petz.petz_list_by_owner[player_name][pet_index] then
+			return
+		end
+		local pet = petz.petz_list_by_owner[player_name][pet_index].pet
 		--minetest.chat_send_player("singleplayer", "test1")
 		if pet then
 		--minetest.chat_send_player("singleplayer", "test2")

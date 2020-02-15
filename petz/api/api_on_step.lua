@@ -12,4 +12,7 @@ petz.on_step = function(self, dtime)
 	if self.gallop == true then
 		petz.gallop(self, dtime)
 	end
+	if self.dreamcatcher then
+		petz.dreamcatcher_save_metadata(self)
+	end
 end
