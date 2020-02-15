@@ -55,7 +55,8 @@ petz.settings.cobweb_decay = tonumber(settings:get("cobweb_decay", "1200"))
 petz.settings.pointable_driver = settings:get_bool("pointable_driver", true)
 petz.settings.gallop_time =  tonumber(settings:get("gallop_time", "5"))
 petz.settings.gallop_recover_time =  tonumber(settings:get("gallop_recover_time", "5"))
-
+--Falling
+petz.settings.falling = settings:get_bool("falling", true)
 --Lashing
 petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "3"))
 --Bee Stuff

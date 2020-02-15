@@ -44,8 +44,8 @@ function petz.attach(entity, player)
 	attach_at = entity.driver_attach_at
 	eye_offset = entity.driver_eye_offset
 	petz.force_detach(player)
-	entity.driver = player
 	player:set_attach(entity.object, "", attach_at, entity.player_rotation)
+	entity.driver = player --this goes after petz.force_detach!
 	local player_name = player:get_player_name()
 	petz.mount_attached[player_name] = entity
 	default.player_attached[player_name] = true	

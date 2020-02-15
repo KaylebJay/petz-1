@@ -10,12 +10,32 @@ petz.get_node_below = function(pos)
 	return node
 end
 
+function petz.spawn_is_in_deep(nodepos)
+	if not nodepos then
+		return false
+	end
+	local node1 = mobkit.nodeatpos(nodepos)
+	nodepos.y=nodepos.y+1
+	local node2 = mobkit.nodeatpos(nodepos)
+	nodepos.y=nodepos.y-2
+	local node3 = mobkit.nodeatpos(nodepos)
+	if node1 and node2 and node1.drawtype=='liquid' and (node2.drawtype=='liquid' or node3.drawtype=='liquid') then
+		return true
+	else
+		return false
+	end
+end
+
 petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr, liquidflag)
 	local node
 	if not(liquidflag) then
 		node = petz.get_node_below(spawn_pos) --the node below the spawn pos
-	else
-		node = minetest.get_node(spawn_pos)
+	else --liquid
+		if not(petz.spawn_is_in_deep(spawn_pos)) then --spawn only in deep
+			return
+		else
+			node = minetest.get_node(spawn_pos)
+		end
 	end
 	local candidates_list = {} --Create a sublist of the petz with the same node to spawnand between max_height and min_height	
 	for i = 1, #petz.petz_list do

@@ -46,7 +46,7 @@ petz.on_die = function(self)
 		petz.pet[self.owner]= nil --remove owner entry for right_click formspec
 	end
 	if self.tamed == true then
-		petz.remove_petz_list_by_owner(self) --remove this petz from the list of the player pets
+		petz.remove_petz_list_by_owner(self, false) --remove this petz from the list of the player pets
 	end
 	mobkit.make_sound(self, 'die')
 	mobkit.hq_die(self)

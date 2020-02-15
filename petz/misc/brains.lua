@@ -43,7 +43,7 @@ function petz.herbivore_brain(self)
 		self.object:set_acceleration({x=0, y=0, z=0})
 	end
 	
-	mobkit.check_ground_suffocation(self)
+	mobkit.check_ground_suffocation(self)	
 	
 	if mobkit.timer(self, 1) then 	
 	

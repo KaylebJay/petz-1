@@ -7,7 +7,7 @@ petz.insert_petz_list_by_owner = function(self)
 		end
 		local insert = true
 		for i = 1, #petz.petz_list_by_owner[self.owner] do
-			if petz.petz_list_by_owner[self.owner][i] == self then
+			if petz.petz_list_by_owner[self.owner] == self then
 				insert = false
 				break
 			end
@@ -18,8 +18,8 @@ petz.insert_petz_list_by_owner = function(self)
 	end
 end
 
-petz.remove_petz_list_by_owner = function(self)
-	if self.tag ~= "" then
+petz.remove_petz_list_by_owner = function(self, force)
+	if self.tag ~= "" or force then
 		if petz.petz_list_by_owner[self.owner] then
 			local temp_table = {}
 			for key, pet in ipairs(petz.petz_list_by_owner[self.owner]) do
