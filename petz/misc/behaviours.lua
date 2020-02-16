@@ -59,7 +59,7 @@ function mobkit.check_height(self)
 	local dir_x = -math.sin(yaw) * (self.collisionbox[4] + 0.5)
 	local dir_z = math.cos(yaw) * (self.collisionbox[4] + 0.5)
 	local pos = self.object:get_pos()
-	local ypos = pos.y + self.collisionbox[2] -- just above floor
+	local ypos = pos.y - self.collisionbox[2] -- just floor level
 	if minetest.line_of_sight(
 		{x = pos.x + dir_x, y = ypos, z = pos.z + dir_z}, {x = pos.x + dir_x, y = ypos - self.max_height, z = pos.z + dir_z}, 1) then
 		return false

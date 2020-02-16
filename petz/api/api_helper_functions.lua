@@ -13,7 +13,7 @@ end
 
 function petz.is_night()
 	local timeofday = minetest.get_timeofday()
-	if timeofday == nil then --can be nil if world not loaded
+	if timeofday == nil then --can be nil if world not loaded!!!
 		return nil
 	end
 	timeofday = timeofday  * 24000

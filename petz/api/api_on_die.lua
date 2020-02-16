@@ -26,7 +26,10 @@ petz.on_die = function(self)
 					minetest.item_drop(stack, self.object, self.object:get_pos())
 				end
 			end
-		end				
+		end
+		if self.type == "pony" and self.horseshoes > 0 then --drop horseshoes
+			petz.drop_item(self, "petz:horseshoe", self.horseshoes)
+		end		
 	elseif self.type == "puppy" then
 		if self.square_ball_attached == true and self.attached_squared_ball then
 			self.attached_squared_ball.object:set_detach()

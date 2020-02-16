@@ -24,6 +24,8 @@ minetest.register_entity("petz:"..pet_name, {
 	follow = petz.settings.kitty_follow,
 	rotate = petz.settings.rotate,
 	physical = true,
+	sleep_at_day = true,
+	sleep_ratio = 0.3,
 	stepheight = 0.1,	--EVIL!
 	collide_with_objects = true,
 	collisionbox = collisionbox,
@@ -52,9 +54,10 @@ minetest.register_entity("petz:"..pet_name, {
 			{range={x=47, y=59}, speed=5, loop=true},
 		},	
 		sit = {range={x=60, y=65}, speed=5, loop=false},
+		sleep = {range={x=81, y=93}, speed=10, loop=false},
 	},
 	sounds = {
-		misc = "petz_kitty_meow",
+		misc = {"petz_kitty_meow", "petz_kitty_meow2", "petz_kitty_meow3"},
 		moaning = "petz_kitty_moaning",
 	},
 	

@@ -8,6 +8,14 @@ petz.drop_velocity = function(obj)
 	})	
 end
 
+petz.drop_object = function(obj)
+	if obj and obj:get_luaentity() then
+		petz.drop_velocity(obj)
+	elseif obj then
+		obj:remove() -- item does not exist
+	end
+end
+
 petz.drop_items = function(self)	
 	if not self.drops or #self.drops == 0 then 	-- check for nil or no drops
 		return
@@ -27,11 +35,7 @@ petz.drop_items = function(self)
 			elseif self.drops[n].min ~= 0 then
 				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
 			end
-			if obj and obj:get_luaentity() then
-				petz.drop_velocity(obj)
-			elseif obj then
-				obj:remove() -- item does not exist
-			end
+			petz.drop_object(obj)
 		end
 	end
 	self.drops = {}
@@ -51,24 +55,21 @@ petz.node_drop_items = function(pos)
 			if drops[n].min ~= 0 then
 				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
 			end
-			if obj and obj:get_luaentity() then
-				petz.drop_velocity(obj)
-			elseif obj then
-				obj:remove() -- item does not exist
-			end
+			petz.drop_object(obj)
 		end
 	end
 end
 
-petz.player_drop_item = function(player, item, num)	
+petz.drop_item = function(self, item, num)	
 	if not(item) or not(num) then
 		return
-	end		
-	local pos = player:get_pos()
-	local obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
-	if obj and obj:get_luaentity() then
-		petz.drop_velocity(obj)
-	elseif obj then
-		obj:remove() -- item does not exist
 	end
+	local pos
+	if type(self) == 'table' then --entity
+		pos = self.object:get_pos()
+	else --player
+		pos = self:get_pos()
+	end
+	local obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
+	petz.drop_object(obj)
 end

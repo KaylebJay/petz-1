@@ -326,3 +326,15 @@ filename: petz_pony_blow_lips.ogg
 Author: www.zapsplat.com
 https://www.zapsplat.com/music/horse-blow-lips/
 License: https://www.zapsplat.com/license-type/standard-license/
+--------------------------------------------
+filename: petz_kitty_meow2.ogg
+Author: Alexander
+http://www.orangefreesounds.com/kitty-meows/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
+--------------------------------------------
+filename: petz_kitty_meow3.ogg
+Author: Alexander
+http://www.orangefreesounds.com/cat-meow-sound-effect/
+License: The sound effect is permitted for commercial use
+under license “Public Domain”

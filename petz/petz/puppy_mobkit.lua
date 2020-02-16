@@ -22,9 +22,8 @@ minetest.register_entity("petz:"..pet_name, {
 	can_be_brushed = true,
 	capture_item = "lasso",
 	follow = petz.settings.puppy_follow,
-	sleep_at_day = false,
 	sleep_at_night = true,
-	sleep_ratio = 0.4,
+	sleep_ratio = 0.3,
 	rotate = petz.settings.rotate,
 	physical = true,
 	stepheight = 0.1,	--EVIL!

@@ -49,13 +49,11 @@ petz.dyn_prop = {
 	set_vars = {type= "boolean", default = false},	
 	shaved = {type= "boolean", default = false},
 	show_tag = {type= "boolean", default = false},
-	sleep_end_time = {type= "int", default = 23999},
-	sleep_start_time = {type= "int", default = 19500},
 	square_ball_attached = {type= "boolean", default = false},
 	status = {type= "string", default = ""},
 	tag = {type= "string", default = ""},
 	tamed = {type= "boolean", default = false},
-	texture_no = {type= "int", default = 1},
+	--texture_no = {type= "int", default = 1}, --do not use!!! OR MISSING TEXTURE
 	warn_attack = {type= "boolean", default = false},
 	was_killed_by_player = {type= "boolean", default = false},	
 }
@@ -170,16 +168,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 		if self.type == "pony" then	
 			self.horseshoes = mobkit.remember(self, "horseshoes", 0)	
-		end
-		if self.sleep_at_night or self.sleep_at_day then
-			local sleep_time = (self.sleep_ratio or 1) * 4499
-			local sleep_max_end_time = 23999 - sleep_time
-			local sleep_start_time = math.random(19500, sleep_max_end_time)
-			self.sleep_start_time = mobkit.remember(self, "sleep_start_time", sleep_start_time)	
-			local sleep_end_time = sleep_start_time + sleep_time					
-			self.sleep_end_time = mobkit.remember(self, "sleep_end_time", sleep_end_time)	
-			--minetest.chat_send_player("singleplayer", "sleep_time="..tostring(sleep_time).."/sleep_start_time="..tostring(sleep_start_time).."/sleep_end_time="..tostring(sleep_end_time))	
-		end
+		end		
 		--Mobs that can have babies
 		if self.breed == true then
 			if self.is_male == nil then
@@ -285,7 +274,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	--2. ALREADY EXISTING MOBS
 	--
 	elseif captured_mob == false then	
-		petz.load_vars(self) --Load memory variables	
+		petz.load_vars(self) --Load memory variables
 	--
 	--3. CAPTURED MOBS
 	--
@@ -304,7 +293,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				prop_value = nil
 			end
 			self[key] = mobkit.remember(self, key, prop_value) or value["default"]
-		end	
+		end
+		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])
 	end		
 		
 	--Custom textures
@@ -352,6 +342,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			})			
 		end
 	end
+	petz.calculate_sleep_times(self) --Sleep behaviour
 	--ALL the mobs
 	if self.is_pet and self.tamed then
 		petz.update_nametag(self)
