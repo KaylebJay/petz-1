@@ -1,7 +1,7 @@
 # textdomain: petz
 @1 at full health (@2)=@1 при хорошем здоровье (@2)
 @1 has been tamed!=@1 has been tamed!
-Affinity=Аффинити
+Affinity=Отношения
 Alight= Свет
 A silk bobbin has been created!=Шелковая катушка была создана!
 Bat=Летучая мышь
@@ -48,7 +48,7 @@ Elephant=Слон
 Elephant Tusk=Слоновый бивень
 Elephant (Female)=Слониха
 Feather=Перо
-Fed=Накормлен
+Fed=Сыт
 Female=Самка
 First, extract the silk bobbin from the spinning wheel.=Сначала извлеките шелковую катушку из вращающегося колеса.
 Fish Tank= Рыбный бак
@@ -80,7 +80,7 @@ Horseshoe=Подкова
 Hungry=Голоден
 Infertile=Бесплодие
 is turning into another animal=превращается в другое животное
-It breeds with=Разводится с помощью
+It breeds with=Разводить используя
 It is pregnant=Скоро родит
 It likes=Ему нравится... 
 Jack-o'-lantern=Фонарь из тыквы
