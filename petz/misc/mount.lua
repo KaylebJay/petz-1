@@ -50,7 +50,6 @@ function petz.attach(entity, player)
 	petz.mount_attached[player_name] = entity
 	default.player_attached[player_name] = true	
 	player:set_properties({
-		petz_mount = entity,
 		visual_size = {
 			x = petz.truncate(entity.driver_scale.x, 2),
 			y = petz.truncate(entity.driver_scale.y, 2)
@@ -65,7 +64,7 @@ function petz.attach(entity, player)
 end
 
 petz.force_detach = function(player)
-	entity = petz.mount_attached[player:get_player_name()]
+	local entity = petz.mount_attached[player:get_player_name()]
 	if not(entity) then		
 		return
 	end
@@ -77,7 +76,6 @@ petz.force_detach = function(player)
 	player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 	default.player_set_animation(player, "stand" , 30)	
 	player:set_properties({
-		petz_mount = nil,
 		visual_size = {x = 1, y = 1},
 		pointable = true
 	})	

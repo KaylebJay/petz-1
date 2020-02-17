@@ -4,6 +4,7 @@ petz.calculate_sleep_times = function(self)
 	if (self.sleep_at_night or self.sleep_at_day) then
 		local sleep_time
 		local sleep_start_time
+		local sleep_end_time
 		local sleep_end_time_limit
 		if self.sleep_at_night then			
 			local night_start = 19500
