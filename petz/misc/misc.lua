@@ -17,9 +17,9 @@ if minetest.get_modpath("3d_armor") ~= nil then --Armors (optional)
 end
 assert(loadfile(modpath .. "/misc/weapons.lua"))(modpath, S) --Load the spawn engine
 --Bonemeal support
-if minetest.get_modpath("bonemeal") ~= nil then	
+if minetest.get_modpath("bonemeal") ~= nil then
 	assert(loadfile(modpath .. "/misc/bonemeal.lua"))(modpath, S) --Bonemeal support
 end
---if minetest.get_modpath("awards") ~= nil then	
+--if minetest.get_modpath("awards") ~= nil then
 	--assert(loadfile(modpath .. "/misc/awards.lua"))(modpath, S) --Load the awards
 --end

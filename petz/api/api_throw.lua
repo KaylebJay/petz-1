@@ -18,10 +18,10 @@ function petz.throw(self, dtime, damage, effect, particles, sound)
 
 	local cast = minetest.raycast(self.old_pos, pos, true, false)
 	local thing = cast:next()
-	while thing do		
-		if thing.type == "object" and thing.ref ~= self.object then			
+	while thing do
+		if thing.type == "object" and thing.ref ~= self.object then
 			--minetest.chat_send_player("singleplayer", thing.type)
-			local thing_ent = thing.ref:get_luaentity()			
+			local thing_ent = thing.ref:get_luaentity()
 			if not(thing.ref:is_player()) or (thing.ref:is_player() and not(thing.ref:get_player_name() == self.shooter_name)) then
 				local ent_pos
 				if thing.ref:is_player() then
@@ -42,7 +42,7 @@ function petz.throw(self, dtime, damage, effect, particles, sound)
 						minetest.set_node(ent_pos, {name = "petz:cobweb"})
 					end
 				end
-				if particles then		
+				if particles then
 					petz.do_particles_effect(nil, pos, particles)
 				end
 				self.waiting_for_removal = true
@@ -54,8 +54,8 @@ function petz.throw(self, dtime, damage, effect, particles, sound)
 			local node = minetest.get_node(node_pos)
 			local node_name = node.name
 			--minetest.chat_send_player("singleplayer", node.name)
-			if minetest.registered_items[node_name].walkable and minetest.registered_items[node_name] ~= "air" then					
-				if effect then					
+			if minetest.registered_items[node_name].walkable and minetest.registered_items[node_name] ~= "air" then
+				if effect then
 					if effect == "fire" then
 						local pos_above = {
 							x = node_pos.x,
@@ -70,8 +70,8 @@ function petz.throw(self, dtime, damage, effect, particles, sound)
 							--if minetest.get_node(pos_above).name == "air" then
 							petz.do_particles_effect(nil, pos_above, "fire")
 							--end
-						end	
-						petz.do_sound_effect("pos", node_pos, "petz_firecracker")					
+						end
+						petz.do_sound_effect("pos", node_pos, "petz_firecracker")
 					elseif effect == "cobweb" then
 						local pos_above = {
 							x = node_pos.x,
@@ -94,10 +94,10 @@ function petz.throw(self, dtime, damage, effect, particles, sound)
 	self.old_pos = pos
 end
 
-function petz.spawn_throw_object(user, strength, entity)	
+function petz.spawn_throw_object(user, strength, entity)
 	local pos = user:get_pos()
-	if user:is_player() then	
-		pos.y = pos.y + 1.5 -- camera offset	
+	if user:is_player() then
+		pos.y = pos.y + 1.5 -- camera offset
 	end
 	--minetest.chat_send_player("singleplayer", tostring(pos))
 	local obj = minetest.add_entity(pos, entity)
@@ -107,11 +107,11 @@ function petz.spawn_throw_object(user, strength, entity)
 	local dir
 	local yaw
 	local user_name
-	if user:is_player() then		
+	if user:is_player() then
 		yaw = user:get_look_horizontal()
 		dir = user:get_look_dir()
 		user_name = user:get_player_name()
-	else		
+	else
 		yaw = user:get_yaw()
 		dir = minetest.yaw_to_dir(yaw)
 		user_name = user:get_luaentity().type
@@ -129,7 +129,7 @@ function petz.register_throw_entity(name, textures, damage, effect, particles, s
 		physical = false, -- use Raycast
 		collisionbox = {-0.1, -0.1, -0.1, 0.1, 0.1, 0.1},
 		visual = "wielditem",
-		textures = {textures},	
+		textures = {textures},
 		visual_size = {x = 1.0, y = 1.0},
 		old_pos = nil,
 		shooter_name = "",
@@ -139,12 +139,12 @@ function petz.register_throw_entity(name, textures, damage, effect, particles, s
 		on_activate = function(self)
 			self.object:set_acceleration({x = 0, y = -9.81, z = 0})
 		end,
-	
+
 		on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 			return false
 		end,
-		
-		on_step = function(self, dtime)		
+
+		on_step = function(self, dtime)
 			petz.throw(self, dtime, damage, effect, particles, sound)
 		end,
 })

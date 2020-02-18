@@ -2,7 +2,7 @@ local modpath, S = ...
 
 minetest.register_node("petz:parchment", {
 	description = S("Parchment"),
-	inventory_image = "petz_parchment.png",	
+	inventory_image = "petz_parchment.png",
 	tiles = {"petz_transparency.png"},
 	groups = {snappy=1, bendy=2, cracky=1},
 	sounds = default_stone_sounds,
@@ -40,11 +40,11 @@ minetest.register_node("petz:parchment_bg", {
 			{-0.5, -0.375, 0.375, -0.4375, 0.3125, 0.4375},
 			},
 	},
-	
+
 })
 
 minetest.register_entity("petz:parchment_entity", {
-    physical = false,    
+    physical = false,
     collisionbox = {-0.4375, -0.375, 0.5, 0.4375, 0.3125, 0.5},
     visual = "wielditem",
     visual_size = {x=1, y=1},

@@ -30,19 +30,19 @@ minetest.register_node("petz:square_ball", {
     groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
     sounds = default.node_sound_wood_defaults(),
 	on_use = function(itemstack, user, pointed_thing)
-		local strength = 20	
+		local strength = 20
 		if not petz.spawn_square_ball(user, strength) then
 			return -- something failed
-		end	
-		itemstack:take_item()			
+		end
+		itemstack:take_item()
 		return itemstack
-	end,	
+	end,
 })
 
 minetest.register_craft({
     type = "shaped",
     output = 'petz:square_ball',
-    recipe = {        
+    recipe = {
         {'wool:blue', 'wool:white', 'wool:red'},
         {'wool:white', 'farming:string', 'wool:white'},
         {'wool:yellow', 'wool:white', 'wool:white'},
@@ -53,16 +53,16 @@ petz.attach_squareball = function(self, thing_ent, thing_ref, shooter_name)
 	self.object:set_properties({visual = "cube",  physical = true, visual_size = {x = 0.045, y = 0.045},
 			textures = {"petz_square_ball.png", "petz_square_ball.png", "petz_square_ball.png", "petz_square_ball.png",
 			"petz_square_ball.png", "petz_square_ball.png"}, groups = {immortal = 1}, collisionbox = {-0.15, -0.15, -0.15, 0.15, 0.15, 0.15},})
-	self.object:set_attach(thing_ref, "head", {x=-0.0, y=0.5, z=-0.45}, {x=0, y=0, z=0}) 						
+	self.object:set_attach(thing_ref, "head", {x=-0.0, y=0.5, z=-0.45}, {x=0, y=0, z=0})
 	thing_ent.square_ball_attached = true
 	thing_ent.attached_squared_ball = self
-	mobkit.remember(thing_ent, "square_ball_attached", thing_ent.square_ball_attached)	
-	mobkit.make_sound(thing_ent, "moaning")				
+	mobkit.remember(thing_ent, "square_ball_attached", thing_ent.square_ball_attached)
+	mobkit.make_sound(thing_ent, "moaning")
 	if shooter_name then
-		local player = minetest.get_player_by_name(shooter_name)		
+		local player = minetest.get_player_by_name(shooter_name)
 		if player then
-			mobkit.clear_queue_low(thing_ent)	
-			mobkit.hq_follow(thing_ent, 15, player)						
+			mobkit.clear_queue_low(thing_ent)
+			mobkit.hq_follow(thing_ent, 15, player)
 			self.shooter_name = "" --disable de 'on_step' event
 		end
 	end
@@ -83,34 +83,34 @@ minetest.register_entity("petz:ent_square_ball", {
 	on_activate = function(self)
 		self.object:set_acceleration({x = 0, y = -9.81, z = 0})
 	end,
-	
+
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 		return false
 	end,
-	
-	on_rightclick = function(self, clicker)		
-		if self.object:get_attach() then --if attached				
-			local attach = self.object:get_attach()	
-			local inv = clicker:get_inventory()			
+
+	on_rightclick = function(self, clicker)
+		if self.object:get_attach() then --if attached
+			local attach = self.object:get_attach()
+			local inv = clicker:get_inventory()
 			local new_stack = "petz:square_ball"
 			if inv:room_for_item("main", new_stack) then
 				inv:add_item("main", new_stack)
-			else			
+			else
 				local parent_pos = attach:get_pos()
 				minetest.add_item(parent_pos, new_stack)
-			end			
+			end
 			self.object:set_detach()
 			local parent_ent = attach:get_luaentity()
-			parent_ent.square_ball_attached = false				
+			parent_ent.square_ball_attached = false
 			parent_ent.attached_squared_ball = nil
 			mobkit.clear_queue_low(parent_ent)
-			petz.ownthing(parent_ent)			
+			petz.ownthing(parent_ent)
 			self.object:remove()	--remove the square ball
 			mobkit.clear_queue_low(parent_ent)
 			petz.ownthing(parent_ent)
 		end
 	end,
-	
+
 	on_step = function(self, dtime)
 		if self.shooter_name == "" then
 			if self.object:get_attach() == nil then
@@ -139,7 +139,7 @@ minetest.register_entity("petz:ent_square_ball", {
 			elseif thing.type == "node" then
 				local name = minetest.get_node(thing.under).name
 				if minetest.registered_items[name].walkable then
-					itemstack_squareball = ItemStack("petz:square_ball")
+					local itemstack_squareball = ItemStack("petz:square_ball")
 					--local meta = itemstack_squareball:get_meta()
 					--meta:set_string("shooter_name", self.shooter_name)
 					minetest.item_drop(itemstack_squareball,

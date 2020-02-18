@@ -55,13 +55,12 @@ minetest.register_craftitem("petz:kennel", {
     inventory_image = "petz_kennel.png",
     groups = {},
     on_use = function (itemstack, user, pointed_thing)
-        if pointed_thing.type ~= "node" then            
+        if pointed_thing.type ~= "node" then
             return
-        end        
+        end
         local pt_above = pointed_thing.above
-        local pt_under = pointed_thing.under
         if not(minetest.is_protected(pt_above, user:get_player_name())) then
-			minetest.place_schematic(pt_above, modpath..'/schematics/kennel.mts', 0, nil, true)        
+			minetest.place_schematic(pt_above, modpath..'/schematics/kennel.mts', 0, nil, true)
 			itemstack:take_item()
 			return itemstack
 		end
@@ -71,7 +70,7 @@ minetest.register_craftitem("petz:kennel", {
 minetest.register_craft({
     type = "shaped",
     output = 'petz:kennel',
-    recipe = {        
+    recipe = {
         {'group:wood', 'dye:red', 'group:wood'},
         {'group:wood', 'dye:blue', 'group:wood'},
         {'group:stone', 'dye:yellow', 'group:stone'},
@@ -103,25 +102,25 @@ minetest.register_node("petz:ducky_nest", {
         if player then
             local itemstack_name = itemstack:get_name()
             if itemstack_name == "petz:ducky_egg" or itemstack_name == "petz:chicken_egg" then --put the egg
-				local egg_type = "" 
+				local egg_type
 				if itemstack_name == "petz:ducky_egg" then
 					egg_type = "ducky"
 				else
 					egg_type = "chicken"
 				end
-                itemstack:take_item()			
+                itemstack:take_item()
 				player:set_wielded_item(itemstack)
 				minetest.set_node(pos, {name= "petz:".. egg_type .."_nest_egg"})
-				return itemstack		
+				return itemstack
             end
         end
     end,
 })
- 
+
 minetest.register_craft({
     type = "shaped",
     output = 'petz:ducky_nest',
-    recipe = {        
+    recipe = {
         {'', '', ''},
         {'group:leaves', '', 'group:leaves'},
         {'default:papyrus', 'default:papyrus', 'default:papyrus'},
@@ -175,11 +174,11 @@ minetest.register_node("petz:chicken_nest_egg", {
 		petz.extract_egg_from_nest(self, pos, player, "petz:chicken_egg") --extract the egg
 	end,
 })
- 
+
 minetest.register_craft({
     type = "shaped",
     output = 'petz:ducky_nest_egg',
-    recipe = {        
+    recipe = {
         {'', '', ''},
         {'group:leaves', 'petz:ducky_egg', 'group:leaves'},
         {'default:papyrus', 'default:papyrus', 'default:papyrus'},
@@ -239,7 +238,7 @@ minetest.register_alias("wool:vanilla", "petz:wool_vanilla")
 --Bird Stand
 
 minetest.register_node("petz:bird_stand", {
-    description = S("Bird Stand"),  
+    description = S("Bird Stand"),
     groups = {snappy=1, bendy=2, cracky=1},
     sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
@@ -259,7 +258,7 @@ minetest.register_node("petz:bird_stand", {
     visual_size = {x = 1.0, y = 1.0},
     tiles = {"default_wood.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-		local player_name = player:get_player_name()	
+		local player_name = player:get_player_name()
 		local pos_above = {
 			x = pos.x,
 			y = pos.y + 1,
@@ -271,16 +270,16 @@ minetest.register_node("petz:bird_stand", {
 			x = pos.x,
 			y = pos.y + 1,
 			z = pos.z - 0.125,
-		} 
+		}
 		local pos_toucan = {
 			x = pos.x - 0.0625,
 			y = pos.y + 1,
 						z = pos.z + 0.0625,
-		}		
+		}
 		for _, obj in ipairs(obj_list) do
 			local ent = obj:get_luaentity()
-			if ent and (ent.name == "petz:parrot" or ent.name == "petz:toucan") then			
-				bird_in_stand = true	
+			if ent and (ent.name == "petz:parrot" or ent.name == "petz:toucan") then
+				bird_in_stand = true
 				local rotation = obj:get_rotation()
 				local bird_pos = obj:get_pos()
 				local z_offset
@@ -298,24 +297,23 @@ minetest.register_node("petz:bird_stand", {
 						obj:set_pos(pos_parrot)
 					else
 						obj:set_pos(pos_toucan)
-					end					
-				end				
+					end
+				end
 			end
-		end					
+		end
 		local itemstack_name = itemstack:get_name()
-		if itemstack_name == "petz:parrot_set" or itemstack_name == "petz:toucan_set" then		
+		if itemstack_name == "petz:parrot_set" or itemstack_name == "petz:toucan_set" then
 			if bird_in_stand == true then
-				minetest.chat_send_player(player_name, S("There's already a bird on top."))	
+				minetest.chat_send_player(player_name, S("There's already a bird on top."))
 				return
 			end
 			if not minetest.is_protected(pos, player_name) then
-				local player_pos = player:get_pos()
 				if itemstack_name == "petz:parrot_set" then
 					pos = pos_parrot
 				else --toucan
 					pos = pos_toucan
 				end
-				ent = petz.create_pet(player, itemstack, itemstack_name:sub(1, -5) , pos)
+				local ent = petz.create_pet(player, itemstack, itemstack_name:sub(1, -5) , pos)
 				petz.standhere(ent)
 			end
 			return itemstack
@@ -326,7 +324,7 @@ minetest.register_node("petz:bird_stand", {
 minetest.register_craft({
     type = "shaped",
     output = 'petz:bird_stand',
-    recipe = {        
+    recipe = {
         {'default:stick', 'group:feather', 'default:stick'},
         {'', 'default:stick', ''},
         {'', 'default:stick', ''},
@@ -342,11 +340,11 @@ minetest.register_node("petz:beehive", {
 		flammable = 3, wool = 1},
 	sounds = default.node_sound_defaults(),
 	on_construct = function(pos)
-		local meta = minetest.get_meta(pos)				
+		local meta = minetest.get_meta(pos)
 		local	drops = {
-			{name = "petz:honeycomb", chance = 1, min = 6, max= 6},		
+			{name = "petz:honeycomb", chance = 1, min = 6, max= 6},
 		}
-		meta:set_string("drops", minetest.serialize(drops))		
+		meta:set_string("drops", minetest.serialize(drops))
 		local timer = minetest.get_node_timer(pos)
 		timer:start(2.0) -- in seconds
 		local honey_count = petz.settings.initial_honey_behive
@@ -359,14 +357,14 @@ minetest.register_node("petz:beehive", {
 	after_place_node = function(pos, placer, itemstack, pointed_thing)
 		local meta = minetest.get_meta(pos)
 		local honey_count = petz.settings.initial_honey_behive
-		meta:set_int("honey_count", honey_count)		
+		meta:set_int("honey_count", honey_count)
 		local bee_count
 		if placer:is_player() then
 			bee_count = 1
 		else
-			bee_count = petz.settings.max_bees_behive			
+			bee_count = petz.settings.max_bees_behive
 		end
-		meta:set_int("bee_count", bee_count)	
+		meta:set_int("bee_count", bee_count)
 		meta:set_int("total_bees", bee_count)
 		petz.set_infotext_behive(meta, honey_count, bee_count)
 	end,
@@ -381,9 +379,9 @@ minetest.register_node("petz:beehive", {
 				x = pos. x,
 				y = pos.y - 4,
 				z = pos.z,
-			}	
+			}
 			local ray = minetest.raycast(pos, tpos, false, false) --check if fire/torch (igniter) below
-			local igniter_below = false			
+			local igniter_below = false
 			for thing in ray do
 				if thing.type == "node" then
 					local node_name = minetest.get_node(thing.under).name
@@ -392,7 +390,7 @@ minetest.register_node("petz:beehive", {
 						igniter_below = true
 						--minetest.chat_send_player("singleplayer", S("igniter"))
 						break
-					end					
+					end
 				end
 			end
 			local bee_outing_ratio
@@ -404,7 +402,7 @@ minetest.register_node("petz:beehive", {
 			if math.random(1, bee_outing_ratio) == 1 then --opportunitty to go out
 				local spawn_bee_pos = petz.spawn_bee_pos(pos)
 				if spawn_bee_pos then
-					local bee = minetest.add_entity(spawn_bee_pos, "petz:bee")	
+					local bee = minetest.add_entity(spawn_bee_pos, "petz:bee")
 					local bee_entity = bee:get_luaentity()
 					bee_entity.behive = mobkit.remember(bee_entity, "behive", pos)
 					bee_count = bee_count - 1
@@ -414,23 +412,23 @@ minetest.register_node("petz:beehive", {
 			end
 		end
         return true
-    end,   
+    end,
 	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
 		local wielded_item = player:get_wielded_item()
 		local wielded_item_name = wielded_item:get_name()
 		local meta, honey_count, bee_count = petz.get_behive_stats(pos)
-		local player_name = player:get_player_name()	
-		if wielded_item_name == "vessels:glass_bottle" then			
+		local player_name = player:get_player_name()
+		if wielded_item_name == "vessels:glass_bottle" then
 			if honey_count > 0 then
 				local inv = player:get_inventory()
 				if inv:room_for_item("main", "petz:honey_bottle") then
 					local itemstack_name = itemstack:get_name()
 					local stack = ItemStack("petz:honey_bottle 1")
-					if (itemstack_name == "petz:honey_bottle" or itemstack_name == "") and (itemstack:get_count() < itemstack:get_stack_max()) then					
-						itemstack:add_item(stack)					
-					else						
-						inv:add_item("main", stack)				
-					end		
+					if (itemstack_name == "petz:honey_bottle" or itemstack_name == "") and (itemstack:get_count() < itemstack:get_stack_max()) then
+						itemstack:add_item(stack)
+					else
+						inv:add_item("main", stack)
+					end
 					itemstack:take_item()
 					honey_count = honey_count - 1
 					meta:set_int("honey_count", honey_count)
@@ -450,7 +448,7 @@ minetest.register_node("petz:beehive", {
 				meta:set_int("bee_count", bee_count)
 				meta:set_int("total_bees", total_bees)
 				petz.set_infotext_behive(meta, honey_count, bee_count)
-				itemstack:take_item()	
+				itemstack:take_item()
 				return itemstack
 			else
 				minetest.chat_send_player(player_name, S("This behive already has").." "..tostring(petz.settings.max_bees_behive).." "..S("bees inside."))
@@ -472,9 +470,9 @@ minetest.register_craft({
 --Halloween Update
 
 minetest.register_node("petz:jack_o_lantern", {
-    description = S("Jack-o'-lantern"),
-    groups = { snappy=3, flammable=3, oddly_breakable_by_hand=2 },
-  	sounds = default.node_sound_wood_defaults({
+	description = S("Jack-o'-lantern"),
+	groups = { snappy=3, flammable=3, oddly_breakable_by_hand=2 },
+	sounds = default.node_sound_wood_defaults({
 		dig = { name = "default_dig_oddly_breakable_by_hand" },
 		dug = { name = "default_dig_choppy" }
 	}),
@@ -502,7 +500,7 @@ if minetest.get_modpath("farming") ~= nil and farming.mod == "redo" then
 	})
 end
 
-if minetest.get_modpath("crops") ~= nil then	
+if minetest.get_modpath("crops") ~= nil then
 	minetest.register_craft({
 		type = "shapeless",
 		output = "petz:jack_o_lantern",
@@ -517,7 +515,7 @@ end
 
 --Poop
 minetest.register_node("petz:poop", {
-    description = S("Poop"),    
+    description = S("Poop"),
     inventory_image = "petz_poop_inv.png",
     tiles = {"petz_poop.png"},
     groups = {crumbly=1, falling_node=1},
@@ -545,7 +543,7 @@ minetest.register_node("petz:poop", {
 })
 
 minetest.register_node("petz:poop_block", {
-	description = S("Poop Block"),  
+	description = S("Poop Block"),
 	drawtype = "allfaces_optional",
 	tiles = {"petz_poop.png"},
 	paramtype = "light",
@@ -557,7 +555,7 @@ minetest.register_node("petz:poop_block", {
 minetest.register_craft({
 	type = "shaped",
 	output = "petz:poop_block",
-    recipe = {        
+    recipe = {
         {'petz:poop', 'petz:poop', 'petz:poop'},
         {'petz:poop', 'petz:poop', 'petz:poop'},
         {'petz:poop', 'petz:poop', 'petz:poop'},
@@ -566,7 +564,7 @@ minetest.register_craft({
 
 --Cat Basket
 minetest.register_node("petz:cat_basket", {
-    description = S("Cat Basket"),  
+    description = S("Cat Basket"),
     groups = {snappy=1, bendy=2, cracky=1},
     sounds = default.node_sound_wood_defaults(),
 	tiles = {
@@ -593,7 +591,7 @@ minetest.register_node("petz:cat_basket", {
 		}
 	},
 	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-		local player_name = player:get_player_name()	
+		local player_name = player:get_player_name()
 		local pos_above = {
 			x = pos.x,
 			y = pos.y,
@@ -605,33 +603,32 @@ minetest.register_node("petz:cat_basket", {
 			x = pos.x,
 			y = pos.y,
 			z = pos.z-0.125,
-		} 
+		}
 		for _, obj in ipairs(obj_list) do
 			local ent = obj:get_luaentity()
-			if ent and (ent.name == "petz:kitty") then			
-				cat_in_basket = true	
+			if ent and (ent.name == "petz:kitty") then
+				cat_in_basket = true
 				local rotation = obj:get_rotation()
-				local kitty_pos = obj:get_pos()					
+				local kitty_pos = obj:get_pos()
 				if rotation.y == 0 then
 					obj:set_rotation({x=0, y=math.pi, z=0})
 					obj:set_pos({x= kitty_pos.x, y=kitty_pos.y, z=kitty_pos.z+0.0625})
 				else
 					obj:set_rotation({x=0, y=0, z=0})
-					obj:set_pos(pos_kitty)										
-				end				
+					obj:set_pos(pos_kitty)
+				end
 			end
-		end					
+		end
 		local itemstack_name = itemstack:get_name()
-		if itemstack_name == "petz:kitty_set" then		
+		if itemstack_name == "petz:kitty_set" then
 			if cat_in_basket == true then
-				minetest.chat_send_player(player_name, S("There's already a kitty in the basket."))	
+				minetest.chat_send_player(player_name, S("There's already a kitty in the basket."))
 				return
 			end
 			if not minetest.is_protected(pos, player_name) then
-				local player_pos = player:get_pos()
-				ent = petz.create_pet(player, itemstack, itemstack_name:sub(1, -5) , pos_kitty)
+				local ent = petz.create_pet(player, itemstack, itemstack_name:sub(1, -5) , pos_kitty)
 				mobkit.clear_queue_low(ent)
-				mobkit.clear_queue_high(ent)	
+				mobkit.clear_queue_high(ent)
 				petz.sleep(ent, 2, true)
 			end
 			return itemstack
@@ -642,7 +639,7 @@ minetest.register_node("petz:cat_basket", {
 minetest.register_craft({
     type = "shaped",
     output = 'petz:cat_basket',
-    recipe = {        
+    recipe = {
         {'', '', ''},
         {'group:wood', 'wool:white', 'group:wood'},
         {'group:wood', 'group:wood', 'group:wood'},

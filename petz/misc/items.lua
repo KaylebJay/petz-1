@@ -38,11 +38,11 @@ minetest.register_node("petz:pet_bowl", {
             },
         },
 })
- 
+
 minetest.register_craft({
     type = "shaped",
     output = 'petz:pet_bowl',
-    recipe = {        
+    recipe = {
         {'group:wood', '', 'group:wood'},
         {'group:wood', 'group:wood', 'group:wood'},
         {'', 'dye:red', ''},
@@ -108,7 +108,7 @@ minetest.register_craftitem("petz:bucket_milk", {
     groups = {milk_bucket = 1, food = 3, food_milk = 1},
     on_use = function (itemstack, user, pointed_thing)
         return minetest.do_item_eat(3, "bucket:bucket_empty", itemstack, user, pointed_thing)
-    end,	
+    end,
 })
 
 --minetest.register_alias("petz:bucket_milk", "mobs:bucket_milk")
@@ -173,9 +173,9 @@ local function remove_fish(pos)
 		return
 	end
 	for _, obj in pairs(objs) do
-		if obj and obj:get_luaentity() and obj:get_luaentity().groups.fishtank then					
+		if obj and obj:get_luaentity() and obj:get_luaentity().groups.fishtank then
 			obj:remove()
-			break			
+			break
 		end
 	end
 end
@@ -199,29 +199,29 @@ minetest.register_node("petz:fishtank", {
 		type = "fixed",
 		fixed = { -0.25, -0.5, -0.25, 0.25, 0.4, 0.25 },
 	},
-	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)				
-		itemstack_name= itemstack:get_name()
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+		local itemstack_name= itemstack:get_name()
 		if itemstack:get_name():sub(1, 5) == "petz:" then
-			itemstack_name= itemstack:get_name():sub(1, -5) --remove the "_set" part		
+			itemstack_name= itemstack:get_name():sub(1, -5) --remove the "_set" part
 		end
         local itemstack_group = minetest.get_item_group(itemstack_name, "spawn_egg")
-        --minetest.chat_send_player("singleplayer", itemstack_name)        
+        --minetest.chat_send_player("singleplayer", itemstack_name)
         local meta = minetest.get_meta(pos)
-		local has_fish = meta:get_string("has_fish")			
-        if (itemstack_group >= 1) or (itemstack_name == "petz:clownfish" or itemstack_name == "petz:tropicalfish") then	
+		local has_fish = meta:get_string("has_fish")
+        if (itemstack_group >= 1) or (itemstack_name == "petz:clownfish" or itemstack_name == "petz:tropicalfish") then
 			if has_fish == "false" then
-				meta:set_string("has_fish", "true")				
-				meta:set_string("fish_type", itemstack_name)	
+				meta:set_string("has_fish", "true")
+				meta:set_string("fish_type", itemstack_name)
 				local fish_entity = minetest.add_entity({x=pos.x, y=pos.y, z=pos.z}, itemstack_name.."_entity_sprite")
 				local itemstack_meta = itemstack:get_meta()
-				fish_entity:set_properties({textures=itemstack_meta:get_string("textures").."^[transformFX"}) 		
-				fish_entity:set_sprite({x=0, y=0}, 16, 1.0, false)		
-				itemstack:take_item()			
+				fish_entity:set_properties({textures=itemstack_meta:get_string("textures").."^[transformFX"})
+				fish_entity:set_sprite({x=0, y=0}, 16, 1.0, false)
+				itemstack:take_item()
 				clicker:set_wielded_item(itemstack)
 				return itemstack
 			end
-		elseif ((itemstack_name == "mobs:net") or (itemstack_name == "fireflies:bug_net")) and (has_fish == "true") then			
-			local inv = clicker:get_inventory()						   
+		elseif ((itemstack_name == "mobs:net") or (itemstack_name == "fireflies:bug_net")) and (has_fish == "true") then
+			local inv = clicker:get_inventory()
 			local fish_type = meta:get_string("fish_type")
 			if fish_type and inv:room_for_item("main", ItemStack(fish_type)) then
 				inv:add_item("main", fish_type.."_set")
@@ -239,7 +239,7 @@ minetest.register_node("petz:fishtank", {
 	on_destruct = function(pos)
 		local meta = minetest.get_meta(pos)
 		local has_fish = meta:get_string("has_fish")
-		local fish_type = meta:get_string("fish_type")	
+		local fish_type = meta:get_string("fish_type")
 		if fish_type and has_fish == "true" then
 			remove_fish(pos)
 			minetest.add_entity(pos, fish_type)
@@ -281,7 +281,7 @@ minetest.register_craft({
     }
 })
 
--- Shears	
+-- Shears
 minetest.register_tool("petz:shears", {
 	description = S("Shears"),
 	inventory_image = "petz_shears.png",
@@ -388,12 +388,12 @@ minetest.register_node("petz:bottle_moth", {
 		local placer_name = ""
 		if placer:is_player() then
 			placer_name = placer:get_player_name()
-		end		
+		end
 		meta:set_string("owner", placer_name)
 	end,
 	on_destruct = function(pos)
 		local ent = minetest.add_entity(pos, "petz:moth")
-		local meta = minetest.get_meta(pos)		
+		local meta = minetest.get_meta(pos)
 		petz.set_owner(ent, meta:get_string("owner"), false) --set owner
 		--minetest.chat_send_player("singleplayer", meta:get_string("owner"))
 	end,
@@ -408,7 +408,7 @@ minetest.register_craftitem("petz:honey_bottle", {
 	inventory_image = "petz_honey_bottle.png",
 	on_use = function (itemstack, user, pointed_thing)
         return minetest.do_item_eat(7, "vessels:glass_bottle", itemstack, user, pointed_thing)
-    end,	
+    end,
 })
 
 minetest.register_craftitem("petz:honeycomb", {
@@ -418,17 +418,17 @@ minetest.register_craftitem("petz:honeycomb", {
 
 minetest.register_craftitem("petz:pollen", {
 	description = S("Pollen"),
-	inventory_image = "petz_pollen.png",	
+	inventory_image = "petz_pollen.png",
 })
 
 minetest.register_craftitem("petz:bee_sting", {
 	description = S("Bee Sting"),
-	inventory_image = "petz_bee_sting.png",	
+	inventory_image = "petz_bee_sting.png",
 })
 
 minetest.register_craftitem("petz:beeswax", {
 	description = S("Beeswax"),
-	inventory_image = "petz_beeswax.png",	
+	inventory_image = "petz_beeswax.png",
 })
 
 minetest.register_craft({
@@ -482,7 +482,7 @@ minetest.register_craft({
 
 minetest.register_craftitem("petz:parchment", {
 	description = S("Parchment"),
-	inventory_image = "petz_parchment.png",	
+	inventory_image = "petz_parchment.png",
 })
 
 minetest.register_craft({
@@ -509,7 +509,7 @@ minetest.register_craft({
 
 minetest.register_craftitem("petz:horseshoe", {
 	description = S("Horseshoe"),
-	inventory_image = "petz_horseshoe.png",	
+	inventory_image = "petz_horseshoe.png",
 })
 
 minetest.register_craft({
@@ -528,5 +528,5 @@ minetest.register_alias("petz:horseshoe", "mobs:horseshoe_steel")
 
 minetest.register_craftitem("petz:spider_eye", {
 	description = S("Spider Eye"),
-	inventory_image = "petz_spider_eye.png",	
+	inventory_image = "petz_spider_eye.png",
 })

@@ -19,7 +19,7 @@ petz.dyn_prop = {
 	driver = {type= "player", default = nil},
 	eggs_count = {type= "int", default = 0},
 	father_genes = {type= "table", default = {}},
-	father_veloc_stats = {type= "table", default = {}},	
+	father_veloc_stats = {type= "table", default = {}},
 	fed = {type= "boolean", default = true},
 	food_count = {type= "int", default = 0},
 	food_count_wool = {type= "int", default = 0},
@@ -28,11 +28,11 @@ petz.dyn_prop = {
 	gallop_exhausted = {type= "boolean", default = false},
 	gallop_recover_time = {type= "int", default = petz.settings.gallop_recover_time},
 	genes = {type= "table", default = {}},
-	growth_time = {type= "int", default = 0},	
+	growth_time = {type= "int", default = 0},
 	horseshoes = {type= "int", default = 0},
 	is_baby = {type= "boolean", default = false},
 	is_male = {type= "boolean", default = false},
-	is_pregnant = {type= "boolean", default = false},				
+	is_pregnant = {type= "boolean", default = false},
 	is_rut = {type= "boolean", default = false},
 	lashed = {type= "boolean", default = false},
 	lashing_count = {type= "int", default = 0},
@@ -40,13 +40,13 @@ petz.dyn_prop = {
 	max_speed_reverse = {type= "int", default = 1},
 	milked = {type= "boolean", default = false},
 	muted = {type= "boolean", default = false},
-	owner = {type= "string", default = nil},	
+	owner = {type= "string", default = nil},
 	pregnant_count = {type= "int", default = petz.settings.pregnant_count},
 	pregnant_time = {type= "int", default = 0},
 	saddle = {type= "boolean", default = false},
 	saddlebag = {type= "boolean", default = false},
 	saddlebag_inventory = {type= "table", default = nil},
-	set_vars = {type= "boolean", default = false},	
+	set_vars = {type= "boolean", default = false},
 	shaved = {type= "boolean", default = false},
 	show_tag = {type= "boolean", default = false},
 	square_ball_attached = {type= "boolean", default = false},
@@ -55,28 +55,24 @@ petz.dyn_prop = {
 	tamed = {type= "boolean", default = false},
 	--texture_no = {type= "int", default = 1}, --do not use!!! OR MISSING TEXTURE
 	warn_attack = {type= "boolean", default = false},
-	was_killed_by_player = {type= "boolean", default = false},	
+	was_killed_by_player = {type= "boolean", default = false},
 }
 
-petz.cleanup_prop= function(self)	
+petz.cleanup_prop= function(self)
 	self.warn_attack = false --reset the warn attack
 	self.driver = nil --no driver
-	self.was_killed_by_player = false --reset the warn attack	
+	self.was_killed_by_player = false --reset the warn attack
 end
 
-petz.genetics_random_texture = function(self, textures_count)	
-	local skins_count = #self.skin_colors
-	
+petz.genetics_random_texture = function(self, textures_count)
 	local array = {}
 	for row=1, textures_count do
 		array[row] = {}
 		for col=1, textures_count do
 			array[row][col] = math.min(row, col)
-		end	
+		end
 	end
-				
 	return array[math.random(1, textures_count)][math.random(1, textures_count)]
-
 	-- Accessing the array to calculate the rates
 	--local rates = {}
 	--for row=1, textures_count do
@@ -84,19 +80,18 @@ petz.genetics_random_texture = function(self, textures_count)
 			--rates[array[row][col]] = (rates[array[row][col]] or 0) + 1
 		--end
 	--end
-	
+
 	--for row=1, textures_count do
-		--minetest.chat_send_player("singleplayer", tostring(rates[row]))			
+		--minetest.chat_send_player("singleplayer", tostring(rates[row]))
 	--end
-	
 end
 
-petz.set_random_gender = function()	
-	if math.random(1, 2) == 1 then	    
+petz.set_random_gender = function()
+	if math.random(1, 2) == 1 then
 		return true
-	else		
+	else
 		return false
-	end	
+	end
 end
 
 petz.get_gen = function(self)
@@ -109,15 +104,15 @@ petz.get_gen = function(self)
 	return math.random(1, textures_count)
 end
 
-petz.genetics_texture  = function(self, textures_count)	
+petz.genetics_texture  = function(self, textures_count)
 	for i = 1, textures_count do
-		if self.genes["gen1"] == i or self.genes["gen2"] == i then 
+		if self.genes["gen1"] == i or self.genes["gen2"] == i then
 			return i
 		end
 	end
 end
 
-petz.load_vars = function(self)	
+petz.load_vars = function(self)
 	for key, value in pairs(petz.dyn_prop) do
 		self[key] = mobkit.recall(self, key) or value["default"]
 	end
@@ -127,60 +122,60 @@ petz.load_vars = function(self)
 	petz.cleanup_prop(self)	 --Reset some vars
 end
 
-function petz.set_initial_properties(self, staticdata, dtime_s)	
-	local static_data_table = minetest.deserialize(staticdata)	
+function petz.set_initial_properties(self, staticdata, dtime_s)
+	local static_data_table = minetest.deserialize(staticdata)
 	local captured_mob = false
 	local baby_born = false
-	--minetest.chat_send_player("singleplayer", staticdata)	
-	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["captured"] then 
+	--minetest.chat_send_player("singleplayer", staticdata)
+	if static_data_table and static_data_table["fields"] and static_data_table["fields"]["captured"] then
 		captured_mob = true
 	elseif static_data_table and static_data_table["baby_born"] and static_data_table["baby_born"] == true then
-		baby_born = true	
+		baby_born = true
 	end
 	--
 	--1. NEW MOBS
 	--
-	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars		
+	if mobkit.recall(self, "set_vars") == nil and captured_mob == false then	--set some vars
 		--Mob Specific
 		--Lamb
-		if self.type == "lamb" then --set a random color 
-			self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)	
-			self.shaved = mobkit.remember(self, "shaved", false)	
-		elseif self.type == "puppy" then		
-			self.square_ball_attached = mobkit.remember(self, "square_ball_attached", false)				
-		elseif self.is_mountable == true then		
+		if self.type == "lamb" then --set a random color
+			self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)
+			self.shaved = mobkit.remember(self, "shaved", false)
+		elseif self.type == "puppy" then
+			self.square_ball_attached = mobkit.remember(self, "square_ball_attached", false)
+		elseif self.is_mountable == true then
 			if baby_born == false then
 				self.max_speed_forward= mobkit.remember(self, "max_speed_forward", math.random(2, 4)) --set a random velocity for walk and run
-				self.max_speed_reverse= 	mobkit.remember(self, "max_speed_reverse", math.random(1, 2))				
-				self.accel= mobkit.remember(self, "accel", math.random(2, 4))	
+				self.max_speed_reverse= 	mobkit.remember(self, "max_speed_reverse", math.random(1, 2))
+				self.accel= mobkit.remember(self, "accel", math.random(2, 4))
 			end
-			self.driver = mobkit.remember(self, "driver", nil)			
+			self.driver = mobkit.remember(self, "driver", nil)
 			--Saddlebag
-			self.saddle = mobkit.remember(self, "saddle", false)		
-			if self.has_saddlebag == true then			
+			self.saddle = mobkit.remember(self, "saddle", false)
+			if self.has_saddlebag == true then
 				self.saddlebag_ref = nil
 				self.saddlebag_inventory = mobkit.remember(self, "saddlebag_inventory", {})
 			end
-			gallop = mobkit.remember(self, "gallop", false)
-			gallop_time = mobkit.remember(self, "gallop_time", 0)
-			gallop_exhausted = mobkit.remember(self, "gallop_exhausted", false)
-			gallop_recover_time = mobkit.remember(self, "gallop_recover_time", petz.settings.gallop_recover_time)
+			self.gallop = mobkit.remember(self, "gallop", false)
+			self.gallop_time = mobkit.remember(self, "gallop_time", 0)
+			self.gallop_exhausted = mobkit.remember(self, "gallop_exhausted", false)
+			self.gallop_recover_time = mobkit.remember(self, "gallop_recover_time", petz.settings.gallop_recover_time)
 		end
-		if self.type == "pony" then	
-			self.horseshoes = mobkit.remember(self, "horseshoes", 0)	
-		end		
+		if self.type == "pony" then
+			self.horseshoes = mobkit.remember(self, "horseshoes", 0)
+		end
 		--Mobs that can have babies
 		if self.breed == true then
 			if self.is_male == nil then
-				self.is_male = petz.set_random_gender() --set a random gender			
+				self.is_male = petz.set_random_gender() --set a random gender
 			end
 			mobkit.remember(self, "is_male", self.is_male)
 			self.is_rut = mobkit.remember(self, "is_rut", false)
 			self.is_pregnant = mobkit.remember(self, "is_pregnant", false)
 			self.pregnant_time = mobkit.remember(self, "pregnant_time", 0.0)
 			self.father_genes = mobkit.remember(self, "father_genes", {})
-			self.father_veloc_stats = mobkit.remember(self, "father_veloc_stats", {})			
-			self.pregnant_count = mobkit.remember(self, "pregnant_count", petz.settings.pregnant_count)			
+			self.father_veloc_stats = mobkit.remember(self, "father_veloc_stats", {})
+			self.pregnant_count = mobkit.remember(self, "pregnant_count", petz.settings.pregnant_count)
 			self.is_baby = mobkit.remember(self, "is_baby", false)
 			self.growth_time = mobkit.remember(self, "growth_time", 0.0)
 			--Genetics
@@ -193,38 +188,38 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				if baby_born == false then
 					self.genes["gen1"] = petz.get_gen(self)
 					self.genes["gen2"] = petz.get_gen(self)
-					--minetest.chat_send_player("singleplayer", tostring(self.genes["gen1"]))	
-					--minetest.chat_send_player("singleplayer", tostring(self.genes["gen2"]))	
+					--minetest.chat_send_player("singleplayer", tostring(self.genes["gen1"]))
+					--minetest.chat_send_player("singleplayer", tostring(self.genes["gen2"]))
 				else
 					if math.random(1, 2) == 1 then
-						self.genes["gen1"] = static_data_table["gen1_father"]					
+						self.genes["gen1"] = static_data_table["gen1_father"]
 					else
 						self.genes["gen1"] = static_data_table["gen2_father"]
 					end
 					if math.random(1, 2) == 1 then
-						self.genes["gen2"] = static_data_table["gen1_mother"]					
+						self.genes["gen2"] = static_data_table["gen1_mother"]
 					else
 						self.genes["gen2"] = static_data_table["gen2_mother"]
-					end					
-				end						
+					end
+				end
 				local textures_count
 				if self.mutation and (self.mutation > 0) then
 					textures_count = #self.skin_colors - self.mutation
 				else
 					textures_count = #self.skin_colors
 				end
-				self.texture_no = petz.genetics_texture(self, textures_count)															
+				self.texture_no = petz.genetics_texture(self, textures_count)
 			else -- mutation
 				local mutation_gen = math.random((#self.skin_colors-self.mutation+1), #self.skin_colors) --select the mutation in the last skins
-				self.genes["gen1"] = mutation_gen 
-				self.genes["gen2"] = mutation_gen 
+				self.genes["gen1"] = mutation_gen
+				self.genes["gen2"] = mutation_gen
 				self.texture_no = mutation_gen
-			end			
+			end
 			mobkit.remember(self, "genes", self.genes)
-		end	
+		end
 		if self.lay_eggs == true then
 			self.eggs_count = mobkit.remember(self, "eggs_count", 0)
-		end	
+		end
 		--ALL the mobs
 		--Get a texture
 		if not(self.texture_no) then
@@ -244,41 +239,41 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.tag = mobkit.remember(self, "tag", "")
 		self.show_tag = mobkit.remember(self, "show_tag", false)
 		self.tamed = mobkit.remember(self, "tamed", false)
-		self.owner = mobkit.remember(self, "owner", nil)			
-		self.fed = mobkit.remember(self, "fed", true)	
-		self.food_count = mobkit.remember(self, "food_count", 0)							
-		self.was_killed_by_player = mobkit.remember(self, "was_killed_by_player", false)	
-		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", false)	
+		self.owner = mobkit.remember(self, "owner", nil)
+		self.fed = mobkit.remember(self, "fed", true)
+		self.food_count = mobkit.remember(self, "food_count", 0)
+		self.was_killed_by_player = mobkit.remember(self, "was_killed_by_player", false)
+		self.dreamcatcher = mobkit.remember(self, "dreamcatcher", false)
 		self.status = mobkit.remember(self, "status", "")
 		self.warn_attack = mobkit.remember(self, "warn_attack", false)
 		self.colorized = mobkit.remember(self, "colorized", nil)
 		self.convert = mobkit.remember(self, "convert", nil)
 		self.muted = mobkit.remember(self, "muted", false)
-		if petz.settings[self.type.."_convert_to"] then		
+		if petz.settings[self.type.."_convert_to"] then
 			self.convert_to = mobkit.remember(self, "convert_to", petz.settings[self.type.."_convert_to"])
 		end
-		if petz.settings[self.type.."_convert_count"] then		
+		if petz.settings[self.type.."_convert_count"] then
 			self.convert_count = mobkit.remember(self, "convert_count", petz.settings[self.type.."_convert_count"])
 		end
 		if self.init_tamagochi_timer== true then
 			petz.init_tamagochi_timer(self)
 		end
 		if self.has_affinity == true then
-			self.affinity = mobkit.remember(self, "affinity", 100)	
+			self.affinity = mobkit.remember(self, "affinity", 100)
 		end
 		if self.is_wild == true then
-			self.lashed = mobkit.remember(self, "lashed", false)	
-			self.lashing_count = mobkit.remember(self, "lashing_count", 0)	
+			self.lashed = mobkit.remember(self, "lashed", false)
+			self.lashing_count = mobkit.remember(self, "lashing_count", 0)
 		end
 	--
 	--2. ALREADY EXISTING MOBS
 	--
-	elseif captured_mob == false then	
+	elseif captured_mob == false then
 		petz.load_vars(self) --Load memory variables
 	--
 	--3. CAPTURED MOBS
 	--
-	else 		
+	else
 		for key, value in pairs(petz.dyn_prop) do
 			local prop_value
 			if value["type"] == "string" then
@@ -295,11 +290,11 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 			self[key] = mobkit.remember(self, key, prop_value) or value["default"]
 		end
 		self.texture_no = tonumber(static_data_table["fields"]["texture_no"])
-	end		
-		
+	end
+
 	--Custom textures
 	if captured_mob == true or self.breed == true then
-		local texture		
+		local texture
 		--Mob Specific
 		--Lamb
 		if self.type == "lamb" then
@@ -308,7 +303,7 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 				shaved_string = "_shaved"
 			end
 			texture = "petz_lamb".. shaved_string .."_"..self.skin_colors[self.texture_no]..".png"
-		elseif self.is_mountable == true then	
+		elseif self.is_mountable == true then
 			if self.saddle then
 				texture = "petz_"..self.type.."_"..self.skin_colors[self.texture_no]..".png" .. "^petz_"..self.type.."_saddle.png"
 			else
@@ -320,8 +315,8 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		else
 			texture = self.textures[self.texture_no]
 		end
-		mobkit.remember(self, "texture_no", self.texture_no) 	
-		petz.set_properties(self, {textures = {texture}})	
+		mobkit.remember(self, "texture_no", self.texture_no)
+		petz.set_properties(self, {textures = {texture}})
 	end
 	if self.colorized then
 		if not(self.shaved) then
@@ -333,13 +328,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	end
 	if self.breed == true then
 		if baby_born == true then
-			self.is_baby = mobkit.remember(self, "is_baby", true)	
+			self.is_baby = mobkit.remember(self, "is_baby", true)
 		end
 		if self.is_baby == true then
 			petz.set_properties(self, {
 				visual_size = self.visual_size_baby,
-				collisionbox = self.collisionbox_baby 
-			})			
+				collisionbox = self.collisionbox_baby
+			})
 		end
 	end
 	petz.calculate_sleep_times(self) --Sleep behaviour
@@ -349,9 +344,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 	end
 	if self.status and self.status ~= "" then
 		if self.status == "stand" then
-			petz.standhere(self)			
+			petz.standhere(self)
 		elseif self.status == "guard" then
-			petz.guard(self)	
+			petz.guard(self)
 		elseif self.status == "sleep" then
 			self.status = "" --reset
 		else

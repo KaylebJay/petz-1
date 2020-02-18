@@ -1,5 +1,5 @@
 --
--- petz 
+-- petz
 -- License:GPLv3
 --
 
@@ -44,6 +44,6 @@ end
 for i = 1, #petz.petz_list do --load all the petz.lua files
 	local file_name = modpath .. "/petz/"..petz.petz_list[i].."_"..petz.settings.type_api..".lua"
 	if petz.file_exists(file_name) then
-		assert(loadfile(file_name))(S) 
+		assert(loadfile(file_name))(S)
 	end
 end

@@ -7,7 +7,7 @@ petz.update_nametag = function(self)
 		self.object:set_nametag_attributes({text = name_tag .." ♥ "..tostring(self.hp).."/"..tostring(self.max_hp),})
 	else
 		self.object:set_nametag_attributes({text = "",})
-	end	
+	end
 end
 
 petz.delete_nametag = function(self)

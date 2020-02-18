@@ -3,7 +3,7 @@ local modpath, S = ...
 --Coocon
 minetest.register_node("petz:cocoon", {
     description = S("Silkworm Cocoon"),
-    inventory_image = "petz_cocoon_inv.png",    
+    inventory_image = "petz_cocoon_inv.png",
     groups = {snappy=1, bendy=2, cracky=1},
     sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
@@ -23,7 +23,7 @@ minetest.register_node("petz:cocoon", {
 
 --Silkworm Egg
 minetest.register_node("petz:silkworm_eggs", {
-    description = S("Silkworm Eggs"),    
+    description = S("Silkworm Eggs"),
     inventory_image = "petz_silkworm_eggs_inv.png",
     groups = {snappy=1, bendy=2, cracky=1, falling_node = 1},
     sounds = default.node_sound_wood_defaults(),
@@ -55,16 +55,16 @@ minetest.register_abm({
 		if node.name == 'ignore' then --make sure it's not acting on unloaded chunks
 			return
 		end
-		if pos then			
+		if pos then
 			minetest.set_node(pos, {name= "air"})
-			minetest.add_entity(pos, "petz:silkworm")				
+			minetest.add_entity(pos, "petz:silkworm")
 			local pos2 = {
 				x = pos.x + 1,
 				y = pos.y,
 				z = pos.z + 1,
 			}
 			if minetest.get_node(pos2) and minetest.get_node(pos2).name == "air" then
-				minetest.add_entity(pos2, "petz:silkworm")			
+				minetest.add_entity(pos2, "petz:silkworm")
 			end
 			local pos3 = {
 				x = pos.x - 1,
@@ -72,7 +72,7 @@ minetest.register_abm({
 				z = pos.z -1,
 			}
 			if minetest.get_node(pos3) and minetest.get_node(pos3).name == "air" then
-				minetest.add_entity(pos3, "petz:silkworm")			
+				minetest.add_entity(pos3, "petz:silkworm")
 			end
 		end
     end
@@ -101,7 +101,7 @@ minetest.register_abm({
 
 --Spinning Wheel
 minetest.register_node("petz:spinning_wheel", {
-    description = S("Spinning Wheel"),    
+    description = S("Spinning Wheel"),
     groups = {snappy=1, bendy=2, cracky=1},
     sounds = default.node_sound_wood_defaults(),
     paramtype = "light",
@@ -125,17 +125,17 @@ minetest.register_node("petz:spinning_wheel", {
 		local player_name = player:get_player_name()
 		--minetest.chat_send_player(player_name, "name="..itemstack:get_name())
 		local meta = minetest.get_meta(pos)
-		local silk_count = meta:get_int("silk_count") 
-		if itemstack:get_name() == "petz:cocoon" then			
-			if silk_count == 3 then				
-				minetest.chat_send_player(player_name, S("First, extract the silk bobbin from the spinning wheel."))				
+		local silk_count = meta:get_int("silk_count")
+		if itemstack:get_name() == "petz:cocoon" then
+			if silk_count == 3 then
+				minetest.chat_send_player(player_name, S("First, extract the silk bobbin from the spinning wheel."))
 			elseif silk_count == 2 then
 				silk_count = silk_count + 1
-				meta:set_int("silk_count", silk_count) 
+				meta:set_int("silk_count", silk_count)
 				meta:set_string("infotext", S("Silk Count").." = "..tostring(silk_count))
 				itemstack:take_item()
-				minetest.chat_send_player(player_name, S("A silk bobbin has been created!"))		
-				return itemstack			
+				minetest.chat_send_player(player_name, S("A silk bobbin has been created!"))
+				return itemstack
 			else
 				silk_count = silk_count + 1
 				meta:set_int("silk_count", silk_count)
@@ -144,25 +144,25 @@ minetest.register_node("petz:spinning_wheel", {
 				minetest.chat_send_player(player_name, S("There are still").." ".. tostring(3-silk_count).." "..S("more to create the bobbin."))
 				return itemstack
 			end
-		elseif silk_count == 3 then --get the bobbin	
+		elseif silk_count == 3 then --get the bobbin
 			local inv = player:get_inventory()
-			if inv:room_for_item("main", "petz:silk_bobbin") then --firstly check for room in the inventory	
+			if inv:room_for_item("main", "petz:silk_bobbin") then --firstly check for room in the inventory
 				local itemstack_name = itemstack:get_name()
 				local stack = ItemStack("petz:silk_bobbin 1")
-				if (itemstack_name == "petz:silk_bobbin" or itemstack_name == "") and (itemstack:get_count() < itemstack:get_stack_max()) then					
-					itemstack:add_item(stack)					
-				else						
-					inv:add_item("main", stack)				
-				end				
+				if (itemstack_name == "petz:silk_bobbin" or itemstack_name == "") and (itemstack:get_count() < itemstack:get_stack_max()) then
+					itemstack:add_item(stack)
+				else
+					inv:add_item("main", stack)
+				end
 				meta:set_int("silk_count", 0) --reset the silk count
-				meta:set_string("infotext", S("Silk Count").." = 0")				
+				meta:set_string("infotext", S("Silk Count").." = 0")
 				minetest.chat_send_player(player_name, S("You got the bobbin!"))
 				return itemstack
 			else
 				minetest.chat_send_player(player_name, S("No room in your inventory for the silk bobbin."))
 			end
-		end	
-	end,	
+		end
+	end,
 })
 
 minetest.register_craft({
@@ -176,8 +176,8 @@ minetest.register_craft({
 })
 
 petz.init_convert_to_chrysalis = function(self)
-	minetest.after(math.random(1200, 1500), function(self) 
-		if not(mobkit.is_alive(self)) then 
+	minetest.after(math.random(1200, 1500), function(self)
+		if not(mobkit.is_alive(self)) then
 			return
 		end
 		local pos = self.object:get_pos()
@@ -190,8 +190,8 @@ petz.init_convert_to_chrysalis = function(self)
 end
 
 petz.init_lay_eggs = function(self)
-	minetest.after(math.random(150, 240), function(self) 
-		if not(mobkit.is_alive(self)) then 
+	minetest.after(math.random(150, 240), function(self)
+		if not(mobkit.is_alive(self)) then
 			return
 		end
 		if self.eggs_count > 0 then
@@ -199,28 +199,28 @@ petz.init_lay_eggs = function(self)
 		end
 		petz.alight(self)
 		minetest.after(10.0, function(self)
-			if not(mobkit.is_alive(self)) then 
+			if not(mobkit.is_alive(self)) then
 				return
 			end
-			local pos = self.object:get_pos()			
+			local pos = self.object:get_pos()
 			if minetest.get_node(pos) and minetest.get_node(pos).name ~= "air" then
 				return
 			end
-			local node_name = mobkit.node_name_in(self, "below")			
-			local spawn_egg = false			
-			if string.sub(petz.settings.silkworm_lay_egg_on_node, 1, 5) == "group" then							
-				local node_group = minetest.get_item_group(node_name, string.sub(petz.settings.silkworm_lay_egg_on_node, 7)) 
+			local node_name = mobkit.node_name_in(self, "below")
+			local spawn_egg = false
+			if string.sub(petz.settings.silkworm_lay_egg_on_node, 1, 5) == "group" then
+				local node_group = minetest.get_item_group(node_name, string.sub(petz.settings.silkworm_lay_egg_on_node, 7))
 				if node_group > 0 then
 					spawn_egg = true
 				end
-			else								
+			else
 				if node_name == petz.settings.silkworm_lay_egg_on_node then
 					spawn_egg = true
-				end											
+				end
 			end
 			if spawn_egg == true then
 				minetest.set_node(pos, {name= "petz:silkworm_eggs"})
-				self.eggs_count = mobkit.remember(self, "eggs_count", (self.eggs_count+1)) --increase the count of eggs			
+				self.eggs_count = mobkit.remember(self, "eggs_count", (self.eggs_count+1)) --increase the count of eggs
 			else
 				petz.init_lay_eggs(self) --reinit the timer, to try to lay eggs later
 			end
@@ -240,7 +240,7 @@ minetest.register_craftitem("petz:silk_bobbin", {
 minetest.register_craft({
     type = "shaped",
     output = 'petz:silk_bobbin',
-    recipe = {        
+    recipe = {
         {'petz:cocoon', 'default:stick', 'petz:cocoon'},
         {'petz:cocoon', 'default:stick', 'petz:cocoon'},
         {'petz:cocoon', 'default:stick', 'petz:cocoon'},

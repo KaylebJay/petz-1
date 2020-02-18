@@ -39,7 +39,7 @@ armor:register_armor("petz:silk_dress_coat", {
 	damage_groups = {cracky=3, snappy=3, choppy=3, crumbly=3, level=1},
 	reciprocate_damage = true,
 	on_destroy = function(player, index, stack)
-		petz.armor_destroy("brewing_break_armor_sound", player)	
+		petz.armor_destroy("brewing_break_armor_sound", player)
 	end,
 })
 
@@ -102,13 +102,13 @@ minetest.register_craft({
 		{"petz:silk_bobbin", "", "petz:silk_bobbin"},
 	},
 })
-minetest.register_craft({	
+minetest.register_craft({
 	output = "petz:silk_boots",
 	type = "shaped",
 	recipe = {
 		{"petz:silk_bobbin", "", "petz:silk_bobbin"},
 		{"default:gold_ingot", "", "default:gold_ingot"},
-		{"petz:silk_bobbin", "dye:brown", "petz:silk_bobbin"},		
+		{"petz:silk_bobbin", "dye:brown", "petz:silk_bobbin"},
 	},
 })
 
@@ -144,7 +144,7 @@ armor:register_armor("petz:prince_north_coat", {
 	damage_groups = {cracky=3, snappy=3, choppy=3, crumbly=3, level=1},
 	reciprocate_damage = true,
 	on_destroy = function(player, index, stack)
-		petz.armor_destroy("brewing_break_armor_sound", player)	
+		petz.armor_destroy("brewing_break_armor_sound", player)
 	end,
 })
 

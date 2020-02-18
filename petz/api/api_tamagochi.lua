@@ -6,7 +6,7 @@ local modpath, S = ...
 
 -- Increase/Descrease the pet affinity
 
-petz.calculate_affinity_change = function(rate) 
+petz.calculate_affinity_change = function(rate)
 	if rate < 0 then --negative rates have a reduction factor
 		rate = rate - (rate * petz.settings.tamagochi_reduction_factor)
 	end
@@ -15,14 +15,14 @@ petz.calculate_affinity_change = function(rate)
 	return affinity_change
 end
 
-petz.set_affinity = function(self, rate)    
+petz.set_affinity = function(self, rate)
     local new_affinity = petz.round(self.affinity + petz.calculate_affinity_change(rate))
 	--minetest.chat_send_player(self.owner, tostring(new_affinity))
     if new_affinity > 100 then
         new_affinity = 100
-    elseif new_affinity < 0 then     
+    elseif new_affinity < 0 then
         new_affinity = 0
-    end    
+    end
     self.affinity = mobkit.remember(self, "affinity", new_affinity)
 end
 
@@ -31,7 +31,7 @@ end
 petz.set_health = function(self, rate)
 	local hp_amount = math.abs(self.max_hp * rate)
 	if rate >= 0 then
-		mobkit.heal(self, hp_amount)	
+		mobkit.heal(self, hp_amount)
 	else
 		mobkit.hurt(self, hp_amount)
 	end
@@ -39,7 +39,7 @@ end
 
 --The Tamagochi Timer
 
-petz.init_tamagochi_timer = function(self)	
+petz.init_tamagochi_timer = function(self)
     if (petz.settings.tamagochi_mode == true) and (self.tamed == true) and (self.init_tamagochi_timer == true) then
         petz.timer(self)
         return true
@@ -53,13 +53,13 @@ end
 --
 
 petz.timer = function(self)
-    minetest.after(petz.settings.tamagochi_check_time, function(self)         
+    minetest.after(petz.settings.tamagochi_check_time, function(self)
         if mobkit.is_alive(self) then
 			if (not(minetest.is_singleplayer())) and (petz.settings.tamagochi_check_if_player_online == true) then
 				if minetest.player_exists(self.owner) == false then --if pet owner is not online
 					return
 				end
-			end       
+			end
             local pos = self.object:get_pos()
             if not(pos == nil) then --important for if the pet dies
                 local pos_below = {
@@ -72,28 +72,28 @@ petz.timer = function(self)
                 for i = 1, #petz.settings.tamagochi_safe_nodes do --loop  thru all safe nodes
                     if node and (node.name == petz.settings.tamagochi_safe_nodes[i]) then
 						self.init_tamagochi_timer = true
-						mobkit.remember(self, "init_tamagochi_timer", self.init_tamagochi_timer)    
+						mobkit.remember(self, "init_tamagochi_timer", self.init_tamagochi_timer)
                         return
-                    end    
-                end                
+                    end
+                end
             else  --if the pos is nil, it means that the pet died before 'minetest.after_effect'
                 self.init_tamagochi_timer = false
                 mobkit.remember(self, "init_tamagochi_timer", self.init_tamagochi_timer)   --so no more timer
                 return
             end
             --Decrease health if pet has not fed
-            if self.fed == false then	
+            if self.fed == false then
 				petz.set_health(self, -petz.settings.tamagochi_feed_hunger_rate)
 				petz.update_nametag(self)
                 if (self.hp > 0)  and (self.has_affinity == true) then
 					petz.set_affinity(self, -petz.settings.tamagochi_feed_hunger_rate)
-				end                
+				end
             else
                 self.fed = false
                 mobkit.remember(self, "fed", self.fed) --Reset the variable
             end
-            --If the pet has not brushed            
-            if self.can_be_brushed == true then				
+            --If the pet has not brushed
+            if self.can_be_brushed == true then
 				if self.brushed == false then
 					if self.has_affinity == true then
 						petz.set_affinity(self, -petz.settings.tamagochi_brush_rate)
@@ -104,15 +104,15 @@ petz.timer = function(self)
 				end
 			end
             --If the petz is a lion had to been lashed
-            if self.type== "lion" then				
+            if self.type== "lion" then
                 if self.lashed == false then
-                    petz.set_affinity(self, -petz.settings.tamagochi_lashing_rate)                
+                    petz.set_affinity(self, -petz.settings.tamagochi_lashing_rate)
                 else
                     self.lashed = false
                     mobkit.remember(self, "lashed", self.lashed)
                 end
-            end            
-            --If the pet starves to death            
+            end
+            --If the pet starves to death
             if self.hp <= 0 then
                 minetest.chat_send_player(self.owner, S("Your").. " "..self.type.." "..S("has starved to death!!!"))
                 self.init_tamagochi_timer  = false -- no more timing
@@ -120,9 +120,9 @@ petz.timer = function(self)
             elseif (self.has_affinity == true) and (self.affinity == 0) then
                 minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("has abandoned you!!!"))
                 petz.delete_nametag(self)
-				petz.remove_owner(self) --the pet abandon you               
+				petz.remove_owner(self) --the pet abandon you
                 petz.drop_dreamcatcher(self)
-                self.init_tamagochi_timer  = false -- no more timing				
+                self.init_tamagochi_timer  = false -- no more timing
             else  --else reinit the timer, to check again in the future
                 self.init_tamagochi_timer  = true
             end

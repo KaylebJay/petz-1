@@ -12,7 +12,7 @@ petz.insert_petz_list_by_owner = function(self)
 				break
 			end
 		end
-		if insert == true then --if not yet			
+		if insert == true then --if not yet
 			table.insert(petz.petz_list_by_owner[self.owner], {["pet"] = self, metadata = {["tag"] = self.tag, ["type"] = self.type, ["last_pos"] = nil}})
 		end
 	end
@@ -25,7 +25,7 @@ petz.remove_petz_list_by_owner = function(self, force)
 			for key, pet_table in ipairs(petz.petz_list_by_owner[self.owner]) do
 				if pet_table.pet ~= self then
 					table.insert(temp_table, pet_table)
-					--minetest.chat_send_player("singleplayer", self.tag)	
+					--minetest.chat_send_player("singleplayer", self.tag)
 				end
 			end
 			petz.petz_list_by_owner[self.owner] = temp_table
@@ -53,7 +53,7 @@ petz.remove_owner = function(self)
 end
 
 petz.do_feed = function(self)
-	petz.set_affinity(self, petz.settings.tamagochi_feed_hunger_rate)                
+	petz.set_affinity(self, petz.settings.tamagochi_feed_hunger_rate)
 	self.fed = mobkit.remember(self, "fed", true)
 end
 
@@ -62,39 +62,39 @@ end
 --
 
 petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_count, tame)
-	-- Can eat/tame with item in hand		
-	if petz.item_in_itemlist(wielded_item_name, self.follow) then		
+	-- Can eat/tame with item in hand
+	if petz.item_in_itemlist(wielded_item_name, self.follow) then
 		if creative_mode == false then -- if not in creative then take item
 			wielded_item:take_item()
 			clicker:set_wielded_item(wielded_item)
-		end		
+		end
 		petz.set_health(self, petz.settings.tamagochi_feed_hunger_rate)
-		petz.update_nametag(self)		
+		petz.update_nametag(self)
 		if self.hp >= self.max_hp then
 			self.hp = self.max_hp
-			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", S(petz.first_to_upper(self.type)), tostring(self.hp)))							
-		end		
+			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", S(petz.first_to_upper(self.type)), tostring(self.hp)))
+		end
 		if self.tamed== true then
 			petz.update_nametag(self)
 		end
-		-- Feed and Tame	
+		-- Feed and Tame
 		self.food_count = mobkit.remember(self, "food_count", self.food_count + 1)
-		if self.food_count >= feed_count then			
-			self.food_count = mobkit.remember(self, "food_count", 0)   
+		if self.food_count >= feed_count then
+			self.food_count = mobkit.remember(self, "food_count", 0)
 			if tame then
 				if self.tamed == false then
 					petz.set_owner(self, clicker:get_player_name(), false)
 					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", S(petz.first_to_upper(self.type))))
-					mobkit.clear_queue_high(self) -- clear behaviour (i.e. it was running away)	
+					mobkit.clear_queue_high(self) -- clear behaviour (i.e. it was running away)
 					if petz.settings.tamagochi_mode == true then
 						self.init_tamagochi_timer = true
 					end
 				end
-			end			
+			end
 		end
 		mobkit.make_sound(self, "moaning")
 		return true
-	end	
+	end
 	return false
 end
 
@@ -105,29 +105,29 @@ end
 -- Whip/lashing behaviour
 
 petz.do_lashing = function(self)
-    if self.lashed == false then        
-        self.lashed = mobkit.remember(self, "lashed", true) 
+    if self.lashed == false then
+        self.lashed = mobkit.remember(self, "lashed", true)
     end
     petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
 end
 
-petz.tame_whip= function(self, hitter)	
+petz.tame_whip= function(self, hitter)
 		local wielded_item_name= hitter:get_wielded_item():get_name()
 		if (wielded_item_name == "petz:whip") then
-    		if self.tamed == false then
-    		--The mob can be tamed lashed with a whip    	                	    	
-    			self.lashing_count = self.lashing_count + 1        
+			if self.tamed == false then
+				--The mob can be tamed lashed with a whip
+				self.lashing_count = self.lashing_count + 1
 				if self.lashing_count >= petz.settings.lashing_tame_count then
 					self.lashing_count = mobkit.remember(self, "lashing_count", 0)	 --reset to 0
-					petz.set_owner(self, hitter:get_player_name(), true)					
-					minetest.chat_send_player(self.owner, S("The").." "..S(petz.first_to_upper(self.type)).." "..S("has been tamed."))	
-					mobkit.clear_queue_high(self) -- do not attack				
-				end			
+					petz.set_owner(self, hitter:get_player_name(), true)
+					minetest.chat_send_player(self.owner, S("The").." "..S(petz.first_to_upper(self.type)).." "..S("has been tamed."))
+					mobkit.clear_queue_high(self) -- do not attack
+				end
 			else
 				if (petz.settings.tamagochi_mode == true) and (self.owner == hitter:get_player_name()) then
-	        		petz.do_lashing(self)
-    	    	end
-    	    end
-    	    petz.do_sound_effect("object", hitter, "petz_whip")
+					petz.do_lashing(self)
+				end
+			end
+			petz.do_sound_effect("object", hitter, "petz_whip")
 		end
 end

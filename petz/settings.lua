@@ -38,7 +38,7 @@ petz.settings.lay_egg_chance = tonumber(settings:get("lay_egg_chance"))
 petz.settings.misc_sound_chance = tonumber(settings:get("misc_sound_chance"))
 petz.settings.max_hear_distance = tonumber(settings:get("max_hear_distance"))
 --Fly Behaviour
-petz.settings.fly_check_time = tonumber(settings:get("fly_check_time")) 
+petz.settings.fly_check_time = tonumber(settings:get("fly_check_time"))
 --Breed Engine
 petz.settings.pregnant_count = tonumber(settings:get("pregnant_count"))
 petz.settings.pregnancy_time = tonumber(settings:get("pregnancy_time"))
@@ -72,8 +72,8 @@ petz.settings.pumpkin_grenade_damage = tonumber(settings:get("pumpkin_grenade_da
 petz.settings.horseshoe_speedup = tonumber(settings:get("horseshoe_speedup", "1"))
 --Lycanthropy
 petz.settings.lycanthropy = settings:get_bool("lycanthropy", true)
-petz.settings.lycanthropy_infection_chance_by_wolf = tonumber(settings:get("lycanthropy_infection_chance_by_wolf", "200")) 
-petz.settings.lycanthropy_infection_chance_by_werewolf = tonumber(settings:get("lycanthropy_infection_chance_by_werewolf", "10")) 
+petz.settings.lycanthropy_infection_chance_by_wolf = tonumber(settings:get("lycanthropy_infection_chance_by_wolf", "200"))
+petz.settings.lycanthropy_infection_chance_by_werewolf = tonumber(settings:get("lycanthropy_infection_chance_by_werewolf", "10"))
 --Mobs Specific
 for i = 1, #petz.petz_list do --load the settings
 	local petz_type = petz.petz_list[i]
@@ -93,10 +93,10 @@ for i = 1, #petz.petz_list do --load the settings
 	petz.settings[petz_type.."_convert_to"] = settings:get(petz_type.."_convert_to", nil)
 	petz.settings[petz_type.."_convert_count"] = tonumber(settings:get(petz_type.."_convert_count")) or nil
 	if petz_type == "beaver" then
-		petz.settings[petz_type.."_create_dam"] = settings:get_bool(petz_type.."_create_dam", false)		
+		petz.settings[petz_type.."_create_dam"] = settings:get_bool(petz_type.."_create_dam", false)
 	elseif petz_type == "silkworm" then
 		petz.settings[petz_type.."_lay_egg_on_node "] = settings:get(petz_type.."_lay_egg_on_node", "")
-	end	
+	end
 end
 
 if petz.settings.type_model == "mesh" then

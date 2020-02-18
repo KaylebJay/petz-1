@@ -6,7 +6,7 @@ petz.chest.open_chests = {}
 function petz.chest.get_chest_formspec(pos)
 	local spos = pos.x .. "," .. pos.y .. "," .. pos.z
 	local meta = minetest.get_meta(pos)
-	local christmas_msg = meta:get_string("christmas_msg")	
+	local christmas_msg = meta:get_string("christmas_msg")
 	if not(christmas_msg) or christmas_msg == "" then
 		christmas_msg = S("Merry Christmas")
 	end
@@ -81,7 +81,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	local pos = petz.christmas_cards[player:get_player_name()]
-	
+
 	if pos and fields.christmas_msg then
 		local meta = minetest.get_meta(pos)
 		meta:set_string("christmas_msg", fields.christmas_msg)
@@ -108,12 +108,12 @@ function petz.register_chest(name, d)
 	def.after_place_node = function(pos, placer, itemstack, pointed_thing)
 		if placer:is_player() then
 			local player_name = placer:get_player_name()
-			local formspec = 
+			local formspec =
 				"size[6,4]"..
 				"image[1,0;1,1;petz_christmas_card.png]"..
 				"label[2,0;"..S("Christmas Card").."]"..
 				"field[1,2;5,1;christmas_msg;"..S("Compose a message")..":;]"..
-				"button_exit[2,3;2,1;write;"..S("Write").."]"			
+				"button_exit[2,3;2,1;write;"..S("Write").."]"
 			petz.christmas_cards[player_name] = pos
 			minetest.show_formspec(placer:get_player_name(), "petz:present_msg", formspec)
 		end
@@ -143,7 +143,7 @@ function petz.register_chest(name, d)
 		minetest.remove_node(pos)
 		return drops
 	end
-	
+
 	def.on_metadata_inventory_move = function(pos, from_list, from_index,
 			to_list, to_index, count, player)
 		minetest.log("action", player:get_player_name() ..

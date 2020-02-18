@@ -5,7 +5,7 @@ petz.drop_velocity = function(obj)
 		x = math.random(-10, 10) / 9,
 		y = 6,
 		z = math.random(-10, 10) / 9,
-	})	
+	})
 end
 
 petz.drop_object = function(obj)
@@ -16,13 +16,13 @@ petz.drop_object = function(obj)
 	end
 end
 
-petz.drop_items = function(self)	
+petz.drop_items = function(self)
 	if not self.drops or #self.drops == 0 then 	-- check for nil or no drops
 		return
-	end	
+	end
 	if self.child then -- no drops for child mobs
 		return
-	end	
+	end
 	local death_by_player = self.was_killed_by_player or nil -- was mob killed by player?
 	local obj, item, num
 	local pos = self.object:get_pos()
@@ -41,13 +41,13 @@ petz.drop_items = function(self)
 	self.drops = {}
 end
 
-petz.node_drop_items = function(pos)	
+petz.node_drop_items = function(pos)
 	local meta = minetest.get_meta(pos)
 	local drops= minetest.deserialize(meta:get_string("drops"))
 	if not drops or #drops == 0 then 	-- check for nil or no drops
 		return
 	end
-	local obj
+	local obj, item, num
 	for n = 1, #drops do
 		if math.random(1, drops[n].chance) == 1 then
 			num = math.random(drops[n].min or 0, drops[n].max or 1)
@@ -60,7 +60,7 @@ petz.node_drop_items = function(pos)
 	end
 end
 
-petz.drop_item = function(self, item, num)	
+petz.drop_item = function(self, item, num)
 	if not(item) or not(num) then
 		return
 	end

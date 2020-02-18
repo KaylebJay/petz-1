@@ -14,17 +14,17 @@ end)
 minetest.register_on_player_hpchange(function(player, hp_change)
 	local attached_to = player:get_attach()
 	if attached_to then
-		local entity = attached_to:get_luaentity()	
+		local entity = attached_to:get_luaentity()
 		if entity.is_mountable then
 			local hp = player:get_hp()
 			if hp_change < 0 then
 				local new_hp = hp + hp_change
 				if new_hp <= 0 then
-					petz.force_detach(player)			
+					petz.force_detach(player)
 				end
 			end
 		end
-	end	
+	end
 end)
 
 -------------------------------------------------------------------------------
@@ -48,13 +48,13 @@ function petz.attach(entity, player)
 	entity.driver = player --this goes after petz.force_detach!
 	local player_name = player:get_player_name()
 	petz.mount_attached[player_name] = entity
-	default.player_attached[player_name] = true	
+	default.player_attached[player_name] = true
 	player:set_properties({
 		visual_size = {
 			x = petz.truncate(entity.driver_scale.x, 2),
 			y = petz.truncate(entity.driver_scale.y, 2)
 		},
-		pointable = petz.settings.pointable_driver		
+		pointable = petz.settings.pointable_driver
 	})
 	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
 	minetest.after(0.2, function()
@@ -65,20 +65,20 @@ end
 
 petz.force_detach = function(player)
 	local entity = petz.mount_attached[player:get_player_name()]
-	if not(entity) then		
+	if not(entity) then
 		return
 	end
 	if entity.driver and entity.driver == player then
-		entity.driver = nil			
+		entity.driver = nil
 	end
 	player:set_detach()
 	default.player_attached[player:get_player_name()] = false
 	player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
-	default.player_set_animation(player, "stand" , 30)	
+	default.player_set_animation(player, "stand" , 30)
 	player:set_properties({
 		visual_size = {x = 1, y = 1},
 		pointable = true
-	})	
+	})
 end
 
 function petz.detach(player, offset)
@@ -94,7 +94,7 @@ end
 --Gallop
 --
 function petz.gallop(self, dtime)
-	self.gallop_time = self.gallop_time + dtime	
+	self.gallop_time = self.gallop_time + dtime
 	if self.gallop_time >= petz.settings.gallop_time then
 		self.gallop = false
 		self.gallop_time = 0

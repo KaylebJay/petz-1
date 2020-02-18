@@ -5,7 +5,7 @@ local modpath, S = ...
 --
 
 petz.create_pet = function(placer, itemstack, pet_name, pos)
-	local meta = itemstack:get_meta()				
+	local meta = itemstack:get_meta()
 	local meta_table = meta:to_table()
 	local sdata = minetest.serialize(meta_table)
 	local mob = minetest.add_entity(pos, pet_name, sdata)
@@ -16,7 +16,6 @@ petz.create_pet = function(placer, itemstack, pet_name, pos)
 end
 
 function petz:register_egg(pet_name, desc, inv_img, tamed)
-	local grp = {spawn_egg = 1}
 	local description = S("@1", desc)
 	if tamed then
 		description = description .." ("..S("Tamed")..")"
@@ -46,13 +45,13 @@ function petz:register_egg(pet_name, desc, inv_img, tamed)
 	})
 end
 
-petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)	
+petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)
 	local capture_item_type
 	if wielded_item_name == "mobs:lasso" or wielded_item_name == "petz:lasso" then
 		capture_item_type = "lasso"
 	elseif (wielded_item_name == "mobs:net") or (wielded_item_name == "fireflies:bug_net") then
 		capture_item_type = "net"
-	else		
+	else
 		return false
 	end
 	if capture_item_type == self.capture_item then
@@ -63,7 +62,7 @@ petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_
 				return true
 			else
 				minetest.chat_send_player(clicker:get_player_name(), S("No room in your inventory to capture it."))
-				return false				
+				return false
 			end
 		else
 			return true
@@ -75,7 +74,7 @@ end
 
 petz.capture = function(self, clicker, put_in_inventory)
 	local new_stack = ItemStack(self.name .. "_set") 	-- add special mob egg with all mob information
-	local stack_meta = new_stack:get_meta()	
+	local stack_meta = new_stack:get_meta()
 	--local sett ="---TABLE---: "
 	--local sett = ""
 	--local i = 0
@@ -87,18 +86,18 @@ petz.capture = function(self, clicker, put_in_inventory)
 			elseif what_type == "table" then
 				if key == "saddlebag_inventory" or key == "genes" or key == "father_genes" or key == "father_veloc_stats" then --only this tables to save serialized
 					value = minetest.serialize(value)
-					--minetest.chat_send_player("singleplayer", value)	
-				end				
+					--minetest.chat_send_player("singleplayer", value)
+				end
 			end
-			stack_meta:set_string(key, value)	
+			stack_meta:set_string(key, value)
 			--i = i + 1
 			--local sett= sett .. ", ".. tostring(key).." : ".. tostring(self[key])
-			--minetest.chat_send_player("singleplayer", sett)				
+			--minetest.chat_send_player("singleplayer", sett)
 		end
-	end		
-	--minetest.chat_send_player("singleplayer", "status="..tostring(self.status))	
+	end
+	--minetest.chat_send_player("singleplayer", "status="..tostring(self.status))
 	stack_meta:set_string("captured", "true") --IMPORTANT! mark as captured
-	--minetest.chat_send_player("singleplayer", tostring(i))	
+	--minetest.chat_send_player("singleplayer", tostring(i))
 	--Info text stuff:
 	local info_text = ""
 	if not(petz.str_is_empty(self.tag)) then
@@ -130,7 +129,7 @@ petz.capture = function(self, clicker, put_in_inventory)
 	end
 	stack_meta:set_string("description", S(petz.first_to_upper(description)).." ("..S("Tamed")..")"..info_text)
 	if put_in_inventory == true then
-		local inv = clicker:get_inventory()	
+		local inv = clicker:get_inventory()
 		if inv:room_for_item("main", new_stack) then
 			inv:add_item("main", new_stack)
 		else
@@ -138,9 +137,9 @@ petz.capture = function(self, clicker, put_in_inventory)
 		end
 	end
 	if self.type == "bee" and self.behive then
-		petz.decrease_total_bee_count(self.behive)		
-		local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)	
-		petz.set_infotext_behive(meta, honey_count, bee_count)			
+		petz.decrease_total_bee_count(self.behive)
+		local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
+		petz.set_infotext_behive(meta, honey_count, bee_count)
 	end
 	petz.remove_petz_list_by_owner(self, false)
 	self.object:remove()

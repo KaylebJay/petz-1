@@ -4,7 +4,7 @@ local modpath, S = ...
 --on_die event for all the mobs
 --
 
-petz.on_die = function(self)	
+petz.on_die = function(self)
 	--Specific of each mob
 	if self.is_mountable == true then
 		if self.saddle then -- drop saddle when petz is killed while riding
@@ -19,7 +19,7 @@ petz.on_die = function(self)
 		if self.saddlebag_inventory then
 			for key, value in pairs(self.saddlebag_inventory) do
 				inv:set_stack("saddlebag", key, value)
-			end						
+			end
 			for i = 1, inv:get_size("saddlebag") do
 				local stack = inv:get_stack("saddlebag", i)
 				if stack:get_count() > 0 then
@@ -29,7 +29,7 @@ petz.on_die = function(self)
 		end
 		if self.type == "pony" and self.horseshoes > 0 then --drop horseshoes
 			petz.drop_item(self, "petz:horseshoe", self.horseshoes)
-		end		
+		end
 	elseif self.type == "puppy" then
 		if self.square_ball_attached == true and self.attached_squared_ball then
 			self.attached_squared_ball.object:set_detach()
@@ -42,7 +42,7 @@ petz.on_die = function(self)
 	--For all the mobs
     local props = self.object:get_properties()
     props.collisionbox[2] = props.collisionbox[1] - 0.0625
-    self.object:set_properties({collisionbox=props.collisionbox})	
+    self.object:set_properties({collisionbox=props.collisionbox})
 	petz.drop_items(self)
 	mobkit.clear_queue_high(self)
 	if petz.pet[self.owner] then
@@ -55,7 +55,7 @@ petz.on_die = function(self)
 	mobkit.hq_die(self)
 end
 
-petz.was_killed_by_player = function(self, puncher)	
+petz.was_killed_by_player = function(self, puncher)
 	if self.hp <= 0 then
 		if puncher:is_player() then
 			return true

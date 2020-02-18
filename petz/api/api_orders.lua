@@ -1,10 +1,10 @@
 local modpath, S = ...
 
-petz.ownthing = function(self)	
+petz.ownthing = function(self)
 	self.status = mobkit.remember(self, "status", "")
 	if self.can_fly then
 		mobkit.hq_wanderfly(self, 0)
-	elseif self.can_swin and self.isinliquid then	
+	elseif self.can_swin and self.isinliquid then
 		mobkit.hq_aqua_roam(self, 0, self.max_speed)
 	else
 		mobkit.hq_roam(self, 0)
@@ -13,18 +13,18 @@ petz.ownthing = function(self)
 	mobkit.clear_queue_high(self)
 end
 
-petz.stand = function(self)		
-	self.object:set_velocity({ x = 0, y = 0, z = 0 })   
-	self.object:set_acceleration({ x = 0, y = 0, z = 0 }) 
+petz.stand = function(self)
+	self.object:set_velocity({ x = 0, y = 0, z = 0 })
+	self.object:set_acceleration({ x = 0, y = 0, z = 0 })
 end
 
-petz.standhere = function(self)	
+petz.standhere = function(self)
 	mobkit.clear_queue_high(self)
 	mobkit.clear_queue_low(self)
-	if self.can_fly == true then						
-		if mobkit.node_name_in(self, "below") == "air" then		
+	if self.can_fly == true then
+		if mobkit.node_name_in(self, "below") == "air" then
 			mobkit.animate(self, "fly")
-		else					
+		else
 			mobkit.animate(self, "stand")
 		end
 	elseif self.can_swin and petz.isinliquid(self) then
@@ -37,14 +37,14 @@ petz.standhere = function(self)
 		end
 	end
 	self.status = mobkit.remember(self, "status", "stand")
-	--mobkit.lq_idle(self, 2400)		
-	petz.stand(self)	
+	--mobkit.lq_idle(self, 2400)
+	petz.stand(self)
 end
 
 petz.guard = function(self)
 	self.status = mobkit.remember(self, "status", "guard")
 	mobkit.clear_queue_high(self)
-	petz.stand(self)	
+	petz.stand(self)
 end
 
 petz.follow = function(self, player)
@@ -54,7 +54,7 @@ petz.follow = function(self, player)
 	if self.can_fly then
 		mobkit.animate(self, "fly")
 		mobkit.hq_followliquidair(self, 100, player)
-	elseif self.can_swin and self.isinliquid then			
+	elseif self.can_swin and self.isinliquid then
 		mobkit.animate(self, "def")
 		mobkit.hq_followliquidair(self, 100, player)
 	else
@@ -64,9 +64,9 @@ end
 
 petz.alight = function(self)
 	mobkit.clear_queue_low(self)
-	mobkit.clear_queue_high(self)	
-	if not(mobkit.node_name_in(self, "below") == "air") then		
-		mobkit.animate(self, "fly")				
-	end					
-	mobkit.hq_alight(self, 0)	
+	mobkit.clear_queue_high(self)
+	if not(mobkit.node_name_in(self, "below") == "air") then
+		mobkit.animate(self, "fly")
+	end
+	mobkit.hq_alight(self, 0)
 end

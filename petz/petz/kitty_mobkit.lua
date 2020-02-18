@@ -5,16 +5,16 @@ local S = ...
 
 local pet_name = "kitty"
 local scale_model = 1.5
-local mesh = 'petz_kitty.b3d'	
+local mesh = 'petz_kitty.b3d'
 local textures= {"petz_kitty.png", "petz_kitty2.png", "petz_kitty3.png", "petz_kitty4.png", "petz_kitty5.png", "petz_kitty6.png"}
 local p1 = {x= -0.0625, y = -0.5, z = -0.3125}
 local p2 = {x= 0.125, y = -0.0625, z = 0.3125}
 local collisionbox, collisionbox_baby = petz.get_collisionbox(p1, p2, scale_model, nil)
 
-minetest.register_entity("petz:"..pet_name, {          
+minetest.register_entity("petz:"..pet_name, {
 	--Petz specifics
-	type = "kitty",	
-	init_tamagochi_timer = true,	
+	type = "kitty",
+	init_tamagochi_timer = true,
 	is_pet = true,
 	has_affinity = true,
 	is_wild = false,
@@ -44,15 +44,15 @@ minetest.register_entity("petz:"..pet_name, {
 	lung_capacity = 10, -- seconds
 	max_hp = 10,
 	makes_footstep_sound = false,
-		
-	attack={range=0.5, damage_groups={fleshy=3}},	
+
+	attack={range=0.5, damage_groups={fleshy=3}},
 	animation = {
-		walk={range={x=1, y=12}, speed=20, loop=true},	
-		run={range={x=13, y=25}, speed=20, loop=true},	
+		walk={range={x=1, y=12}, speed=20, loop=true},
+		run={range={x=13, y=25}, speed=20, loop=true},
 		stand={
 			{range={x=26, y=46}, speed=5, loop=true},
 			{range={x=47, y=59}, speed=5, loop=true},
-		},	
+		},
 		sit = {range={x=60, y=65}, speed=5, loop=false},
 		sleep = {range={x=81, y=93}, speed=10, loop=false},
 	},
@@ -60,23 +60,23 @@ minetest.register_entity("petz:"..pet_name, {
 		misc = {"petz_kitty_meow", "petz_kitty_meow2", "petz_kitty_meow3"},
 		moaning = "petz_kitty_moaning",
 	},
-	
+
 	logic = petz.herbivore_brain,
-	
+
 	on_activate = function(self, staticdata, dtime_s) --on_activate, required
 		mobkit.actfunc(self, staticdata, dtime_s)
 		petz.set_initial_properties(self, staticdata, dtime_s)
 	end,
-	
-	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)		
+
+	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 		petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
 	end,
-	
+
 	on_rightclick = function(self, clicker)
 		petz.on_rightclick(self, clicker)
-	end, 
-	
-	on_step = function(self, dtime)	
+	end,
+
+	on_step = function(self, dtime)
 		mobkit.stepfunc(self, dtime) -- required
 		petz.on_step(self, dtime)
 	end,

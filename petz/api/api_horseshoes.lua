@@ -1,7 +1,7 @@
 local modpath, S = ...
 
 petz.put_horseshoe = function(self, clicker)
-	if self.horseshoes >= 4 then		
+	if self.horseshoes >= 4 then
 		minetest.chat_send_player(clicker:get_player_name(), S("This pony has already four horseshoes."))
 		return
 	end
@@ -9,13 +9,13 @@ petz.put_horseshoe = function(self, clicker)
 	wielded_item:take_item()
 	petz.horseshoes_inc_speed(self)
 	petz.do_sound_effect("object", self.object, "petz_put_sound")
-	petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")		
+	petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
 end
 
 petz.speedup_change = function(self, speedup)
 	self.max_speed_forward = self.max_speed_forward + speedup
 	self.max_speed_reverse = self.max_speed_reverse + speedup
-	self.accel= self.accel + speedup	
+	self.accel= self.accel + speedup
 end
 
 petz.horseshoes_speedup = function(self)

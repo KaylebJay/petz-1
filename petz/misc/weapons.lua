@@ -1,7 +1,7 @@
 local modpath, S = ...
 
 minetest.register_node("petz:jack_o_lantern_grenade", {
-	description = S("Jack-o'-lantern Grenade").. " ("..S("use to throw")..")",	
+	description = S("Jack-o'-lantern Grenade").. " ("..S("use to throw")..")",
 	tiles = {"petz_jackolantern_grenade_top.png", "petz_jackolantern_grenade_bottom.png",
 		"petz_jackolantern_grenade_right.png", "petz_jackolantern_grenade_left.png",
 		"petz_jackolantern_grenade_back.png", "petz_jackolantern_grenade_front.png"},
@@ -10,14 +10,14 @@ minetest.register_node("petz:jack_o_lantern_grenade", {
     groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
     sounds = default.node_sound_wood_defaults(),
 	on_use = function(itemstack, user, pointed_thing)
-		local strength = 20	
+		local strength = 20
 		petz.do_sound_effect("player", user, "petz_fireball")
 		if not petz.spawn_throw_object(user, strength, "petz:ent_jack_o_lantern_grenade") then
 			return -- something failed
-		end	
-		itemstack:take_item()			
+		end
+		itemstack:take_item()
 		return itemstack
-	end,	
+	end,
 })
 
 petz.register_throw_entity("petz:ent_jack_o_lantern_grenade", "petz:jack_o_lantern_grenade", petz.settings.pumpkin_grenade_damage, "fire", "fire", "petz_firecracker")
@@ -49,8 +49,8 @@ minetest.register_node("petz:cobweb", {
 	drop = "farming:string",
 	sounds = default.node_sound_leaves_defaults(),
 	on_construct = function(pos)
-		local timer = minetest.get_node_timer(pos) --throwed cobwebs dissapear after some time 
-		timer:start(petz.settings.cobweb_decay)		
+		local timer = minetest.get_node_timer(pos) --throwed cobwebs dissapear after some time
+		timer:start(petz.settings.cobweb_decay)
 	end,
 	after_place_node = function(pos, placer, itemstack, pointed_thing)
 		if placer:is_player() then

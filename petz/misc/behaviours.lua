@@ -33,7 +33,7 @@ function petz.bh_check_pack(self)
 	end
 end
 
-function petz.get_player_back_pos(player, pos)	
+function petz.get_player_back_pos(player, pos)
 	local yaw = player:get_look_horizontal()
 	if yaw then
 		local dir_x = -math.sin(yaw)
@@ -42,7 +42,7 @@ function petz.get_player_back_pos(player, pos)
 			x = pos.x - dir_x,
 			y = pos.y,
 			z = pos.z - dir_z,
-		}	
+		}
 		local node = minetest.get_node_or_nil(back_pos)
 		if node and minetest.registered_nodes[node.name] then
 			return node.name, back_pos
@@ -126,7 +126,7 @@ end
 
 function mobkit.node_name_in(self, where)
 	local pos = self.object:get_pos()
-	local yaw = self.object:get_yaw() 	
+	local yaw = self.object:get_yaw()
 	if yaw then
 		local dir_x = -math.sin(yaw)
 		local dir_z = math.cos(yaw)
@@ -136,7 +136,7 @@ function mobkit.node_name_in(self, where)
 				x = pos.x + dir_x,
 				y = pos.y,
 				z = pos.z + dir_z,
-			}	
+			}
 		elseif where == "top" then
 			pos2= {
 				x = pos.x,
@@ -146,12 +146,12 @@ function mobkit.node_name_in(self, where)
 		elseif where == "below" then
 			pos2 = mobkit.get_stand_pos(self)
 			pos2.y = pos2.y - 0.1
-		elseif where == "back" then	
+		elseif where == "back" then
 			pos2 = {
 				x = pos.x - dir_x,
 				y = pos.y,
 				z = pos.z - dir_z,
-			}	
+			}
 		elseif where == "self" then
 			pos2= {
 				x = pos.x,
@@ -160,7 +160,7 @@ function mobkit.node_name_in(self, where)
 			}
 		end
 		local node = minetest.get_node_or_nil(pos2)
-		if node and minetest.registered_nodes[node.name] then			
+		if node and minetest.registered_nodes[node.name] then
 			return node.name
 		else
 			return nil
@@ -171,16 +171,16 @@ function mobkit.node_name_in(self, where)
 end
 
 petz.check_if_climb = function(self)
-	local node_front_name = mobkit.node_name_in(self, "front")	
-	--minetest.chat_send_player("singleplayer", node_front_name)		
-	local node_top_name= mobkit.node_name_in(self, "top")	
-	--minetest.chat_send_player("singleplayer", node_top_name)		
+	local node_front_name = mobkit.node_name_in(self, "front")
+	--minetest.chat_send_player("singleplayer", node_front_name)
+	local node_top_name= mobkit.node_name_in(self, "top")
+	--minetest.chat_send_player("singleplayer", node_top_name)
 	if node_front_name and minetest.registered_nodes[node_front_name]
 		and node_top_name and minetest.registered_nodes[node_top_name]
 		and node_top_name == "air"
 		and (minetest.registered_nodes[node_front_name].groups.wood
 		or minetest.registered_nodes[node_front_name].groups.leaves
-		or minetest.registered_nodes[node_front_name].groups.tree) then		
+		or minetest.registered_nodes[node_front_name].groups.tree) then
 			return true
 	else
 		return false
@@ -190,7 +190,7 @@ end
 petz.pos_front = function(self, pos)
 	local yaw = self.object:get_yaw()
 	local dir_x = -math.sin(yaw) * (self.collisionbox[4] + 0.5)
-	local dir_z = math.cos(yaw) * (self.collisionbox[4] + 0.5)	
+	local dir_z = math.cos(yaw) * (self.collisionbox[4] + 0.5)
 	local pos_front = {	-- what is in front of mob?
 		x = pos.x + dir_x,
 		y = pos.y - 0.75,
@@ -214,20 +214,20 @@ function petz.bh_runaway_from_predator(self, pos)
 		predator_list = petz.str_remove_spaces(predator_list)
 		local predators = string.split(predator_list, ',')
 		for i = 1, #predators do --loop  thru all preys
-			--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])	
-			--minetest.chat_send_player("singleplayer", "node name="..node.name)	
-			local predator = mobkit.get_closest_entity(self, predators[i])	-- look for predator						
+			--minetest.chat_send_player("singleplayer", "spawn node="..spawn_nodes[i])
+			--minetest.chat_send_player("singleplayer", "node name="..node.name)
+			local predator = mobkit.get_closest_entity(self, predators[i])	-- look for predator
 			if predator then
-				local predator_pos = predator:get_pos()	
-				if predator and vector.distance(pos, predator_pos) <= self.view_range then						
+				local predator_pos = predator:get_pos()
+				if predator and vector.distance(pos, predator_pos) <= self.view_range then
 					mobkit.hq_runfrom(self, 18, predator)
 					return true
 				else
 					return false
 				end
-			end					
+			end
 		end
-	end	
+	end
 end
 
 --
@@ -246,10 +246,10 @@ function petz.bh_attack_player(self, pos, prty, player)
 			werewolf = true
 		end
 	end
-	if (self.tamed == false and werewolf == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then					
+	if (self.tamed == false and werewolf == false) or (self.tamed == true and self.status == "guard" and player:get_player_name() ~= self.owner) then
 		local player_pos = player:get_pos()
 		if vector.distance(pos, player_pos) <= self.view_range then	-- if player close
-			if (self.attack_player and not(self.avoid_player)) or (self.warn_attack == true) then --attack player	
+			if (self.attack_player and not(self.avoid_player)) or (self.warn_attack == true) then --attack player
 				if self.can_swin then
 					mobkit.hq_aqua_attack(self, prty, player, 6)
 				elseif self.can_fly then
@@ -269,7 +269,7 @@ function petz.bh_attack_player(self, pos, prty, player)
 				else
 					return false
 				end
-			end	
+			end
 		else
 			return false
 		end
@@ -278,11 +278,11 @@ function petz.bh_attack_player(self, pos, prty, player)
 	end
 end
 
-petz.bh_afraid= function(self, pos) 
+petz.bh_afraid= function(self, pos)
 	petz.lookback(self, pos)
 	local x = self.object:get_velocity().x
-	local z = self.object:get_velocity().z	
-	self.object:set_velocity({x= 4.0, y= 0, z= 4.0})
+	local z = self.object:get_velocity().z
+	self.object:set_velocity({x= x, y= 0, z= z})
 	--self.object:set_acceleration({x= hvel.x, y= 0, z= hvel.z})
 end
 
@@ -333,22 +333,22 @@ function petz.bh_breed(self, pos)
 		local couple_name = "petz:"..self.type
 		if self.type ==  "elephant" then
 			couple_name = couple_name.."_female"
-		end				
+		end
 		local couple_obj = mobkit.get_closest_entity(self, couple_name)	-- look for a couple
 		if couple_obj then
-			couple = couple_obj:get_luaentity()
+			local couple = couple_obj:get_luaentity()
 			if couple and couple.is_rut == true and couple.is_pregnant == false and couple.is_male == false then --if couple and female and is not pregnant and is rut
-				local couple_pos = couple.object:get_pos() --get couple pos						
+				local couple_pos = couple.object:get_pos() --get couple pos
 				local copulation_distance = petz.settings[self.type.."_copulation_distance"] or 1
 				if vector.distance(pos, couple_pos) <= copulation_distance then --if close
-					--Changue some vars						
+					--Changue some vars
 					self.is_rut = false
 					mobkit.remember(self, "is_rut", self.is_rut)
 					couple.is_rut = false
-					mobkit.remember(couple, "is_rut", couple.is_rut)				
+					mobkit.remember(couple, "is_rut", couple.is_rut)
 					couple.is_pregnant = true
-					mobkit.remember(couple, "is_pregnant", couple.is_pregnant)	
-					couple.father_genes = mobkit.remember(couple, "father_genes", self.genes)	
+					mobkit.remember(couple, "is_pregnant", couple.is_pregnant)
+					couple.father_genes = mobkit.remember(couple, "father_genes", self.genes)
 					petz.do_particles_effect(couple.object, couple.object:get_pos(), "pregnant".."_"..couple.type)
 				end
 			end
@@ -366,14 +366,14 @@ end
 
 function petz.bh_start_follow(self, pos, player, prty)
 	if player then
-		local wielded_item_name = player:get_wielded_item():get_name()	
+		local wielded_item_name = player:get_wielded_item():get_name()
 		local tpos = player:get_pos()
-		if petz.item_in_itemlist(wielded_item_name, self.follow) and vector.distance(pos, tpos) <= self.view_range then 			
-			self.status = mobkit.remember(self, "status", "follow")			
-			if (self.can_fly) or (self.can_swin and self.isinliquid) then								
+		if petz.item_in_itemlist(wielded_item_name, self.follow) and vector.distance(pos, tpos) <= self.view_range then
+			self.status = mobkit.remember(self, "status", "follow")
+			if (self.can_fly) or (self.can_swin and self.isinliquid) then
 				mobkit.hq_followliquidair(self, prty, player)
-			else			
-				mobkit.hq_follow(self, prty, player)				
+			else
+				mobkit.hq_follow(self, prty, player)
 			end
 			return true
 		else
@@ -385,7 +385,7 @@ end
 function petz.bh_stop_follow(self, player)
 	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()
-		if wielded_item_name ~= self.follow then 			
+		if wielded_item_name ~= self.follow then
 			petz.ownthing(self)
 			return true
 		else
@@ -393,7 +393,7 @@ function petz.bh_stop_follow(self, player)
 		end
 	else
 		petz.ownthing(self)
-	end	
+	end
 end
 
 --
@@ -410,19 +410,19 @@ function mobkit.hq_followliquidair(self, prty, player)
 				local node_name = mobkit.node_name_in(self, "below")
 				if minetest.get_item_group(node_name, "water") == 0  then
 					petz.ownthing(self)
-					return true	
+					return true
 				end
 			end
-		end		
+		end
 		if pos and tpos then
 			local distance = vector.distance(pos, tpos)
 			if distance < 3 then
 				return
 			elseif (distance < self.view_range) then
-				if mobkit.is_queue_empty_low(self) then					
+				if mobkit.is_queue_empty_low(self) then
 					mobkit.lq_followliquidair(self, player)
 				end
-			elseif distance >= self.view_range then				
+			elseif distance >= self.view_range then
 				petz.ownthing(self)
 				return true
 			end
@@ -446,8 +446,8 @@ function mobkit.flyto(self, target)
 	local tpos = target:get_pos()
 	local tgtbox = target:get_properties().collisionbox
 	local height = math.abs(tgtbox[3]) + math.abs(tgtbox[6])
-	--minetest.chat_send_player("singleplayer", tostring(tpos.y))	
-	--minetest.chat_send_player("singleplayer", tostring(height))	
+	--minetest.chat_send_player("singleplayer", tostring(tpos.y))
+	--minetest.chat_send_player("singleplayer", tostring(height))
 	tpos.y = tpos.y + 2 * (height)
 	local dir = vector.direction(pos, tpos)
 	local velocity = {
@@ -456,7 +456,7 @@ function mobkit.flyto(self, target)
 		z= self.max_speed* dir.z,
 	}
 	local new_yaw = minetest.dir_to_yaw(dir)
-	self.object:set_yaw(new_yaw)   
+	self.object:set_yaw(new_yaw)
 	self.object:set_velocity(velocity)
 end
 
@@ -471,10 +471,10 @@ function mobkit.hq_approach_torch(self, prty, tpos)
 		if pos and tpos then
 			local distance = vector.distance(pos, tpos)
 			if distance < self.view_range and (distance >= self.view_range) then
-				if mobkit.is_queue_empty_low(self) then			
-					mobkit.lq_followliquidair(self, target)					
+				if mobkit.is_queue_empty_low(self) then
+					mobkit.lq_followliquidair(self, target)
 				end
-			elseif distance >= self.view_range then				
+			elseif distance >= self.view_range then
 				petz.ownthing(self)
 				return true
 			end
@@ -491,7 +491,7 @@ end
 
 function mobkit.hq_wanderfly(self, prty)
 	local func=function(self)
-		if mobkit.is_queue_empty_low(self) then									
+		if mobkit.is_queue_empty_low(self) then
 			mobkit.lq_dumbfly(self, 0.3)
 		end
 	end
@@ -512,23 +512,22 @@ function mobkit.lq_dumbfly(self, speed_factor)
 	local fly_status = "ascend"
 	speed_factor = speed_factor or 1
 	local func = function(self)
-		timer = timer - self.dtime			
-		if timer < 0 then			
-			--minetest.chat_send_player("singleplayer", tostring(timer))		
+		timer = timer - self.dtime
+		if timer < 0 then
+			--minetest.chat_send_player("singleplayer", tostring(timer))
 			local velocity
 			local mob = self.object
-			local pos = mob:getpos()					
 			mobkit.animate(self, 'fly')
 			local random_num = math.random(1, 5)
-			if random_num <= 1 or mobkit.node_name_in(self, "front") ~= "air" then	
+			if random_num <= 1 or mobkit.node_name_in(self, "front") ~= "air" then
 				local yaw = self.object:get_yaw()
 				if yaw then
-					--minetest.chat_send_player("singleplayer", "test")	
+					--minetest.chat_send_player("singleplayer", "test")
 					local rotation_integer = math.random(0, 4)
-					local rotation_decimals = math.random()				
+					local rotation_decimals = math.random()
 					local new_yaw = yaw + rotation_integer + rotation_decimals
-					self.object:set_yaw(new_yaw)				
-				end			
+					self.object:set_yaw(new_yaw)
+				end
 			end
 			if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz
 				random_num = math.random(1, 100)
@@ -542,8 +541,8 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				if minetest.get_item_group(node_name, "water") >= 1  then
 					fly_status = "ascend"
 				end
-			end	
-			--minetest.chat_send_player("singleplayer", status)		
+			end
+			--minetest.chat_send_player("singleplayer", status)
 			--local node_name_in_front = mobkit.node_name_in(self, "front")
 			if fly_status == "stand" then -- stand
 				velocity = {
@@ -553,12 +552,12 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				}
 				random_num = math.random(1, 100)
 				if random_num < 20 and mobkit.check_height(self) == false then
-					fly_status = "descend"				
-				elseif random_num < 40 then		
-					fly_status = "ascend"							
-				end		
-				--minetest.chat_send_player("singleplayer", "stand")			
-			elseif fly_status == "descend" then -- descend				
+					fly_status = "descend"
+				elseif random_num < 40 then
+					fly_status = "ascend"
+				end
+				--minetest.chat_send_player("singleplayer", "stand")
+			elseif fly_status == "descend" then -- descend
 				velocity = {
 					x = self.max_speed* speed_factor,
 					y = -self.max_speed * speed_factor,
@@ -567,20 +566,20 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				random_num = math.random(1, 100)
 				if random_num < 20 then
 					fly_status = "stand"
-				elseif random_num < 40 then		
-					fly_status = "ascend"											
+				elseif random_num < 40 then
+					fly_status = "ascend"
 				end
-				--minetest.chat_send_player("singleplayer", "descend")	
-			else --ascend			
+				--minetest.chat_send_player("singleplayer", "descend")
+			else --ascend
 				fly_status = "ascend"
 				velocity ={
-					x = self.max_speed * speed_factor,				
+					x = self.max_speed * speed_factor,
 					y = self.max_speed * speed_factor * 2,
 					z = self.max_speed * speed_factor,
 				}
 				--minetest.chat_send_player("singleplayer", tostring(velocity.x))
-				--minetest.chat_send_player("singleplayer", "ascend")			
-			end		
+				--minetest.chat_send_player("singleplayer", "ascend")
+			end
 			timer = petz.settings.fly_check_time
 			petz.set_velocity(self, velocity)
 			self.fly_velocity = velocity --save the velocity to set in each step, not only each x seconds
@@ -590,7 +589,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				petz.set_velocity(self, self.fly_velocity)
 			else
 				petz.set_velocity(self, {x = 0.0, y = 0.0, z = 0.0})
-			end		
+			end
 		end
 	end
 	mobkit.queue_low(self,func)
@@ -601,9 +600,9 @@ end
 --
 
 function mobkit.hq_fly(self, prty)
-	local func=function(self)		
-		mobkit.animate(self, "fly")	
-		mobkit.lq_fly(self)	
+	local func=function(self)
+		mobkit.animate(self, "fly")
+		mobkit.lq_fly(self)
 		mobkit.clear_queue_high(self)
 	end
 	mobkit.queue_high(self, func, prty)
@@ -618,11 +617,11 @@ end
 
 -- Function to recover flying mobs from water
 
-function mobkit.hq_liquid_recovery_flying(self, prty)	
-	local func=function(self)		
+function mobkit.hq_liquid_recovery_flying(self, prty)
+	local func=function(self)
 		self.object:set_acceleration({ x = 0.0, y = 0.125, z = 0.0 })
 		self.object:set_velocity({ x = 1.0, y = 1.0, z = 1.0 })
-		if not(petz.isinliquid(self)) then			
+		if not(petz.isinliquid(self)) then
 			self.object:set_acceleration({ x = 0.0, y = 0.0, z = 0.0 })
 			return true
 		end
@@ -643,10 +642,10 @@ function mobkit.hq_alight(self, prty)
 			mobkit.hq_wanderfly(self, 0)
 			return true
 		else
-			--minetest.chat_send_player("singleplayer", "on ground")				
+			--minetest.chat_send_player("singleplayer", "on ground")
 			mobkit.animate(self, "stand")
-			mobkit.lq_idle(self, 2400)	
-			self.status = "stand"		
+			mobkit.lq_idle(self, 2400)
+			self.status = "stand"
 			return true
 		end
 	end
@@ -655,7 +654,7 @@ end
 
 function mobkit.lq_alight(self)
 	local func=function(self)
-		--minetest.chat_send_player("singleplayer", "alight")	
+		--minetest.chat_send_player("singleplayer", "alight")
 		self.object:set_acceleration({ x = 0, y = -1, z = 0 })
 		return true
 	end
@@ -676,10 +675,10 @@ function mobkit.hq_flyhunt(self, prty, tgtobj)
 			if dist > self.view_range then
 				return true
 			elseif dist > 3 then
-				mobkit.flyto(self, tgtobj)				
+				mobkit.flyto(self, tgtobj)
 			else
-				--minetest.chat_send_player("singleplayer", "hq fly attack")	
-				mobkit.hq_flyattack(self, prty+1, tgtobj)					
+				--minetest.chat_send_player("singleplayer", "hq fly attack")
+				mobkit.hq_flyattack(self, prty+1, tgtobj)
 			end
 		end
 	end
@@ -694,19 +693,18 @@ function mobkit.hq_flyattack(self, prty, tgtobj)
 		if mobkit.is_queue_empty_low(self) then
 			local pos = self.object:get_pos()
 			local tpos = mobkit.get_stand_pos(tgtobj)
-			local dist = vector.distance(pos,tpos)			
-			if dist > 3 then 
+			local dist = vector.distance(pos,tpos)
+			if dist > 3 then
 				return true
 			else
-				mobkit.lq_flyattack(self, tgtobj) 
+				mobkit.lq_flyattack(self, tgtobj)
 			end
 		end
 	end
 	mobkit.queue_high(self,func,prty)
 end
 
-function mobkit.lq_flyattack(self, target)	
-	local tgtbox = target:get_properties().collisionbox
+function mobkit.lq_flyattack(self, target)
 	local func = function(self)
 		if not mobkit.is_alive(target) then
 			return true
@@ -714,19 +712,19 @@ function mobkit.lq_flyattack(self, target)
 		local tgtpos = target:get_pos()
 		local pos = self.object:get_pos()
 		-- calculate attack spot
-		local dist = vector.distance(pos, tgtpos)	
+		local dist = vector.distance(pos, tgtpos)
 		if dist <= 1.5 then	--bite
-			target:punch(self.object, 1, self.attack)			
+			target:punch(self.object, 1, self.attack)
 			local vy = self.object:get_velocity().y -- bounce off
 			local yaw = self.object:get_yaw()
 			local dir = minetest.yaw_to_dir(yaw)
-			self.object:set_velocity({x=dir.x*-3,y=vy,z=dir.z*-3})				
+			self.object:set_velocity({x=dir.x*-3,y=vy,z=dir.z*-3})
 			mobkit.make_sound(self,'attack') -- play attack sound if defined
 			if self.attack_kamikaze then
 				self.hp = 0 --bees must to die!!!
 			end
 		else
-			mobkit.flyto(self, target)	
+			mobkit.flyto(self, target)
 		end
 		mobkit.lq_idle(self, 0.3)
 		return true
@@ -739,16 +737,16 @@ end
 --
 
 function mobkit.hq_climb(self, prty)
-	local func=function(self)	
+	local func=function(self)
 		if not(petz.check_if_climb) then
-			self.object:set_acceleration({x = 0, y = 0, z = 0 })   								
+			self.object:set_acceleration({x = 0, y = 0, z = 0 })
 			mobkit.clear_queue_low(self)
-			mobkit.clear_queue_high(self)			
+			mobkit.clear_queue_high(self)
 			return true
 		else
 			mobkit.animate(self, 'climb')
-			self.object:set_acceleration({x = 0, y = 0.25, z = 0 })			
-		end					
+			self.object:set_acceleration({x = 0, y = 0.25, z = 0 })
+		end
 	end
 	mobkit.queue_high(self,func,prty)
 end
@@ -759,13 +757,13 @@ end
 
 function mobkit.hq_aqua_jump(self, prty)
 	local func = function(self)
-		--minetest.chat_send_player("singleplayer", "test")		
+		--minetest.chat_send_player("singleplayer", "test")
 		local vel_impulse = 4.0
 		local velocity = {
 			x = self.max_speed * (vel_impulse/3),
 			y = self.max_speed * vel_impulse,
 			z = self.max_speed * (vel_impulse/3),
-		}		
+		}
 		petz.set_velocity(self, velocity)
 		self.object:set_acceleration({x=1.0, y=vel_impulse, z=1.0})
 		self.status = "jump"
@@ -786,10 +784,10 @@ end
 ---
 
 function mobkit.hq_gotopollen(self, prty, tpos)
-	local func = function(self)	
+	local func = function(self)
 		if self.pollen == true then
 			--mobkit.clear_queue_low(self)
-			--mobkit.clear_queue_high(self)	
+			--mobkit.clear_queue_high(self)
 			return true
 		end
 		mobkit.animate(self, "fly")
@@ -799,14 +797,14 @@ function mobkit.hq_gotopollen(self, prty, tpos)
 end
 
 function mobkit.lq_search_flower(self, tpos)
-	local func = function(self)	
-		local pos = self.object:get_pos()			
-		local y_distance = tpos.y - pos.y				
-		local abs_y_distance = math.abs(y_distance)		
+	local func = function(self)
+		local pos = self.object:get_pos()
+		local y_distance = tpos.y - pos.y
+		local abs_y_distance = math.abs(y_distance)
 		if (abs_y_distance > 1) and (abs_y_distance < self.view_range) then
-			petz.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
+			petz.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})
 		end
-		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 0.5) then					
+		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 0.5) then
 			self.pollen = true
 			petz.do_particles_effect(self.object, self.object:get_pos(), "pollen")
 			return true
@@ -816,7 +814,7 @@ function mobkit.lq_search_flower(self, tpos)
 end
 
 function mobkit.hq_gotobehive(self, prty, pos)
-	local func = function(self)	
+	local func = function(self)
 		if self.pollen == false or not(self.behive) then
 			return true
 		end
@@ -827,18 +825,18 @@ function mobkit.hq_gotobehive(self, prty, pos)
 end
 
 function mobkit.lq_search_behive(self)
-	local func = function(self)	
+	local func = function(self)
 		local tpos
 		if self.behive then
 			tpos = self.behive
 		else
 			return true
 		end
-		local pos = self.object:get_pos()			
+		local pos = self.object:get_pos()
 		local y_distance = tpos.y - pos.y
-		local abs_y_distance = math.abs(y_distance)	
+		local abs_y_distance = math.abs(y_distance)
 		if (abs_y_distance > 1) and (abs_y_distance < self.view_range) then
-			petz.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})	
+			petz.set_velocity(self, {x= 0.0, y= y_distance, z= 0.0})
 		end
 		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 1.01)  then
 				if petz.behive_exists(self) then
@@ -848,19 +846,19 @@ function mobkit.lq_search_behive(self)
 					meta:set_int("bee_count", bee_count)
 					honey_count = honey_count + 1
 					meta:set_int("honey_count", honey_count)
-					petz.set_infotext_behive(meta, honey_count, bee_count)											
-					self.pollen = false	
+					petz.set_infotext_behive(meta, honey_count, bee_count)
+					self.pollen = false
 				end
-		end						
+		end
 	end
 	mobkit.queue_low(self, func)
 end
 
 function mobkit.hq_approach_behive(self, pos, prty)
-	local func = function(self)			
+	local func = function(self)
 		if math.abs(pos.x - self.behive.x) <= (self.view_range / 2) or math.abs(pos.z - self.behive.z) <= (self.view_range / 2) then
 			mobkit.clear_queue_low(self)
-			mobkit.clear_queue_high(self)	
+			mobkit.clear_queue_high(self)
 			return true
 		end
 		mobkit.lq_approach_behive(self)
@@ -869,18 +867,17 @@ function mobkit.hq_approach_behive(self, pos, prty)
 end
 
 function mobkit.lq_approach_behive(self)
-	local func = function(self)		
+	local func = function(self)
 		local tpos
 		if self.behive then
 			tpos = self.behive
 		else
 			return true
 		end
-		local pos = self.object:get_pos()			
+		local pos = self.object:get_pos()
 		local y_distance = tpos.y - pos.y
-		local abs_y_distance = math.abs(y_distance)
 		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, (self.view_range / 4) ) then
-			mobkit.clear_queue_high(self)	
+			mobkit.clear_queue_high(self)
 			return true
 		end
 	end
@@ -943,22 +940,22 @@ local function get_v(v)
 end
 
 function mobkit.hq_mountdriver(self, prty)
-	local func=function(self)	
-		if not(self.driver) then			
+	local func=function(self)
+		if not(self.driver) then
 			return true
-		else	
-			if mobkit.is_queue_empty_low(self) then	
+		else
+			if mobkit.is_queue_empty_low(self) then
 				mobkit.lq_mountdriver(self)
 			end
-		end					
+		end
 	end
 	mobkit.queue_high(self,func,prty)
 end
 
 function mobkit.lq_mountdriver(self)
 	local auto_drive = false
-	local func = function(self)	
-		if not(self.driver) then return true end		
+	local func = function(self)
+		if not(self.driver) then return true end
 		local rot_steer, rot_view = math.pi/2, 0
 		if self.player_rotation.y == 90 then
 			rot_steer, rot_view = 0, math.pi/2
@@ -973,8 +970,8 @@ function mobkit.lq_mountdriver(self)
 			}
 		end
 		local velocity = get_v(velo)
-		--minetest.chat_send_player("singleplayer", tostring(velocity))	
-		-- process controls		
+		--minetest.chat_send_player("singleplayer", tostring(velocity))
+		-- process controls
 		local ctrl = self.driver:get_player_control()
 		if ctrl.up and ctrl.aux1 then
 			auto_drive = true
@@ -986,7 +983,7 @@ function mobkit.lq_mountdriver(self)
 			if ctrl.jump then
 				velo.y = velo.y + (self.jump_height)*4
 				acce_y = acce_y *1.5
-			end		
+			end
 		elseif ctrl.down and self.isonground then -- move backwards
 			if self.max_speed_reverse == 0 and velocity == 0 then
 				return
@@ -1001,9 +998,9 @@ function mobkit.lq_mountdriver(self)
 		else --stand
 			velocity = 0
 			mobkit.animate(self, "stand")
-			return	
+			return
 		end
-		--Gallop		
+		--Gallop
 		if ctrl.up and ctrl.sneak and not(self.gallop_exhausted) then
 			if self.gallop == false then
 				self.gallop = true
@@ -1012,7 +1009,7 @@ function mobkit.lq_mountdriver(self)
 			end
 			velocity = velocity + self.accel
 		end
-		--minetest.chat_send_player("singleplayer", tostring(velocity))	
+		--minetest.chat_send_player("singleplayer", tostring(velocity))
 		-- fix mob rotation
 		local horz = self.driver:get_look_horizontal() or 0
 		self.object:set_yaw(horz - self.rotate)
@@ -1026,10 +1023,9 @@ function mobkit.lq_mountdriver(self)
 			velocity = velocity - get_sign(velocity)
 		end
 		-- Set position, velocity and acceleration
-		local p = self.object:get_pos()
 		local new_velo = {x = 0, y = 0, z = 0}
 		local new_acce = {x = 0, y = mobkit.gravity, z = 0}
-		new_velo = get_velocity(velocity, self.object:get_yaw() - rot_view, velo.y)		
+		new_velo = get_velocity(velocity, self.object:get_yaw() - rot_view, velo.y)
 		self.object:set_velocity(new_velo)
 		if not(self.gallop) then
 			mobkit.animate(self, "walk")	-- set animation
@@ -1037,8 +1033,8 @@ function mobkit.lq_mountdriver(self)
 			mobkit.animate(self, "run")
 		end
 		new_acce.y = new_acce.y + acce_y
-		--minetest.chat_send_player("singleplayer", tostring(new_acce.y))	
-		self.object:set_acceleration(new_acce)		
+		--minetest.chat_send_player("singleplayer", tostring(new_acce.y))
+		self.object:set_acceleration(new_acce)
 		return
 	end
 	mobkit.queue_low(self, func)

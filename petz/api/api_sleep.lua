@@ -9,10 +9,10 @@ petz.calculate_sleep_times = function(self)
 		local sleep_start_time
 		local sleep_end_time
 		local sleep_end_time_limit
-		if self.sleep_at_night then			
+		if self.sleep_at_night then
 			local night_start = 19500
 			local night_duration = 9000
-			sleep_time = night_duration * (self.sleep_ratio or 1) 
+			sleep_time = night_duration * (self.sleep_ratio or 1)
 			sleep_end_time_limit = 23999 + 4500
 			sleep_start_time = math.random(night_start, sleep_end_time_limit - sleep_time)
 			sleep_end_time = sleep_start_time + sleep_time
@@ -25,7 +25,7 @@ petz.calculate_sleep_times = function(self)
 		else
 			local day_start = 4500
 			local day_duration = 15000
-			sleep_time = day_duration * (self.sleep_ratio or 1) 
+			sleep_time = day_duration * (self.sleep_ratio or 1)
 			sleep_end_time_limit = 19500
 			sleep_start_time = math.random(day_start, sleep_end_time_limit - sleep_time)
 			sleep_end_time = sleep_start_time + sleep_time
@@ -53,24 +53,24 @@ petz.bh_sleep = function(self, prty)
 			elseif timeofday < 4500 then
 				sleep_start_time = 0
 			end
-		end		
-		--minetest.chat_send_player("singleplayer", "time of day="..tostring(timeofday).."/sleep_start_time="..tostring(self.sleep_start_time).."/sleep_end_time="..tostring(self.sleep_end_time))	
+		end
+		--minetest.chat_send_player("singleplayer", "time of day="..tostring(timeofday).."/sleep_start_time="..tostring(self.sleep_start_time).."/sleep_end_time="..tostring(self.sleep_end_time))
 		if (self.status ~= "sleep") and (timeofday > sleep_start_time and timeofday < sleep_end_time) then
-			--minetest.chat_send_player("singleplayer", "prueba")	
+			--minetest.chat_send_player("singleplayer", "prueba")
 			petz.sleep(self, prty, false)
-		end		
+		end
 	end
 end
 
 petz.sleep = function(self, prty, force)
-	self.status = mobkit.remember(self, "status", "sleep")	
-	mobkit.animate(self, 'sleep')			
+	self.status = mobkit.remember(self, "status", "sleep")
+	mobkit.animate(self, 'sleep')
 	mobkit.hq_sleep(self, prty, force)
 end
 
 function mobkit.hq_sleep(self, prty, force)
 	local timer = 2
-	local func=function(self)	
+	local func=function(self)
 		timer = timer - self.dtime
 		if timer <  0 then
 			if not(force) then
@@ -83,18 +83,18 @@ function mobkit.hq_sleep(self, prty, force)
 					elseif timeofday < 4500 then
 						sleep_start_time = 0
 					end
-				end					
+				end
 				if (self.status == "sleep") and timer < 0 --check if status did not change
 					and (self.sleep_at_night and not(petz.is_night())) or (self.sleep_at_day and petz.is_night())
-					or (timeofday < sleep_start_time) or (timeofday > sleep_end_time) then			
+					or (timeofday < sleep_start_time) or (timeofday > sleep_end_time) then
 						mobkit.clear_queue_high(self) --awake
 						self.status = mobkit.remember(self, "status", "")
 						return true
 				else
-					petz.do_particles_effect(self.object, self.object:get_pos(), "sleep") 
+					petz.do_particles_effect(self.object, self.object:get_pos(), "sleep")
 				end
 			else
-				petz.do_particles_effect(self.object, self.object:get_pos(), "sleep") 
+				petz.do_particles_effect(self.object, self.object:get_pos(), "sleep")
 			end
 			timer = 2
 		end
