@@ -563,3 +563,88 @@ minetest.register_craft({
         {'petz:poop', 'petz:poop', 'petz:poop'},
     }
 })
+
+--Cat Basket
+minetest.register_node("petz:cat_basket", {
+    description = S("Cat Basket"),  
+    groups = {snappy=1, bendy=2, cracky=1},
+    sounds = default.node_sound_wood_defaults(),
+	tiles = {
+		"petz_cat_basket_top.png",
+		"petz_cat_basket_bottom.png",
+		"petz_cat_basket_side.png",
+		"petz_cat_basket_side.png",
+		"petz_cat_basket_side.png",
+		"petz_cat_basket_side.png"
+	},
+	drawtype = "nodebox",
+	paramtype = "light",
+	groups = {snappy=1, bendy=2, cracky=1},
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.5, -0.5, -0.5, 0.5, -0.375, 0.5}, -- NodeBox1
+			{-0.5, -0.375, -0.5, -0.4375, -0.125, 0.4375}, -- NodeBox2
+			{-0.5, -0.375, 0.4375, 0.5, -0.125, 0.5}, -- NodeBox3
+			{0.4375, -0.375, -0.5, 0.5, -0.125, 0.5}, -- NodeBox4
+			{-0.4375, -0.4375, -0.5, -0.25, -0.125, -0.4375}, -- NodeBox5
+			{0.25, -0.375, -0.5, 0.4375, -0.125, -0.4375}, -- NodeBox6
+			{-0.5, -0.375, -0.5, 0.5, -0.3125, -0.4375}, -- NodeBox7
+		}
+	},
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		local player_name = player:get_player_name()	
+		local pos_above = {
+			x = pos.x,
+			y = pos.y,
+			z = pos.z,
+		}
+		local cat_in_basket
+		local obj_list = minetest.get_objects_inside_radius(pos_above, 1) --check if already a kitty
+		local pos_kitty = {
+			x = pos.x,
+			y = pos.y,
+			z = pos.z-0.125,
+		} 
+		for _, obj in ipairs(obj_list) do
+			local ent = obj:get_luaentity()
+			if ent and (ent.name == "petz:kitty") then			
+				cat_in_basket = true	
+				local rotation = obj:get_rotation()
+				local kitty_pos = obj:get_pos()					
+				if rotation.y == 0 then
+					obj:set_rotation({x=0, y=math.pi, z=0})
+					obj:set_pos({x= kitty_pos.x, y=kitty_pos.y, z=kitty_pos.z+0.0625})
+				else
+					obj:set_rotation({x=0, y=0, z=0})
+					obj:set_pos(pos_kitty)										
+				end				
+			end
+		end					
+		local itemstack_name = itemstack:get_name()
+		if itemstack_name == "petz:kitty_set" then		
+			if cat_in_basket == true then
+				minetest.chat_send_player(player_name, S("There's already a kitty in the basket."))	
+				return
+			end
+			if not minetest.is_protected(pos, player_name) then
+				local player_pos = player:get_pos()
+				ent = petz.create_pet(player, itemstack, itemstack_name:sub(1, -5) , pos_kitty)
+				mobkit.clear_queue_low(ent)
+				mobkit.clear_queue_high(ent)	
+				petz.sleep(ent, 2, true)
+			end
+			return itemstack
+		end
+	end
+})
+
+minetest.register_craft({
+    type = "shaped",
+    output = 'petz:cat_basket',
+    recipe = {        
+        {'', '', ''},
+        {'group:wood', 'wool:white', 'group:wood'},
+        {'group:wood', 'group:wood', 'group:wood'},
+    }
+})

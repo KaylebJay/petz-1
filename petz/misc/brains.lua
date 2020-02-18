@@ -188,7 +188,7 @@ function petz.herbivore_brain(self)
 		end
 		
 		if prty < 2 then	--Sleep Behaviour
-			petz.sleep(self, 2)
+			petz.bh_sleep(self, 2)			
 		end
 		
 		--Roam default			
