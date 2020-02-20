@@ -64,7 +64,7 @@ function petz.herbivore_brain(self)
 
 		if prty < 20 then
 			if petz.isinliquid(self) then
-				if not(self.can_fly) then
+				if not self.can_fly then
 					mobkit.hq_liquid_recovery(self, 20)
 					return
 				else

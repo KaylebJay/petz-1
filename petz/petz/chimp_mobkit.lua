@@ -45,8 +45,8 @@ minetest.register_entity("petz:"..pet_name,{
 	makes_footstep_sound = true,
 	attack={range=0.5, damage_groups={fleshy=3}},
 	animation = {
-		walk={range={x=1, y=12}, speed=20, loop=true},
-		run={range={x=1, y=12}, speed=20, loop=true},
+		walk={range={x=1, y=12}, speed=25, loop=true},
+		run={range={x=1, y=12}, speed=25, loop=true},
 		stand={
 			{range={x=12, y=24}, speed=5, loop=true},
 			{range={x=24, y=36}, speed=10, loop=true},

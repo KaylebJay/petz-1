@@ -67,6 +67,19 @@ function mobkit.check_height(self)
 	return true
 end
 
+function mobkit.check_front_obstacle(self)
+	local yaw = self.object:get_yaw()
+	local dir_x = -math.sin(yaw) * (self.collisionbox[4] + 0.5)
+	local dir_z = math.cos(yaw) * (self.collisionbox[4] + 0.5)
+	local pos = self.object:get_pos()
+	local nodes_front = 5
+	if minetest.line_of_sight(
+		{x = pos.x + dir_x, y = pos.y, z = pos.z + dir_z}, {x = pos.x + dir_x + nodes_front, y = pos.y, z = pos.z + dir_z + nodes_front}, 1) then
+		return false
+	end
+	return true
+end
+
 function mobkit.check_is_on_surface(self)
 	local pos = self.object:get_pos()
 	if pos.y > 0 then
@@ -492,7 +505,7 @@ end
 function mobkit.hq_wanderfly(self, prty)
 	local func=function(self)
 		if mobkit.is_queue_empty_low(self) then
-			mobkit.lq_dumbfly(self, 0.3)
+			mobkit.lq_dumbfly(self, 0.6)
 		end
 	end
 	mobkit.queue_high(self,func,prty)
@@ -507,6 +520,15 @@ end
 --5) In each status a chance to change of status, important: more preference for 'ascend'
 --than descend, cos this does the mobs stand on air, and climb mountains and trees.
 
+function mobkit.lq_turn2yaw(self, yaw)
+	local func = function(self)
+		if mobkit.turn2yaw(self, yaw) then
+			return true
+		end
+	end
+	mobkit.queue_low(self,func)
+end
+
 function mobkit.lq_dumbfly(self, speed_factor)
 	local timer = petz.settings.fly_check_time
 	local fly_status = "ascend"
@@ -519,15 +541,22 @@ function mobkit.lq_dumbfly(self, speed_factor)
 			local mob = self.object
 			mobkit.animate(self, 'fly')
 			local random_num = math.random(1, 5)
+			local yaw = self.object:get_yaw()
+			local rotation = self.object:get_rotation()
 			if random_num <= 1 or mobkit.node_name_in(self, "front") ~= "air" then
-				local yaw = self.object:get_yaw()
 				if yaw then
 					--minetest.chat_send_player("singleplayer", "test")
 					local rotation_integer = math.random(0, 4)
 					local rotation_decimals = math.random()
 					local new_yaw = yaw + rotation_integer + rotation_decimals
-					self.object:set_yaw(new_yaw)
+					mobkit.lq_turn2yaw(self, new_yaw)
+					return true --finish this que to start the turn
 				end
+			end
+			local y_impulse = 1
+			if mobkit.check_front_obstacle(self) and mobkit.node_name_in(self, "top") == "air" then
+				fly_status = "ascend"
+				y_impulse = 3
 			end
 			if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz
 				random_num = math.random(1, 100)
@@ -546,10 +575,11 @@ function mobkit.lq_dumbfly(self, speed_factor)
 			--local node_name_in_front = mobkit.node_name_in(self, "front")
 			if fly_status == "stand" then -- stand
 				velocity = {
-					x= self.max_speed* speed_factor *2,
+					x= self.max_speed* speed_factor,
 					y= 0.0,
-					z= self.max_speed* speed_factor *2,
+					z= self.max_speed* speed_factor,
 				}
+				self.object:set_rotation({x= -0.0, y = rotation.y, z= rotation.z})
 				random_num = math.random(1, 100)
 				if random_num < 20 and mobkit.check_height(self) == false then
 					fly_status = "descend"
@@ -560,9 +590,10 @@ function mobkit.lq_dumbfly(self, speed_factor)
 			elseif fly_status == "descend" then -- descend
 				velocity = {
 					x = self.max_speed* speed_factor,
-					y = -self.max_speed * speed_factor,
+					y = -speed_factor,
 					z = self.max_speed* speed_factor,
 				}
+				self.object:set_rotation({x= 0.16, y = rotation.y, z= rotation.z})
 				random_num = math.random(1, 100)
 				if random_num < 20 then
 					fly_status = "stand"
@@ -574,9 +605,10 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				fly_status = "ascend"
 				velocity ={
 					x = self.max_speed * speed_factor,
-					y = self.max_speed * speed_factor * 2,
+					y = speed_factor * (y_impulse or 1),
 					z = self.max_speed * speed_factor,
 				}
+				self.object:set_rotation({x= -0.16, y = rotation.y, z= rotation.z})
 				--minetest.chat_send_player("singleplayer", tostring(velocity.x))
 				--minetest.chat_send_player("singleplayer", "ascend")
 			end

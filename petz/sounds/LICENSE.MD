@@ -187,9 +187,9 @@ License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
 --------------------------------------------
 filenames: petz_hamster_squeak.ogg & petz_hamster_moaning.ogg
-Author: Daniel Simon 
+Author: Daniel Simon
 http://soundbible.com/2144-Guinea-Pig.html
-License: Attribution 3.0 
+License: Attribution 3.0
 --------------------------------------------
 filenames: petz_dolphin_clicking.ogg & petz_dolphin_moaning.ogg
 Author: Alexander
@@ -251,12 +251,12 @@ License: The sound effect is permitted for non-commercial use
 under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
 --------------------------------------------
 filenames: petz_polar_bear_attack.ogg
-Author: Partners In Rhyme 
+Author: Partners In Rhyme
 https://www.freesoundeffects.com/free-track/ploar-89403/polar%20bear/
 License: Free
 --------------------------------------------
 filenames: petz_polar_bear_growl.ogg
-Author: Partners In Rhyme 
+Author: Partners In Rhyme
 https://www.freesoundeffects.com/free-track/polarbear-89404/polar%20bear/
 License: Free
 --------------------------------------------
@@ -338,3 +338,8 @@ Author: Alexander
 http://www.orangefreesounds.com/cat-meow-sound-effect/
 License: The sound effect is permitted for commercial use
 under license “Public Domain”
+--------------------------------------------
+filename: petz_replace.ogg
+Author: www.zapsplat.com
+https://www.zapsplat.com/music/cow-eat-grass-or-foliage-single-chew/
+License: https://www.zapsplat.com/license-type/standard-license/
