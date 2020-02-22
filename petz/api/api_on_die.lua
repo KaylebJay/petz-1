@@ -43,7 +43,7 @@ petz.on_die = function(self)
     local props = self.object:get_properties()
     props.collisionbox[2] = props.collisionbox[1] - 0.0625
     self.object:set_properties({collisionbox=props.collisionbox})
-	petz.drop_items(self)
+	petz.drop_items(self, self.was_killed_by_player or nil)
 	mobkit.clear_queue_high(self)
 	if petz.pet[self.owner] then
 		petz.pet[self.owner]= nil --remove owner entry for right_click formspec

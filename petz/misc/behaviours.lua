@@ -1,6 +1,5 @@
 local modpath, S = ...
 
-
 --
 -- Helpers Functions
 --
@@ -297,20 +296,6 @@ petz.bh_afraid= function(self, pos)
 	local z = self.object:get_velocity().z
 	self.object:set_velocity({x= x, y= 0, z= z})
 	--self.object:set_acceleration({x= hvel.x, y= 0, z= hvel.z})
-end
-
---
--- Enviromental Damage
---
-
-function petz.bh_env_damage(self, prty)
-	local stand_pos= mobkit.get_stand_pos(self)
-	if petz.env_damage(self, stand_pos)	== true then
-		local air_pos = minetest.find_node_near(stand_pos, self.view_range, "air", false)
-		if air_pos then
-			mobkit.hq_goto(self, prty, air_pos)
-		end
-	end
 end
 
 --

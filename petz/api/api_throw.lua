@@ -147,7 +147,5 @@ function petz.register_throw_entity(name, textures, damage, effect, particles, s
 		on_step = function(self, dtime)
 			petz.throw(self, dtime, damage, effect, particles, sound)
 		end,
-})
-
-
+	})
 end

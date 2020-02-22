@@ -52,7 +52,7 @@ function petz.herbivore_brain(self)
 		local prty = mobkit.get_queue_priority(self)
 
 		if prty < 30 then
-			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+			petz.env_damage(self, pos, 30) --enviromental damage: lava, fire...
 		end
 
 		if prty < 25 then
@@ -232,7 +232,7 @@ function petz.predator_brain(self)
 		local player = mobkit.get_nearby_player(self) --get the player close
 
 		if prty < 30 then
-			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+			petz.env_damage(self, pos, 30) --enviromental damage: lava, fire...
 		end
 
 		--Follow Behaviour
@@ -350,7 +350,7 @@ function petz.bee_brain(self)
 		local player = mobkit.get_nearby_player(self)
 
 		if prty < 30 then
-			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+			petz.env_damage(self, pos, 30) --enviromental damage: lava, fire...
 		end
 
 		--search for flowers
@@ -608,7 +608,7 @@ function petz.monster_brain(self)
 		local player = mobkit.get_nearby_player(self) --get the player close
 
 		if prty < 30 then
-			petz.bh_env_damage(self, 30) --enviromental damage: lava, fire...
+			petz.env_damage(self, pos, 30) --enviromental damage: lava, fire...
 		end
 
 		-- hunt a prey

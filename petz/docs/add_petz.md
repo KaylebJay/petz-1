@@ -90,3 +90,17 @@ min_height = 0, --min height to spawn (0= sea level)
 max_height = 30, --max height to spawn (0= sea level)
 min_daylight_level = 0, --min light to spawn (min 0)
 max_daylight_level = 8, --max light to spawn (max 15)
+
+####Noxious Nodes
+
+If mob in node, then damage it per second.
+
+In example:
+
+noxious_nodes  = {
+	{name = "air", where ="entity", damage = 1},
+},
+
+name = name of the node
+where = "stand" or "entity"
+damage = damage points (by default 1)
