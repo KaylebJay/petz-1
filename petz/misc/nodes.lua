@@ -30,11 +30,11 @@ if minetest.get_modpath("stairs") ~= nil then
     stairs.register_stair_and_slab(
         "red_gables",
         "petz:red_gables",
-        {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+        {choppy = 2, stone = 1},
         {"petz_red_gables.png"},
         S("Red Gables Stair"),
         S("Red Gables Slab"),
-        default.node_sound_wood_defaults()
+        default.node_sound_stone_defaults()
     )
     stairs.register_stair_and_slab(
         "blue_stained_wood",
