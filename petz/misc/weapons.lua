@@ -7,7 +7,7 @@ minetest.register_node("petz:jack_o_lantern_grenade", {
 		"petz_jackolantern_grenade_back.png", "petz_jackolantern_grenade_front.png"},
 	visual_scale = 0.35,
 	is_ground_content = false,
-    groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
+    groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
     sounds = default.node_sound_wood_defaults(),
 	on_use = function(itemstack, user, pointed_thing)
 		local strength = 20
