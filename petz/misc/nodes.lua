@@ -6,16 +6,16 @@ minetest.register_node("petz:red_gables", {
     description = S("Red Gables"),
     tiles = {"petz_red_gables.png"},
     is_ground_content = false,
-    groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
-    sounds = default.node_sound_wood_defaults(),
+	groups = {choppy = 2, stone = 1},
+	sounds = default.node_sound_stone_defaults(),
 })
 
 minetest.register_node("petz:yellow_paving", {
     description = S("Yellow Paving"),
     tiles = {"petz_yellow_paving.png"},
     is_ground_content = false,
-    groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
-    sounds = default.node_sound_wood_defaults(),
+	groups = {cracky = 2, stone = 1},
+	sounds = default.node_sound_stone_defaults(),
 })
 
 minetest.register_node("petz:blue_stained_wood", {

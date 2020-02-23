@@ -159,8 +159,8 @@ minetest.register_node("petz:gray_paving_stone", {
     description = S("Gray Paving Stone"),
     tiles = {"petz_gray_paving_stone.png"},
     is_ground_content = false,
-    groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
-    sounds = default.node_sound_wood_defaults(),
+	groups = {cracky = 2, stone = 1},
+	sounds = default.node_sound_stone_defaults(),
 })
 
 ---
@@ -251,10 +251,11 @@ minetest.register_craft({
 	type = "shaped",
 	output = "petz:fishtank",
 	recipe = {
-		{"default:obsidian_glass", "default:obsidian_glass", "default:obsidian_glass"},
-		{"default:obsidian_glass", "default:water_source", "default:obsidian_glass"},
-		{"default:obsidian_glass", "default:obsidian_glass", "default:obsidian_glass"},
-	}
+		{"default:glass", "default:glass", "default:glass"},
+		{"default:glass", "group:water_bucket", "default:glass"},
+		{"default:glass", "default:glass", "default:glass"},
+	},
+	replacements = {{"group:water_bucket", "bucket:bucket_empty"}}
 })
 
 --Metal Syringe

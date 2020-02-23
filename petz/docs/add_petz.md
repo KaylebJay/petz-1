@@ -102,5 +102,6 @@ noxious_nodes  = {
 },
 
 name = name of the node
-where = "stand" or "entity"
+where = "stand" or "entity" (by default "entity")
 damage = damage points (by default 1)
+Note: Lava already makes damage so it is not necessary being defined.

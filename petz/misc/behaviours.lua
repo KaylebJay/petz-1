@@ -106,21 +106,17 @@ function petz.is_jumping(self)
 	end
 end
 
-function mobkit.check_ground_suffocation(self)
-	local spos = mobkit.get_stand_pos(self)
-	spos.y = spos.y+0.01
+function mobkit.check_ground_suffocation(self, pos)
 	if self.type and mobkit.is_alive(self) and not(self.is_baby) then
-		local stand_pos = spos
-		stand_pos.y = spos.y + 0.5
-		local stand_node_pos = mobkit.get_node_pos(stand_pos)
-		local stand_node = mobkit.nodeatpos(stand_node_pos)
-		if stand_node and stand_node.walkable and stand_node.drawtype == "normal" then
-			local new_y = stand_pos.y + self.jump_height
+		pos.y = pos.y - 0.5
+		local node = mobkit.nodeatpos(pos)
+		if node and node.walkable and node.drawtype == "normal" then
+			local new_y = pos.y + self.jump_height
 			if new_y <= 30927 then
 				self.object:set_pos({
-					x = stand_pos.x,
+					x = pos.x,
 					y = new_y,
-					z = stand_pos.z
+					z = pos.z
 				})
 			end
 		end

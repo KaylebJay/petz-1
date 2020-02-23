@@ -43,7 +43,7 @@ function petz.herbivore_brain(self)
 		self.object:set_acceleration({x=0, y=0, z=0})
 	end
 
-	mobkit.check_ground_suffocation(self)
+	mobkit.check_ground_suffocation(self, pos)
 
 	if mobkit.timer(self, 1) then
 
@@ -209,6 +209,8 @@ end
 
 function petz.predator_brain(self)
 
+	local pos = self.object:get_pos()
+
 	mobkit.vitals(self)
 
 	if self.hp <= 0 then -- Die Behaviour
@@ -216,7 +218,7 @@ function petz.predator_brain(self)
 		return
 	end
 
-	mobkit.check_ground_suffocation(self)
+	mobkit.check_ground_suffocation(self, pos)
 
 	if mobkit.timer(self, 1) then
 
@@ -303,6 +305,8 @@ end
 
 function petz.bee_brain(self)
 
+	local pos = self.object:get_pos() --pos of the petz
+
 	mobkit.vitals(self)
 
 	self.object:set_acceleration({x=0, y=0, z=0})
@@ -334,7 +338,7 @@ function petz.bee_brain(self)
 		end
 	end
 
-	mobkit.check_ground_suffocation(self)
+	mobkit.check_ground_suffocation(self, pos)
 
 	if mobkit.timer(self, 1) then
 
@@ -344,8 +348,6 @@ function petz.bee_brain(self)
 			mobkit.hq_liquid_recovery(self, 40)
 			return
 		end
-
-		local pos = self.object:get_pos()
 
 		local player = mobkit.get_nearby_player(self)
 
@@ -440,7 +442,7 @@ function petz.aquatic_brain(self)
 		mobkit.hurt(self, petz.settings.air_damage)
 	end
 
-	mobkit.check_ground_suffocation(self)
+	mobkit.check_ground_suffocation(self, pos)
 
 	if mobkit.timer(self, 1) then
 
@@ -512,7 +514,7 @@ function petz.semiaquatic_brain(self)
 	end
 
 	if not(petz.isinliquid(self)) then
-		mobkit.check_ground_suffocation(self)
+		mobkit.check_ground_suffocation(self, pos)
 	end
 
 	if mobkit.timer(self, 1) then
@@ -585,6 +587,8 @@ end
 
 function petz.monster_brain(self)
 
+	local pos = self.object:get_pos() --pos of the petz
+
 	mobkit.vitals(self)
 
 	if self.hp <= 0 then -- Die Behaviour
@@ -592,7 +596,7 @@ function petz.monster_brain(self)
 		return
 	end
 
-	mobkit.check_ground_suffocation(self)
+	mobkit.check_ground_suffocation(self, pos)
 
 	if mobkit.timer(self, 1) then
 
