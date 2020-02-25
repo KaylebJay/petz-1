@@ -35,6 +35,7 @@ REPLACE FUNCTION
 ---
 - mokapi.replace(self, sound_name, max_hear_distance)
 Replace a node to another. Useful for eating grass.
+'sound_name' & 'max_hear_distance' are optionals.
 Example of the 'replace_what' definition:
     replace_what = {
         {"group:grass", "air", -1},
