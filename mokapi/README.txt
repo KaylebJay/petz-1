@@ -30,3 +30,15 @@ Example of the 'misc' definition:
 Make a sound on dest accordingly dest_type.
 dest_type can be "object, "player" or "pos".
 
+---
+REPLACE FUNCTION
+---
+- mokapi.replace(self, sound_name, max_hear_distance)
+Replace a node to another. Useful for eating grass.
+Example of the 'replace_what' definition:
+    replace_what = {
+        {"group:grass", "air", -1},
+        {"default:dirt_with_grass", "default:dirt", -2}
+    },
+3 parameters: replace_what, replace_with and y_offset
+

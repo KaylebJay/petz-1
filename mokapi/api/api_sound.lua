@@ -6,9 +6,6 @@ function mokapi.make_misc_sound(self, chance, max_hear_distance)
 	if self.muted == true then
 		return
 	end
-	if not max_hear_distance then
-		max_hear_distance = mokapi.consts.DEFAULT_MAX_HEAR_DISTANCE
-	end
 	local random_number = math.random(1, chance)
 	if random_number == 1 then
 		if self.sounds and self.sounds['misc'] then
@@ -18,7 +15,7 @@ function mokapi.make_misc_sound(self, chance, max_hear_distance)
 			else
 				misc_sound = self.sounds['misc']
 			end
-			mokapi.make_sound("object", self.object, misc_sound, max_hear_distance)
+			mokapi.make_sound("object", self.object, misc_sound, max_hear_distance or mokapi.consts.DEFAULT_MAX_HEAR_DISTANCE)
 		end
 	end
 end

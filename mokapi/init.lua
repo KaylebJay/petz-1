@@ -5,3 +5,4 @@ local modpath = minetest.get_modpath(modname) --the modpath
 assert(loadfile(modpath.."/api/api_consts.lua"))()
 assert(loadfile(modpath.."/api/api_drops.lua"))()
 assert(loadfile(modpath.."/api/api_sound.lua"))()
+assert(loadfile(modpath.."/api/api_replace.lua"))()
