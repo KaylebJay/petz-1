@@ -37,9 +37,11 @@ REPLACE FUNCTION
 Replace a node to another. Useful for eating grass.
 'sound_name' & 'max_hear_distance' are optionals.
 Example of the 'replace_what' definition:
+	replace_rate = 10,
+	replace_offset = 0,
     replace_what = {
         {"group:grass", "air", -1},
         {"default:dirt_with_grass", "default:dirt", -2}
     },
-3 parameters: replace_what, replace_with and y_offset
+3 parameters for 'replace_what': replace_what, replace_with and y_offset
 
