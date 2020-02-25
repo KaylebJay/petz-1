@@ -7,7 +7,7 @@ petz.breed = function(self, clicker, wielded_item, wielded_item_name)
 		self.is_rut = true
 		mobkit.remember(self, "is_rut", self.is_rut)
 		petz.do_particles_effect(self.object, self.object:get_pos(), "heart")
-		petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
+		mokapi.make_sound("object", self.object, "petz_"..self.type.."_moaning", petz.settings.max_hear_distance)
 	else
 		if self.is_rut then
 			minetest.chat_send_player(clicker:get_player_name(), S("This animal is already rut."))
@@ -76,7 +76,7 @@ petz.childbirth = function(self)
 	end
 	pos.y = pos.y + 1.01 -- birth a litte up
 	local baby = minetest.add_entity(pos, baby_type, minetest.serialize(baby_properties))
-	petz.do_sound_effect("object", baby, "petz_pop_sound")
+	mokapi.make_sound("object", baby, "petz_pop_sound", petz.settings.max_hear_distance)
 	local baby_entity = baby:get_luaentity()
 	baby_entity.is_baby = true
 	mobkit.remember(baby_entity, "is_baby", baby_entity.is_baby)
@@ -143,6 +143,6 @@ petz.growth_timer = function(self, dtime)
 			visual_size = self.visual_size,
 			collisionbox = self.collisionbox
 		})
-		petz.do_sound_effect("object", self.object, "petz_pop_sound")
+		mokapi.make_sound("object", self.object, "petz_pop_sound", petz.settings.max_hear_distance)
 	end
 end

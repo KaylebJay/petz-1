@@ -7,7 +7,7 @@ petz.convert = function(self, player_name)
 	if self.convert_count <= 0 then
 		local pos = self.object:get_pos()
 		local converted_pet = minetest.add_entity(pos, self.convert_to)
-		petz.do_sound_effect("object", converted_pet, "petz_pop_sound")
+		mokapi.make_sound("object", converted_pet, "petz_pop_sound", petz.settings.max_hear_distance)
 		local converted_entity = converted_pet:get_luaentity()
 		converted_entity.tamed = true
 		mobkit.remember(converted_entity, "tamed", converted_entity.tamed)
@@ -18,7 +18,7 @@ petz.convert = function(self, player_name)
 		minetest.chat_send_player(player_name , S("The").." "..S(old_pet_name).." "..S("turn into").." "..S(new_pet_name))
 	else
 		minetest.chat_send_player(player_name , S("The").." "..S(old_pet_name).." "..S("is turning into another animal")..".")
-		petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
+		mokapi.make_sound("object", self.object, "petz_"..self.type.."_moaning", petz.settings.max_hear_distance)
 		petz.do_particles_effect(self.object, self.object:get_pos(), "heart")
 	end
 end

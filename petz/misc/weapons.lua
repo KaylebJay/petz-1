@@ -11,7 +11,7 @@ minetest.register_node("petz:jack_o_lantern_grenade", {
     sounds = default.node_sound_wood_defaults(),
 	on_use = function(itemstack, user, pointed_thing)
 		local strength = 20
-		petz.do_sound_effect("player", user, "petz_fireball")
+		mokapi.make_sound("player", user, "petz_fireball", petz.settings.max_hear_distance)
 		if not petz.spawn_throw_object(user, strength, "petz:ent_jack_o_lantern_grenade") then
 			return -- something failed
 		end

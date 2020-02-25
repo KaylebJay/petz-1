@@ -1,6 +1,7 @@
-local modpath, S = ...
-
-petz.drop_velocity = function(obj)
+--
+--Helper funtions
+--
+function mokapi.drop_velocity(obj)
 	obj:set_velocity({
 		x = math.random(-10, 10) / 9,
 		y = 6,
@@ -8,15 +9,35 @@ petz.drop_velocity = function(obj)
 	})
 end
 
-petz.drop_object = function(obj)
+function mokapi.drop_object(obj)
 	if obj and obj:get_luaentity() then
-		petz.drop_velocity(obj)
+		mokapi.drop_velocity(obj)
 	elseif obj then
 		obj:remove() -- item does not exist
 	end
 end
 
-petz.drop_items = function(self, killed_by_player)
+--
+--Functions
+--
+function mokapi.drop_item(self, item, num)
+	if not item then
+		return
+	end
+	if not num then
+		num = 1
+	end
+	local pos
+	if type(self) == 'table' then --entity
+		pos = self.object:get_pos()
+	else --player
+		pos = self:get_pos()
+	end
+	local obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
+	mokapi.drop_object(obj)
+end
+
+function mokapi.drop_items(self, killed_by_player)
 	if not self.drops or #self.drops == 0 then 	-- check for nil or no drops
 		return
 	end
@@ -34,16 +55,19 @@ petz.drop_items = function(self, killed_by_player)
 			elseif self.drops[n].min ~= 0 then
 				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
 			end
-			petz.drop_object(obj)
+			mokapi.drop_object(obj)
 		end
 	end
 	self.drops = {}
 end
 
-petz.node_drop_items = function(pos)
+function mokapi.node_drop_items(pos)
 	local meta = minetest.get_meta(pos)
+	if not meta then
+		return
+	end
 	local drops= minetest.deserialize(meta:get_string("drops"))
-	if not drops or #drops == 0 then 	-- check for nil or no drops
+	if not drops or #drops == 0 then -- check for nil or no drops
 		return
 	end
 	local obj, item, num
@@ -54,21 +78,7 @@ petz.node_drop_items = function(pos)
 			if drops[n].min ~= 0 then
 				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
 			end
-			petz.drop_object(obj)
+			mokapi.drop_object(obj)
 		end
 	end
-end
-
-petz.drop_item = function(self, item, num)
-	if not(item) or not(num) then
-		return
-	end
-	local pos
-	if type(self) == 'table' then --entity
-		pos = self.object:get_pos()
-	else --player
-		pos = self:get_pos()
-	end
-	local obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
-	petz.drop_object(obj)
 end

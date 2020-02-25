@@ -28,7 +28,7 @@ petz.on_die = function(self)
 			end
 		end
 		if self.type == "pony" and self.horseshoes > 0 then --drop horseshoes
-			petz.drop_item(self, "petz:horseshoe", self.horseshoes)
+			mokapi.drop_item(self, "petz:horseshoe", self.horseshoes)
 		end
 	elseif self.type == "puppy" then
 		if self.square_ball_attached == true and self.attached_squared_ball then
@@ -43,7 +43,7 @@ petz.on_die = function(self)
     local props = self.object:get_properties()
     props.collisionbox[2] = props.collisionbox[1] - 0.0625
     self.object:set_properties({collisionbox=props.collisionbox})
-	petz.drop_items(self, self.was_killed_by_player or nil)
+	mokapi.drop_items(self, self.was_killed_by_player or nil)
 	mobkit.clear_queue_high(self)
 	if petz.pet[self.owner] then
 		petz.pet[self.owner]= nil --remove owner entry for right_click formspec

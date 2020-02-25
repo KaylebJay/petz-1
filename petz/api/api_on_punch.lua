@@ -73,7 +73,7 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 				if (self.hp <= self.max_hp / 2) then
 					petz.bh_teleport(self, pos, player, player_pos)
 				else
-					petz.do_sound_effect("object", self.object, "petz_fireball")
+					mokapi.make_sound("object", self.object, "petz_fireball", petz.settings.max_hear_distance)
 					petz.spawn_throw_object(self.object, 20, "petz:ent_jack_o_lantern_grenade")
 				end
 			end
@@ -83,6 +83,6 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 				petz.spawn_throw_object(self.object, 20, "petz:ent_cobweb")
 			end
 		end
-		petz.do_sound_effect("object", self.object, "petz_default_punch") --sound
+		mokapi.make_sound("object", self.object, "petz_default_punch", petz.settings.max_hear_distance) --sound
 	end
 end

@@ -88,7 +88,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			}
 			pet.object:set_pos(pet_pos)
 			minetest.close_formspec(player_name, "petz:form_whistle")
-			petz.do_sound_effect("player", player, "petz_whistle")
+			mokapi.make_sound("player", player, "petz_whistle", petz.settings.max_hear_distance)
 		end
 	end
 	return true

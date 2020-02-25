@@ -45,7 +45,7 @@ petz.lamb_wool_shave = function(self, clicker)
 	else
 		minetest.add_item(self.object:get_pos(), new_stack)
 	end
-    petz.do_sound_effect("object", self.object, "petz_lamb_moaning")
+    mokapi.make_sound("object", self.object, "petz_lamb_moaning", petz.settings.max_hear_distance)
     local lamb_texture = "petz_lamb_shaved_"..self.skin_colors[self.texture_no]..".png"
 	if petz.settings.type_model == "mesh" then
 		petz.set_properties(self, {textures = {lamb_texture}})
@@ -55,7 +55,7 @@ petz.lamb_wool_shave = function(self, clicker)
 	self.shaved = mobkit.remember(self, "shaved", true)
 	self.food_count_wool = mobkit.remember(self, "food_count_wool", 0)
 	petz.bh_afraid(self, clicker:get_pos())
-	petz.do_sound_effect("object", self.object, "petz_pop_sound")
+	mokapi.make_sound("object", self.object, "petz_pop_sound", petz.settings.max_hear_distance)
 end
 
 ---
@@ -78,7 +78,7 @@ petz.milk_milk = function(self, clicker)
 		wielded_item:take_item()
 		clicker:set_wielded_item("petz:bucket_milk")
 		inv:add_item("main", wielded_item)
-		petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
+		mokapi.make_sound("object", self.object, "petz_"..self.type.."_moaning", petz.settings.max_hear_distance)
 	else
 		minetest.add_item(self:get_pos(), "petz:bucket_milk")
 	end
@@ -96,6 +96,6 @@ petz.cut_feather = function(self, clicker)
 	else
 		minetest.add_item(self.object:get_pos(), item_stack)
 	end
-    petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
+    mokapi.make_sound("object", self.object, "petz_"..self.type.."_moaning", petz.settings.max_hear_distance)
 	petz.bh_afraid(self, clicker:get_pos())
 end

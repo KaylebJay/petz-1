@@ -30,7 +30,7 @@ petz.replace = function(self)
 		end
 		if on_replace_return ~= false then
 			minetest.set_node(pos, {name = with})
-			petz.do_sound_effect("object", self.object, "petz_replace")
+			mokapi.make_sound("object", self.object, "petz_replace", petz.settings.max_hear_distance)
 			petz.refill(self) --Refill wool, milk or nothing
 		end
 	end

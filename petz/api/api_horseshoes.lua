@@ -8,8 +8,8 @@ petz.put_horseshoe = function(self, clicker)
 	local wielded_item = clicker:get_wielded_item()
 	wielded_item:take_item()
 	petz.horseshoes_inc_speed(self)
-	petz.do_sound_effect("object", self.object, "petz_put_sound")
-	petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
+	mokapi.make_sound("object", self.object, "petz_put_sound", petz.settings.max_hear_distance)
+	mokapi.make_sound("object", self.object, "petz_"..self.type.."_moaning", petz.settings.max_hear_distance)
 end
 
 petz.speedup_change = function(self, speedup)
@@ -47,9 +47,9 @@ petz.horseshoes_reset = function(self)
 	local pos = self.object:get_pos()
 	for i = 1, self.horseshoes do
 		obj = minetest.add_item(pos, "petz:horseshoe")
-		petz.drop_velocity(obj)
+		mokapi.drop_velocity(obj)
 	end
 	self.horseshoes = mobkit.remember(self, "horseshoes", 0)
-	petz.do_sound_effect("object", self.object, "petz_pop_sound")
+	mokapi.make_sound("object", self.object, "petz_pop_sound", petz.settings.max_hear_distance)
 end
 

@@ -177,7 +177,7 @@ function petz.herbivore_brain(self)
 		--end
 
 		-- Default Random Sound
-		petz.random_mob_sound(self)
+		mokapi.make_misc_sound(self, petz.settings.misc_sound_chance, petz.settings.max_hear_distance)
 
 		if prty < 3 then
 			--if self.is_arboreal == true then
@@ -289,7 +289,7 @@ function petz.predator_brain(self)
 		end
 
 		-- Default Random Sound
-		petz.random_mob_sound(self)
+		mokapi.make_misc_sound(self, petz.settings.misc_sound_chance, petz.settings.max_hear_distance)
 
 		--Roam default
 		if mobkit.is_queue_empty_high(self) and self.status == "" then
@@ -406,7 +406,7 @@ function petz.bee_brain(self)
 		end
 
 		-- Default Random Sound
-		petz.random_mob_sound(self)
+		mokapi.make_misc_sound(self, petz.settings.misc_sound_chance, petz.settings.max_hear_distance)
 
 		--Roam default
 		if mobkit.is_queue_empty_high(self) and self.status == "" then
@@ -482,7 +482,7 @@ function petz.aquatic_brain(self)
 		end
 
 		-- Default Random Sound
-		petz.random_mob_sound(self)
+		mokapi.make_misc_sound(self, petz.settings.misc_sound_chance, petz.settings.max_hear_distance)
 
 		--Roam default
 		if mobkit.is_queue_empty_high(self)  and self.status == "" and not(self.status== "jump") then
@@ -564,7 +564,7 @@ function petz.semiaquatic_brain(self)
 		end
 
 		-- Default Random Sound
-		petz.random_mob_sound(self)
+		mokapi.make_misc_sound(self, petz.settings.misc_sound_chance, petz.settings.max_hear_distance)
 
 		if self.petz_type == "beaver" then --beaver's dam
 			petz.create_dam(self, pos)
@@ -661,7 +661,7 @@ function petz.monster_brain(self)
 		end
 
 		-- Default Random Sound
-		petz.random_mob_sound(self)
+		mokapi.make_misc_sound(self, petz.settings.misc_sound_chance, petz.settings.max_hear_distance)
 
 		--Roam default
 		if mobkit.is_queue_empty_high(self) then

@@ -20,6 +20,6 @@ petz.brush = function(self, wielded_item_name, pet_name)
 			end
 		end
 	end
-	petz.do_sound_effect("object", self.object, "petz_brushing")
+	mokapi.make_sound("object", self.object, "petz_brushing", petz.settings.max_hear_distance)
 	petz.do_particles_effect(self.object, self.object:get_pos(), "star")
 end

@@ -780,7 +780,7 @@ function mobkit.hq_aqua_jump(self, prty)
 		petz.set_velocity(self, velocity)
 		self.object:set_acceleration({x=1.0, y=vel_impulse, z=1.0})
 		self.status = "jump"
-		petz.do_sound_effect("object", self.object, "petz_splash")
+		mokapi.make_sound("object", self.object, "petz_splash", petz.settings.max_hear_distance)
 		minetest.after(0.5, function(self, velocity)
 			if mobkit.is_alive(self.object) then
 				self.status = ""
@@ -1017,8 +1017,8 @@ function mobkit.lq_mountdriver(self)
 		if ctrl.up and ctrl.sneak and not(self.gallop_exhausted) then
 			if self.gallop == false then
 				self.gallop = true
-				petz.do_sound_effect("object", self.object, "petz_horse_whinny")
-				petz.do_sound_effect("object", self.object, "petz_horse_gallop")
+				mokapi.make_sound("object", self.object, "petz_horse_whinny", petz.settings.max_hear_distance)
+				mokapi.make_sound("object", self.object, "petz_horse_gallop", petz.settings.max_hear_distance)
 			end
 			velocity = velocity + self.accel
 		end

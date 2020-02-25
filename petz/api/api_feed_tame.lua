@@ -108,7 +108,7 @@ petz.do_lashing = function(self)
     if self.lashed == false then
         self.lashed = mobkit.remember(self, "lashed", true)
     end
-    petz.do_sound_effect("object", self.object, "petz_"..self.type.."_moaning")
+    mokapi.make_sound("object", self.object, "petz_"..self.type.."_moaning", petz.settings.max_hear_distance)
 end
 
 petz.tame_whip= function(self, hitter)
@@ -128,6 +128,6 @@ petz.tame_whip= function(self, hitter)
 					petz.do_lashing(self)
 				end
 			end
-			petz.do_sound_effect("object", hitter, "petz_whip")
+			mokapi.make_sound("object", hitter, "petz_whip", petz.settings.max_hear_distance)
 		end
 end

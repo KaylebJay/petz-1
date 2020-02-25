@@ -389,7 +389,7 @@ minetest.register_chatcommand("howl", {
 		if player then
 			if petz.is_werewolf(player) then
 				local pos = player:get_pos()
-				petz.do_sound_effect("pos", pos, "petz_werewolf_howl")
+				mokapi.make_sound("pos", pos, "petz_werewolf_howl", petz.settings.max_hear_distance)
 			else
 				return false, "Error: You are not a werewolf."
 			end

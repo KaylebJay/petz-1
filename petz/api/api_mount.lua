@@ -19,13 +19,13 @@ petz.mount = function(self, clicker, wielded_item, wielded_item_name)
 		elseif (self.saddle or self.saddlebag) and wielded_item_name == "petz:shears" then
 			if self.saddle then
 				minetest.add_item(self.object:get_pos(), "petz:saddle")
-				petz.do_sound_effect("object", self.object, "petz_pop_sound")
+				mokapi.make_sound("object", self.object, "petz_pop_sound", petz.settings.max_hear_distance)
 				self.saddle = false
 				mobkit.remember(self, "saddle", self.saddle)
 			end
 			if self.saddlebag then
 				minetest.add_item(self.object:get_pos(), "petz:saddlebag")
-				petz.do_sound_effect("object", self.object, "petz_pop_sound")
+				mokapi.make_sound("object", self.object, "petz_pop_sound", petz.settings.max_hear_distance)
 				self.saddlebag = false
 				mobkit.remember(self, "saddlebag", self.saddlebag)
 			end
@@ -78,5 +78,5 @@ petz.put_saddle = function(self, clicker, wielded_item, wielded_item_name)
 		wielded_item:take_item()
 		clicker:set_wielded_item(wielded_item)
 	end
-	petz.do_sound_effect("object", self.object, "petz_put_sound")
+	mokapi.make_sound("object", self.object, "petz_put_sound", petz.settings.max_hear_distance)
 end
