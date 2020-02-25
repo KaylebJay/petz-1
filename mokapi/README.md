@@ -6,6 +6,7 @@ Mob drops only one item.
 ## mokapi.drop_items(self, killed_by_player)
 
 Mob drops a table list of items defined in the entity.
+
 Example of the 'drops' definition:
 ```
 drops = {
@@ -30,14 +31,16 @@ sounds = {
 ```
 ## mokapi.make_sound(dest_type, dest, soundfile, max_hear_distance)
 Make a sound on dest accordingly dest_type.
-dest_type can be "object, "player" or "pos".
 
+dest_type can be "object, "player" or "pos".
 
 # Replace Function
 
 ## mokapi.replace(self, sound_name, max_hear_distance)
 Replace a node to another. Useful for eating grass.
+
 'sound_name' & 'max_hear_distance' are optionals.
+
 Example of the 'replace_what' definition:
 ```
 replace_rate = 10,
