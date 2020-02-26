@@ -56,7 +56,8 @@ replace_what = {
 
 ## function mokapi.feed(self, clicker, feed_rate, msg_full_health, sound_name)
 
-It returns true if fed
+It returns true if fed.
+
 It checks against a list of 'self.follow' items or groups.
 ```
 self.follow = "group:food_meat_raw, mobs:raw_chicken"
@@ -64,6 +65,8 @@ self.follow = "group:food_meat_raw, mobs:raw_chicken"
 'feed_rate' (from 0.0 to 1.0) is the percentage to health referenced to self.max_hp
 
 ## function mokapi.tame(self, feed_count, owner_name, msg_tamed)
+It returns true if tamed.
+
 'feed_count' is the amount of food to get the mob tamed.
 
 ## function mokapi.set_owner(self, owner_name)
