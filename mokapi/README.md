@@ -51,3 +51,28 @@ replace_what = {
 },
 ```
 3 parameters for 'replace_what': replace_what, replace_with and y_offset
+
+# Feed & Tame Functions
+
+## function mokapi.feed(self, clicker, feed_rate, msg_full_health, sound_name)
+
+It returns true if fed
+It checks a list of 'self.follow' items
+```
+self.follow = "group:food_meat_raw"
+```
+'feed_rate' (from 0.0 to 1.0) is the percentage to health referenced to self.max_hp
+
+## function mokapi.tame(self, feed_count, owner_name, msg_tamed)
+'feed_count' is the amount of food to get the mob tamed.
+
+## function mokapi.set_owner(self, owner_name)
+Put 'self.tamed' to true and the 'self.owner' name.
+
+## function mokapi.remove_owner(self)
+Put 'self.tamed' to false and the 'self.owner' to nil.
+
+## function mokapi.set_health(self, rate)
+'rate' (from 0.0 to 1.0) is the percentage of self.max_hp
+
+rate can be positive or negative
