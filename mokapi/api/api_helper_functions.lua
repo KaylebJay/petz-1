@@ -1,7 +1,16 @@
 mokapi.item_in_itemlist = function(item_name, itemlist)
 	local match = false
+	local table = false
+	if type(itemlist) == "table" then
+		table = true
+	end
 	if item_name and itemlist then
-		local items = string.split(itemlist, ',')
+		local items
+		if not table then
+			items = string.split(itemlist, ',')
+		else
+			items = itemlist
+		end
 		for i = 1, #items do --loop  thru all items
 			--minetest.chat_send_player("singleplayer", "itemlist item="..items[i])
 			--minetest.chat_send_player("singleplayer", "item name="..item_name)

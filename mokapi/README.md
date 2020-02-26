@@ -58,9 +58,11 @@ replace_what = {
 
 It returns true if fed.
 
-It checks against a list of 'self.follow' items or groups.
+It checks against a string, a stringlist separated by commas or a table of 'self.follow' items or groups.
 ```
+self.follow = "farming:wheat"
 self.follow = "group:food_meat_raw, mobs:raw_chicken"
+self.follow = {"group:food_meat_raw", "mobs:raw_chicken"}
 ```
 'feed_rate' (from 0.0 to 1.0) is the percentage to health referenced to self.max_hp
 

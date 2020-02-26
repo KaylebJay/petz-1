@@ -9,7 +9,7 @@ function mokapi.feed(self, clicker, feed_rate, msg_full_health, sound_name)
 			clicker:set_wielded_item(wielded_item)
 		end
 		--Feed-->
-		mokapi.set_health(self, feed_rate)
+		mokapi.set_health(self, feed_rate or mokapi.consts.DEFAULT_FEED_RATE)
 		if self.hp >= self.max_hp then
 			self.hp = self.max_hp
 			if msg_full_health then
@@ -26,7 +26,7 @@ end
 
 function mokapi.tame(self, feed_count, owner_name, msg_tamed)
 	local tamed = false
-	if self.food_count >= feed_count then
+	if self.food_count >= (feed_count or mokapi.consts.DEFAULT_FEED_COUNT) then
 		self.food_count = mobkit.remember(self, "food_count", 0)
 		if self.tamed == false then
 			tamed = true
