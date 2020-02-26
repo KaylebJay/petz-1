@@ -64,7 +64,7 @@ self.follow = "farming:wheat"
 self.follow = "group:food_meat_raw, mobs:raw_chicken"
 self.follow = {"group:food_meat_raw", "mobs:raw_chicken"}
 ```
-'feed_rate' (from 0.0 to 1.0) is the percentage to health referenced to self.max_hp
+'feed_rate' (from 0.0 to 1.0) is the percentage to heal referenced to self.max_hp
 
 ## function mokapi.tame(self, feed_count, owner_name, msg_tamed)
 It returns true if tamed.
