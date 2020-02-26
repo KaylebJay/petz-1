@@ -7,6 +7,7 @@ petz.put_horseshoe = function(self, clicker)
 	end
 	local wielded_item = clicker:get_wielded_item()
 	wielded_item:take_item()
+	clicker:set_wielded_item(wielded_item)
 	petz.horseshoes_inc_speed(self)
 	mokapi.make_sound("object", self.object, "petz_put_sound", petz.settings.max_hear_distance)
 	mokapi.make_sound("object", self.object, "petz_"..self.type.."_moaning", petz.settings.max_hear_distance)
