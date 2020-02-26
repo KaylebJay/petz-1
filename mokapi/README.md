@@ -65,7 +65,9 @@ self.follow = "group:food_meat_raw, mobs:raw_chicken"
 self.follow = {"group:food_meat_raw", "mobs:raw_chicken"}
 ```
 'feed_rate' (from 0.0 to 1.0) is the percentage to heal referenced to self.max_hp
+
 msg_full_health is optional
+
 sound_type is the self.sound type
 
 ## function mokapi.tame(self, feed_count, owner_name, msg_tamed)
