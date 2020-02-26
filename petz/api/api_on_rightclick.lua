@@ -26,14 +26,20 @@ petz.on_rightclick = function(self, clicker)
 		and ((wielded_item_name == "petz:hairbrush") or (wielded_item_name == "petz:beaver_oil")) then
 			petz.brush(self, wielded_item_name, pet_name)
 	--If feeded
-	elseif petz.feed_tame(self, clicker, wielded_item, wielded_item_name, 5, true) then
+	elseif mokapi.feed(self, clicker, petz.settings.tamagochi_feed_hunger_rate, S("@1 at full health (@2)", S(petz.first_to_upper(self.type)), tostring(self.hp)), "moaning") then
+		if mokapi.tame(self, 5, clicker:get_player_name(), S("@1 has been tamed!", S(petz.first_to_upper(self.type)))) then
+			petz.do_tame(self)
+		end
+		if self.tamed== true then
+			petz.update_nametag(self)
+		end
 		if petz.settings.tamagochi_mode == true and self.fed == false then
 			petz.do_feed(self)
 		end
 		petz.refill(self) --Refill wool, milk or nothing
 	--convert to
 	elseif not(petz.str_is_empty(petz.settings[self.type.."_convert"])) and not(petz.str_is_empty(petz.settings[self.type.."_convert_to"]))
-		and petz.item_in_itemlist(wielded_item_name, petz.settings[self.type.."_convert"]) then
+		and mokapi.item_in_itemlist(wielded_item_name, petz.settings[self.type.."_convert"]) then
 			petz.convert(self, player_name)
 	elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then
 		local player_name = clicker:get_player_name()
@@ -42,7 +48,8 @@ petz.on_rightclick = function(self, clicker)
 			return
 		end
 		if self.owner== nil or self.owner== "" or (self.owner ~= player_name and petz.settings.rob_mobs == true) then
-			petz.set_owner(self, 	player_name, false)
+			mokapi.set_owner(self, player_name)
+			petz.do_tame(self)
 		end
 		petz.capture(self, clicker, true)
 		minetest.chat_send_player("singleplayer", S("Your").." "..S(pet_name).." "..S("has been captured")..".")

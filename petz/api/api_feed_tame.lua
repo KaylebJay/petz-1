@@ -33,69 +33,16 @@ petz.remove_petz_list_by_owner = function(self, force)
 	end
 end
 
-petz.set_owner = function(self, owner_name, force)
-	if self.is_wild == false or force == true then -- set owner if not a monster
-		self.tamed = mobkit.remember(self, "tamed", true)
-		self.owner = mobkit.remember(self, "owner", owner_name)
-		petz.insert_petz_list_by_owner(self)
-	end
-end
-
-petz.remove_owner = function(self)
-	if self.tag ~= "" then --remove from the list of petz by owner
-		local pets = petz.petz_list_by_owner[self.owner]
-		if pets and pets[self] then
-			petz.petz_list_by_owner[self] = nil
-		end
-	end
-	self.tamed = mobkit.remember(self, "tamed", false)
-	self.owner = mobkit.remember(self, "owner", nil)
-end
-
 petz.do_feed = function(self)
 	petz.set_affinity(self, petz.settings.tamagochi_feed_hunger_rate)
 	self.fed = mobkit.remember(self, "fed", true)
 end
 
---
---Feed/Tame Function
---
-
-petz.feed_tame = function(self, clicker, wielded_item, wielded_item_name, feed_count, tame)
-	-- Can eat/tame with item in hand
-	if petz.item_in_itemlist(wielded_item_name, self.follow) then
-		if creative_mode == false then -- if not in creative then take item
-			wielded_item:take_item()
-			clicker:set_wielded_item(wielded_item)
-		end
-		petz.set_health(self, petz.settings.tamagochi_feed_hunger_rate)
-		petz.update_nametag(self)
-		if self.hp >= self.max_hp then
-			self.hp = self.max_hp
-			minetest.chat_send_player(clicker:get_player_name(), S("@1 at full health (@2)", S(petz.first_to_upper(self.type)), tostring(self.hp)))
-		end
-		if self.tamed== true then
-			petz.update_nametag(self)
-		end
-		-- Feed and Tame
-		self.food_count = mobkit.remember(self, "food_count", self.food_count + 1)
-		if self.food_count >= feed_count then
-			self.food_count = mobkit.remember(self, "food_count", 0)
-			if tame then
-				if self.tamed == false then
-					petz.set_owner(self, clicker:get_player_name(), false)
-					minetest.chat_send_player(clicker:get_player_name(), S("@1 has been tamed!", S(petz.first_to_upper(self.type))))
-					mobkit.clear_queue_high(self) -- clear behaviour (i.e. it was running away)
-					if petz.settings.tamagochi_mode == true then
-						self.init_tamagochi_timer = true
-					end
-				end
-			end
-		end
-		mobkit.make_sound(self, "moaning")
-		return true
+petz.do_tame = function(self)
+	petz.insert_petz_list_by_owner(self)
+	if petz.settings.tamagochi_mode == true then
+		self.init_tamagochi_timer = true
 	end
-	return false
 end
 
 --
@@ -119,7 +66,8 @@ petz.tame_whip= function(self, hitter)
 				self.lashing_count = self.lashing_count + 1
 				if self.lashing_count >= petz.settings.lashing_tame_count then
 					self.lashing_count = mobkit.remember(self, "lashing_count", 0)	 --reset to 0
-					petz.set_owner(self, hitter:get_player_name(), true)
+					mokapi.set_owner(self, hitter:get_player_name())
+					petz.do_tame(self)
 					minetest.chat_send_player(self.owner, S("The").." "..S(petz.first_to_upper(self.type)).." "..S("has been tamed."))
 					mobkit.clear_queue_high(self) -- do not attack
 				end

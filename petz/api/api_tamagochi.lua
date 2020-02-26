@@ -26,17 +26,6 @@ petz.set_affinity = function(self, rate)
     self.affinity = mobkit.remember(self, "affinity", new_affinity)
 end
 
---Calculate heal/hurt hunger
-
-petz.set_health = function(self, rate)
-	local hp_amount = math.abs(self.max_hp * rate)
-	if rate >= 0 then
-		mobkit.heal(self, hp_amount)
-	else
-		mobkit.hurt(self, hp_amount)
-	end
-end
-
 --The Tamagochi Timer
 
 petz.init_tamagochi_timer = function(self)
@@ -83,7 +72,7 @@ petz.timer = function(self)
             end
             --Decrease health if pet has not fed
             if self.fed == false then
-				petz.set_health(self, -petz.settings.tamagochi_feed_hunger_rate)
+				mokapi.set_health(self, -petz.settings.tamagochi_feed_hunger_rate)
 				petz.update_nametag(self)
                 if (self.hp > 0)  and (self.has_affinity == true) then
 					petz.set_affinity(self, -petz.settings.tamagochi_feed_hunger_rate)
@@ -121,6 +110,7 @@ petz.timer = function(self)
                 minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("has abandoned you!!!"))
                 petz.delete_nametag(self)
 				petz.remove_owner(self) --the pet abandon you
+				petz.remove_petz_list_by_owner(self, true)
                 petz.drop_dreamcatcher(self)
                 self.init_tamagochi_timer  = false -- no more timing
             else  --else reinit the timer, to check again in the future

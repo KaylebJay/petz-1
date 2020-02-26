@@ -98,7 +98,7 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr, liquidflag)
 				end
 			end
 		end
-		if can_spawn and petz.item_in_itemlist(node.name, petz.settings[pet_name.."_spawn_nodes"]) == true then
+		if can_spawn and mokapi.item_in_itemlist(node.name, petz.settings[pet_name.."_spawn_nodes"]) == true then
 			table.insert(candidates_list, pet_name)
 		end
 	end --end for
@@ -172,7 +172,7 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr, liquidflag)
 					local height, liquidflag = mobkit.get_terrain_height(spawn_pos, 32)
 					if height then
 						local node = petz.get_node_below(spawn_pos)
-						if not(petz.item_in_itemlist(node.name, petz.settings[random_mob.."_spawn_nodes"])) then
+						if not(mokapi.item_in_itemlist(node.name, petz.settings[random_mob.."_spawn_nodes"])) then
 							spawn = false
 						end
 					end

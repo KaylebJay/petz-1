@@ -364,7 +364,7 @@ function petz.bh_start_follow(self, pos, player, prty)
 	if player then
 		local wielded_item_name = player:get_wielded_item():get_name()
 		local tpos = player:get_pos()
-		if petz.item_in_itemlist(wielded_item_name, self.follow) and vector.distance(pos, tpos) <= self.view_range then
+		if mokapi.item_in_itemlist(wielded_item_name, self.follow) and vector.distance(pos, tpos) <= self.view_range then
 			self.status = mobkit.remember(self, "status", "follow")
 			if (self.can_fly) or (self.can_swin and self.isinliquid) then
 				mobkit.hq_followliquidair(self, prty, player)

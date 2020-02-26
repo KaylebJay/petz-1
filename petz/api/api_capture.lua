@@ -9,8 +9,9 @@ petz.create_pet = function(placer, itemstack, pet_name, pos)
 	local meta_table = meta:to_table()
 	local sdata = minetest.serialize(meta_table)
 	local mob = minetest.add_entity(pos, pet_name, sdata)
-	local ent = mob:get_luaentity()
-	petz.set_owner(ent, placer:get_player_name(), false) --set owner
+	local self = mob:get_luaentity()
+	mokapi.set_owner(self, placer:get_player_name()) --set owner
+	petz.do_tame(self)
 	itemstack:take_item() -- since mob is unique we remove egg once spawned
 	return ent
 end
