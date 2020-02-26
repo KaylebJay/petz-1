@@ -47,8 +47,6 @@ function petz.herbivore_brain(self)
 
 	if mobkit.timer(self, 1) then
 
-		--petz.env_damage(self)
-
 		local prty = mobkit.get_queue_priority(self)
 
 		if prty < 30 then
@@ -63,14 +61,13 @@ function petz.herbivore_brain(self)
 		end
 
 		if prty < 20 then
-			if petz.isinliquid(self) then
+			if self.isinliquid then
 				if not self.can_fly then
 					mobkit.hq_liquid_recovery(self, 20)
-					return
 				else
 					mobkit.hq_liquid_recovery_flying(self, 20)
-					return
 				end
+				return
 			end
 		end
 
@@ -224,7 +221,7 @@ function petz.predator_brain(self)
 
 		local prty = mobkit.get_queue_priority(self)
 
-		if prty < 40 and petz.isinliquid(self) then
+		if prty < 40 and self.isinliquid then
 			mobkit.hq_liquid_recovery(self, 40)
 			return
 		end
@@ -344,7 +341,7 @@ function petz.bee_brain(self)
 
 		local prty = mobkit.get_queue_priority(self)
 
-		if prty < 40 and petz.isinliquid(self) then
+		if prty < 40 and self.isinliquid then
 			mobkit.hq_liquid_recovery(self, 40)
 			return
 		end
@@ -602,7 +599,7 @@ function petz.monster_brain(self)
 
 		local prty = mobkit.get_queue_priority(self)
 
-		if prty < 40 and petz.isinliquid(self) then
+		if prty < 40 and self.isinliquid then
 			mobkit.hq_liquid_recovery(self, 40)
 			return
 		end
