@@ -57,9 +57,9 @@ replace_what = {
 ## function mokapi.feed(self, clicker, feed_rate, msg_full_health, sound_name)
 
 It returns true if fed
-It checks a list of 'self.follow' items
+It checks against a list of 'self.follow' items or groups.
 ```
-self.follow = "group:food_meat_raw"
+self.follow = "group:food_meat_raw, mobs:raw_chicken"
 ```
 'feed_rate' (from 0.0 to 1.0) is the percentage to health referenced to self.max_hp
 
