@@ -74,11 +74,15 @@ petz.force_detach = function(player)
 	player:set_detach()
 	default.player_attached[player:get_player_name()] = false
 	player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+	minetest.after(0.25, function(player) --to avoid tiny player
+		if player then
+			player:set_properties({
+				visual_size = {x = 1.0, y = 1.0},
+				pointable = true
+			})
+		end
+	end, player)
 	default.player_set_animation(player, "stand" , 30)
-	player:set_properties({
-		visual_size = {x = 1, y = 1},
-		pointable = true
-	})
 end
 
 function petz.detach(player, offset)
