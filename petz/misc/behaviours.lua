@@ -814,6 +814,9 @@ end
 function mobkit.lq_search_flower(self, tpos)
 	local func = function(self)
 		local pos = self.object:get_pos()
+		if not(pos) or not(tpos) then
+			return true
+		end
 		local y_distance = tpos.y - pos.y
 		local abs_y_distance = math.abs(y_distance)
 		if (abs_y_distance > 1) and (abs_y_distance < self.view_range) then
