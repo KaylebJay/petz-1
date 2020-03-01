@@ -1,4 +1,4 @@
-mokapi.item_in_itemlist = function(item_name, itemlist)
+function mokapi.item_in_itemlist(item_name, itemlist)
 	local match = false
 	local table = false
 	if type(itemlist) == "table" then
@@ -30,4 +30,11 @@ mokapi.item_in_itemlist = function(item_name, itemlist)
 		end
 		return match
 	end
+end
+
+function mokapi.remove_mob(self)
+	--IMPORTANT: Firstly: Delete Behaviours
+	mobkit.clear_queue_high(self)
+	mobkit.clear_queue_low(self)
+	self.object:remove()
 end

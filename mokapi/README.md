@@ -85,3 +85,8 @@ Put 'self.tamed' to false and the 'self.owner' to nil.
 'rate' (from 0.0 to 1.0) is the percentage of self.max_hp
 
 rate can be positive or negative
+
+# Helper Functions
+
+##function mokapi.remove_mob(self)
+It clears the mob HQ and LQ behaviours and then remove it from the world.
