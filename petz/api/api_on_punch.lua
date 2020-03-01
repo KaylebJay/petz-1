@@ -71,7 +71,7 @@ function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, d
 			if math.random(1, 3) == 1 then
 				--petz.lookat(self, puncher:get_pos())
 				if (self.hp <= self.max_hp / 2) then
-					petz.bh_teleport(self, pos, player, player_pos)
+					petz.bh_teleport(self, pos, puncher, puncher:get_pos())
 				else
 					mokapi.make_sound("object", self.object, "petz_fireball", petz.settings.max_hear_distance)
 					petz.spawn_throw_object(self.object, 20, "petz:ent_jack_o_lantern_grenade")
