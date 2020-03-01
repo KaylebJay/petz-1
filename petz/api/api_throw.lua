@@ -32,7 +32,7 @@ function petz.throw(self, dtime, damage, effect, particles, sound)
 					end
 				else
 					mobkit.hurt(thing_ent, damage)
-					ent_pos = thing_ent:get_pos()
+					ent_pos = thing.ref:get_pos()
 					if sound then
 						mokapi.make_sound("object", thing.ref, sound, petz.settings.max_hear_distance)
 					end
