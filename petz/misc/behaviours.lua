@@ -863,7 +863,7 @@ function mobkit.lq_search_behive(self)
 		end
 		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, 1.01)  then
 				if petz.behive_exists(self) then
-					self.object:remove()
+					mokapi.remove_mob(self)
 					local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
 					bee_count = bee_count + 1
 					meta:set_int("bee_count", bee_count)

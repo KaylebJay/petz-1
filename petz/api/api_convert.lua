@@ -13,7 +13,7 @@ petz.convert = function(self, player_name)
 		mobkit.remember(converted_entity, "tamed", converted_entity.tamed)
 		converted_entity.owner = player_name
 		mobkit.remember(converted_entity, "owner", converted_entity.owner)
-		self.object:remove()
+		mokapi.remove_mob(self)
 		local new_pet_name = petz.first_to_upper(converted_entity.type)
 		minetest.chat_send_player(player_name , S("The").." "..S(old_pet_name).." "..S("turn into").." "..S(new_pet_name))
 	else

@@ -330,7 +330,7 @@ function petz.bee_brain(self)
 				meta:set_int("honey_count", honey_count)
 			end
 			petz.set_infotext_behive(meta, honey_count, bee_count)
-			self.object:remove()
+			mokapi.remove_mob(self)
 			return
 		end
 	end
@@ -390,7 +390,7 @@ function petz.bee_brain(self)
 			local node_name = mobkit.node_name_in(self, "front")
 			if minetest.get_item_group(node_name, "wood") > 0 or minetest.get_item_group(node_name, "leaves") > 0 then
 				minetest.set_node(pos, {name= "petz:beehive"})
-				self.object:remove()
+				mokapi.remove_mob(self)
 			end
 		end
 

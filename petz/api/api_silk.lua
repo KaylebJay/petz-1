@@ -185,7 +185,7 @@ petz.init_convert_to_chrysalis = function(self)
 			return
 		end
 		minetest.set_node(pos, {name= "petz:cocoon"})
-		self.object:remove()
+		mokapi.remove_mob(self)
 	end, self)
 end
 

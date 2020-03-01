@@ -91,7 +91,7 @@ minetest.register_entity("petz:tropicalfish_entity_sprite", {
 	on_activate = function(self, staticdata)
 		local pos = self.object:getpos()
 		if minetest.get_node(pos).name ~= "petz:fishtank" then
-			self.object:remove()
+			mokapi.remove_mob(self)
 		end
 	end,
 })
