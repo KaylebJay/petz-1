@@ -27,6 +27,9 @@ function petz.spawn_is_in_deep(nodepos)
 end
 
 petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr, liquidflag)
+	if petz.settings.no_spawn_in_protected and minetest.is_protected(spawn_pos, "") then
+		return
+	end
 	local node
 	if not(liquidflag) then
 		node = petz.get_node_below(spawn_pos) --the node below the spawn pos

@@ -645,3 +645,26 @@ minetest.register_craft({
         {'group:wood', 'group:wood', 'group:wood'},
     }
 })
+
+minetest.register_node("petz:honey_block", {
+	description = S("Honey Block"),
+	drawtype = "nodebox",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}, -- NodeBox1
+			{-0.3125, -0.3125, -0.3125, 0.3125, 0.3125, 0.3125}, -- NodeBox2
+		}
+	},
+	tiles =  {"petz_honey.png"},
+	walkable = true,
+	groups = {snappy = 2},
+	paramtype = "light",
+	--paramtype2 = "glasslikeliquidlevel",
+	param2 = 50,
+	sunlight_propagates = true,
+	use_texture_alpha = true,
+	light_source = LIGHT_MAX - 1,
+	sounds = default.node_sound_glass_defaults(),
+
+})
