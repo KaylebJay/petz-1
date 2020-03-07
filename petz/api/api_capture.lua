@@ -15,7 +15,7 @@ petz.create_pet = function(placer, itemstack, pet_name, pos)
 	end
 	petz.do_tame(self)
 	itemstack:take_item() -- since mob is unique we remove egg once spawned
-	return ent
+	return self
 end
 
 function petz:register_egg(pet_name, desc, inv_img, tamed)
