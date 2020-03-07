@@ -319,6 +319,13 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		mobkit.remember(self, "texture_no", self.texture_no)
 		petz.set_properties(self, {textures = {texture}})
 	end
+	if self.type == "bee" and self.queen then --delay to create beehive
+		minetest.after(math.random(120, 150), function(self)
+			if mobkit.is_alive(self.object) then
+				self.create_beehive = mobkit.remember(self, "create_beehive", true)
+			end
+		end, self)
+	end
 	if self.colorized then
 		if not(self.shaved) then
 			petz.colorize(self, self.colorized)

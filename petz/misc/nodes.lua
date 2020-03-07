@@ -369,7 +369,7 @@ minetest.register_node("petz:beehive", {
 		petz.set_infotext_behive(meta, honey_count, bee_count)
 	end,
 	on_destruct = function(pos)
-		minetest.add_entity(pos, "petz:queen_bee")
+		local self = minetest.add_entity(pos, "petz:queen_bee")
 		mokapi.node_drop_items(pos)
 	end,
 	on_timer = function(pos)

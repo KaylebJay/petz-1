@@ -88,5 +88,5 @@ rate can be positive or negative
 
 # Helper Functions
 
-##function mokapi.remove_mob(self)
+## function mokapi.remove_mob(self)
 It clears the mob HQ and LQ behaviours and then remove it from the world.

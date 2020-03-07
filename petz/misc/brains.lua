@@ -390,23 +390,8 @@ function petz.bee_brain(self)
 		end
 
 		if prty < 13 and self.queen == true then --if queen try to create a colony (beehive)
-			local node_name = mobkit.node_name_in(self, "front")
-			if minetest.get_item_group(node_name, "wood") > 0 or minetest.get_item_group(node_name, "leaves") > 0 then
-				local minp = {
-					x = pos.x - (self.max_height*4),
-					y = pos.y - self.max_height,
-					z = pos.z - (self.max_height*4),
-				}
-				local maxp = {
-					x = pos.x + (self.max_height*4),
-					y = pos.y + self.max_height,
-					z = pos.z + (self.max_height*4),
-				}
-				if #minetest.find_nodes_in_area(minp, maxp, {"petz:beehive"}) < 1 then
-					minetest.set_node(pos, {name= "petz:beehive"})
-					mokapi.remove_mob(self)
-					return
-				end
+			if petz.bh_create_beehive(self, pos) then
+				return
 			end
 		end
 
