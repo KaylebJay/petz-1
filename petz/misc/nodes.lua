@@ -356,7 +356,7 @@ minetest.register_node("petz:beehive", {
 	end,
 	after_place_node = function(pos, placer, itemstack, pointed_thing)
 		local meta = minetest.get_meta(pos)
-		local honey_count = petz.settingents.initial_honey_behive
+		local honey_count = petz.settings.initial_honey_behive
 		meta:set_int("honey_count", honey_count)
 		local bee_count
 		if placer:is_player() then
