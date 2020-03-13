@@ -12,9 +12,7 @@ petz.dyn_prop = {
 	brushed = {type= "boolean", default = false},
 	child = {type= "boolean", default = false},
 	colorized = {type= "string", default = nil},
-	convert = {type= "string", default = nil},
 	convert_count = {type= "int", default = 5},
-	convert_to = {type= "string", default = nil},
 	dreamcatcher = {type= "boolean", default = false},
 	driver = {type= "player", default = nil},
 	eggs_count = {type= "int", default = 0},
@@ -250,9 +248,6 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		self.colorized = mobkit.remember(self, "colorized", nil)
 		self.convert = mobkit.remember(self, "convert", nil)
 		self.muted = mobkit.remember(self, "muted", false)
-		if petz.settings[self.type.."_convert_to"] then
-			self.convert_to = mobkit.remember(self, "convert_to", petz.settings[self.type.."_convert_to"])
-		end
 		if petz.settings[self.type.."_convert_count"] then
 			self.convert_count = mobkit.remember(self, "convert_count", petz.settings[self.type.."_convert_count"])
 		end

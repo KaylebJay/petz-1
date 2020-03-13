@@ -6,7 +6,7 @@ petz.convert = function(self, player_name)
 	mobkit.remember(self, "convert_count", self.convert_count)
 	if self.convert_count <= 0 then
 		local pos = self.object:get_pos()
-		local converted_pet = minetest.add_entity(pos, self.convert_to)
+		local converted_pet = minetest.add_entity(pos, petz.settings[self.type.."_convert_to"])
 		mokapi.make_sound("object", converted_pet, "petz_pop_sound", petz.settings.max_hear_distance)
 		local converted_entity = converted_pet:get_luaentity()
 		converted_entity.tamed = true
