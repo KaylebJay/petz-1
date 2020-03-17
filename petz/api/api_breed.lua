@@ -128,6 +128,9 @@ petz.pregnant_timer = function(self, dtime)
 end
 
 petz.growth_timer = function(self, dtime)
+	if(not(self.growth_time)) then
+		self.growth_time = 0
+	end 
 	self.growth_time = mobkit.remember(self, "growth_time", self.growth_time + dtime)
 	if self.growth_time >= petz.settings.growth_time then
 		self.is_baby = mobkit.remember(self, "is_baby", false)
