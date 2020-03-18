@@ -43,7 +43,7 @@ petz.on_rightclick = function(self, clicker)
 			petz.convert(self, player_name)
 	elseif petz.check_capture_items(self, wielded_item_name, clicker, true) == true then
 		local player_name = clicker:get_player_name()
-		if (self.is_pet == true and self.owner and self.owner ~= player_name and not(petz.settings.rob_mobs)) then
+		if (self.is_pet == true and (not(self.tamed) or (self.owner and self.owner ~= player_name)) and not(petz.settings.rob_mobs)) then
 			minetest.chat_send_player(player_name, S("You are not the owner of the").." "..S(pet_name)..".")
 			return
 		end
