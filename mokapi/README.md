@@ -90,3 +90,10 @@ rate can be positive or negative
 
 ## function mokapi.remove_mob(self)
 It clears the mob HQ and LQ behaviours and then remove it from the world.
+
+# Commands
+
+## clear_mobs modname
+It clears all the mobkit non-tamed mobs in the closest range.
+
+Modname is the mod ogf the mobs to clear.
