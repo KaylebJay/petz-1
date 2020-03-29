@@ -193,7 +193,7 @@ minetest.register_node("petz:fishtank", {
 	param2 = 50,
 	sunlight_propagates = true,
 	use_texture_alpha = true,
-	light_source = LIGHT_MAX - 1,
+	light_source = default.LIGHT_MAX - 1,
 	sounds = default.node_sound_glass_defaults(),
 	selection_box = {
 		type = "fixed",
@@ -376,7 +376,7 @@ minetest.register_node("petz:bottle_moth", {
 	param2 = 50,
 	sunlight_propagates = true,
 	use_texture_alpha = true,
-	light_source = LIGHT_MAX - 1,
+	light_source = default.LIGHT_MAX - 1,
 	sounds = default.node_sound_glass_defaults(),
 	selection_box = {
 		type = "fixed",

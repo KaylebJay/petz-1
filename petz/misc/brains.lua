@@ -547,7 +547,7 @@ function petz.semiaquatic_brain(self)
 						if self.warn_attack == true then --attack player
 							mobkit.clear_queue_high(self)							-- abandon whatever they've been doing
 							if petz.isinliquid(self) then
-								mobkit.hq_aqua_attack(self, 10, puncher, 6)				-- get revenge
+								mobkit.hq_aqua_attack(self, 10, player, 6)				-- get revenge
 							else
 								mobkit.hq_hunt(self, 10, player)
 							end

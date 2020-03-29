@@ -394,7 +394,7 @@ minetest.register_chatcommand("howl", {
 				return false, "Error: You are not a werewolf."
 			end
 		else
-			return false, player_name .." ".."not online!"
+			return false, name .." ".."not online!"
 		end
     end,
 })
@@ -512,6 +512,7 @@ petz:register_egg("petz:werewolf", S("Werewolf"), "petz_spawnegg_werewolf.png", 
 
 --hbhunger support
 if minetest.get_modpath("hbhunger") ~= nil then
+	local org_eat = core.do_item_eat
 	core.do_item_eat = function(hp_change, replace_with_item, itemstack, user, pointed_thing)
 		local old_itemstack = itemstack
 		if not(petz.is_werewolf(user)) or not(minetest.get_item_group(itemstack:get_name(), "food_meat_raw") == 0) then

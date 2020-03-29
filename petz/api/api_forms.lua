@@ -277,7 +277,7 @@ petz.create_detached_saddlebag_inventory = function(name)
 	local saddlebag_inventory = minetest.create_detached_inventory(name, {
 		allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
 			local stack = inv:get_stack(from_list, from_index)
-			return allow_put(pos, to_list, to_index, stack, player)
+			return allow_put(inv, from_list, from_index, stack, player)
 			end,
 		allow_put = function(inv, listname, index, stack, player)
 			return stack:get_count()

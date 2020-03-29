@@ -40,6 +40,7 @@ end
 --
 
 function petz.on_punch(self, puncher, time_from_last_punch, tool_capabilities, dir)
+	local pos = self.object:get_pos() --pos of the petz
 	if mobkit.is_alive(self) then
 		if self.is_mountable and puncher == self.driver then --Do not punch when you mount on it
 			return

@@ -4,6 +4,7 @@ function mokapi.feed(self, clicker, feed_rate, msg_full_health, sound_type)
 	local wielded_item_name = wielded_item:get_name()
 	if mokapi.item_in_itemlist(wielded_item_name, self.follow) then -- Can eat/tame with item in hand
 		fed = true
+		local creative_mode = minetest.settings:get_bool("creative_mode")
 		if creative_mode == false then -- if not in creative, take item
 			wielded_item:take_item()
 			clicker:set_wielded_item(wielded_item)
@@ -17,7 +18,7 @@ function mokapi.feed(self, clicker, feed_rate, msg_full_health, sound_type)
 			end
 		end
 		self.food_count = mobkit.remember(self, "food_count", self.food_count + 1) --increase the food count
-		if sound_name then
+		if sound_type then
 			mobkit.make_sound(self, sound_type)
 		end
 	end

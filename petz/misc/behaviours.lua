@@ -501,7 +501,7 @@ function mobkit.hq_approach_torch(self, prty, tpos)
 			local distance = vector.distance(pos, tpos)
 			if distance < self.view_range and (distance >= self.view_range) then
 				if mobkit.is_queue_empty_low(self) then
-					mobkit.lq_followliquidair(self, target)
+					--mobkit.lq_followliquidair(self, target)
 				end
 			elseif distance >= self.view_range then
 				petz.ownthing(self)
@@ -554,7 +554,6 @@ function mobkit.lq_dumbfly(self, speed_factor)
 		if timer < 0 then
 			--minetest.chat_send_player("singleplayer", tostring(timer))
 			local velocity
-			local mob = self.object
 			mobkit.animate(self, 'fly')
 			local random_num = math.random(1, 5)
 			local yaw = self.object:get_yaw()
@@ -926,7 +925,7 @@ function mobkit.lq_approach_behive(self)
 			return true
 		end
 		local pos = self.object:get_pos()
-		local y_distance = tpos.y - pos.y
+		--local y_distance = tpos.y - pos.y
 		if mobkit.drive_to_pos(self, tpos, 1.5, 6.28, (self.view_range / 4) ) then
 			mobkit.clear_queue_high(self)
 			return true

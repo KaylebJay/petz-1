@@ -25,7 +25,7 @@ petz.lay_egg = function(self)
 end
 
 --Extract Egg from a Nest
-petz.extract_egg_from_nest = function(self, pos, player, egg_type)
+petz.extract_egg_from_nest = function(pos, player, egg_type)
 	local inv = player:get_inventory()
 	if inv:room_for_item("main", egg_type) then
 		inv:add_item("main", egg_type) --add the egg to the player's inventory

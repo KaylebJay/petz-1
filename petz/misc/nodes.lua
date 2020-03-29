@@ -147,7 +147,7 @@ minetest.register_node("petz:ducky_nest_egg", {
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
     },
 	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-		petz.extract_egg_from_nest(self, pos, player, "petz:ducky_egg") --extract the egg
+		petz.extract_egg_from_nest(pos, player, "petz:ducky_egg") --extract the egg
 	end,
 })
 
@@ -171,7 +171,7 @@ minetest.register_node("petz:chicken_nest_egg", {
         fixed= {-0.25, -0.75, -0.25, 0.25, -0.25, 0.25},
     },
 	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-		petz.extract_egg_from_nest(self, pos, player, "petz:chicken_egg") --extract the egg
+		petz.extract_egg_from_nest(pos, player, "petz:chicken_egg") --extract the egg
 	end,
 })
 
@@ -664,7 +664,7 @@ minetest.register_node("petz:honey_block", {
 	param2 = 50,
 	sunlight_propagates = true,
 	use_texture_alpha = true,
-	light_source = LIGHT_MAX - 1,
+	light_source = default.LIGHT_MAX - 1,
 	sounds = default.node_sound_glass_defaults(),
 
 })

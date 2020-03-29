@@ -5,7 +5,7 @@ minetest.register_node("petz:parchment", {
 	inventory_image = "petz_parchment.png",
 	tiles = {"petz_transparency.png"},
 	groups = {snappy=1, bendy=2, cracky=1},
-	sounds = default_stone_sounds,
+	sounds = default.node_sound_stone_defaults(),
 	paramtype = "light",
 	drawtype = "nodebox",
 	node_box = {
