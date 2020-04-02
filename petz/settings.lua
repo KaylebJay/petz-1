@@ -96,7 +96,7 @@ for i = 1, #petz.petz_list do --load the settings
 	if petz_type == "beaver" then
 		petz.settings[petz_type.."_create_dam"] = settings:get_bool(petz_type.."_create_dam", false)
 	elseif petz_type == "silkworm" then
-		petz.settings[petz_type.."_lay_egg_on_node "] = settings:get(petz_type.."_lay_egg_on_node", "")
+		petz.settings[petz_type.."_lay_egg_on_node"] = settings:get(petz_type.."_lay_egg_on_node", "")
 	end
 end
 

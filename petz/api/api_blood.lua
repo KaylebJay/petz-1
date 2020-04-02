@@ -1,6 +1,9 @@
 local modpath, S = ...
 
 function petz.blood(self)
+	if not(petz.settings.blood) and self.no_blood then
+		return
+	end
 	local pos = self.object:get_pos()
 	local texture
 	if self.blood_texture then

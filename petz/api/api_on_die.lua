@@ -5,7 +5,7 @@ local modpath, S = ...
 --
 
 petz.on_die = function(self)
-	--Specific of each mob
+	--Specific of each mob-->
 	if self.is_mountable == true then
 		if self.saddle then -- drop saddle when petz is killed while riding
 			minetest.add_item(self.object:get_pos(), "petz:saddle")
@@ -27,7 +27,8 @@ petz.on_die = function(self)
 				end
 			end
 		end
-		if self.type == "pony" and self.horseshoes > 0 then --drop horseshoes
+		 --Drop horseshoes-->
+		if self.horseshoes and self.horseshoes > 0 then
 			mokapi.drop_item(self, "petz:horseshoe", self.horseshoes)
 		end
 	elseif self.type == "puppy" then
@@ -35,23 +36,30 @@ petz.on_die = function(self)
 			self.attached_squared_ball.object:set_detach()
 		end
 	end
+	--Check if Dreamctacher to drop it-->
 	petz.drop_dreamcatcher(self)
+	--Flying mobs fall down-->
 	if self.can_fly then
 		self.can_fly = false
 	end
-	--For all the mobs
+	--For all the mobs-->
     local props = self.object:get_properties()
     props.collisionbox[2] = props.collisionbox[1] - 0.0625
     self.object:set_properties({collisionbox=props.collisionbox})
+    --Drop Items-->
 	mokapi.drop_items(self, self.was_killed_by_player or nil)
 	mobkit.clear_queue_high(self)
+	--Remove the owner entry for right_click formspec-->
 	if petz.pet[self.owner] then
-		petz.pet[self.owner]= nil --remove owner entry for right_click formspec
+		petz.pet[self.owner]= nil
 	end
+	--Remove this petz from the list of the player pets-->
 	if self.tamed == true then
-		petz.remove_petz_list_by_owner(self, false) --remove this petz from the list of the player pets
+		petz.remove_petz_list_by_owner(self, false)
 	end
+	--Make Sound-->
 	mobkit.make_sound(self, 'die')
+	--To finish, the Mobkit Die Function-->
 	mobkit.hq_die(self)
 end
 

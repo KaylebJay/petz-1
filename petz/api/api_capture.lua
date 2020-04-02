@@ -83,7 +83,7 @@ petz.capture = function(self, clicker, put_in_inventory)
 	--local i = 0
 	for key, value in pairs(self) do
 		local what_type = type(value)
-		if  what_type ~= "function" and what_type ~= "nil" and what_type ~= "userdata" then
+		if what_type ~= "function" and what_type ~= "nil" and what_type ~= "userdata" then
 			if what_type == "boolean" or what_type == "number" then
 				value = tostring(value)
 			elseif what_type == "table" then
