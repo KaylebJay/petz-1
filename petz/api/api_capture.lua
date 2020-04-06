@@ -50,7 +50,7 @@ end
 
 petz.check_capture_items = function(self, wielded_item_name, clicker, check_inv_room)
 	if self.driver then
-		returndd
+		return
 	end
 	local capture_item_type
 	if wielded_item_name == "mobs:lasso" or wielded_item_name == "petz:lasso" then
