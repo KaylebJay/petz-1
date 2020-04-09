@@ -394,9 +394,9 @@ minetest.register_node("petz:bottle_moth", {
 	end,
 	on_destruct = function(pos)
 		local self = minetest.add_entity(pos, "petz:moth")
-		local meta = minetest.get_meta(pos)
-		mokapi.set_owner(self, meta:get_string("owner")) --set owner
-		petz.do_tame(self)
+		--local meta = minetest.get_meta(pos)
+		--mokapi.set_owner(self, meta:get_string("owner")) --set owner
+		--petz.do_tame(self)
 		--minetest.chat_send_player("singleplayer", meta:get_string("owner"))
 	end,
 })
