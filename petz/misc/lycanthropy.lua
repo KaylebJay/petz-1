@@ -283,16 +283,18 @@ minetest.register_on_joinplayer(
 -- A werewolf only can eat raw meat
 --
 
-minetest.register_on_item_eat(
-    function(hp_change, replace_with_item, itemstack, user, pointed_thing)
-		if petz.is_werewolf(user) and (minetest.get_item_group(itemstack:get_name(), "food_meat_raw") == 0) then
-			local user_name = user:get_player_name()
-			--minetest.chat_send_player(user_name, itemstack:get_name())
-			minetest.chat_send_player(user_name, S("Werewolves only can eat raw meat!"))
-			return itemstack
-		end
+if minetest.get_modpath("hbhunger") == nil then
+	minetest.register_on_item_eat(
+		function(hp_change, replace_with_item, itemstack, user, pointed_thing)
+			if petz.is_werewolf(user) and (minetest.get_item_group(itemstack:get_name(), "food_meat_raw") == 0) then
+				local user_name = user:get_player_name()
+				--minetest.chat_send_player(user_name, itemstack:get_name())
+				minetest.chat_send_player(user_name, S("Werewolves only can eat raw meat!"))
+				return itemstack
+			end
     end
-)
+	)
+end
 
 ---
 --- Set & Unset for 3D Armor
@@ -508,22 +510,3 @@ minetest.register_entity("petz:"..pet_name,{
 })
 
 petz:register_egg("petz:werewolf", S("Werewolf"), "petz_spawnegg_werewolf.png", false)
-
-
---hbhunger support
-if minetest.get_modpath("hbhunger") ~= nil then
-	local org_eat = core.do_item_eat
-	core.do_item_eat = function(hp_change, replace_with_item, itemstack, user, pointed_thing)
-		local old_itemstack = itemstack
-		if not(petz.is_werewolf(user)) or not(minetest.get_item_group(itemstack:get_name(), "food_meat_raw") == 0) then
-			--itemstack = hbhunger.eat(hp_change, replace_with_item, itemstack, user, pointed_thing)
-		end
-		for _, callback in pairs(core.registered_on_item_eats) do
-			local result = callback(hp_change, replace_with_item, itemstack, user, pointed_thing, old_itemstack)
-			if result then
-				return result
-			end
-		end
-		return itemstack
-	end
-end
