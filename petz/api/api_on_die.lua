@@ -36,6 +36,10 @@ petz.on_die = function(self)
 			self.attached_squared_ball.object:set_detach()
 		end
 	end
+	--Not pointable-->
+	self.object:set_properties({
+		pointable = false,
+	})
 	--Check if Dreamctacher to drop it-->
 	petz.drop_dreamcatcher(self)
 	--Flying mobs fall down-->
