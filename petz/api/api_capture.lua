@@ -147,7 +147,7 @@ petz.capture = function(self, clicker, put_in_inventory)
 		local meta, honey_count, bee_count = petz.get_behive_stats(self.behive)
 		petz.set_infotext_behive(meta, honey_count, bee_count)
 	end
-	petz.remove_petz_list_by_owner(self, false)
+	petz.remove_tamed_by_owner(self, false)
 	mokapi.remove_mob(self)
 	return stack_meta
 end

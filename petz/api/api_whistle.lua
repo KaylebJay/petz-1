@@ -25,7 +25,7 @@ minetest.register_craft({
 
 petz.create_form_list_by_owner = function(user_name, user_pos)
 	--Get the values of the list
-	local item_list_table = petz.petz_list_by_owner[user_name]
+	local item_list_table = petz.tamed_by_owner[user_name]
 	if item_list_table then
 		if #item_list_table <= 0 then
 			minetest.chat_send_player(user_name, "You have no pets with a name to call.")
@@ -34,7 +34,7 @@ petz.create_form_list_by_owner = function(user_name, user_pos)
 		local item_list = ""
 		for key, pet_table in ipairs(item_list_table) do
 			local pet = pet_table.pet
-			if mobkit.is_alive(pet) then -- check if alive
+			if mobkit.is_alive(pet) and not(petz.str_is_empty(pet.tag)) then -- check if alive
 				local pet_type =  pet.type:gsub("^%l", string.upper)
 				local pet_pos =  pet.object:get_pos()
 				local distance, pet_pos_x, pet_pos_y, pet_pos_z
@@ -73,10 +73,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		local player_name = player:get_player_name()
 		local event = minetest.explode_textlist_event(fields.petz_list)
 		local pet_index = event.index
-		if not petz.petz_list_by_owner[player_name][pet_index] then
+		if not petz.tamed_by_owner[player_name][pet_index] then
 			return
 		end
-		local pet = petz.petz_list_by_owner[player_name][pet_index].pet
+		local pet = petz.tamed_by_owner[player_name][pet_index].pet
 		--minetest.chat_send_player("singleplayer", "test1")
 		if pet then
 		--minetest.chat_send_player("singleplayer", "test2")

@@ -55,7 +55,7 @@ petz.on_die = function(self)
 	end
 	--Remove this petz from the list of the player pets-->
 	if self.tamed == true then
-		petz.remove_petz_list_by_owner(self, false)
+		petz.remove_tamed_by_owner(self, false)
 	end
 	--Make Sound-->
 	mobkit.make_sound(self, 'die')

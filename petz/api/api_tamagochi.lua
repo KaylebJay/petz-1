@@ -110,7 +110,7 @@ petz.timer = function(self)
                 minetest.chat_send_player(self.owner, S("Your").." "..self.type.." "..S("has abandoned you!!!"))
                 petz.delete_nametag(self)
 				mokapi.remove_owner(self) --the pet abandon you
-				petz.remove_petz_list_by_owner(self, true)
+				petz.remove_tamed_by_owner(self, true)
                 petz.drop_dreamcatcher(self)
                 self.init_tamagochi_timer  = false -- no more timing
             else  --else reinit the timer, to check again in the future

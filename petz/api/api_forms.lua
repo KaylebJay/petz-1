@@ -232,9 +232,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			pet.tag = minetest.formspec_escape(string.sub(fields.ipt_name, 1 , 12))
 			mobkit.remember(pet, "tag", pet.tag)
 			if not(pet.tag == "") then
-				petz.insert_petz_list_by_owner(pet)
+				petz.insert_tamed_by_owner(pet)
 			else
-				petz.remove_petz_list_by_owner(pet, true)
+				petz.remove_tamed_by_owner(pet, true)
 			end
 		end
 		petz.update_nametag(pet)

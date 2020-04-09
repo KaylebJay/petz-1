@@ -53,12 +53,12 @@ petz.dreamcatcher_save_metadata = function(self)
 	if self.tag == "" then
 		return
 	end
-	for i = 1, #petz.petz_list_by_owner[self.owner] do
-		if petz.petz_list_by_owner[self.owner][i].pet == self then
-			petz.petz_list_by_owner[self.owner][i]["metadata"].tag = self.tag
-			petz.petz_list_by_owner[self.owner][i]["metadata"].type = self.type
-			petz.petz_list_by_owner[self.owner][i]["metadata"].dreamcatcher = self.dreamcatcher
-			petz.petz_list_by_owner[self.owner][i]["metadata"].last_pos = self.object:get_pos()
+	for i = 1, #petz.tamed_by_owner[self.owner] do
+		if petz.tamed_by_owner[self.owner][i].pet == self then
+			petz.tamed_by_owner[self.owner][i]["metadata"].tag = self.tag
+			petz.tamed_by_owner[self.owner][i]["metadata"].type = self.type
+			petz.tamed_by_owner[self.owner][i]["metadata"].dreamcatcher = self.dreamcatcher
+			petz.tamed_by_owner[self.owner][i]["metadata"].last_pos = self.object:get_pos()
 			break
 		end
 	end
@@ -66,7 +66,7 @@ end
 
 petz.create_form_list_by_owner_dreamcatcher = function(user_name, user_pos)
 	--Get the values of the list
-	local item_list_table = petz.petz_list_by_owner[user_name]
+	local item_list_table = petz.tamed_by_owner[user_name]
 	if item_list_table then
 		if #item_list_table <= 0 then
 			minetest.chat_send_player(user_name, "You have no pets with a name and a dreamcatcher to list.")

@@ -70,10 +70,18 @@ msg_full_health is optional
 
 sound_type is the self.sound type
 
-## function mokapi.tame(self, feed_count, owner_name, msg_tamed)
+## function mokapi.tame(self, feed_count, owner_name, msg_tamed, limit)
 It returns true if tamed.
 
 'feed_count' is the amount of food to get the mob tamed.
+
+'limit' is an optional table with the following data:
+
+1. max = The limit of the tamed mobs by player
+2. count = The current number of tamed mobs of the specific player that wants to tame
+3. msg = Message when the limit of tamed mobs is reached
+
+if 'max > count + 1' then the taming process is aborted.
 
 ## function mokapi.set_owner(self, owner_name)
 Put 'self.tamed' to true and the 'self.owner' name.

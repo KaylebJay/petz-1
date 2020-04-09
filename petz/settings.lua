@@ -71,6 +71,8 @@ petz.settings.bee_outing_ratio = tonumber(settings:get("bee_outing_ratio", "20")
 petz.settings.pumpkin_grenade_damage = tonumber(settings:get("pumpkin_grenade_damage", "8"))
 --Horseshoes
 petz.settings.horseshoe_speedup = tonumber(settings:get("horseshoe_speedup", "1"))
+--Population Control
+petz.settings.max_tamed_by_owner = tonumber(settings:get("max_tamed_by_owner", "-1"))
 --Lycanthropy
 petz.settings.lycanthropy = settings:get_bool("lycanthropy", true)
 petz.settings.lycanthropy_infection_chance_by_wolf = tonumber(settings:get("lycanthropy_infection_chance_by_wolf", "200"))

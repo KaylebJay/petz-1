@@ -25,17 +25,27 @@ function mokapi.feed(self, clicker, feed_rate, msg_full_health, sound_type)
 	return fed
 end
 
-function mokapi.tame(self, feed_count, owner_name, msg_tamed)
+function mokapi.tame(self, feed_count, owner_name, msg_tamed, limit)
 	local tamed = false
 	if self.food_count >= (feed_count or mokapi.consts.DEFAULT_FEED_COUNT) then
 		self.food_count = mobkit.remember(self, "food_count", 0) --reset
 		if self.tamed == false then --if not tamed
-			tamed = true
-			mokapi.set_owner(self, owner_name)
-			if msg_tamed then
-				minetest.chat_send_player(owner_name, msg_tamed)
+			local limit_reached = false
+			if limit and (limit.max >= 0) then
+				--minetest.chat_send_player(owner_name, "limit.max="..tostring(limit.max)..", limit.count="..tostring(limit.count))
+				if (limit.count +1) > limit.max then
+					minetest.chat_send_player(owner_name, limit.msg)
+					limit_reached = true
+				end
 			end
-			mobkit.clear_queue_high(self) -- clear behaviour (i.e. it was running away)
+			if not limit_reached then
+				tamed = true
+				mokapi.set_owner(self, owner_name)
+				if msg_tamed then
+					minetest.chat_send_player(owner_name, msg_tamed)
+				end
+				mobkit.clear_queue_high(self) -- clear behaviour (i.e. it was running away)
+			end
 		end
 	end
 	return tamed

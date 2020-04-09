@@ -1,36 +1,44 @@
 local modpath, S, creative_mode = ...
 
-petz.insert_petz_list_by_owner = function(self)
-	if self.tag ~= "" then
-		if (petz.petz_list_by_owner[self.owner] == nil) then
-			petz.petz_list_by_owner[self.owner] = {}
+petz.insert_tamed_by_owner = function(self)
+	if (petz.tamed_by_owner[self.owner] == nil) then
+		petz.tamed_by_owner[self.owner] = {}
+	end
+	local insert = true
+	for i = 1, #petz.tamed_by_owner[self.owner] do
+		if petz.tamed_by_owner[self.owner][i].pet == self then
+			insert = false
+			break
 		end
-		local insert = true
-		for i = 1, #petz.petz_list_by_owner[self.owner] do
-			if petz.petz_list_by_owner[self.owner][i].pet == self then
-				insert = false
-				break
-			end
-		end
-		if insert == true then --if not yet
-			table.insert(petz.petz_list_by_owner[self.owner], {["pet"] = self, metadata = {["tag"] = self.tag, ["type"] = self.type, ["last_pos"] = nil}})
-		end
+	end
+	if insert == true then --if not yet
+		table.insert(petz.tamed_by_owner[self.owner], {["pet"] = self, metadata = {["tag"] = self.tag, ["type"] = self.type, ["last_pos"] = nil}})
 	end
 end
 
-petz.remove_petz_list_by_owner = function(self, force)
+petz.remove_tamed_by_owner = function(self, force)
 	if self.tag ~= "" or force then
-		if petz.petz_list_by_owner[self.owner] then
+		if petz.tamed_by_owner[self.owner] then
 			local temp_table = {}
-			for key, pet_table in ipairs(petz.petz_list_by_owner[self.owner]) do
+			for key, pet_table in ipairs(petz.tamed_by_owner[self.owner]) do
 				if pet_table.pet ~= self then
 					table.insert(temp_table, pet_table)
 					--minetest.chat_send_player("singleplayer", self.tag)
 				end
 			end
-			petz.petz_list_by_owner[self.owner] = temp_table
+			petz.tamed_by_owner[self.owner] = temp_table
 		end
 	end
+end
+
+petz.count_tamed_by_owner = function(owner_name)
+	local count
+	if petz.tamed_by_owner[owner_name] then
+		count = #petz.tamed_by_owner[owner_name]
+	else
+		count = 0
+	end
+	return count
 end
 
 petz.do_feed = function(self)
@@ -39,7 +47,7 @@ petz.do_feed = function(self)
 end
 
 petz.do_tame = function(self)
-	petz.insert_petz_list_by_owner(self)
+	petz.insert_tamed_by_owner(self)
 	if petz.settings.tamagochi_mode == true then
 		self.init_tamagochi_timer = true
 	end

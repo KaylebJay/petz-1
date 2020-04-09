@@ -26,7 +26,7 @@ petz.settings.rotate = 0
 
 assert(loadfile(modpath .. "/settings.lua"))(modpath, S) --Load the settings
 
-petz.petz_list_by_owner = {} --a list of tamed petz with owner
+petz.tamed_by_owner = {} --a list of tamed petz with owner
 
 assert(loadfile(modpath .. "/api/api.lua"))(modpath, modname, S)
 assert(loadfile(modpath .. "/misc/misc.lua"))(modpath, S)
