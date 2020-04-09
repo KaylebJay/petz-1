@@ -370,7 +370,7 @@ minetest.register_node("petz:bottle_moth", {
 	tiles = {"petz_bottle_moth.png"},
 	inventory_image = "petz_bottle_moth_inv.png",
 	walkable = false,
-	groups = {snappy = 2},
+	groups = {snappy = 1},
 	paramtype = "light",
 	paramtype2 = "glasslikeliquidlevel",
 	param2 = 50,
@@ -393,10 +393,9 @@ minetest.register_node("petz:bottle_moth", {
 		meta:set_string("owner", placer_name)
 	end,
 	on_destruct = function(pos)
-		local self = minetest.add_entity(pos, "petz:moth")
-		--local meta = minetest.get_meta(pos)
-		--mokapi.set_owner(self, meta:get_string("owner")) --set owner
-		--petz.do_tame(self)
+		local meta = minetest.get_meta(pos)
+		local moth = minetest.add_entity(pos, "petz:moth", '{owner ='.. meta:get_string("owner")..', tamed = true}')
+		--petz.do_tame(moth)
 		--minetest.chat_send_player("singleplayer", meta:get_string("owner"))
 	end,
 })
