@@ -12,8 +12,8 @@ petz.create_pet = function(placer, itemstack, pet_name, pos)
 	local self = mob:get_luaentity()
 	if self.is_wild == false then --not monster
 		mokapi.set_owner(self, placer:get_player_name()) --set owner
+		petz.do_tame(self)
 	end
-	petz.do_tame(self)
 	itemstack:take_item() -- since mob is unique we remove egg once spawned
 	return self
 end

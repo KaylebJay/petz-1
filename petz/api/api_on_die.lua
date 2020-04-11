@@ -36,7 +36,7 @@ petz.on_die = function(self)
 			self.attached_squared_ball.object:set_detach()
 		end
 	end
-	--Not pointable-->
+	--Make it not pointable-->
 	self.object:set_properties({
 		pointable = false,
 	})
