@@ -9,7 +9,7 @@ minetest.register_node("petz:cocoon", {
     paramtype = "light",
     drawtype = "mesh",
 	mesh = 'petz_cocoon.b3d',
-    visual_scale = {x = 0.5, y = 0.5},
+    visual_scale = 1.0,
 	tiles = {"petz_cocoon.png"},
 	collision_box = {
 		type = "fixed",
@@ -30,7 +30,7 @@ minetest.register_node("petz:silkworm_eggs", {
     paramtype = "light",
     drawtype = "mesh",
 	mesh = 'petz_silkworm_eggs.b3d',
-    visual_scale = {x = 0.5, y = 0.5},
+    visual_scale = 1.0,
 	tiles = {"petz_silkworm_eggs.png"},
 	collision_box = {
 		type = "fixed",
