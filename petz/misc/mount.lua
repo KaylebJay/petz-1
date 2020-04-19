@@ -49,16 +49,16 @@ function petz.attach(entity, player)
 	local player_name = player:get_player_name()
 	petz.mount_attached[player_name] = entity
 	default.player_attached[player_name] = true
-	player:set_properties({
-		visual_size = {
-			x = petz.truncate(entity.driver_scale.x, 2),
-			y = petz.truncate(entity.driver_scale.y, 2)
-		},
+	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
+	minetest.after(0.3, function()
+		default.player_set_animation(player, "sit" , 30)
+		player:set_properties({
+			visual_size = {
+				x = petz.truncate(entity.driver_scale.x, 2),
+				y = petz.truncate(entity.driver_scale.y, 2)
+			},
 		pointable = petz.settings.pointable_driver
 	})
-	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
-	minetest.after(0.2, function()
-		default.player_set_animation(player, "sit" , 30)
 	end)
 	player:set_look_horizontal(entity.object:get_yaw() - rot_view)
 end
