@@ -1,7 +1,7 @@
 local modpath, S = ...
 
 function petz.blood(self)
-	if not(petz.settings.blood) and self.no_blood then
+	if not(petz.settings.blood) or self.no_blood then
 		return
 	end
 	local pos = self.object:get_pos()
