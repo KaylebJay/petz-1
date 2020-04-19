@@ -343,3 +343,8 @@ filename: petz_replace.ogg
 Author: www.zapsplat.com
 https://www.zapsplat.com/music/cow-eat-grass-or-foliage-single-chew/
 License: https://www.zapsplat.com/license-type/standard-license/
+--------------------------------------------
+filename: petz_rat_squeak.ogg
+Author: toefur
+https://freesound.org/people/toefur/sounds/288941/
+License: This work is licensed under the Creative Commons 0 License.
