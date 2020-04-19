@@ -50,7 +50,7 @@ function petz.attach(entity, player)
 	player_api.player_attached[player_name] = true
 	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
 	player:set_properties({
-			visual_size = {
+		visual_size = {
 				x = petz.truncate(entity.driver_scale.x, 2),
 				y = petz.truncate(entity.driver_scale.y, 2)
 			},

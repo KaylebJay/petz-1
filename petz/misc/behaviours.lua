@@ -53,17 +53,21 @@ function petz.get_player_back_pos(player, pos)
 	end
 end
 
+
 function mobkit.check_height(self)
 	local yaw = self.object:get_yaw()
 	local dir_x = -math.sin(yaw) * (self.collisionbox[4] + 0.5)
 	local dir_z = math.cos(yaw) * (self.collisionbox[4] + 0.5)
 	local pos = self.object:get_pos()
 	local ypos = pos.y - self.collisionbox[2] -- just floor level
-	if minetest.line_of_sight(
-		{x = pos.x + dir_x, y = ypos, z = pos.z + dir_z}, {x = pos.x + dir_x, y = ypos - self.max_height, z = pos.z + dir_z}, 1) then
-		return false
+	local pos1 = {x = pos.x + dir_x, y = ypos, z = pos.z + dir_z}
+	local pos2 = {x = pos.x + dir_x, y = ypos - self.max_height, z = pos.z + dir_z}
+	local blocking_node, blocking_node_pos = minetest.line_of_sight(pos1, pos2, 1)
+	if not(blocking_node) then
+		local height = ypos - blocking_node_pos.y
+		return height
 	end
-	return true
+	return false
 end
 
 function mobkit.check_front_obstacle(self)
@@ -573,16 +577,21 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				fly_status = "ascend"
 				y_impulse = 3
 			end
-			if mobkit.check_height(self) == false or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz
+			height_from_ground = mobkit.check_height(self) --returns 'false' if the mob flies higher that max_height, otherwise returns the height from the ground
+			--minetest.chat_send_player("singleplayer", tostring(height_from_ground))
+			if not(height_from_ground) or mobkit.node_name_in(self, "top") ~= "air" then --check if max height, then stand or descend, or a node above the petz
 				random_num = math.random(1, 100)
 				if random_num < 70 then
 					fly_status = "descend"
 				else
 					fly_status = "stand"
 				end
-			else --check if water below, if yes ascend
+			else --check if water below, or near the ground, if yes ascend
 				local node_name = mobkit.node_name_in(self, "below")
 				if minetest.get_item_group(node_name, "water") >= 1  then
+					fly_status = "ascend"
+				end
+				if height_from_ground and (height_from_ground < 1) then
 					fly_status = "ascend"
 				end
 			end
@@ -596,7 +605,7 @@ function mobkit.lq_dumbfly(self, speed_factor)
 				}
 				self.object:set_rotation({x= -0.0, y = rotation.y, z= rotation.z})
 				random_num = math.random(1, 100)
-				if random_num < 20 and mobkit.check_height(self) == false then
+				if random_num < 20 and not(height_from_ground) then
 					fly_status = "descend"
 				elseif random_num < 40 then
 					fly_status = "ascend"
