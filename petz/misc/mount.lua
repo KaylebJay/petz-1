@@ -43,22 +43,21 @@ function petz.attach(entity, player)
 	end
 	attach_at = entity.driver_attach_at
 	eye_offset = entity.driver_eye_offset
-	petz.force_detach(player)
 	player:set_attach(entity.object, "", attach_at, entity.player_rotation)
 	entity.driver = player --this goes after petz.force_detach!
 	local player_name = player:get_player_name()
 	petz.mount_attached[player_name] = entity
-	default.player_attached[player_name] = true
+	player_api.player_attached[player_name] = true
 	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
-	minetest.after(0.3, function()
-		default.player_set_animation(player, "sit" , 30)
-		player:set_properties({
+	player:set_properties({
 			visual_size = {
 				x = petz.truncate(entity.driver_scale.x, 2),
 				y = petz.truncate(entity.driver_scale.y, 2)
 			},
 		pointable = petz.settings.pointable_driver
-	})
+		})
+	minetest.after(0.3, function()
+		player_api.set_animation(player, "sit" , 30)
 	end)
 	player:set_look_horizontal(entity.object:get_yaw() - rot_view)
 end
@@ -72,7 +71,7 @@ petz.force_detach = function(player)
 		entity.driver = nil
 	end
 	player:set_detach()
-	default.player_attached[player:get_player_name()] = false
+	player_api.player_attached[player:get_player_name()] = false
 	player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 	minetest.after(0.25, function(player) --to avoid tiny player
 		if player then
@@ -81,8 +80,8 @@ petz.force_detach = function(player)
 				pointable = true
 			})
 		end
+		player_api.set_animation(player, "stand" , 30)
 	end, player)
-	default.player_set_animation(player, "stand" , 30)
 end
 
 function petz.detach(player, offset)
