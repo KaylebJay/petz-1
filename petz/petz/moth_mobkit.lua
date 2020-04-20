@@ -17,6 +17,7 @@ minetest.register_entity("petz:"..pet_name,{
 	lay_eggs = true,
 	lay_eggs_in_nest = false,
 	type_of_egg = "node",
+	bottled = "petz:bottle_moth",
 	max_height = 3,
 	spawn_at_night = true,
 	die_at_daylight = true,

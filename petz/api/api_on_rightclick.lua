@@ -81,17 +81,8 @@ petz.on_rightclick = function(self, clicker)
 		if not(self.is_baby) then
 			petz.pony_breed(self, clicker, wielded_item, wielded_item_name)
 		end
-	elseif self.type == "moth" and (wielded_item_name == "vessels:glass_bottle") then
-		--capture the moth in the bottle
-		local new_stack = ItemStack("petz:bottle_moth") 	-- add special mob egg with all mob information
-		local stack_meta = new_stack:get_meta()
-		stack_meta = petz.capture(self, clicker, false)
-		local inv = clicker:get_inventory()
-		if inv:room_for_item("main", new_stack) then
-			inv:add_item("main", new_stack)
-		else
-			minetest.add_item(clicker:get_pos(), new_stack)
-		end
+	elseif self.bottled and (wielded_item_name == "vessels:glass_bottle") then
+		petz.bottled(self, clicker)
 	elseif (self.type == "pony") and (wielded_item_name == "petz:horseshoe") and (self.owner == player_name) then
 		petz.put_horseshoe(self, clicker)
 	elseif self.is_mountable == true then

@@ -364,41 +364,59 @@ minetest.register_craftitem("petz:elephant_tusk", {
 	groups = {},
 })
 
-minetest.register_node("petz:bottle_moth", {
-	description = S("Bottle with Moth"),
-	drawtype = "plantlike",
-	tiles = {"petz_bottle_moth.png"},
-	inventory_image = "petz_bottle_moth_inv.png",
-	walkable = false,
-	groups = {snappy = 1},
-	paramtype = "light",
-	paramtype2 = "glasslikeliquidlevel",
-	param2 = 50,
-	sunlight_propagates = true,
-	use_texture_alpha = true,
-	light_source = default.LIGHT_MAX - 1,
-	sounds = default.node_sound_glass_defaults(),
-	selection_box = {
-		type = "fixed",
-		fixed = { -0.25, -0.5, -0.25, 0.25, 0.4, 0.25 },
-	},
-	after_place_node = function(pos, placer, itemstack, pointed_thing)
-		--local meta_itemstack = itemstack:get_meta()
-		local meta = minetest.get_meta(pos)
-		--meta = meta_itemstack
-		local placer_name = ""
-		if placer:is_player() then
-			placer_name = placer:get_player_name()
-		end
-		meta:set_string("owner", placer_name)
-	end,
-	on_destruct = function(pos)
-		local meta = minetest.get_meta(pos)
-		local moth = minetest.add_entity(pos, "petz:moth", '{owner ='.. meta:get_string("owner")..', tamed = true}')
-		--petz.do_tame(moth)
-		--minetest.chat_send_player("singleplayer", meta:get_string("owner"))
-	end,
-})
+for i=1, 2 do
+	if i == 1 then
+		bottled_mob = "moth"
+	else
+		bottled_mob = "butterfly"
+	end
+	minetest.register_node("petz:bottle_"..bottled_mob, {
+		description = S("Bottle with "..petz.first_to_upper(bottled_mob)),
+		drawtype = "plantlike",
+		tiles = {"petz_bottle_"..bottled_mob..".png"},
+		inventory_image = "petz_bottle_"..bottled_mob.."_inv.png",
+		stack_max = 1,
+		drop = "",
+		walkable = false,
+		groups = {oddly_breakable_by_hand = 1},
+		paramtype = "light",
+		paramtype2 = "glasslikeliquidlevel",
+		param2 = 50,
+		sunlight_propagates = true,
+		use_texture_alpha = true,
+		light_source = default.LIGHT_MAX - 1,
+		sounds = default.node_sound_glass_defaults(),
+		selection_box = {
+			type = "fixed",
+			fixed = { -0.25, -0.5, -0.25, 0.25, 0.4, 0.25 },
+		},
+		after_place_node = function(pos, placer, itemstack, pointed_thing)
+			local meta_itemstack = itemstack:get_meta()
+			local meta = minetest.get_meta(pos)
+			--meta = meta_itemstack
+			local placer_name = ""
+			if placer:is_player() then
+				placer_name = placer:get_player_name()
+			end
+			meta:set_string("owner", placer_name)
+			--minetest.chat_send_all("texture= "..tostring(meta_itemstack:get_int("petz:texture_no")))
+			meta:set_int("petz:texture_no", meta_itemstack:get_int("petz:texture_no"))
+		end,
+		on_destruct = function(pos)
+			local meta = minetest.get_meta(pos)
+			local ent = minetest.add_entity(pos, "petz:"..bottled_mob, '{owner ='.. meta:get_string("owner")..', tamed = true}')
+			local texture_no = meta:get_int("petz:texture_no")
+			--minetest.chat_send_all("texture= "..tostring(meta:get_int("petz:texture_no")))
+			if texture_no then
+				ent_ref = ent:get_luaentity()
+				local props = {}
+				props.textures = {ent_ref.textures[texture_no]}
+				ent:set_properties(props)
+			end
+			--petz.do_tame(moth)
+		end,
+	})
+end
 
 --
 --Honey Stuff

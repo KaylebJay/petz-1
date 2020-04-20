@@ -97,10 +97,10 @@ petz.capture = function(self, clicker, put_in_inventory)
 			end
 			stack_meta:set_string(key, value)
 			--i = i + 1
-			--local sett= sett .. ", ".. tostring(key).." : ".. tostring(self[key])
-			--minetest.chat_send_player("singleplayer", sett)
+			--sett= sett .. ", ".. tostring(key).." : ".. tostring(self[key])
 		end
 	end
+	--minetest.chat_send_player("singleplayer", sett)
 	--minetest.chat_send_player("singleplayer", "status="..tostring(self.status))
 	stack_meta:set_string("captured", "true") --IMPORTANT! mark as captured
 	--minetest.chat_send_player("singleplayer", tostring(i))

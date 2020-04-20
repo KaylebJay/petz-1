@@ -16,6 +16,7 @@ minetest.register_entity("petz:"..pet_name,{
 	can_fly = true,
 	max_height = 4,
 	has_affinity = false,
+	bottled = "petz:bottle_butterfly",
 	is_wild = false,
 	give_orders = false,
 	can_be_brushed = false,
