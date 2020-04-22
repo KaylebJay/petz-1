@@ -111,5 +111,3 @@ else -- is 'cubic'
     petz.settings.visual_size = {x=1.0, y=1.0}
     petz.settings.rotate = 180
 end
-
-

@@ -1,7 +1,6 @@
-Source code, models, icons and textures by runs.
-The license applied for all of them is GPLv3.
-
-Sounds have different licenses, see the sounds/LICENSE.MD file.
+- Source code: GPLv3.
+- Textures: CC BY-SA  4.0
+- Sounds: They have different licenses, see the 'sounds/LICENSE.MD' file.
 
 
                     GNU GENERAL PUBLIC LICENSE
