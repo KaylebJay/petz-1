@@ -30,6 +30,7 @@ petz.tamed_by_owner = {} --a list of tamed petz with owner
 
 assert(loadfile(modpath .. "/api/api.lua"))(modpath, modname, S)
 assert(loadfile(modpath .. "/misc/misc.lua"))(modpath, S)
+assert(loadfile(modpath .. "/server/cron.lua"))(modname)
 
 petz.file_exists = function(name)
    local f = io.open(name,"r")
