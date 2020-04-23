@@ -109,3 +109,5 @@ Modname is the mod ogf the mobs to clear.
 # Server
 ## function mokapi.cron_clear(cron_time, modname)
 It creates a cron task to clears all the mobkit non-tamed mobs in the closest range of all the server's players from time to time.
+
+If cron_time <= 0 then the cron task does not run.
