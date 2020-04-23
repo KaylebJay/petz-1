@@ -104,7 +104,7 @@ It clears the mob HQ and LQ behaviours and then remove it from the world.
 ## clear_mobs modname
 It clears all the mobkit non-tamed mobs in the closest range of the player.
 
-Modname is the mod ogf the mobs to clear.
+Modname is the mod of the mobs to clear.
 
 # Server
 ## function mokapi.cron_clear(cron_time, modname)
