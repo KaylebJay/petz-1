@@ -42,7 +42,12 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr, liquidflag)
 	end
 
 	--Spawn Peaceful or monsters?
-	local peaceful_monsters_random = math.random()
+	local peaceful_monsters_random
+	if not(petz.settings.disable_monsters) then
+		peaceful_monsters_random = math.random()
+	else
+		peaceful_monsters_random = 0.0
+	end
 	--minetest.chat_send_player("singleplayer", tostring(peaceful_monsters_random))
 	local peaceful
 	if peaceful_monsters_random <= petz.settings.spawn_peaceful_monsters_ratio then
