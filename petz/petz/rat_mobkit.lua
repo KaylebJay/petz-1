@@ -17,6 +17,7 @@ minetest.register_entity("petz:"..pet_name,{
 	type = "rat",
 	init_tamagochi_timer = false,
 	is_pet = false,
+	is_monster = true,
 	has_affinity = false,
 	is_wild = true,
 	attack_player = true,

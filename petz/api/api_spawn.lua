@@ -40,6 +40,17 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr, liquidflag)
 			node = minetest.get_node(spawn_pos)
 		end
 	end
+
+	--Spawn Peaceful or monsters?
+	local peaceful_monsters_random = math.random()
+	--minetest.chat_send_player("singleplayer", tostring(peaceful_monsters_random))
+	local peaceful
+	if peaceful_monsters_random <= petz.settings.spawn_peaceful_monsters_ratio then
+		peaceful = true
+	else
+		peaceful = false
+	end
+
 	local candidates_list = {} --Create a sublist of the petz with the same node to spawnand between max_height and min_height
 	for i = 1, #petz.petz_list do
 		local pet_name
@@ -51,7 +62,10 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr, liquidflag)
 		-- Note: using a function that just returns false on the first condition that is not met
 		-- might be easier to read than this current implementation
 		if ent then --do several checks to know if the mob can be included in the list or not
-			if can_spawn and petz.settings[pet_name.."_spawn"] == false then
+			if can_spawn and petz.settings[pet_name.."_disable_spawn"] then
+				can_spawn = false
+			end
+			if can_spawn and ((ent.is_monster and peaceful == true) or (not(ent.is_monster) and peaceful == false)) then
 				can_spawn = false
 			end
 			if can_spawn and ent.spawn_max_height then --check max_height
@@ -81,7 +95,7 @@ petz.spawn_mob = function(spawn_pos, limit_max_mobs, abr, liquidflag)
 				end
 			end
 			--Check if monsters are disabled
-			if can_spawn and ent.is_monster == true then
+			if can_spawn and ent.is_monster then
 				if petz.settings.disable_monsters == true then
 					can_spawn = false
 				end

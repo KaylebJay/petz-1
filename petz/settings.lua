@@ -32,7 +32,9 @@ petz.settings.rob_mobs = settings:get_bool("rob_mobs", false)
 petz.settings.spawn_interval = tonumber(settings:get("spawn_interval"))
 petz.settings.spawn_chance = tonumber(settings:get("spawn_chance"))
 petz.settings.max_mobs = tonumber(settings:get("max_mobs"))
-petz.settings.no_spawn_in_protected  = settings:get_bool("no_spawn_in_protected ", false)
+petz.settings.no_spawn_in_protected = settings:get_bool("no_spawn_in_protected ", false)
+petz.settings.no_spawn_in_protected = settings:get_bool("no_spawn_in_protected ", false)
+petz.settings.spawn_peaceful_monsters_ratio = mokapi.delimit_number(tonumber(settings:get("spawn_peaceful_monsters_ratio")) or 1.0, {min=0.0, max=1.0})
 --Lay Eggs
 petz.settings.lay_egg_chance = tonumber(settings:get("lay_egg_chance"))
 --Misc Random Sound Chance
