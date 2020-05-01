@@ -26,7 +26,18 @@ petz.pony_breed = function(self, clicker, wielded_item, wielded_item_name)
 		meta:set_int("max_speed_forward", (self.max_speed_forward - speedup))
 		meta:set_int("max_speed_reverse", (self.max_speed_reverse - speedup))
 		meta:set_int("accel", (self.accel - speedup))
-		clicker:set_wielded_item(new_wielded_item)
+		if wielded_item:get_count() > 1 then
+			local inv = clicker:get_inventory()
+			if not inv:room_for_item("main", new_wielded_item) then
+				minetest.chat_send_player(clicker:get_player_name(), S("No room in your inventory for a Glass Syringe with seed."))
+				return
+			end
+			wielded_item:take_item(1)
+			clicker:set_wielded_item(wielded_item)
+			inv:add_item("main", new_wielded_item)
+		else
+			clicker:set_wielded_item(new_wielded_item)
+		end
 	elseif wielded_item_name == "petz:glass_syringe_sperm" and self.is_male== false then
 		local meta = wielded_item:get_meta()
 		local petz_type = meta:get_string("petz_type")
