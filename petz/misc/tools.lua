@@ -1,6 +1,6 @@
 local modpath, S = ...
 
-minetest.register_tool("petz:shepherd_crock", {
+minetest.register_tool("petz:shepherd_crook", {
     description = S("Shepherd's Crook"),
     inventory_image = "petz_shepherd_crook.png",
     liquids_pointable = false,
@@ -12,6 +12,7 @@ minetest.register_tool("petz:shepherd_crock", {
     },
     damage_groups = {fleshy=1},
 })
+minetest.register_alias("petz:shepherd_crock", "petz:shepherd_crook")
 
 minetest.register_craft({
     type = "shaped",
