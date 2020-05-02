@@ -129,6 +129,13 @@ petz.create_form = function(player_name, context)
 			"button_exit[0.375,6.5;1,1;btn_alight;"..S("Alight").."]"	..
 			"button_exit[1.375,6.5;1,1;btn_fly;"..S("Fly").."]"..
 			"button_exit[2.375,6.5;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"
+		elseif pet.type == "toucan" then
+			form_size.h = form_size.h + 1
+			buttonexit_pos.y = buttonexit_pos.y + 1
+			more_form_orders = more_form_orders..
+			"button_exit[0.375,6.5;1,1;btn_alight;"..S("Alight").."]"	..
+			"button_exit[1.375,6.5;1,1;btn_fly;"..S("Fly").."]"..
+			"button_exit[2.375,6.5;2,1;btn_perch_shoulder;"..S("Perch on shoulder").."]"
 		elseif pet.is_mountable == true then
 			more_form_orders = more_form_orders..
 				"image[3.5,4.5;1,1;petz_"..pet.type.."_velocity_icon.png]"..
