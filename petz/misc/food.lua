@@ -334,3 +334,25 @@ minetest.register_craftitem("petz:candy_cane", {
 	on_use = minetest.item_eat(6),
 	groups = {flammable = 2, food = 2},
 })
+
+--Goat Meat
+minetest.register_craftitem("petz:raw_goat", {
+    description = S("Raw Goat"),
+    inventory_image = "petz_raw_goat.png",
+    on_use = minetest.item_eat(1),
+    groups = {flammable = 2, food = 2, food_meat_raw = 1},
+})
+
+minetest.register_craftitem("petz:roasted_goat_meat", {
+	description = S("Roasted Goat Meat"),
+	inventory_image = "petz_roasted_goat_meat.png",
+	on_use = minetest.item_eat(4),
+	groups = {flammable = 2, food = 2, food_meat = 1},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "petz:roasted_goat_meat",
+	recipe = "petz:raw_goat",
+	cooktime = 3,
+})
