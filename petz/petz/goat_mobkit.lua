@@ -20,6 +20,7 @@ minetest.register_entity("petz:"..pet_name,{
 	milkable = true,
 	is_wild = false,
 	give_orders = false,
+	herd = true,
 	can_be_brushed = true,
 	capture_item = "lasso",
 	follow = petz.settings.goat_follow,

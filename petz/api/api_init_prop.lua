@@ -27,6 +27,7 @@ petz.dyn_prop = {
 	gallop_recover_time = {type= "int", default = petz.settings.gallop_recover_time},
 	genes = {type= "table", default = {}},
 	growth_time = {type= "int", default = 0},
+	herding = {type= "boolean", default = false},
 	horseshoes = {type= "int", default = 0},
 	is_baby = {type= "boolean", default = false},
 	is_male = {type= "boolean", default = false},
@@ -161,6 +162,9 @@ function petz.set_initial_properties(self, staticdata, dtime_s)
 		end
 		if self.type == "pony" then
 			self.horseshoes = mobkit.remember(self, "horseshoes", 0)
+		end
+		if self.herd then
+			self.herding = mobkit.remember(self, "herding", false)
 		end
 		--Mobs that can have babies
 		if self.breed == true then

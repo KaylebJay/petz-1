@@ -99,7 +99,9 @@ petz.on_rightclick = function(self, clicker)
 	if show_form == true then
 		if (self.tamed == true) and (self.is_pet == true) and (self.owner == player_name) then
 			petz.pet[player_name]= self
-			minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name))
+			local context = {}
+			context.tab_id = 1
+			minetest.show_formspec(player_name, "petz:form_orders", petz.create_form(player_name, context))
 		end
 	end
 end

@@ -60,6 +60,9 @@ petz.settings.gallop_time =  tonumber(settings:get("gallop_time", "5"))
 petz.settings.gallop_recover_time =  tonumber(settings:get("gallop_recover_time", "5"))
 --Sleeping
 petz.settings.sleeping = settings:get_bool("sleeping", true)
+--Herding
+petz.settings.herding_members_distance = tonumber(settings:get("herding_members_distance", "5"))
+petz.settings.herding_shepherd_distance = tonumber(settings:get("herding_shepherd_distance", "5"))
 --Lashing
 petz.settings.lashing_tame_count = tonumber(settings:get("lashing_tame_count", "3"))
 --Bee Stuff

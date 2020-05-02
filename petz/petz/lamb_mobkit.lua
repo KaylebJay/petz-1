@@ -27,6 +27,7 @@ minetest.register_entity("petz:"..pet_name,{
 	breed = true,
 	is_wild = false,
 	give_orders = false,
+	herd = true,
 	can_be_brushed = true,
 	capture_item = "lasso",
 	mutation = 1,

@@ -129,6 +129,13 @@ function petz.herbivore_brain(self)
 			petz.bh_breed(self, pos)
 		end
 
+		--Herding
+		if prty < 4.5 then
+			if petz.bh_herding(self, pos, player) then
+				return
+			end
+		end
+
 		--search for a petz:pet_bowl
 		if prty < 4 and self.tamed == true then
 			local view_range = self.view_range
