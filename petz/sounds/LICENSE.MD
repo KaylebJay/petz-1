@@ -348,3 +348,9 @@ filename: petz_rat_squeak.ogg
 Author: toefur
 https://freesound.org/people/toefur/sounds/288941/
 License: This work is licensed under the Creative Commons 0 License.
+--------------------------------------------
+filename: petz_goat_bleat.ogg & petz_goat_moaning.ogg
+Author: Alexander
+http://www.orangefreesounds.com/goat-sounds/
+License: The sound effect is permitted for non-commercial use
+under license “Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)”
