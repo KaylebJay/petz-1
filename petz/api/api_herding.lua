@@ -1,3 +1,0 @@
-local modpath, S = ...
-
-

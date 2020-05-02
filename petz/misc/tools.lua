@@ -12,3 +12,13 @@ minetest.register_tool("petz:shepherd_crock", {
     },
     damage_groups = {fleshy=1},
 })
+
+minetest.register_craft({
+    type = "shaped",
+    output = 'petz:shepherd_crock',
+    recipe = {
+        {'', 'group:wood', 'petz:whistle'},
+        {'', 'group:wood', ''},
+        {'', 'group:wood', ''},
+    }
+})
